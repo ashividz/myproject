@@ -1,0 +1,183 @@
+<div class="col-md-6 col-md-offset-3">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2 class="panel-title">New Lead</h2>
+		</div>
+		<div class="panel-body">
+	        <hr>
+			<form method="POST" action="" role="form" class="form-inline" id="form">
+				<fieldset>
+					<ol>
+						<li>
+							<label>Name *</label>
+							<input type="text" id="name" name="name" required>
+						</li>
+						<li>
+							<label>Gender *</label>
+							<input type="radio" name="gender" id="gender" value="F" required> Female &nbsp;
+								<input type="radio" name="gender" id="gender" value="M"> Male
+						</li>
+						<li>
+							<label>Mobile *</label>
+							<input type="text" id="mobile" name="mobile" value="" required>
+						</li>
+						<li>
+							<label>Email</label>
+							<input type="email" id="email" name="email">
+						</li>						
+						<li>
+							<label>Lead Source *</label>
+							<div class="dropdown">
+								<select id="source" name="source" required>
+								</select>
+						 	</div>
+						</li>
+						<li>
+							<label>How did you hear about us?</label>
+							<div class="dropdown">
+								<select id="voice" name="voice">
+								</select>
+						 	</div>
+						</li>
+						<li>
+							<label>Remarks</label>
+							<textarea size="3" class="form-control" type="text" id="remark" name="remark" style="width:225px"></textarea>
+						</li>
+						<li>
+							<label>Assign CRE *</label>
+							<div class="dropdown">
+								<select id="cre" name="cre" required>
+								</select>
+						 	</div>
+						</li>
+						<li>
+							<label>Address</label>
+							<input type="text" id="address" name="address">
+						</li>
+						<li>
+							<label>Country</label>
+							<div class="dropdown">
+								<select id="country" onchange="selectState(this.options[this.selectedIndex].value)" name="country">
+									<option value="">Select Country</option>
+								</select>
+						 	</div>
+						</li>
+						<li>
+							<label>State/Region</label>
+							<select id="state" onchange="selectCity(this.options[this.selectedIndex].value)" name="state">
+		                        <option value="">Select State</option>
+		                    </select>
+						</li>
+						<li>
+							<label>City</label>
+							<select id="city" name="city">
+		                        <option value="">Select City</option>
+		                    </select>
+						</li>
+						<li>
+							<label>ZIP/PIN</label>
+							<input type="text" id="zip" name="zip">
+						</li>
+					</ol>
+				</fieldset>				
+				<div class="col-md-3">
+					<button id="save" type="submit" name="save" class="btn btn-success"> Save</button> 
+				</div>
+				<input type="hidden" name="_token" value="{{ csrf_token() }}">			
+			</form>
+		</div>	
+	</div>
+	
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() 
+{     
+	//Fetch Lead Voices   
+    $("#voice").append("<option value=''> Select Voice </option>");
+    $.getJSON("/api/getVoiceList",function(result){
+        $.each(result, function(i, field){
+            $("#voice").append("<option value='" + field.id + "'> " + field.name + "</option>");
+        });
+    });
+
+    //Fetch Lead Sources   
+    $("#source").append("<option value=''> Select Source </option>");
+    $.getJSON("/api/getSourceList",function(result){
+        $.each(result, function(i, field){
+        	$("#source").append("<option value='" + field.id + "'> " + field.source_name + "</option>");
+        });
+    });
+
+    //Fetch CRE List   
+    $("#cre").append("<option value=''> Select CRE </option>");
+    $.getJSON("/api/getUsersByRole?role=cre",function(result){
+        $.each(result, function(i, field){
+        	$("#cre").append("<option value='" + field.name + "'> " + field.name + "</option>");
+        });
+    });
+
+
+    $("#country").empty();
+    $("#country").append("<option value=''> Select Country </option>");
+    $.getJSON("/api/getCountryList",function(result){
+        var country = "IN";
+        $.each(result, function(i, field){
+            if (field.country_code == country) {
+                $("#country").append("<option value='" + field.country_code + "' selected> " + field.country_name + "</option>");
+            }
+            else
+            {
+                $("#country").append("<option value='" + field.country_code + "'> " + field.country_name + "</option>");
+            }       
+        });
+        selectState(country);
+    });
+
+});
+
+/*This function is called when country dropdown value change*/
+function selectState(country_id){
+    $("#city").empty();
+    $("#city").append("<option value=''> Select City </option>");
+    getRegionCode(country_id);
+}
+
+/*This function is called when state dropdown value change*/
+function selectCity(state_id){
+    getCityCode(state_id);
+}
+
+
+function getRegionCode(country_id) {
+	var state = "IN.07";
+    $.getJSON("/api/getRegionList", { country_code: country_id }, function(result){
+        $("#state").empty();
+        $("#state").append("<option value=''> Select State </option>");
+        $.each(result, function(i, field) {            
+        	if (field.region_code == state) {
+                $("#state").append("<option value='" + field.region_code + "' selected> " + field.region_name + "</option>");
+            }
+            else
+            {
+                $("#state").append("<option value='" + field.region_code + "'> " + field.region_name + "</option>");
+            }
+        });
+    });
+    getCityCode(state);    
+}
+
+function getCityCode(state_id) {
+    $.getJSON("/api/getCityList", { region_code: state_id }, function(result){
+        $("#city").empty();
+        $("#city").append("<option value=''> Select City </option>");
+        $.each(result, function(i, field) {
+        	$("#city").append("<option value='" + field.city_name + "'> " + field.city_name + "</option>");
+        });
+    });
+    
+}
+
+</script>
