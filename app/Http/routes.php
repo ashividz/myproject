@@ -246,10 +246,8 @@ Route::group([
 		Route::get('patient/{id}/weight', 'PatientWeightController@index');
 		Route::post('patient/{id}/weight', 'PatientWeightController@store');
 
-        Route::get('patient/{id}/bt', 'PatientBTController@show');
         Route::post('patient/{id}/bt', 'PatientBTController@upload');
 
-        Route::get('bt/report/{id}', 'PatientBTController@fetchBTReport');
         Route::get('patient/bt/edit/{id}', 'PatientBTController@edit');
         Route::post('patient/bt/edit/{id}', 'PatientBTController@update');
 
@@ -283,9 +281,12 @@ Route::group([
         Route::get('service/reports/yuwow/feedback', 'YuWoWController@customerFeedback');
         Route::post('service/reports/yuwow/feedback', 'YuWoWController@customerFeedback');
 
-        //Doctor can also see the Diets
+        //Doctor can also see the Diets & BT
 
         Route::get('patient/{id}/diet', 'PatientDietController@show');
+        Route::get('patient/{id}/bt', 'PatientBTController@show');
+        Route::get('bt/report/{id}', 'PatientBTController@fetchBTReport');
+                
 });
 
 Route::group([
