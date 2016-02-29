@@ -3,6 +3,8 @@
     $start_date = isset($daterange[0]) ? date('Y/m/d 0:0:0', strtotime($daterange[0])) : date("Y/m/d 0:0:0");
 ?>
 @include('partials/daterange', array('start_date' => $start_date, 'ajax' => 1))    
+    <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download orders</a>
+
     <table id="orders" class="table table-bordered">
         
         <thead>
@@ -76,6 +78,7 @@ function getOrders() {
     })
 }
 </script>
+
 <style type="text/css">
     #orders tr.success td {
         background-color: rgb(108, 208, 147);
@@ -87,3 +90,29 @@ function getOrders() {
         background-color: rgb(240, 240, 140);
     }
 </style>
+
+<script type="text/javascript">
+$(document).ready(function() 
+{
+    
+
+    $( "#downloadCSV" ).bind( "click", function() 
+    {
+        var csv_value = $('#orders').table2CSV({
+                delivery: 'value'
+            });
+        downloadFile('orders.csv','data:text/csv;charset=UTF-8,' + encodeURIComponent(csv_value));
+        $("#csv_text").val(csv_value);  
+    });
+
+    function downloadFile(fileName, urlData){
+        var aLink = document.createElement('a');
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("click");
+        aLink.download = fileName;
+        aLink.href = urlData ;
+        aLink.dispatchEvent(evt);
+    }
+});
+</script>                   
+</div>
