@@ -200,6 +200,8 @@ Route::group([
 		Route::get('herb/template/add', 'HerbController@templateForm');
 		Route::post('herb/template/add', 'HerbController@templateSave');
 
+		Route::get('service/reports/appointments', 'ServiceController@appointments');	
+
 });
 
 Route::group([

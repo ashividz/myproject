@@ -308,4 +308,16 @@ class ServiceController extends Controller
 
     }
 
+    public function appointments()
+    {
+        $appointments = Patient::getAppointments();
+        $data = array(
+            'menu'           => 'service',
+            'section'        => 'appointments',
+            'appointments'   => $appointments,       
+        );
+        
+        return view('home')->with($data);
+    }
+
 }
