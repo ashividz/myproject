@@ -75,7 +75,7 @@
 					<td class="green" title="{{$patient->phone or ''}}"><span style="color:green">Y</span></td>
 				@endif
 
-					<td class="{{trim($patient->blood_group) == '' ? 'red' : 'green'}}">{{$patient->blood_group}}</td>
+					<td class="{{ $patient->blood_group_id == '' || $patient->rh_factor_id == '' ? 'red' : 'green'}}">{{$patient->blood_type->name or "" }} {{$patient->rh_factor->code or ""}}</td>
 
 				@if ($patient->constipation == NULL || $patient->gas == NULL || $patient->water_retention == NULL || $patient->digestion_type == NULL || $patient->allergic == NULL || $patient->wheezing == NULL || $patient->acidity == NULL || $patient->diseases_history == NULL || $patient->energy_level == NULL || $patient->diagnosis == NULL || $patient->medical_problem == NULL || $patient->previous_weight_loss == NULL || $patient->medical_history == NULL || $patient->sweet_tooth == NULL || $patient->routine_diet == NULL || $patient->special_food_remark == NULL)
 					<td class='red' title='Medical Details'>N</td>
