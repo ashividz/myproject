@@ -217,10 +217,23 @@
                             <a href="/service/viewSurveys" id="menu_survey_results">Survey Results</a>
                         </li>
                         <li>
+                            <a href="/service/reports/appointments" id="menu_service_appointments">Nutritionist Appointments</a>
+                        </li>
+                        <li>
                             <a href="/service/reports/yuwow/feedback" id="menu_service_diet-not-started">Yuwow Feedback</a>
                         </li>
                     </ul>
-                </li>    
+                </li>
+                
+                <li>
+                    <a href="#" id="yuwow">YuWoW</a>
+                    <ul>
+                        <li>
+                            <a href="/yuwow/yuwowUsers" id="menu_service_yuwow">YuWoW Users</a>
+                        </li>                          
+                    </ul>
+                </li>
+
                             
             </ul> <!-- second level -->                        
         </li>  
