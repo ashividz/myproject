@@ -306,4 +306,168 @@ class Patient extends Model
         
     
     }
+
+    public static function getAppointments()
+    {
+        $totalPatients = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })      
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as totalPatients'))
+        ->get();
+
+
+        $todaysAppointments = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })        
+        ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')
+        ->leftJoin(DB::raw('(select * from diets where date_assign >curdate() ) as diets'),function($join){
+            $join->on('patient_details.id','=','diets.patient_id')                
+            ->on('diets.date_assign','=',DB::raw('date_add(curdate(),interval 1 + IFNULL(advance_diet,0) day)'))
+            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
+            ->on('diets.updated_at','<',DB::raw('curdate()'));
+        })
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->whereNull('diets.patient_id')
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as todaysAppointments'))
+        ->get();
+
+        $currentAppointments = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })        
+        ->leftJoin(DB::raw('(select * from diets where date_assign >curdate() ) as diets'),function($join){
+            $join->on('patient_details.id','=','diets.patient_id')                
+            ->on('diets.date_assign','=',DB::raw('date_add(curdate(),interval 1 + IFNULL(advance_diet,0) day)'))
+            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'));
+        })
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->whereNull('diets.patient_id')
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as currentAppointments'))
+        ->get();
+
+        $diets = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })        
+        ->leftJoin(DB::raw('(select * from diets where date_assign >curdate() ) as diets'),function($join){
+            $join->on('patient_details.id','=','diets.patient_id')                
+            ->on('diets.date_assign','=',DB::raw('date_add(curdate(),interval 1 + IFNULL(advance_diet,0) day)'))
+            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
+            ->on('diets.updated_at','>=',DB::raw('curdate()'));
+        })
+        ->whereNotNull('diets.patient_id')
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as diets'))
+        ->get();
+
+        //breaks mean diets not sent for more than 7 days
+        $brakes = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'))
+            ->on('start_date', '<', DB::raw('date_sub(curdate(),interval 7 day)'));
+        })
+        ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')        
+        ->leftJoin(DB::raw('( select distinct (patient_id ) from diets where (email=1 and date_assign > date_sub(curdate(),interval 7 day))  group by patient_id) as diets'),function($join){
+            $join->on('patient_details.id','=','diets.patient_id');
+        })
+        ->whereNull('diets.patient_id')
+        ->whereRaw('fees_details.patient_id IN (SELECT DISTINCT d.patient_id FROM diets d WHERE d.patient_id = fees_details.patient_id AND date_assign >= fees_details.entry_date)')
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as brakes'))
+        ->get(); 
+
+
+        $totalPatients = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })      
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as totalPatients'))
+        ->get();
+
+         $dietNotStarted = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })
+        ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')        
+        ->whereRaw('fees_details.patient_id NOT IN (SELECT DISTINCT d.patient_id FROM diets d WHERE d.patient_id = fees_details.patient_id AND date_assign >= fees_details.entry_date)')
+        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as dietNotStarted'))
+        ->get();
+
+        /*$calls = DB::table('patient_details')
+        ->join('fees_details',function($join){
+            $join->on('fees_details.patient_id', '=', 'patient_details.id')
+            ->on('end_date','>=',DB::raw('curdate()'));
+        })       
+        ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')
+        ->leftJoin(DB::raw('(select distinct(lead_id) from call_dispositions where created_at >= curdate() and  disposition_id not in (2,3,4,5,6,7,12) or ( disposition_id = 8 and callback >= curdate() and callback < date_add(curdate(),interval 1 day) ) ) as call_dispositions'),function($join){
+            $join->on('call_dispositions.lead_id','=','marketing_details.id');
+        })
+        ->groupBy('patient_details.nutritionist')        
+        ->whereNotNull('call_dispositions.lead_id')
+        ->select(DB::raw('patient_details.nutritionist as nutritionist,count(distinct(patient_details.id)) as calls'))
+        ->get();*/
+        $brakes = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $brakes),
+            array_map(function($o) { return array('brakes' => $o->brakes); }, $brakes)
+        );
+
+        $todaysAppointments = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $todaysAppointments),
+            array_map(function($o) { return array('todaysAppointments' => $o->todaysAppointments); }, $todaysAppointments)
+        );
+
+        $currentAppointments = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $currentAppointments),
+            array_map(function($o) { return array('currentAppointments' => $o->currentAppointments); }, $currentAppointments)
+        );
+
+        /*$calls = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $calls),
+            array_map(function($o) { return array('calls' => $o->calls); }, $calls)
+        );*/
+
+        $diets = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $diets),
+            array_map(function($o) { return array('diets' => $o->diets); }, $diets)
+        );
+
+        $totalPatients = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $totalPatients),
+            array_map(function($o) { return array('totalPatients' => $o->totalPatients); }, $totalPatients)
+        );
+
+        $dietNotStarted = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $dietNotStarted),
+            array_map(function($o) { return array('dietNotStarted' => $o->dietNotStarted); }, $dietNotStarted)
+        );
+        
+        $app = array_merge_recursive($todaysAppointments,$currentAppointments,$diets,$totalPatients,$brakes,$dietNotStarted);
+        //$app = array_merge_recursive($todaysAppointments,$currentAppointments,$calls,$diets,$totalPatients);
+        $appointments = array();
+        foreach ($app as $nutritionist => $appointment) {
+            $obj = (object) [];
+            $obj->nutritionist         = $nutritionist;
+            $obj->todaysAppointments   = isset($appointment['todaysAppointments']) ? $appointment['todaysAppointments'] : 0;
+            $obj->currentAppointments  = isset($appointment['currentAppointments']) ?$appointment['currentAppointments']:0;
+            //$obj->calls                = isset($appointment['calls']) ? $appointment['calls'] : 0 ;
+            $obj->brakes               = isset($appointment['brakes']) ? $appointment['brakes'] : 0;
+            $obj->diets                = isset($appointment['diets']) ? $appointment['diets'] : 0;
+            $obj->totalPatients        = isset($appointment['totalPatients']) ? $appointment['totalPatients'] : 0;
+            $obj->dietNotStarted       = isset($appointment['dietNotStarted']) ? $appointment['dietNotStarted'] : 0;
+            $appointments[]            = $obj;
+        }
+        return $appointments;
+    }
 }
