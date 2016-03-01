@@ -13,6 +13,7 @@ use App\Models\YuWoW\Fitness;
 use App\Models\YuWoW\Deviation;
 use App\Models\YuWoW\Diary;
 
+use App;
 use App\Models\Patient;
 use App\Models\Days365;
 use DateTime;
@@ -31,7 +32,7 @@ class YuWoWController extends Controller
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
-        
+        $this->nutritionist = isset($request->user) ? $request->user : '';        
     }
     public function index($id)
     {
@@ -169,6 +170,25 @@ class YuWoWController extends Controller
             'end_date'      =>  $this->end_date,            
             );
 
+        return view('home')->with($data);
+    }
+
+    public function yuwowUsers()
+    {
+        if($this->nutritionist != '')
+            $yuwowUsers = Patient::getYuWoWUsers($this->nutritionist);       
+        else
+            $yuwowUsers=null;
+        $users      = App\Models\User::getUsersByRole('nutritionist');
+        
+        $data = array(
+                    'menu'              =>  'service',
+                    'section'           =>  'yuwowUsers',
+                    'yuwowUsers'        =>   $yuwowUsers,
+                    'users'             =>   $users,
+                    'name'              =>   $this->nutritionist,
+                );
+        
         return view('home')->with($data);
     }
     
