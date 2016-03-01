@@ -470,4 +470,18 @@ class Patient extends Model
         }
         return $appointments;
     }
+
+    public static function getYuWoWUsers($nutritionist)
+    {
+        $yuwowPatients = Patient::select('patient_details.*')
+                ->with('lead.yuwow','lead.yuwow.healthtrack','lead.yuwow.diary','lead.yuwow.deviation','lead.yuwow.fitness')
+                ->whereHas('fee', function($query){
+                    $query->where('end_date', '>=', DB::RAW('CURDATE()'));
+                })
+                ->join('marketing_details as m', 'm.id', '=', 'patient_details.lead_id')
+                ->where('nutritionist', $nutritionist)
+                ->get();
+        
+        return $yuwowPatients;
+    }
 }

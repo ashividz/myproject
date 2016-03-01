@@ -101,6 +101,11 @@ class Lead extends Model
         }
     }
 
+    public function getEmailAttribute($value)
+    {
+        return trim(strtolower(ucfirst($value)));
+    }
+
     public static function isDuplicateMobile($id, $mobile)
     {
        $lead = Lead::where('phone', '=', Helper::properMobile($mobile))
