@@ -18,7 +18,7 @@ use App\Models\Status;
 use DB;
 use Auth;
 
-define("BASE_URI",  'http://192.168.1.203/test.ajax');
+define("DIALER_URI",  'http://192.168.1.203/test.ajax');
 
 
 class DialerPushController extends Controller
@@ -31,7 +31,7 @@ class DialerPushController extends Controller
 
       public function __construct(Request $request)
     {   
-        $this->limit = isset($request->limit) ? $request->limit : 100;
+        $this->limit = isset($request->limit) ? $request->limit : 1000;
         $this->list_id = "sales01022016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
@@ -136,7 +136,7 @@ public function getLeadsConsecutive(Request $request)
         if(isset($request->limit))
             $this->limit = $request->limit;
         else
-             $this->limit = 100;  
+             $this->limit = 1000;  
 
         $leads = Lead::with('dnc')
                         ->with('patient')
@@ -220,7 +220,7 @@ public function getLeadsConsecutive(Request $request)
             $push = 0;
 
             //echo $emp->user->username;
-           //$url = BASE_URI."?do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=sales01022016&phone1=".$phone."&agentname=".$cre;
+           //$url = DIALER_URI."?do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=sales01022016&phone1=".$phone."&agentname=".$cre;
              if(!$lead->dnc && !$lead->dialer_push_date)
                 {
                     $push = 1;
@@ -268,8 +268,9 @@ public function getLeadsConsecutive(Request $request)
            
             if($push==1)
             {
-            $ch = curl_init(BASE_URI);
-            $encoded_params = "do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=".$username;
+            $ch = curl_init(DIALER_URI);
+            $encoded_params = "do=manualUpload&username=admin&password=User#7715$&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=".$username;
+            
             curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -292,6 +293,7 @@ public function getLeadsConsecutive(Request $request)
                 $dialer_push->save();
 
             }
+            
             /*$push_stat = array('cre_name' => $lead->cre_name,'lead_status' => $lead_status, 'source' => $source, 'cre_assign_date' => $cre_assign_date, 'push' => $push, 'lead_id'=>$lead_id,'phone'=>$phone, 'lead_name' => $lead_name, 'username' =>$username, 'output' => $output, 'dispo_date' => $dispo_date, 'dispo_remark' => $dispo_remark, 'callback' => $callback);
             $push_stats[] = $push_stat;*/
 
@@ -299,7 +301,7 @@ public function getLeadsConsecutive(Request $request)
             $i++;
             
         }
-   
+ 
     }
     /**
      * Show the form for creating a new resource.
