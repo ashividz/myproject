@@ -62,6 +62,7 @@
 		            <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 		        </form>
+              @if($lead->cre)
                  @if(Auth::user()->hasRole('cre'))
                      @if($lead->cre->cre != Auth::user()->employee->name)
                         @if(isset($lead->dialer) && $lead->dialer->created_at->format('Y-m-d') == date('Y-m-d'))
@@ -76,6 +77,7 @@
                         @endif
                     @endif
                 @endif
+            @endif
 			@else
 				<div class="blacklisted"></div>
 			@endif
