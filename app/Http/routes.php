@@ -34,6 +34,8 @@ Route::group([
 
 		/* Delete User Role */
 		Route::post('user/role/delete', 'RoleUserController@destroy');
+
+		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
 });
 
 Route::group([

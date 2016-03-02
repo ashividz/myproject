@@ -24,7 +24,7 @@ class LeadCre extends Model
     protected $fillable = ['cre', 'start_date'];
 
 
-    public static function saveCre($lead, $cre)
+    public static function saveCre($lead, $cre=null)
     {
     	try 
     	{
