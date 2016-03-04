@@ -8,6 +8,10 @@
         </div>
         <div class="panel-body">
                 <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download appointments</a>
+                <form action="{{url('nutritionist/patients')}}" method="post" target="_blank" id="formx">
+                    {{csrf_field()}}
+                    <input type="hidden" name="user" value="" id="user"><br>
+                </form>
                 <table id="appointments" class="table table-bordered">
                     <thead>
                         <tr>
@@ -34,7 +38,7 @@
                     @foreach($appointments as $appointment)
                         <tr>
                             <td>{{++$i}}</td>
-                            <td><a href="{{url('nutritionist/patients')}}">{{$appointment->nutritionist}}</td>
+                            <td><a href="{{url('nutritionist/patients')}}" id="{{$appointment->nutritionist}}" class="nutritionist">{{$appointment->nutritionist}}</td>
                             <td>{{$appointment->totalPatients}}</td>
                             <td>{{$appointment->todaysAppointments}}</td>
                             <td>{{$appointment->currentAppointments}}</td>
@@ -104,3 +108,10 @@ $(document).ready(function()
     }
 });
 </script> 
+<script>
+$(".nutritionist").click(function( event ) {
+  event.preventDefault();
+  $("#user").val($(this).attr('id'));
+  $( "#formx" ).submit();
+});
+</script>
