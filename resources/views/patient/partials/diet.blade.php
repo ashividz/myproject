@@ -292,6 +292,9 @@
 						<th>Email</th>
 						<th>SMS</th>
 						<th></th>
+						@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl'))
+							<th>Delete</th>
+						@endif						
 					</tr>
 				</thead>
 				<tbody>
@@ -344,6 +347,17 @@
 						</td>
 						<td style="text-align:center">						
 							<i class="fa fa-edit diet" id="{{$diet->id}}"></i>
+						</td>
+						<td>
+							@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl'))
+
+							@if(date('Y-m-d', strtotime($diet->date_assign)) > date('Y-m-d'))
+								<div class="pull-right">
+									<a href="#" id="{{$diet->id}}" onclick="deleteDiet(this.id)"><i class="glyphicon glyphicon-remove red"></i></a>
+								</div>
+							@endif
+
+						@endif
 						</td>
 					</tr>
 			@endforeach
@@ -448,6 +462,33 @@ $(document).ready(function()
 	  }
 	);
 });
+</script>
+<script type="text/javascript">
+	function deleteDiet(id) {
+
+	    var r=confirm("Are you sure you want to delete?");
+    	if (r==true){
+            var url = "/nutritionist/diet/delete"; //
+	        $.ajax(
+	        {
+	           type: "POST",
+	           url: url,
+	           data: {id : id}, // send Source Id.
+	           success: function(data)
+	           {
+	               $('#alert').show();
+	               $('#alert').empty().append(data);
+	               setTimeout(function()
+	                {
+	                    $('#alert').slideUp('slow').fadeOut(function() 
+	                    {
+	                        location.reload();
+	                     });
+	                }, 3000);
+	           }
+	        });
+        };
+	};
 </script>
 <style type="text/css">
 	#form-diet textarea {
