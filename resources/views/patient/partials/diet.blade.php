@@ -348,17 +348,16 @@
 						<td style="text-align:center">						
 							<i class="fa fa-edit diet" id="{{$diet->id}}"></i>
 						</td>
-						<td>
-							@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl'))
-
+						@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl'))
+						<td>					
 							@if(date('Y-m-d', strtotime($diet->date_assign)) > date('Y-m-d'))
 								<div class="pull-right">
 									<a href="#" id="{{$diet->id}}" onclick="deleteDiet(this.id)"><i class="glyphicon glyphicon-remove red"></i></a>
 								</div>
 							@endif
-
-						@endif
 						</td>
+
+						@endif						
 					</tr>
 			@endforeach
 
