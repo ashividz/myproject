@@ -229,6 +229,9 @@
                     <a href="#" id="yuwow">YuWoW</a>
                     <ul>
                         <li>
+                            <a href="/yuwow/yuwowUsageReport" id="menu_service_yuwow_usage_report">YuWoW Usage Report</a>
+                        </li>                          
+                        <li>
                             <a href="/yuwow/yuwowUsers" id="menu_service_yuwow">YuWoW Users</a>
                         </li>                          
                     </ul>

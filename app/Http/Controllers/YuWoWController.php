@@ -13,6 +13,7 @@ use App\Models\YuWoW\Fitness;
 use App\Models\YuWoW\Deviation;
 use App\Models\YuWoW\Diary;
 
+use DB;
 use App;
 use App\Models\Patient;
 use App\Models\Days365;
@@ -189,6 +190,65 @@ class YuWoWController extends Controller
                     'name'              =>   $this->nutritionist,
                 );
         
+        return view('home')->with($data);
+    }
+
+    public function yuwowUsageReport()
+    {
+        $onDateServicedClients =  Patient::select(DB::raw('count(patient_details.id) onDateServicedClients, ifnull(patient_details.nutritionist,"") as nutritionist'))
+                ->whereHas('fee', function($query){
+                    $query->where('end_date', '>=', DB::RAW('CURDATE()'))->where('start_date', '<', DB::RAW('CURDATE()'));
+                })
+                ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+                ->get();
+        
+        $yuwowUsers =  Patient::select(DB::raw('count(patient_details.id) yuwowUsers, ifnull(patient_details.nutritionist,"") as nutritionist'))
+                ->whereHas('fee', function($query){
+                    $query->where('end_date', '>=', DB::RAW('CURDATE()'))->where('start_date', '<', DB::RAW('CURDATE()'));
+                })
+                ->where(function($query){
+                    $query->has('lead.yuwow.deviation')
+                    ->orHas('lead.yuwow.diary')
+                    ->orHas('lead.yuwow.fitness')
+                    ->orHas('lead.yuwow.healthtrack');
+                })
+                ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
+                ->get();
+        
+        //make a key value pair of nutritionist
+        $onDateServicedClients = array_combine(
+            array_map(function($o) { return $o['nutritionist']; }, $onDateServicedClients->toArray() ),
+            array_map(function($o) { return array('onDateServicedClients' => $o['onDateServicedClients']); }, $onDateServicedClients->toArray())
+        );
+
+        $yuwowUsers = array_combine(
+            array_map(function($o) { return $o['nutritionist']; }, $yuwowUsers->toArray()),
+            array_map(function($o) { return array('yuwowUsers' => $o['yuwowUsers']); }, $yuwowUsers->toArray())
+        );
+
+        //merge onDateServicedClients with yuwowUsers
+        $yuwow = array_merge_recursive($onDateServicedClients,$yuwowUsers);
+        $yuwowUsage = array();
+        
+        foreach ($yuwow as $nutritionist => $yuwowRecord) {
+            if($nutritionist!=''){
+                $obj = (object) [];
+                $obj->nutritionist            = $nutritionist;
+                $obj->onDateServicedClients   = $yuwowRecord['onDateServicedClients'];
+                $obj->yuwowUsers              = $yuwowRecord['yuwowUsers'];            
+                $yuwowUsage[]                 = $obj;
+            }
+        }
+
+        $serviceTLs =array_column(App\Models\User::getUsersByRole('service_tl')->toArray(),'name');
+        
+        $data = array(
+                    'menu'              =>  'service',
+                    'section'           =>  'reports.yuwowUsageReport',
+                    'yuwowUsage'        =>   $yuwowUsage,
+                    'serviceTLs'        =>   $serviceTLs,                    
+                );
+
         return view('home')->with($data);
     }
     
