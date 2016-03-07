@@ -36,10 +36,10 @@
                                     <a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name"}}</a>
                                 </td>
                                 <td>
-                                   {{ $lead->cre->cre}} 
+                                   {{ ($lead->cre)?$lead->cre->cre:''}} 
                                 </td>
                                 <td>
-                                   {{date('jS M Y', strtotime($lead->cre->created_at))}}
+                                   {{($lead->cre)?date('jS M Y', strtotime($lead->cre->created_at)):''}}
                                 </td>
 
                                 <td>
