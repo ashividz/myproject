@@ -165,7 +165,7 @@ $(document).ready(function()
     
      $('#self_assign').click(function(e){
             e.preventDefault();
-            alert('jfj');
+           
             var url = $("#form_selfassign").attr('action'); // the script where you handle the form input.
             $.ajax(
             {

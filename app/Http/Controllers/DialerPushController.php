@@ -14,7 +14,7 @@ use App\Models\Disposition;
 use App\Models\DialerPush;
 
 use App\Models\Status;
-
+use App\Models\LeadCre;
 use DB;
 use Auth;
 
@@ -221,6 +221,9 @@ public function getLeadsConsecutive(Request $request)
 
             //echo $emp->user->username;
            //$url = DIALER_URI."?do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=sales01022016&phone1=".$phone."&agentname=".$cre;
+             
+
+
              if(!$lead->dnc && !$lead->dialer_push_date)
                 {
                     $push = 1;
@@ -233,6 +236,10 @@ public function getLeadsConsecutive(Request $request)
                 }
               else
                     $push = 0; 
+
+
+                if($lead->cdisposition_id && $lead->cdisposition_id =='10')
+                    $push = 0;
             }
         $source = $lead->lsource ? $lead->lsource->source_name : '';
 
@@ -407,4 +414,42 @@ public function getLeadsConsecutive(Request $request)
 
         return view('home')->with($data);
     }
+
+    public function selfAssignCount(Request $request)
+    {
+        // select count(*) from dialer_push where created_at >='2016-03-02 00:00:00'
+       /* $leads = LeadCre::with('lead')->join(DB::raw("(SELECT * FROM dialer_push A) AS c"), function($join) {
+                                 $join->on('lead_cre.lead_id', '=', 'c.lead_id');
+                            })
+                        ->join(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  (created_at  BETWEEN '2016-03-04 00:00:00' and '2016-03-04 23:59:59') and id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS d"), function($join) {
+                                 $join->on('lead_cre.lead_id', '=', 'd.lead_id');
+                            })
+        ->whereBetween('lead_cre.created_at',array('2016-03-04 00:00:00','2016-03-04 23:59:59'))->orderBy('lead_cre.cre','desc')->get();
+*/
+        $leads = LeadCre::with('lead')
+                        ->where('self_assign','=',1)
+                        ->whereBetween('lead_cre.created_at',array('2016-03-05 00:00:00','2016-03-05 23:59:59'))->orderBy('lead_cre.cre','desc')->get();
+       
+        $total_leads = Lead::join(DB::raw("(SELECT * FROM dialer_push A) AS c"), function($join) {
+                                 $join->on('marketing_details.id', '=', 'c.lead_id');
+                            })
+                        ->join(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE (disposition_id  NOT IN(3,4,5,6,7)) and (created_at  BETWEEN '2016-03-04 00:00:00' and '2016-03-04 23:59:59') group by lead_id) AS d"), function($join) {
+                                 $join->on('marketing_details.id', '=', 'd.lead_id');
+                            })
+                        ->count();
+                        
+        $data = array(
+            'menu'          =>  'reports',
+            'section'       =>  'self_assign',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'leads'         =>  $leads,
+            'total_leads'   =>  $total_leads
+        );
+
+        return view('home')->with($data);
+    }
+
+
+     
 }
