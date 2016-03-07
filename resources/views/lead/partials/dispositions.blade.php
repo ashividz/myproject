@@ -62,6 +62,22 @@
 		            <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 		        </form>
+              @if($lead->cre)
+                 @if(Auth::user()->hasRole('cre'))
+                     @if($lead->cre->cre != Auth::user()->employee->name)
+                        @if(isset($lead->dialer) && $lead->dialer->created_at->format('Y-m-d') == date('Y-m-d'))
+                            @if(isset($lead->disposition))
+                               <div>
+                                    <form method="POST" action="/lead/{{ $lead->id }}/selfAssign" role="form" class="form-inline" id="form_selfassign">
+                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                     <button  id="self_assign" type='submit' class='btn btn-info active' > Self Assign</button>
+                                    </form>
+                                </div>
+                            @endif
+                        @endif
+                    @endif
+                @endif
+            @endif
 			@else
 				<div class="blacklisted"></div>
 			@endif
@@ -146,7 +162,32 @@ $(document).ready(function()
         minDate:0
     });
 
-     
+    
+     $('#self_assign').click(function(e){
+            e.preventDefault();
+            alert('jfj');
+            var url = $("#form_selfassign").attr('action'); // the script where you handle the form input.
+            $.ajax(
+            {
+               type: "POST",
+               url: url,
+               data: $("#form_selfassign").serialize(), // serializes the form's elements.
+               success: function(data)
+               {
+                   $('#alert').show();
+                   $('#alert').empty().append(data);
+                   setTimeout(function()
+                    {
+                        $('#alert').slideUp('slow').fadeOut(function() 
+                        {
+                            location.reload();
+                         });
+                    }, 3000);
+               }
+            });
+      });
+
+
     $("#form").submit(function(event) {
         
         /* stop form from submitting normally */

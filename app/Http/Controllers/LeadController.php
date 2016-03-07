@@ -239,6 +239,11 @@ class LeadController extends Controller
     public function viewDispositions($id)
     {
         $lead = Lead::with('patient','dispositions.master')
+                ->with('dialer')
+                ->with(['disposition' => function($q){
+                    $q->where('name','=',Auth::user()->employee->name);
+                    $q->whereBetween('created_at', Array(date('Y-m-d 0:0:0'), date('Y-m-d 23:59:59')));
+                }])
                 ->find($id);
 
         $dept =  1;
@@ -257,6 +262,27 @@ class LeadController extends Controller
         );
 
         return view('home')->with($data);
+    }
+
+
+    public function selfAssign(Request $request, $id)
+    {
+        if(Auth::user()->hasRole('cre')) 
+        {
+            $lead = Lead::find($id);
+            if(LeadCre::ifMultipleCreOnSameDate($lead)) {
+                return "Cannot add multiple CRE on same date";
+            }
+            if(LeadCre::ifSameCre($lead, $request->cre)) {
+                return "Cannot add same CRE";
+            }
+            if(LeadCre::saveCre($lead))
+                return "Lead Assigned to your Account!";
+            else
+                return "Somme Error Occured!";  
+            return "Error";
+        }
+        return "You are not a CRE";
     }
 
     public function saveDisposition()
