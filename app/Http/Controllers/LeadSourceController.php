@@ -28,7 +28,7 @@ class LeadSourceController extends Controller
 
       public function __construct(Request $request)
     {   
-        $this->limit = isset($request->limit) ? $request->limit : 100;
+        $this->limit = isset($request->limit) ? $request->limit : 1000;
        
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_REQUEST['daterange']) ? explode("-", $_REQUEST['daterange']) : "";
@@ -48,7 +48,7 @@ class LeadSourceController extends Controller
         $status_id  = $request->status;
         $disposition_id  = $request->disposition;
 
-         $sources = Source::get();
+        $sources = Source::get();
        if(isset($source_selected))
             $source_id = $source_selected;
         else
@@ -63,10 +63,10 @@ class LeadSourceController extends Controller
                          /*->join(DB::raw("(SELECT * FROM lead_sources ls1 WHERE source_id = '$source_id' and id = (SELECT MAX(id) FROM lead_sources ls2 WHERE ls1.lead_id=ls2.lead_id)) AS ls"), function($join) {
                                  $join->on('marketing_details.id', '=', 'ls.lead_id');
                             });*/
-                         ->whereHas('source', function($q) use($source_id) {
-                                // Query the department_id field in status table
-                                 $q->where('source_id', '=', $source_id); // '=' is optional
-                                });
+
+                        ->join(DB::raw("(SELECT * FROM lead_sources ls1 WHERE source_id='$source_id' and (created_at BETWEEN '$this->start_date' and '$this->end_date') and id = (SELECT MAX(id) FROM lead_sources ls2 WHERE ls1.lead_id=ls2.lead_id)) AS ls"), function($join) {
+                                     $join->on('marketing_details.id', '=', 'ls.lead_id');
+                                   });
 
                           if(!empty($disposition_id))
                                 $leads_query->join(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  disposition_id ='1' and id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS d"), function($join) {
@@ -75,11 +75,11 @@ class LeadSourceController extends Controller
                                 });
                             
                           if(!empty($cre))
-                                $leads_query->join(DB::raw("(SELECT * FROM lead_cre A WHERE (cre = '$cre') and (deleted_at IS NULL OR deleted_at = '') and (created_at BETWEEN '$this->start_date' and '$this->end_date') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                                $leads_query->leftjoin(DB::raw("(SELECT * FROM lead_cre A WHERE (cre = '$cre') and (deleted_at IS NULL OR deleted_at = '') and (created_at BETWEEN '$this->start_date' and '$this->end_date') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
                                      $join->on('marketing_details.id', '=', 'c.lead_id');
                                 });
                           else
-                                $leads_query->join(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and (created_at BETWEEN '$this->start_date' and '$this->end_date') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                                $leads_query->leftjoin(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and (created_at BETWEEN '$this->start_date' and '$this->end_date') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
                                      $join->on('marketing_details.id', '=', 'c.lead_id');
                                 });
 
@@ -89,8 +89,8 @@ class LeadSourceController extends Controller
                     if(!empty($status_id))
                     
                         $leads_query->where('status_id', '=', $status_id);
-                    else
-                        $leads_query->where('status_id', '<>', '6');
+                
+                     
 
                     $leads_query->orderBy('c.created_at', 'DESC');
 
