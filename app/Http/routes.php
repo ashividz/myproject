@@ -239,7 +239,6 @@ Route::group([
 		
 		Route::post('patient/{id}/diet', 'DietController@store');
 		Route::post('patient/{id}/diet/save', 'DietController@store');
-		Route::get('patient/{id}/diets', 'PatientDietController@all');
 
 		Route::post('patient/{id}/diets/send', 'DietController@send');
 
@@ -250,7 +249,6 @@ Route::group([
 
 		Route::post('patient/{id}/suit', 'PatientSuitController@store');
 
-		Route::get('patient/{id}/weight', 'PatientWeightController@index');
 		Route::post('patient/{id}/weight', 'PatientWeightController@store');
 
         Route::post('patient/{id}/bt', 'PatientBTController@upload');
@@ -259,7 +257,6 @@ Route::group([
         Route::post('patient/bt/edit/{id}', 'PatientBTController@update');
 
         //Patient Measurements
-        Route::get('patient/{id}/measurements', 'PatientMeasurementController@index');
         Route::post('patient/{id}/measurements', 'PatientMeasurementController@store');
         Route::post('patient/{id}/measurements/copy', 'PatientMeasurementController@copy');
 
@@ -288,11 +285,15 @@ Route::group([
         Route::get('service/reports/yuwow/feedback', 'YuWoWController@customerFeedback');
         Route::post('service/reports/yuwow/feedback', 'YuWoWController@customerFeedback');
 
-        //Doctor can also see the Diets & BT
+        //Doctor can also see the Diets & BT & all diets & weights & measurements
 
         Route::get('patient/{id}/diet', 'PatientDietController@show');
         Route::get('patient/{id}/bt', 'PatientBTController@show');
         Route::get('bt/report/{id}', 'PatientBTController@fetchBTReport');
+        Route::get('patient/{id}/diets', 'PatientDietController@all');
+        Route::get('patient/{id}/weight', 'PatientWeightController@index');
+        Route::get('patient/{id}/measurements', 'PatientMeasurementController@index');
+        
                 
 });
 
