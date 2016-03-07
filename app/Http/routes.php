@@ -35,7 +35,7 @@ Route::group([
 		/* Delete User Role */
 		Route::post('user/role/delete', 'RoleUserController@destroy');
 
-		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
+		
 });
 
 Route::group([
@@ -177,6 +177,7 @@ Route::group([
 		Route::post('cre/viewProgramEndList', 'CREController@viewProgramEndList');
 		Route::get('cre/viewPayments', 'CREController@viewPayments');
 		Route::post('cre/viewPayments', 'CREController@viewPayments');
+		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
 });
 
 Route::group([
