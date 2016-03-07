@@ -37,8 +37,16 @@
                         <td><a href="{{url('lead/'.$yuwowUser->lead->id.'/viewContactDetails')}}" target="blank">{{$yuwowUser->id}}</a></td>
                         @if($yuwowUser->lead->yuwow)
                             <td>{{date("F j, Y ",strtotime($yuwowUser->lead->yuwow->user_registered))}}</td>
-                            <td>{{date("F j, Y ",strtotime($yuwowUser->lead->yuwow->firstUseDate()))}}</td>
-                            <td>{{date("F j, Y ",strtotime($yuwowUser->lead->yuwow->lastUseDate()))}}</td>
+                            @if($yuwowUser->lead->yuwow->firstUseDate())
+                                <td>{{date("F j, Y ",strtotime($yuwowUser->lead->yuwow->firstUseDate()))}}</td>
+                            @else
+                                <td></td>
+                            @endif                            
+                            @if($yuwowUser->lead->yuwow->lastUseDate())
+                                <td>{{date("F j, Y ",strtotime($yuwowUser->lead->yuwow->lastUseDate()))}}</td>
+                            @else
+                                <td></td>
+                            @endif                            
                             <td>{{$yuwowUser->lead->yuwow->totalUsage()}}</td>
                         @else
                             <td></td>

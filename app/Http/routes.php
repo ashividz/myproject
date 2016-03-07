@@ -200,6 +200,9 @@ Route::group([
 		Route::get('herb/template/add', 'HerbController@templateForm');
 		Route::post('herb/template/add', 'HerbController@templateSave');
 
+		Route::get('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
+		Route::post('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
+		
 		Route::get('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
 		Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
 		Route::get('service/reports/appointments', 'ServiceController@appointments');	
