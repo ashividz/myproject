@@ -211,6 +211,11 @@ Route::group([
 		Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
 		Route::get('service/reports/appointments', 'ServiceController@appointments');	
 
+		Route::get('patient/{id}/recipies', 'RecipeController@show');
+		Route::post('patient/{id}/recipies', 'RecipeController@show');
+		Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
+		Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
+
 });
 
 Route::group([
