@@ -123,7 +123,8 @@ Route::group([
 
 		Route::get('lead/{id}/dnc', 'DncController@show');
 		Route::post('lead/{id}/dnc', 'DncController@store');
-
+		Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
+		Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
 });
 
 Route::group([

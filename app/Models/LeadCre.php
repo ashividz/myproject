@@ -90,4 +90,14 @@ class LeadCre extends Model
         return $query->count();
     }
 
+    public function dialer()
+    {
+        return $this->hasOne(DialerPush::class, 'lead_id')->latest();
+    }
+
+     public function lead()
+    {
+    return $this->belongsTo(Lead::class);
+    }
+
 }
