@@ -179,6 +179,33 @@ Route::group([
 		Route::get('cre/viewPayments', 'CREController@viewPayments');
 		Route::post('cre/viewPayments', 'CREController@viewPayments');
 		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
+
+        /* Need to reconfigure */
+        Route::get('cart/approval', 'CartApprovalController@show');
+        Route::post('cart/approval', 'CartApprovalController@store');
+
+        /* Cart */
+        Route::get('lead/{id}/cart', 'CartController@index');
+        Route::post('lead/{id}/cart', 'CartController@store');
+
+        Route::get('cart/{id}/product/add', 'CartProductController@show');
+        Route::post('cart/{id}/product/add', 'CartProductController@store');
+
+        Route::post('cart/{id}/product/delete', 'CartProductController@destroy');
+        Route::post('cart/{id}/payment/delete', 'CartPaymentController@destroy');
+
+        Route::get('cart/product/{id}/edit', 'CartProductController@edit');
+        Route::post('cart/product/{id}/edit', 'CartProductController@update');
+
+        Route::post('api/coupon/validate', 'CouponController@validateCoupon');
+
+        Route::get('cart/{id}/payment/add', 'CartPaymentController@show');
+        Route::post('cart/{id}/payment/add', 'CartPaymentController@store');
+
+        Route::post('cart/{id}/process', 'CartController@process');
+
+
+        Route::get('cart/{id}', 'CartController@show');
 });
 
 Route::group([
