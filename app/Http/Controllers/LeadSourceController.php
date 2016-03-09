@@ -53,7 +53,7 @@ class LeadSourceController extends Controller
             $source_id = $source_selected;
         else
             $source_selected = $source_id;
-        $leads_query = Lead::with('sources.master', 'status')
+        $leads_query = Lead::with('sources.master', 'status') 
                     
                         /*->join(DB::raw("(SELECT * FROM lead_source WHERE source_id = '$source_id') AS ls1"), function($join) {
                                  $join->on('marketing_details.id', '=', 'ls1.lead_id');
