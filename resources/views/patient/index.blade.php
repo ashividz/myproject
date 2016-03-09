@@ -1,45 +1,4 @@
-@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('doctor') || Auth::user()->hasRole('registration'))	
-	@if($patient->lead->country)
-	@if($patient->lead->country!='IN') 	
-	<?php
-		$alert = true;
-		if(Session::has('country_alert_time')){
-			if(Session::get('country_alert_lead_id')==$patient->lead->id){
-				if((time() - Session::get('country_alert_time')) < 120 )
-					$alert = false;
-			}
-		}
-		if($alert){
-			Session::forget(['country_alert_time','country_alert_lead_id']);
-			$countryAlert = array();
-			$countryAlert['country_alert_time'] = time();
-			$countryAlert['country_alert_lead_id'] = $patient->lead->id;
-			Session::put($countryAlert);
-		}
-	?>
-	@if($alert)
-		<div class="row">
-			<div class="col-md-4 col-md-offset-4">
-				<div class="alert alert-danger warning">
-					<a class="close" data-dismiss="alert">×</a>
-					<strong><h5>This is a foreign client. Please check local time before calling</h5></strong> 
-				</div>
-			</div>
-		</div>
-
-	<style type="text/css">
-		.warning {
-			position: fixed;
-			z-index: 9999;
-			width:400px;
-			min-height: 100px;
-			text-align: center;
-		}
-	</style>
-	@endif
-	@endif
-	@endif
-	
+@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('doctor') || Auth::user()->hasRole('registration'))			
 	<div class="container">
 		<div class="col-md-3">
 			<div class="panel panel-default">
