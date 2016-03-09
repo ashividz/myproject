@@ -21,10 +21,12 @@ use App\Models\CallDisposition;
 use App\Models\OBD;
 use App\Models\Cod;
 use App\Models\LeadDnc;
+use App\Models\City;
 use DB;
 use Auth;
 use App\Support\Helper;
 use Redirect;
+use Session;
 
 class LeadController extends Controller
 {
@@ -246,6 +248,30 @@ class LeadController extends Controller
                 }])
                 ->find($id);
 
+        if ($lead->country!='IN'){
+            $city = new City;
+            $flag = false;
+
+            if ($lead->country && $lead->country!='' && $city->where('country_code',$lead->country)->first()){
+                $city = $city->where('country_code',$lead->country);
+                $flag = true;
+            }
+            if ($lead->state && $lead->state!='' && $city->where('region_code',trim(explode('.',$lead->state)[1]))->first()){
+                $city = $city->where('region_code',trim(explode('.',$lead->state)[1]));
+                $flag = true;
+            }
+            if ($lead->city && $lead->city!='' && $city->where('name',$lead->city)->first()){
+                $city = $city->where('name',$lead->city);                       
+                $flag = true;
+            }
+            $msg = 'This is an international Client. Please Check local time before calling';            
+            if($city->first() && $city->first()->getLocalTime())
+                $msg = $msg.'<br>Local Time : '.$city->first()->getLocalTime();
+            if ($flag && $city->first() && $city->first()->country_code =='IN');            
+            else
+                Session::flash('status',$msg);
+        }                           
+           
         $dept =  1;
         if (Auth::user()->hasRole('cre') || Auth::user()->hasRole('sales')) {
            $dept =  1;
@@ -262,6 +288,7 @@ class LeadController extends Controller
         );
 
         return view('home')->with($data);
+            
     }
 
 

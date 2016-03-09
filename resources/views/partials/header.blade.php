@@ -207,6 +207,6 @@ function getUnreadMessageCount() {
     });
 };
 @if (count($errors) > 0 || Session::has('status'))
-	$('#alert').show();
+	$('#alert').show().slideUp().delay().slideDown();
 @endif
 </script>
