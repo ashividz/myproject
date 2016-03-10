@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SentIngredient extends Model
 {
-    protected $table = 'yuwow_alpha_1_0.sent_ingredients';
+    //protected $table = 'yuwow_alpha_1_0.sent_ingredients';
 
     public function recipe()
     {

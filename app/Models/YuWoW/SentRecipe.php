@@ -7,7 +7,7 @@ use App\Models\Patient;
 
 class SentRecipe extends Model
 {
-    protected $table = 'yuwow_alpha_1_0.sent_recipies';
+    //protected $table = 'yuwow_alpha_1_0.sent_recipies';
 
     public function patient()
     {

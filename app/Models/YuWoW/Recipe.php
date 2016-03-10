@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `sent_ingredients` (
 `created_by` int(10) unsigned NOT NULL,  
 `created_at` datetime NOT NULL,   
 `updated_at` datetime NOT NULL,   
-PRIMARY KEY (`id`),   
+PRIMARY KEY (`id`)   
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 
