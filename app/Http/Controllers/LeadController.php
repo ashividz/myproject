@@ -256,7 +256,7 @@ class LeadController extends Controller
                 $city = $city->where('country_code',$lead->country);
                 $flag = true;
             }
-            if ($lead->state && $lead->state!='' && $city->where('region_code',trim(explode('.',$lead->state)[1]))->first()){
+            if ($lead->state && $lead->state!='' && strpos($lead->state,'.') && $city->where('region_code',trim(explode('.',$lead->state)[1]))->first()){
                 $city = $city->where('region_code',trim(explode('.',$lead->state)[1]));
                 $flag = true;
             }
