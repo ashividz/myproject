@@ -35,6 +35,8 @@ Route::group([
 		/* Delete User Role */
 		Route::post('user/role/delete', 'RoleUserController@destroy');
 
+		Route::get('patientReport', 'PatientBTController@groupBTReport');
+		Route::post('patientReport', 'PatientBTController@groupBTReport');
 		
 });
 
@@ -637,6 +639,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/update', 'EmailTemplateController@update');
+    Route::get('show/emailAttachment/{id}', 'EmailTemplateController@showAttachment');
+    Route::get('update/emailAttachment/{id}', 'EmailTemplateController@getAttachment');
+    Route::post('update/emailAttachment/{id}', 'EmailTemplateController@updateAttachment');
+  
 });
 
 
