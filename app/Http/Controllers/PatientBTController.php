@@ -130,7 +130,7 @@ class PatientBTController extends Controller
     public function groupBTReport(Request $request)
     {
        $users = User::getUsersByRole('nutritionist');
-       $patients = Patient::with('prakritis','fee','weight','weights','herbs')->join(DB::raw("(select distinct patient_id,entry_date from fees_details where (entry_date between '$this->start_date' and '$this->end_date')) AS fd"), function($join) {
+       $patients = Patient::with('prakritis','fee','weight','weights','herbs','rh_factor','blood_type')->join(DB::raw("(select distinct patient_id,entry_date from fees_details where (entry_date between '$this->start_date' and '$this->end_date')) AS fd"), function($join) {
                                  $join->on('patient_details.id', '=', 'fd.patient_id');
                             })->select('patient_details.*','fd.entry_date as entry_date')->orderBy('fd.entry_date','asc')->get();
        //dd($patients);

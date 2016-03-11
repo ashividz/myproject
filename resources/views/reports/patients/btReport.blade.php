@@ -19,12 +19,17 @@
                                 <th>Gender</th>
                                 <th>Age</th>
                                 <th>Entry Date</th>
-                                <th>1st Dominant</th>
-                                <th>2nd Dominant</th>
-                                <th>3rd Dominant</th>
+                                <th>1st Dom</th>
+                                <th>%</th>
+                                <th>2nd Dom</th>
+                                <th>%</th>
+                                <th>3rd Dom</th>
+                                <th>%</th>
                                 <th>Blood Group</th>
+                                <th>RH</th>
                                 <th>Duration</th>
-                                <th>Initial/Final Weight</th>
+                                <th>Initial</th>
+                                <th>Final</th>
                                 <th>Herbs Prescribed</th>
                             </tr>
                         </thead>
@@ -64,35 +69,45 @@
                                 
                                
                                ?><td>
-                                   {{$patient_prakriti->first_dominant_name}}&nbsp;
+                                   {{$patient_prakriti->first_dominant_name}}
+                                   </td>
+                                   <td>
                                    {{round($patient_prakriti->first_dominant_percentage, 2)}}%
                                </td>
                                <td>
-                                   {{$patient_prakriti->second_dominant_name}}&nbsp;
+                                   {{$patient_prakriti->second_dominant_name}}
+                                   </td>
+                                   <td>
                                    {{round($patient_prakriti->second_dominant_percentage, 2)}}%
                                </td>
                                <td>
-                                   {{$patient_prakriti->recessive_name}}&nbsp;
+                                   {{$patient_prakriti->recessive_name}}
+                                   </td>
+                                   <td>
                                    {{round($patient_prakriti->recessive_percentage, 2)}}%
                                </td>
                                     
                                    
                               
                                 
-                                <td>{{$patient->blood_group}}</td>
+                                <td>{{($patient->blood_type)?$patient->blood_type->name:''}}</td>
+                                <td>{{($patient->rh_factor)?$patient->rh_factor->code:''}}</td>
                                 <?php   
                                     if(isset($patient->fee)) {
                                         $totalDays = floor((strtotime($patient->fee->end_date) - strtotime($patient->fee->start_date))/(60*60*24));
                                        ?>
                                       <td>
-                                   {{$totalDays}} days
+                                   {{$totalDays}} 
                                 </td> 
                                    <?php   } ?>
                                         
                                 <td>
                                  @if($patient->weight)
-                                 {{round($patient->weights->first()->weight,2)}}/
-                                
+                                 {{round($patient->weights->first()->weight,2)}}
+                                  @endif
+                                 </td>
+                                 <td>
+                                   @if($patient->weight)
                                    {{round($patient->weights->last()->weight,2)}}
                                    @endif
                                    </td>
