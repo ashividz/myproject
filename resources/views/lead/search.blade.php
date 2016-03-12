@@ -1,7 +1,7 @@
 <?php
     $readonly = "";
     $title = "";
-    if (Auth::user()->hasRole('admin')) {
+    if (Auth::user()->hasRole('cre')) {
         $readonly = "readonly";
         $title = "You do not have the permissions use this field. Please contact the Marketing Department.";
     }
