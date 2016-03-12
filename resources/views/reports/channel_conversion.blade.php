@@ -21,9 +21,6 @@
 
         @foreach($sources AS $source)
                 <tr>
-<<<<<<< HEAD
-                    <td><a class='source_links' href="/report/source/{{$source->source_id}}/leads">{{$source->master->source_name or ""}}</a></td>
-=======
                     <td>
                     @if(Auth::user()->hasRole('marketing'))
                         <a class='source_links' href="/report/source/{{$source->source_id}}/leads">{{$source->master->source_name or ""}}</a>
@@ -31,7 +28,6 @@
                         {{$source->master->source_name or ""}}
                     @endif
                     </td>
->>>>>>> 180ed454bcac3922fbc29fc6372f3d75313f9345
             <td>{{$source->leads}}</td>
 
 <?php $fee = Fee::conversionCountBySource($source->source_id, $start_date, $end_date) ?>
