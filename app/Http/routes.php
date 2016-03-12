@@ -478,8 +478,8 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('lead/addLead', 'LeadController@viewAddLeadForm');
 	Route::post('lead/saveLead', 'LeadController@saveLead');
 
-	Route::get('lead/search', 'LeadController@searchLeads');
-	Route::POST('lead/search', 'LeadController@searchLeads');
+	Route::get('lead/search', 'LeadController@search');
+	Route::POST('lead/search', 'LeadController@search');
 
 
 	
