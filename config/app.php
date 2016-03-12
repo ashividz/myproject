@@ -205,6 +205,7 @@ return [
         'CallDisposition'   => App\Models\CallDisposition::class,
         'Carbon'            => Carbon\Carbon::class,
         'Guzzle'            => GuzzleHttp\Client::class,
+
         'Step'              => App\Models\CartStep::class,
 
     ],

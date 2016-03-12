@@ -87,7 +87,6 @@
 		<!-- Select 2 -->
 		<script type="text/javascript" src="/js/select2.full.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="/css/select2.min.css">
-
     </head>
     <body>
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
@@ -226,5 +225,8 @@ function getUnreadMessageCount() {
     .done(function( data ) {
     	$('.new-message-count').empty().append(data);
     });
-};
+};]
+@if (count($errors) > 0 || Session::has('status'))
+	$('#alert').show().slideUp().delay().slideDown();
+@endif
 </script>

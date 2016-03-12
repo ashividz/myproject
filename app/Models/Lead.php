@@ -94,6 +94,7 @@ class Lead extends Model
         return $this->hasOne(LeadDnc::class);
     }
 
+
     public function dialer()
     {
         return $this->hasOne(DialerPush::class, 'lead_id')->latest();
@@ -116,7 +117,6 @@ class Lead extends Model
             return round($weight*10000/($height*$height), 2);
         }
     }
-
     
     public function getEmailAttribute($value)
     {

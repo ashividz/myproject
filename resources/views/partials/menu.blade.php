@@ -304,6 +304,9 @@
                         <li>
                             <a href="/marketing/reports/dnc" id="menu_dnc">DNC</a>
                         </li>
+                        <li>
+                            <a href="/patientReport" id="menu_dnc">Patient Report</a>
+                        </li>
                     </ul>
                 </li>
                             
@@ -481,8 +484,7 @@
                                                 
             </ul> <!-- second level -->
 
-        @endif                         
-
+        @endif  
         </li>  
         @if(Auth::user()->hasRole('admin'))                
         <li class="{{ $menu == 'settings' ? 'current' : '' }}">
@@ -506,7 +508,7 @@
                 </li>  
             </ul>
         </li>
-        @endif     
+        @endif    
                     
     </ul> <!-- first level -->
     

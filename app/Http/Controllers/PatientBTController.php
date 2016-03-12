@@ -12,6 +12,7 @@ use App\Http\Requests\PatientBTRequest;
 
 use App\Models\Patient;
 use App\Models\PatientBT;
+use App\Models\User;
 
 use Auth;
 use DB;
@@ -19,7 +20,16 @@ use Session;
 
 class PatientBTController extends Controller
 {
-   
+    public function __construct(Request $request)
+    {   
+        $this->limit = isset($request->limit) ? $request->limit : 1000;
+        $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
+        $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
+        $this->start_date = isset($this->daterange[0]) ? date('Y-m-d 0:0:0', strtotime($this->daterange[0])) : date("Y-m-01 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y-m-d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');
+        
+    }
+>>>>>>> 180ed454bcac3922fbc29fc6372f3d75313f9345
 
     public function show($id)
     {
@@ -107,8 +117,13 @@ class PatientBTController extends Controller
         );
 
        /* $randomDir = md5(time() . $bt->id .  str_random());
+<<<<<<< HEAD
         mkdir(public_path() . '/files/' . $randomDir);
         $path = public_path() . '/images/uploads/' . html_entity_decode('abc.pdf');
+=======
+        mkdir(public_path() . '/files/' . $randomDir); */
+        /*$path = public_path() . '/images/uploads/' . html_entity_decode('abc.pdf');
+>>>>>>> 180ed454bcac3922fbc29fc6372f3d75313f9345
         file_put_contents($path, base64_decode($bt->file_data));*/
         /*return Response::make(base64_decode( $bt->file_data), 200, [
             'Content-Type' => 'application/pdf',
@@ -117,5 +132,22 @@ class PatientBTController extends Controller
         return view('patient.partials.bt_pdf')->with($data);  
     }
 
-    
+    public function groupBTReport(Request $request)
+    {
+       $users = User::getUsersByRole('nutritionist');
+       $patients = Patient::with('prakritis','fee','weight','weights','herbs','rh_factor','blood_type')->join(DB::raw("(select distinct patient_id,entry_date from fees_details where (entry_date between '$this->start_date' and '$this->end_date')) AS fd"), function($join) {
+                                 $join->on('patient_details.id', '=', 'fd.patient_id');
+                            })->select('patient_details.*','fd.entry_date as entry_date')->orderBy('fd.entry_date','asc')->get();
+       //dd($patients);
+       //$patients = Patient::getPatientsWithTestimonial();
+       $data = array(
+            'menu'          => 'reports',
+            'section'       => 'patients.btReport',
+            'users'         =>  $users,
+            'patients'      =>  $patients,
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+        );
+         return view('home')->with($data); 
+    }
 }

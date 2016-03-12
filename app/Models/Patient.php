@@ -37,6 +37,16 @@ class Patient extends Model
         return $this->hasMany(Fee::class)->orderBy('id', 'DESC');
     }
 
+    public function weight()
+    {
+        return $this->hasOne(PatientWeight::class)->latest();
+    }
+
+    public function weights()
+    {
+        return $this->hasMany(PatientWeight::class)->orderBy('id', 'DESC');
+    }
+
 
     public function diet()
     {

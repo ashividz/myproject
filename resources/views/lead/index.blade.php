@@ -21,7 +21,6 @@
 	@endif
 @endif
 
-@if($lead->country)
 @if($lead->country!='IN')
 <?php
 	$alert = true;
@@ -58,7 +57,6 @@
 			text-align: center;
 		}
 	</style>	
-@endif
 @endif
 @endif
 

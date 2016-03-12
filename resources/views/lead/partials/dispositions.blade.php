@@ -8,8 +8,7 @@
 <div class="row">
 	<div class="col-md-10">
 		<div class="panel panel-default">
-			<div class="panel-heading">
-                <span class="panel-title">Add Disposition</span></div>
+			<div class="panel-heading"><span class="panel-title">Add Disposition</span></div>
 			<div class="panel-body">
 			 @if(!$lead->dnc)	
 				<form method="POST" action="/lead/{{ $lead->id }}/saveDisposition" role="form" class="form-inline" id="form">

@@ -52,10 +52,20 @@
 						</td>
 					</tr>
 					<tr>
+<<<<<<< HEAD
 						<td colspan="2">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 							<button type="submit" class="btn btn-primary">Save</button>
 						</td>
+=======
+						<td>
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<button type="submit" class="btn btn-primary">Save</button>
+						</td>
+                        <td>
+                            <a href="/patient/{{ $patient->id }}/recipes" class="btn btn-success">Recipes</a>
+                        </td>
+>>>>>>> 180ed454bcac3922fbc29fc6372f3d75313f9345
 					</tr>
 				</tbody>
 			</table>

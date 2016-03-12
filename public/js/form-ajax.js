@@ -16,7 +16,7 @@ $(document).ready(function()
                 {
                     $('#alert').slideUp('slow').fadeOut(function() 
                     {
-                        location.reload();
+                        
                     });
                 }, 3000);
            },

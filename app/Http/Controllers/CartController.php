@@ -131,7 +131,7 @@ class CartController extends Controller
             'message' => 'Order Processed', 
             'status' => 'success'
         );    
-
+\
         return redirect('/cart/'.$id)->with($data);
     }
 
@@ -142,7 +142,6 @@ class CartController extends Controller
         
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
             ->find($id); 
-
         $statuses = CartStatus::get();
 
         $data = array(

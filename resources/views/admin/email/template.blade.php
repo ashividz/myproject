@@ -55,7 +55,7 @@
 
         <ul>
             @foreach($template->attachments AS $attachment)
-            <li><img class="attachment" src="/images/cleardot.gif"> {{$attachment->name}}</li>
+            <li><img class="attachment" src="/images/cleardot.gif"> {{$attachment->name}} <a class='popup_gallery' href='/show/emailAttachment/{{$attachment->id}}'>View</a> &nbsp;<a class='popup_gallery' href='/update/emailAttachment/{{$attachment->id}}?attachment_name={{urlencode($attachment->name)}}'>Change</a></li>
             @endforeach
         </ul>
 
@@ -79,6 +79,123 @@
 </script>
 @endif
 
+<link href="/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="/js/jquery-ui.min.js"></script>
 
+<link href="/css/popup.css" media="all" type="text/css" rel="stylesheet">
+<script src="/js/jquery.popup.js"></script>
+<script>
+
+
+    /*---------------------
+      SETTINGS
+    */
+    var gallerySettings = {
+        
+        height: 300,
+        markup    : '' +
+          '<div class="popup">' +
+            '<div class="popup_wrap">' +
+              '<div class="popup_content"/>' +
+            '</div>' +
+            '<a href="#next" class="ignore-hash">Next →</a>' +
+            '<a href="#prev" class="ignore-hash">← Previous</a>' +
+          '</div>',
+        // This is a custom variable
+        gallery : '.popup_gallery',
+        replaced : function($popup, $back){
+          var plugin = this,
+              $wrap = $('.popup_wrap', $popup);
+          // Animate the popup to new size
+          $wrap.animate({
+            width : $wrap.parent().outerWidth(true),
+            height : $wrap.children().children().outerHeight(true)
+          }, {
+            duration : 500,
+            easing : 'easeOutBack',
+            step : function(){
+              // Need to center the poup on each step
+              $popup
+                .css({
+                  top : plugin.getCenter().top,
+                  left : plugin.getCenter().left
+                });
+            },
+            complete : function(){
+              // Fade in!
+              $wrap
+                .children()
+                .animate({opacity : 1}, plugin.o.speed, function(){
+                  plugin.center();
+                  plugin.o.afterOpen.call(plugin);
+                });
+            }
+          });
+        },
+        show    : function($popup, $back){
+          var plugin = this,
+            $wrap = $('.popup_wrap', $popup);
+          // Center the plugin
+          plugin.center();
+          // Default fade in
+          $popup
+            .animate({opacity : 1}, plugin.o.speed, function(){
+              plugin.o.afterOpen.call(plugin);
+            });
+          // Set the inline styles as we animate later
+           $popup.css({
+            width   :'700px'
+          });
+          $wrap.css({
+            width   :'100%',
+            height   : $wrap.outerHeight(true)
+          });
+        },
+        afterClose    : function(){
+          this.currentIndex = undefined;
+        }
+      };
+    $(function(){
+      /*---------------------
+        POPUP
+      */
+      $('.popup_gallery').popup(gallerySettings);
+      /*---------------------
+        NEXT & PREVIOUS LINKS
+      */
+      $(document).on('click', '[href="#next"], [href="#prev"]', function(e){
+        e.preventDefault();
+        var $current = $('.popup_active'),
+            popup = $current.data('popup'),
+            $items = $(popup.o.gallery);
+        // If this is the first time
+        // and we don't have a currentIndex set
+        if( popup.currentIndex === undefined ){
+          popup.currentIndex = $items.index($current);
+        }
+        // Fade the current item out
+        $('.'+popup.o.contentClass)
+          .animate({opacity : 0}, 'fast', function(){
+            // Get the next index
+            var newIndex = $(e.target).attr('href') === '#next'
+              ? popup.currentIndex + 1
+              : popup.currentIndex - 1;
+            // Make sure the index is valid
+            if( newIndex > $items.length -1 ){
+              popup.currentIndex = 0;
+            }else if( newIndex < 0 ){
+              popup.currentIndex = $items.length - 1;
+            }else{
+              popup.currentIndex = newIndex;
+            }
+            // Get the new current link
+            $current = $($items[popup.currentIndex]);
+            // Load the content
+            popup.open($current.attr('href'), undefined, $current[0]);
+          });
+      });
+    });
+
+
+</script>
 @include('partials/footer')
-    

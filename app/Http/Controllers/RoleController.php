@@ -61,6 +61,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return Response
      */
+
     public function getRoles() //For Editable
     {
         $json_array = array();

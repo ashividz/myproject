@@ -124,7 +124,6 @@ class DietController extends Controller
         $request->patient_id = $id; 
 
         $status = Diet::send($request);
-
         $data = array(
                 'message'   => $status,
                 'status'    => 'success'

@@ -1,5 +1,4 @@
 @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('doctor') || Auth::user()->hasRole('registration'))	
-	@if($patient->lead->country)
 	@if($patient->lead->country!='IN') 	
 	<?php
 		$alert = true;
@@ -38,9 +37,6 @@
 	</style>
 	@endif
 	@endif
-	@endif
-	
-	<div class="container">
 		<div class="col-md-3">
 			<div class="panel panel-default">
 			  	<div class="panel-heading">
