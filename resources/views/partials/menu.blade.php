@@ -304,6 +304,9 @@
                         <li>
                             <a href="/marketing/reports/dnc" id="menu_dnc">DNC</a>
                         </li>
+                        <li>
+                            <a href="/patientReport" id="menu_dnc">Patient Report</a>
+                        </li>
                     </ul>
                 </li>
                             
