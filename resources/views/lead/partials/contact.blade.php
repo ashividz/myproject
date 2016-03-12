@@ -1,0 +1,190 @@
+@extends('lead.index')
+@section('top')
+<?php
+	$readonly = "readonly";
+	$title = "You do not have the permissions to edit this field. Please contact the Marketing Department.";
+	if (Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing')) {
+		$readonly = "";
+		$title = "";
+	}
+?>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h2 class="panel-title">ADDRESS</h2>
+	</div>
+	<div class="panel-body">
+    @if($lead->patient && $lead->patient->hasTag('VIP') && !(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service')))
+  		<h3>VIP Client</h3>
+  	@else
+		@if(!$lead->dnc)
+			<form method="POST" action="/lead/{{ $lead->id }}/saveContactDetails" role="form" class="form-inline" id="form">
+				<fieldset>
+					<ol>
+						<li>
+							<label>Mobile</label>
+							<input type="text" id="mobile" name="mobile" value="{{ $lead->mobile }}" title='{{$title}}' {{trim($lead->mobile) == '' ? '' : $readonly}}>
+						</li>
+						<li>
+							<label>Phone *</label>
+							<input type="text" id="phone" name="phone" value="{{ $lead->phone }}" {{trim($lead->phone) == '' ? '' : $readonly}}>
+						</li>
+						<li>
+							<label>Email *</label>
+							<input type="email" id="email" name="email" value="{{ $lead->email }}" {{trim($lead->email) == '' ? '' : $readonly}}>
+						</li>
+						<li>
+							<label>Alternate Email</label>
+							<input type="email" id="email_alt" name="email_alt" value="{{ $lead->email_alt }}" {{trim($lead->email_alt) == '' ? '' : $readonly}}>
+						</li>
+						<li>
+							<label>Skype</label>
+							<input type="text" id="skype" name="skype" value="{{ $lead->skype }}">
+						</li>
+						<li>
+							<label>Address</label>
+							<input type="text" id="address" name="address" value="{{ $lead->address }}">
+						</li>
+						<li>
+							<label>Country</label>
+							<div class="dropdown">
+								<select id="country" onchange="selectState(this.options[this.selectedIndex].value)" name="country" disabled>
+									<option value="">Select Country</option>
+								</select>
+						 	</div>
+						</li>
+						<li>
+							<label>State/Region</label>
+							<select id="state" onchange="selectCity(this.options[this.selectedIndex].value)" name="state" disabled>
+		                        <option value="">Select State</option>
+		                    </select>
+						</li>
+						<li>
+							<label>City</label>
+							<select id="city" name="city" disabled>
+		                        <option value="">Select City</option>
+		                    </select>
+						</li>
+						<li>
+							<label>ZIP/PIN</label>
+							<input type="text" id="zip" name="zip" value="{{ $lead->zip }}">
+						</li>
+					</ol>
+					<div class="cod">
+						{!! $cod !!}
+					</div>
+				</fieldset>				
+				<div class="col-md-3">
+					<button type="submit" id="edit" name="edit" class="btn btn-primary">Edit</button>
+					<button id="save" type="submit" name="save" class="btn btn-success"> Save</button> 
+					<button id="cancel" type="submit" name="cancel" class="btn btn-danger">Cancel</button>
+				</div>
+
+				<input type="hidden" name="_token" value="{{ csrf_token() }}">			
+			</form>
+		@else
+			<div class="blacklisted"></div>
+		@endif
+	@endif
+	</div>	
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() 
+{     
+    $("#country").empty();
+    $("#country").append("<option value=''> Select Country </option>");
+    $.getJSON("/api/getCountryList",function(result){
+        var country = "{{ $lead->country }}";
+        $.each(result, function(i, field){
+            if (field.country_code == country) {
+                $("#country").append("<option value='" + field.country_code + "' selected> " + field.country_name + "</option>");
+            }
+            else
+            {
+                $("#country").append("<option value='" + field.country_code + "'> " + field.country_name + "</option>");
+            }       
+        });
+        selectState(country);
+    });
+
+});
+
+/*This function is called when country dropdown value change*/
+function selectState(country_id){
+    //alert(country_id);
+    //$("#state").prop("disabled", true);
+    $("#city").empty();
+    $("#city").append("<option value=''> Select City </option>");
+    //$("#city").prop("disabled", true);
+    getRegionCode(country_id);
+    getPhoneCode(country_id);
+    //$("#state").prop("disabled", false);
+}
+
+/*This function is called when state dropdown value change*/
+function selectCity(state_id){
+    //$("#city").prop("disabled", true);
+    getCityCode(state_id);
+    //$("#city").prop("disabled", false);
+}
+
+
+
+function getPhoneCode(country_id) {
+    $.getJSON("https://portal.yuwow.com/access_api/phone_code.php", { country_code: country_id }, function(result){
+        $.each(result, function(i, field) {
+            $("#phone_code").val('+' + field.phone_code);
+        });
+    });
+} 
+
+function getRegionCode(country_id) {
+	var state = "{{ $lead->state?$lead->state:'' }}".toUpperCase();
+	if (state == 'NEW DELHI' || state =='DELHI' || state =='GURGAON' || state =='FARIDABAD' || state =='GHAZIABAD'  || state =='NOIDA') {
+		state = "IN.07";
+	}
+    $.getJSON("/api/getRegionList", { country_code: country_id }, function(result){
+        $("#state").empty();
+        $("#state").append("<option value=''> Select State </option>");
+        $.each(result, function(i, field) {            
+        	if (field.region_code == state) {
+                $("#state").append("<option value='" + field.region_code + "' selected> " + field.region_name + "</option>");
+            }
+            else
+            {
+                $("#state").append("<option value='" + field.region_code + "'> " + field.region_name + "</option>");
+            }
+        });
+    });
+    getCityCode(state);    
+}
+
+function getCityCode(state_id) {
+
+	var city = "{{ $lead->city?$lead->city:'' }}";
+    $.getJSON("/api/getCityList", { region_code: state_id }, function(result){
+        $("#city").empty();
+        $("#city").append("<option value=''> Select City </option>");
+        $.each(result, function(i, field) {           
+        	if (field.city_name.toUpperCase() == city.toUpperCase()) {
+                $("#city").append("<option value='" + field.city_name + "' selected> " + field.city_name + "</option>");
+            }
+            else
+            {
+                $("#city").append("<option value='" + field.city_name + "'> " + field.city_name + "</option>");
+            }
+        });
+    });
+    
+}
+</script>
+<script type="text/javascript">
+	$('input[readonly]').click(function () {
+	    alert('{{$title}}');
+	})	
+</script>
+
+<script type="text/javascript" src="/js/form.js"></script>
+
+@endsection

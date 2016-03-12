@@ -1,0 +1,270 @@
+body {
+	font-family: 'Lato';
+	font-size: 12px !important;
+}
+
+table {
+	font-size: 12px !important;
+}
+	
+table thead {
+	font-size: 12px !important;
+	background-color: #5697CC;/*rgb(242, 140, 56);*/
+  	color: #fff;
+  	background-image: -webkit-linear-gradient(top, #5d9ed2, #4386bc);
+}
+.table>tbody>tr>td {
+	border-top: none;
+}
+
+a, a:hover, a:visited {
+	text-decoration: none;
+}
+
+ul {
+	list-style: none;
+}
+/* Panel */
+
+.panel-default > .panel-heading { background-color: #404E6C; color: #fff; min-height: 40px; padding: 5px 15px;}
+.panel .panel-body table.blocked { display: block; overflow-x: auto; }
+
+/* Workflow Table Begin*/
+
+#workflow-table thead {
+	background-color: #8E9491;
+	color: #eee;
+	border: 1px solid #e6e6e6;
+}
+
+#workflow-table tbody {
+	background-color: #fff;
+	color: #333;
+	border: 1px solid #e6e6e6;
+}
+#workflow-table td {
+	padding: 20px;
+}
+#workflow-table .base {
+    height: 2px;
+    background-color: #8E9491;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+#workflow-table .base .step {
+    background-color: #fff;
+    /*border: 2px solid #019856;    
+    color: #019856;
+    box-shadow: 0 0 2px #2abd2a inset;*/
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    font-size: 16px;
+    height: 30px;
+    width: 30px;
+    margin-top: -15px;
+}
+#workflow-table .base .complete {
+	background-color: #03A34D;
+    color: #fff;
+}
+#workflow-table .base .denied {
+	background-color: #CC0000;
+    color: #fff;
+}
+#workflow-table .base .start {
+	background-color: #8E9491;;
+    color: #fff;
+}
+#workflow-table .base .progress {
+	border: 2px solid #8E9491;;
+    color: #fff;
+}
+
+/* Workflow Table End */
+.panel-title {
+	font-size: 14px !important;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+.panel-body {
+    /*padding: 5px;*/
+}
+.form-control {
+	font-size: 12px !important;
+}
+
+i.red {
+	color: red;
+}
+i.green {
+	color: green;
+}
+/* ================ sidebar styles: Begin ================ */
+#sidebar {
+	display: block;
+	/*float:left;
+	margin:0 17px 0 0;
+	/*min-height:300px;*/
+}
+#sidebar #sidenav {
+	margin:5px 0 0 0;
+	padding:7px;
+	background: #f28c38;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+#sidebar #sidenav a {
+	color:#fff;
+	display:block;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	padding:7px 7px;
+	text-decoration:none;
+	margin-bottom:5px;
+	border-bottom:1px solid #f19a52;
+}
+#sidebar #sidenav a:hover {
+	background-color:#ce6d1d;
+}
+
+#sidebar #sidenav a.disabled {
+    background-color: #CE6D1D;
+}
+
+#sidebar #sidenav .selected a {
+	background-color:#555657;
+	color:#fff;
+	border-bottom:none;
+}
+#sidebar ul li {
+	display: inline-block;
+	font-size: 11px;
+	text-transform: uppercase;
+	font-family: 'Verdana';
+	font-weight: 500;
+}
+/* ================ sidebar styles: End ================ */
+
+/* ================ Form styles: Begin ================ */
+form ol {
+	border-bottom: 1px solid #dedede;
+	overflow: hidden;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+form ol li {
+	list-style: none;
+	margin: 3px 0 12px 0;
+}
+form ol li label {
+    display: block;
+    color: #5d5d5d;
+    width: 150px;
+    float: left;
+}
+form ol li input[type=text], input[type=email] {
+    height: 16px;
+    width: 225px;
+}
+form ol li input[type=date] {
+    height: 16px;
+    width: 200px;
+}
+form ol li select {
+    width: 239px;
+    height: 25px;
+    margin-top: 1px;
+    padding: 3px 6px;
+}
+input:disabled, select:disabled, textarea:disabled {
+    background-color: #F5F5F5;
+}
+form ol li.radio {
+	margin: 3px 3px 0 0;
+    width: auto;
+    border: none;
+}
+form button, input[type=submit], input[type=button]  {
+	min-width:100px;
+	padding: 10px;
+	margin-right: 10px;
+	border-color: transparent;
+}
+/* ================ Form styles: End ================ */
+.center {
+    margin: auto;
+    width: 40%;
+    padding: 20px;
+}
+#alert {
+	position: fixed;
+	margin-top: 50px;
+	left: 30%;
+	display: none;
+	z-index: 9999;
+	text-align: center;
+}
+.red {
+	color: #ca4e4e;
+}
+.blue {
+	color: blue;
+}
+/* Cod details in Lead Contact Details*/
+.cod {
+	position: absolute;
+	background-color: #fff4c5;
+	border: 1px solid #e4c94b;
+	margin: -100px 200px 100px 500px;
+	width: 250px;
+	padding: 10px 30px;
+}
+/* Sprite */
+.attachment {
+	background: no-repeat url('/images/sprite.png') 0 -787px;
+    height: 21px;
+    width: 21px;
+}
+/* Click to edit */
+.placeholder { color: gray }
+
+/*Blacklist a lead*/
+.blacklist {
+  display: inline;
+}
+.blacklist:before {
+  content: "Blacklisted";
+  color: red;
+  font-weight: 700;
+}
+.blacklisted:before {
+  content: "This lead is blacklisted. Do not call.";
+  color: red;
+  font-weight: 700;
+  font-size: 26px;
+}
+
+#mws-sidebar {
+	margin-top: 37px;
+	position: fixed;
+}
+#mws-container {
+	margin-top: 0px;
+}
+#mws-datarange {
+	padding: 15px 50px;
+	float: left;
+	position: relative;
+}
+#daterange {
+	border:none;
+	background:none;
+	background-color: rgba(64, 78, 108, 1);
+	color:#fff;
+	padding-left:30px;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
