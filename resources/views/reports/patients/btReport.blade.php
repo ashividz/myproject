@@ -31,6 +31,7 @@
                                 <th>Initial</th>
                                 <th>Final</th>
                                 <th>Herbs Prescribed</th>
+                                <th>Medical</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,6 +70,7 @@
                                <td>{{($patient->weight)?round($patient->weights->first()->weight,2):" "}}</td>
                                <td>{{($patient->weight)?round($patient->weights->last()->weight,2):" "}}</td>
                                <td>@if(count($patient->herbs)) @foreach ($patient->herbs as $herb) {{$herb->herb->name}}, @endforeach @endif </td>
+                               <td>{{$patient->medical_problem}}</td>
                           </tr>
                         @endforeach
 
