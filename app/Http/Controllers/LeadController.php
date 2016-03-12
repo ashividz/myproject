@@ -111,9 +111,9 @@ class LeadController extends Controller
         //DB::update("UPDATE fees_details AS f SET patient_id = (SELECT id FROM patient_details AS p WHERE f.clinic=p.clinic AND f.registration_no=p.registration_no) WHERE patient_id = 0");
         
 
-        if (Auth::user()->hasRole('cre') && Auth::id() <> 93) { //Give access to Neetu Chawla
+        /*if (Auth::user()->hasRole('cre') && Auth::id() <> 93) { //Give access to Neetu Chawla
             return "You are not authorized to view this Page. Kindly contact your Senior or Marketing Team";
-        }
+        }*/
         
         $enquiry_no = trim($request->enquiry_no);
         $name = trim($request->name);

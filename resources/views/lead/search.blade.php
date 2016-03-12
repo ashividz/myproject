@@ -1,13 +1,21 @@
+<?php
+    $readonly = "";
+    $title = "";
+    if (Auth::user()->hasRole('admin')) {
+        $readonly = "readonly";
+        $title = "You do not have the permissions use this field. Please contact the Marketing Department.";
+    }
+?>
 <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-default">
         <div class="panel-heading">Search</div>
         <div class="panel-body">
             <form class="form" method="POST"> 
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                {{ csrf_field() }}
                 <div class="row"> 
                     <div class="col-md-2">
                         Name
-                        <input name="name" class="form-input">
+                        <input name="name" class="form-input" {{ $readonly }}>
                     </div>
                     <div class="col-md-2 col-md-offset-1">
                         Lead Id / Patient Id 
@@ -16,12 +24,12 @@
 
                     <div class="col-md-2 col-md-offset-1">
                         Phone / Mobile
-                        <input name="mobile" class="form-input">
+                        <input name="mobile" class="form-input" {{ $readonly }}>
                     </div>
 
                     <div class="col-md-2 col-md-offset-1">
                         Email
-                        <input name="email" class="form-input">
+                        <input name="email" class="form-input" {{ $readonly }}>
                     </div>
                 </div>
                 <hr>
@@ -138,3 +146,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('input[readonly]').click(function () {
+        alert('{{$title}}');
+    })  
+</script>
