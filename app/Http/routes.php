@@ -35,8 +35,7 @@ Route::group([
 		/* Delete User Role */
 		Route::post('user/role/delete', 'RoleUserController@destroy');
 
-		Route::get('patientReport', 'PatientBTController@groupBTReport');
-		Route::post('patientReport', 'PatientBTController@groupBTReport');
+		
 		
 });
 
@@ -127,6 +126,9 @@ Route::group([
 		Route::post('lead/{id}/dnc', 'DncController@store');
 		Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
 		Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
+
+		Route::get('patientReport', 'PatientBTController@groupBTReport');
+		Route::post('patientReport', 'PatientBTController@groupBTReport');
 });
 
 Route::group([
