@@ -22,13 +22,6 @@ class VerifyCsrfToken extends BaseVerifier
         'finance/saveCre',
         'finance/saveSource',
         'finance/saveAudit',
-        'herb/update' ,
-        'settings/cart/payment/method/update' ,
-        'settings/cart/payment/method/approver/update' ,
-        'settings/cart/discount/approver/update' ,
-        'settings/cart/discount/update',
-        'settings/product/category/name/update',
-        'settings/product/category/unit/update',
-        'settings/product/unit/update'
+        'herb/update'    
     ];
 }

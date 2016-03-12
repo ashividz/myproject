@@ -78,12 +78,7 @@ class DietController extends Controller
                     ->first();
         if($diet)
         {
-            $data = array(
-                'message'   => 'Diet already added for '. $date,
-                'status'    => 'error'
-            );
-
-            return redirect('patient/'.$id.'/diet')->with($data);
+            return redirect('patient/'.$id.'/diet')->with('status', 'Diet already added for '. $date);
         }
 
 
@@ -111,12 +106,7 @@ class DietController extends Controller
         $diet->rem_dev = trim($request->rem_dev);
         $diet->save();
 
-        $data = array(
-                'message'   => 'Diet Added',
-                'status'    => 'success'
-            );
-
-        return redirect('patient/'.$id.'/diet')->with($data);
+        return redirect('patient/'.$id.'/diet')->with('status', 'Diet Added');
     }
 
     public function send(Request $request, $id)
@@ -124,12 +114,8 @@ class DietController extends Controller
         $request->patient_id = $id; 
 
         $status = Diet::send($request);
-        $data = array(
-                'message'   => $status,
-                'status'    => 'success'
-            );
 
-        return redirect('patient/'.$id.'/diet')->with($data);
+        return redirect('patient/'.$id.'/diet')->with('status', $status);
     }
 
     

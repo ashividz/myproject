@@ -61,17 +61,31 @@ class RoleController extends Controller
      * @param  int  $id
      * @return Response
      */
-
-    public function getRoles() //For Editable
+    public function edit($id)
     {
-        $json_array = array();
+        //
+    }
 
-        $roles =  Role::all();        
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
 
-        foreach ($roles as $role) {
-            $json_array[$role->id] = $role->display_name;
-        }
-
-        return json_encode($json_array);
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        
     }
 }

@@ -3,11 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Fee;
-
 use DB;
-use Auth;
+use App\Models\Fee;
 
 class Patient extends Model
 {
@@ -496,32 +493,5 @@ class Patient extends Model
                 ->get();
         
         return $yuwowPatients;
-    }
-
-    public static function register($cart)
-    {
-        if($cart->lead->patient) {            
-            return $patient = $cart->lead->patient;
-
-        }
-
-        if (CartProduct::hasProductCategory($cart, 1)) {
-            $patient = Patient::store($cart->lead);
-            return $patient;
-        }
-
-        return null;       
-
-    }
-
-    public static function store($lead)
-    {
-        $patient = new Patient;
-
-        $patient->lead_id = $lead->id;
-        $patient->created_by = Auth::id();
-        $patient->save();
-
-        return $patient;
     }
 }

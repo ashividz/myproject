@@ -65,11 +65,9 @@ class CartProductController extends Controller
 
                 //dd($cartProduct);
 
-                
+                //Check for Offers
+                CartProduct::getOffer($cartProduct);
             }
-            //Check for Offers
-            Cart::getOffer($id);
-
             //Update the Order Amount
             Cart::updateAmount($id);
         }

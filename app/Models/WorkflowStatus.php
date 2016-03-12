@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductUnit extends Model
-{
-    //
+class WorkflowStatus extends Model
+{   
+    
 }

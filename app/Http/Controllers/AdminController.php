@@ -42,7 +42,7 @@ class AdminController extends Controller
             'menu'      => $this->menu,
             'section'   => "dashboard"
         );
-        return view('home')->with($data);
+        return view('admin/home')->with($data);
     }
 
     public function migrateLeads()

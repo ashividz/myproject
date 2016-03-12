@@ -28,7 +28,24 @@ class CartProduct extends Model
         return $this->belongsTo(Product::class, 'product_offer_parent_id');
     }
 
-    
+    public static function getOffer($CartProduct)
+    {
+        $offer = CartProduct::checkOffer($CartProduct); 
+
+        if($offer) {
+            $op = new CartProduct;
+            $op->cart_id = $CartProduct->cart_id;
+            $op->product_id = $offer->product_offer_id;
+            $op->product_offer_parent_id = $CartProduct->product_id;
+            $op->product_offer_id = $offer->id;
+            $op->quantity = $offer->product_offer_quantity;
+            $op->price = 0;
+            $op->discount = 0;
+            $op->amount = 0;
+            $op->created_by = 1;
+            $op->save();
+        }
+    }
 
     public static function updateOffer($CartProduct)
     {
@@ -64,16 +81,14 @@ class CartProduct extends Model
         }
     }
 
-    public static function checkOffer($product)
+    private static function checkOffer($CartProduct)
     {
-        return ProductOffer::where('product_id', $product->pivot->product_id)
-                    ->where('minimum_quantity', '<=', $product->pivot->quantity)
-                    ->groupBy('product_offer_id')
-                    ->get();
+        return ProductOffer::where('product_id', $CartProduct->product_id)
+                    ->where('minimum_quantity', '<=', $CartProduct->quantity)
                     //->where('start_date', '<=', date('Y-m-d'))
                     //->where('end_date', '<', date('Y-m-d'))
-                    //->orderBy('product_offer_quantity', 'desc')
-                    //->first();
+                    ->orderBy('product_offer_quantity', 'desc')
+                    ->first();
     }
 
     public static function deleteOffer($CartProduct)

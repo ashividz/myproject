@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-use Auth;
 
 class Cart extends Model
 {
@@ -50,14 +49,25 @@ class Cart extends Model
         return $this->belongsTo(Currency::class);
     }
     
-    public function state()
-    {
-        return $this->belongsTo(CartState::class, 'state_id');
-    }    
-
     public function status()
     {
-        return $this->belongsTo(CartStatus::class, 'status_id');
+        return $this->belongsTo(Status::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
+    public function approvers()
+    {
+        return $this->hasMany(OrderApprover::class, 'status_id');
+    }
+    
+
+    public function statuses()
+    {
+        return $this->hasMany(CartStep::class);
     }
     
     public function steps()
@@ -102,29 +112,5 @@ class Cart extends Model
         $cart = Cart::find($id);
         $cart->state_id = $state;
         $cart->save();
-    }
-
-    public static function getOffer($id)
-    {
-        $cart = Cart::find($id);
-
-        foreach ($cart->products as $product) {
-
-            $offers = CartProduct::checkOffer($product); 
-
-            foreach ($offers as $offer) {
-                $op = new CartProduct;
-                $op->cart_id = $id;
-                $op->product_id = $offer->product_offer_id;
-                $op->product_offer_parent_id = $product->id;
-                $op->product_offer_id = $offer->id;
-                $op->quantity = $offer->product_offer_quantity;
-                $op->price = 0;
-                $op->discount = 0;
-                $op->amount = 0;
-                $op->created_by = Auth::id();
-                $op->save();
-            }
-        }
     }
 }

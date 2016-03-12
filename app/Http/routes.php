@@ -13,11 +13,6 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
-
-Route::get('orders', 'OrderController@index');
-Route::post('orders', 'OrderController@index');
-Route::get('order/{id}', 'OrderController@show');
-
 Route::group([
 	'middleware' => ['auth','roles'], 
 	'roles' => ['admin']], 
@@ -40,8 +35,7 @@ Route::group([
 		/* Delete User Role */
 		Route::post('user/role/delete', 'RoleUserController@destroy');
 
-
-        
+		
 		
 });
 
@@ -132,57 +126,9 @@ Route::group([
 		Route::post('lead/{id}/dnc', 'DncController@store');
 		Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
 		Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
+
 		Route::get('patientReport', 'PatientBTController@groupBTReport');
 		Route::post('patientReport', 'PatientBTController@groupBTReport');
-
-        /* Settings */
-        Route::get('settings', 'SettingController@index');
-        
-        /* Cart Payment Method */
-        Route::get('settings/cart/payment/method', 'PaymentMethodController@index');
-        Route::post('settings/cart/payment/method/update', 'PaymentMethodController@update');
-        Route::post('settings/cart/payment/method/add', 'PaymentMethodController@store');
-
-        /* Cart Payment Method Approver */
-        Route::get('settings/cart/payment/method/{id}/approver', 'PaymentApproverController@index');
-        /*Route::post('settings/cart/payment/method/approver/update', 'PaymentApproverController@update');*/
-        Route::post('settings/cart/payment/method/approver/{id}/delete', 'PaymentApproverController@delete');
-        Route::post('settings/cart/payment/method/{id}/approver/add', 'PaymentApproverController@store');
-
-         /* Cart Discount Approver */
-        Route::get('settings/cart/discount', 'DiscountController@index');
-        Route::post('settings/cart/discount/update', 'DiscountController@update');
-        Route::post('settings/cart/discount/add', 'DiscountController@store');
-
-        Route::get('settings/cart/discount/{id}/approver', 'DiscountApproverController@index');
-
-        /*Route::post('settings/cart/discount/approver/update', 'DiscountApproverController@update');*/
-        Route::post('settings/cart/discount/approver/{id}/delete', 'DiscountApproverController@destroy');
-        Route::post('settings/cart/discount/{id}/approver/add', 'DiscountApproverController@store');
-
-        /* Settings Products*/
-        Route::get('settings/products', 'ProductController@index');
-        Route::get('settings/product/add', 'ProductController@modal');
-        Route::post('settings/product/add', 'ProductController@store');
-
-        Route::get('settings/product/{id}/edit', 'ProductController@modal');
-        Route::patch('settings/product/{id}', 'ProductController@update');
-
-
-        /* Settings Product Categories*/
-        Route::get('settings/product/categories', 'ProductCategoryController@index');
-        Route::post('settings/product/category/name/update', 'ProductCategoryController@updateName');
-        Route::post('settings/product/category/unit/update', 'ProductCategoryController@updateUnit');
-        Route::post('settings/product/category/add', 'ProductCategoryController@store');
-
-        /* Settings Product Units */
-        Route::get('settings/product/units', 'ProductUnitController@index');
-        Route::post('settings/product/unit/update', 'ProductUnitController@update');
-        Route::post('settings/product/unit/add', 'ProductUnitController@store');
-
-        /* Settings Product Offer */
-        Route::get('settings/product/{id}/offer', 'ProductOfferController@index');
-        Route::post('settings/product/{id}/offer/add', 'ProductOfferController@store');
 });
 
 Route::group([
@@ -238,14 +184,6 @@ Route::group([
 		Route::post('cre/viewPayments', 'CREController@viewPayments');
 		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
 
-
-        /* Program */
-        Route::get('lead/{id}/program', 'LeadProgramController@show');
-        Route::post('lead/{id}/program', 'LeadProgramController@store');
-
-        
-
-
         /* Need to reconfigure */
         Route::get('cart/approval', 'CartApprovalController@show');
         Route::post('cart/approval', 'CartApprovalController@store');
@@ -272,10 +210,6 @@ Route::group([
 
 
         Route::get('cart/{id}', 'CartController@show');
-
-        Route::get('cart/{id}/registration/update', 'RegistrationController@show');
-        Route::post('cart/{id}/registration/update', 'RegistrationController@update');
-
 });
 
 Route::group([
@@ -312,6 +246,7 @@ Route::group([
 		Route::post('patient/{id}/recipes', 'RecipeController@show');
 		Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
 		Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
+
 });
 
 Route::group([
@@ -542,8 +477,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post('lead', 'LeadController@dialerCall');
 	Route::get('lead/addLead', 'LeadController@viewAddLeadForm');
 	Route::post('lead/saveLead', 'LeadController@saveLead');
+
 	Route::get('lead/search', 'LeadController@search');
 	Route::POST('lead/search', 'LeadController@search');
+
+
 	
 	
 	Route::get('lead/{id}/viewCreModal', 'ModalController@viewCre');
@@ -599,7 +537,6 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('api/lead/{id}/dispositions', 'APIController@dispositions');
 
 
-    Route::get('api/getRoles', 'RoleController@getRoles');
 
 	Route::get('api/survey/comments', 'SurveyController@comments');
 
@@ -731,10 +668,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/update', 'EmailTemplateController@update');
-
     Route::get('show/emailAttachment/{id}', 'EmailTemplateController@showAttachment');
     Route::get('update/emailAttachment/{id}', 'EmailTemplateController@getAttachment');
     Route::post('update/emailAttachment/{id}', 'EmailTemplateController@updateAttachment');
+  
 });
 
 

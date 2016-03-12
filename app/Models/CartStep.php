@@ -16,12 +16,12 @@ class CartStep extends Model
 
     public function status()
     {
-        return $this->belongsTo(CartStatus::class, 'status_id');
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
     public function state()
     {
-        return $this->belongsTo(CartState::class, 'state_id');
+        return $this->belongsTo(State::class, 'state_id');
     }
 
     public function user()

@@ -18,28 +18,6 @@ class Fee extends Model
        return ['entry_date', 'start_date', 'end_date','created_at', 'updated_at'];
     }
 
-    public static function store($patient, $payment)
-    {
-        $duration = CartProduct::getDietDuration($payment->order_id, 1);
-
-        if ($duration) {
-
-            $fee = new Fee;
-            $fee->patient_id = $patient->id;
-            $fee->total_amount = $payment->amount;
-            $fee->payment_mode = $payment->payment_mode_id;
-            $fee->entry_date = $payment->created_at;
-            $fee->start_date = Carbon::now()->addDay(1);
-            $fee->end_date = Carbon::now()->addDay($duration+1);
-            $fee->cre = $payment->cart->cre_id;
-            $fee->source_id = $payment->cart->source_id;
-            $fee->duration = $duration->days;
-            $fee->created_by = 1;//Auth::id();
-            $fee->save();            
-        }
-        
-    }
-
     public static function clean()
     {
     	//Update cre in Fee table

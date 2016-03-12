@@ -48,7 +48,6 @@ class EmailTemplateController extends Controller
 
         return "Updated";
     }
-
     public function getAttachment($id, Request $request=null)
     { 
         
