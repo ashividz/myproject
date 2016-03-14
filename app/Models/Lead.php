@@ -364,13 +364,30 @@ class Lead extends Model
 
     public static function getHotPipelines($start_date, $end_date, $cre = NULL)
     {
-        return Lead::select('marketing_details.*', 'd.created_at', 'd.name AS cre', 'd.remarks')
+        /*$leads =  Lead::select('marketing_details.*', 'd.created_at', 'd.name AS cre', 'd.remarks')
                     ->with('patient', 'patient.fees')
                     ->join('call_dispositions AS d', 'marketing_details.id', '=', 'd.lead_id')
                     ->where('d.disposition_id', 15)  
                     ->whereBetween('d.created_at', array($start_date, $end_date))               
                     ->limit(env('DB_LIMIT'))
-                    ->get();
+                    ->get();*/
+
+        $query = Lead::with('cre', 'patient.fees')
+
+                ->with(array('disposition' => function($q) {
+                        $q->where('disposition_id', 15);
+                }))
+
+                ->whereHas('dispositions', function($q) use ($start_date, $end_date){
+                    $q->whereBetween('callback', array($start_date, $end_date))
+                        ->where('disposition_id', 15);
+                });
+
+        if($cre) {
+            $query = $query->where('cre_name', $cre);
+        }
+
+        return $query->get();   
     }
 
     public static function getChannelPerformanceBySource($source, $start_date, $end_date)

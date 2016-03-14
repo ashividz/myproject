@@ -191,8 +191,8 @@
 @endforeach		
 	</div>
 <?php
-	$diet_date = $patient->diet ? date('d-m-Y', strtotime('+1 day', strtotime($patient->diet->date_assign))) : date('d-m-Y');
-    $diet_date = $diet_date >= date('d-m-Y') ? $diet_date : date('d-m-Y');
+	$diet_date = $patient->diet ? date('d-m-Y', strtotime('+1 day', strtotime($patient->diet->date_assign))) : date('d-m-Y'); 
+    $diet_date = strtotime($diet_date) >= strtotime(date('d-m-Y')) ? $diet_date : date('d-m-Y');
 ?>
 	<div class="panel-body">
 		<form id="form-diet" action="/patient/{{$patient->id}}/diet" method="post" class="form-inline">
@@ -213,7 +213,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<input type="text" id="date" name="date" size="10" value="{{ old('date') ? old('date') : $diet_date }}" readonly placeholder="{{date('d-m-Y')}}">
+							<input type="text" id="date" name="date" size="10" value="{{ $diet_date }}" readonly placeholder="{{ $diet_date }}">
 						</td>
 						<!--<td>
 							<div><label>Early Morning:</label></div>
