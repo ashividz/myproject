@@ -492,6 +492,9 @@
             
             <ul>
                 <li>
+                    <a href="/settings/program" id="menu_settings_program">Programs</a>
+                </li>
+                <li>
                     <a href="#" id="menu_cart">Cart</a>
                     <ul>
                         <li>
