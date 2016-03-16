@@ -69,7 +69,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a data-toggle="modal" data-target="#modal" href="/settings/product/{{ $product->id }}/offer" class="btn btn-primary">
+                                <a data-toggle="modal" data-target="#modal" href="/settings/product/{{ $product->id }}/edit" class="btn btn-primary">
                                     <i class="fa fa-edit"></i>
                                 </a>
                             </td>
