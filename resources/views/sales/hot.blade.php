@@ -28,7 +28,7 @@
 
     			?>
     				<tr>
-                        <td><a href='{{ $url }}{{ $lead->id }}/viewDispositions' target="_blank">{{ $lead->name }}</a></td>
+                        <td><a href='/lead/{{ $lead->id }}/viewDispositions' target="_blank">{{ $lead->name }}</a></td>
     					<td>{{ $lead->disposition->callback or "" }}</td>
     					<td>{{ $lead->cre->cre or "" }}</td>
     					

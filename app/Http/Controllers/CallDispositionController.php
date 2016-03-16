@@ -83,7 +83,7 @@ class CallDispositionController extends Controller
             $disposition->disposition_id = $request->disposition;
             $disposition->name = Auth::user()->employee->name;
             $disposition->remarks = $request->remarks;
-            $disposition->callback = trim($request->callback) ? date('Y/m/d H:i:s', strtotime($request->callback)) : Helper::emptyStringToNull($request->callback);        
+            $disposition->callback = trim($request->callback) ? date('Y-m-d H:i:s', strtotime($request->callback)) : Helper::emptyStringToNull($request->callback);        
 
             $disposition->save();
 

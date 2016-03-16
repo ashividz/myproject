@@ -387,6 +387,12 @@ class Lead extends Model
             $query = $query->where('cre_name', $cre);
         }
 
+        if(Auth::user()->hasRole('sales_tl')) {
+            $users = User::getUsersByRole('cre');
+            $users = array_pluck($users, 'name');
+            $query = $query->whereIn('cre_name', $users);
+        }
+
         return $query->get();   
     }
 
