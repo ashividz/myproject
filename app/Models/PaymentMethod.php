@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentMethod extends Model
 {
-    public function approver()
+    public function approvers()
     {
-        $this->belongsToMany(Role::class, 'payment_approver', 'payment_method_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'approver_payment', 'payment_method_id', 'approver_role_id')->withPivot('id');
     }
 }
