@@ -86,8 +86,6 @@ class FinanceController extends Controller
 
     public function viewPayments()
     {
-        Fee::clean();
-
         $fees = Fee::with('patient')
                 ->with('source')
                 ->whereBetween('entry_date', array($this->start_date, $this->end_date))

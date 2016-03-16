@@ -14,7 +14,7 @@ use App\Models\Cart;
 use App\Models\CartStep;
 use App\Models\LeadProgram;
 use App\Models\OrderProduct;
-use App\Models\WorkflowStatus;
+use App\Models\CartStatus;
 use App\Models\Currency;
 use App\Models\ProductCategory;
 use Auth;
@@ -133,6 +133,7 @@ class CartController extends Controller
         );  
         
         return redirect('/cart/'.$id)->with($data);
+    }
 
     public function show($id)
     {
@@ -142,7 +143,7 @@ class CartController extends Controller
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
             ->find($id); 
 
-        $statuses = WorkflowStatus::get();
+        $statuses = CartStatus::get();
 
         $data = array(
             'cart'     =>  $cart, 
