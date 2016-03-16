@@ -133,6 +133,7 @@ class CartController extends Controller
         );  
         
         return redirect('/cart/'.$id)->with($data);
+    }
 
     public function show($id)
     {
