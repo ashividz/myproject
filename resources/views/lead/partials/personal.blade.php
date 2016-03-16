@@ -77,10 +77,11 @@
 	   		onChangeDateTime:function(dp,$input){
 			    $( "#datepicker" ).val($input.val())
 			  }
-	   });
+	    });
+
 	   	$( "#datepicker" ).datetimepicker({
 	   		timepicker: false,
-	   		maxDate: new Date,
+            maxDate: new Date,
 	   		format:'d-m-Y'
 	   });
 	});

@@ -495,6 +495,9 @@
                     <a href="#" id="menu_cart">Cart</a>
                     <ul>
                         <li>
+                            <a href="/settings/cart/status" id="menu_cart_status">Cart Status</a>
+                        </li>
+                        <li>
                             <a href="/settings/cart/payment/method" id="menu_payment_method">Payment Method</a>
                         </li>
                         <li>

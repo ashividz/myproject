@@ -130,8 +130,7 @@ class CartController extends Controller
         $data = array(
             'message' => 'Order Processed', 
             'status' => 'success'
-        );    
-\
+        );  
         return redirect('/cart/'.$id)->with($data);
     }
 

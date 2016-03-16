@@ -31,16 +31,23 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label>Phone <div class='asterix'>*</div> :</label>   
-                                    {!!$lead->phone == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->phone!!}
+                                    <label>Phone <div class='asterix'>*</div> :</label>
+                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->phone == '' ? 'required' : 'available' }}"> {{ $lead->phone }} </a>
                                 </td>
                                 <td>
-                                    <label>Mobile : </label>  
-                                    <div class="{{$lead->mobile == '' ? 'warning' : 'available'}}">{{$lead->mobile}}</div>
+                                    <label>Mobile : </label> 
+                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->mobile == '' ? 'warning' : 'available' }}"> {{ $lead->mobile }} </a> 
                                 </td>
                                 <td>
-                                    <label>Address :</label>   
-                                    {!! $lead->address == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="warning"></a>' : $lead->address !!}
+                                    <label>Address :</label>  
+                                @if($lead->country == "IN") 
+                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->address == '' ? "required" : "" }}"> 
+
+                                @else
+                                     <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->address == '' ? "warning" : "" }}"> 
+                                @endif
+                                        {{ $lead->address }} 
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
@@ -60,8 +67,15 @@
                             <tr>
 
                                 <td>
-                                    <label>PIN/ZIP :</label>  
-                                    {!! $lead->zip == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="warning"></a>' : $lead->zip !!}
+                                    <label>PIN/ZIP :</label> 
+                                    @if($lead->country == "IN") 
+                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->zip == '' ? "required" : "" }}"> 
+
+                                @else
+                                     <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->zip == '' ? "warning" : "" }}"> 
+                                @endif 
+                                        {{$lead->zip}} 
+                                    </a>
                                 </td>
                                 <td>
                                     <label>Source <div class='asterix'>*</div> :</label> 
@@ -195,14 +209,14 @@ $(function() {
                 
                 @foreach($cart->products as $product)
                             <div class="cart-content">
-                                <div class="col-md-2">{{$product->name}}</div>
-                                <div class="col-md-4">{{$product->description}}</div>
-                                <div class="col-md-1">{{$product->duration}} {{$product->unit->name}}</div>
-                                <div class="col-md-1">{{$product->pivot->quantity}}</div>
-                                <div class="col-md-1">{{$product->pivot->price}}</div>
-                                <div class="col-md-1">{{$product->pivot->discount}}% <em><small></small></em></div>
-                                <div class="col-md-1">{{$product->pivot->coupon}}</div>
-                                <div class="col-md-1">{{$product->pivot->amount}}</div>
+                                <div class="col-md-2">{{$product->name or "" }}</div>
+                                <div class="col-md-4">{{$product->description or "" }}</div>
+                                <div class="col-md-1">{{$product->duration or "" }} {{$product->unit->name or "" }}</div>
+                                <div class="col-md-1">{{$product->pivot->quantity or "" }}</div>
+                                <div class="col-md-1">{{$product->pivot->price or "" }}</div>
+                                <div class="col-md-1">{{$product->pivot->discount or "" }}% <em><small></small></em></div>
+                                <div class="col-md-1">{{$product->pivot->coupon or "" }}</div>
+                                <div class="col-md-1">{{$product->pivot->amount or "" }}</div>
                             </div>
                 @endforeach
 

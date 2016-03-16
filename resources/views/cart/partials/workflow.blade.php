@@ -2,7 +2,7 @@
     <div id="workflow">
     
         @foreach($statuses AS $status)
-            <div class="col-md-{{!$statuses->isEmpty()? 12/$statuses->count(): 3}}">
+            <div class="col-md-{{!$statuses->isEmpty()? floor(12/$statuses->count()): 3}}">
                 <div>{{$status->name}}</div>
                 
         <?php  

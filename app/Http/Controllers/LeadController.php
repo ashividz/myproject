@@ -279,7 +279,6 @@ class LeadController extends Controller
                 Session::flash('status',$msg);
         }                           
            
->>>>>>> 180ed454bcac3922fbc29fc6372f3d75313f9345
         $dept =  1;
         if (Auth::user()->hasRole('cre') || Auth::user()->hasRole('sales')) {
            $dept =  1;

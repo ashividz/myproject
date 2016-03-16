@@ -17,6 +17,8 @@
             _token : "{{ csrf_token() }}"
         };
 
+        alert(data);
+
         $.ajax({
             context: this,
             type: "post",

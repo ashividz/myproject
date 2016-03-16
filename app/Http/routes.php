@@ -143,6 +143,8 @@ Route::group([
         Route::post('settings/cart/payment/method/update', 'PaymentMethodController@update');
         Route::post('settings/cart/payment/method/add', 'PaymentMethodController@store');
 
+       
+
         /* Cart Payment Method Approver */
         Route::get('settings/cart/payment/method/{id}/approver', 'PaymentApproverController@index');
         /*Route::post('settings/cart/payment/method/approver/update', 'PaymentApproverController@update');*/
@@ -155,6 +157,14 @@ Route::group([
         Route::post('settings/cart/discount/add', 'DiscountController@store');
 
         Route::get('settings/cart/discount/{id}/approver', 'DiscountApproverController@index');
+
+        /* Cart Status */
+        Route::get('settings/cart/status', 'CartStatusController@index');
+        Route::post('settings/cart/status/add', 'CartStatusController@store');
+
+        Route::get('settings/cart/status/{id}/approver', 'CartApproverController@modal');
+        Route::post('settings/cart/status/{id}/approver/add', 'CartApproverController@store');
+        Route::post('settings/cart/status/approver/{id}/delete', 'CartApproverController@delete');
 
         /*Route::post('settings/cart/discount/approver/update', 'DiscountApproverController@update');*/
         Route::post('settings/cart/discount/approver/{id}/delete', 'DiscountApproverController@destroy');
