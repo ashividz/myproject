@@ -13,11 +13,6 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
-
-Route::get('orders', 'OrderController@index');
-Route::post('orders', 'OrderController@index');
-Route::get('order/{id}', 'OrderController@show');
-
 Route::group([
 	'middleware' => ['auth','roles'], 
 	'roles' => ['admin']], 
@@ -40,8 +35,7 @@ Route::group([
 		/* Delete User Role */
 		Route::post('user/role/delete', 'RoleUserController@destroy');
 
-
-        
+		
 		
 });
 
@@ -132,8 +126,10 @@ Route::group([
 		Route::post('lead/{id}/dnc', 'DncController@store');
 		Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
 		Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
+
 		Route::get('patientReport', 'PatientBTController@groupBTReport');
 		Route::post('patientReport', 'PatientBTController@groupBTReport');
+<<<<<<< HEAD
 
         /* Settings */
         Route::get('settings', 'SettingController@index');
@@ -193,6 +189,8 @@ Route::group([
         /* Settings Product Offer */
         Route::get('settings/product/{id}/offer', 'ProductOfferController@index');
         Route::post('settings/product/{id}/offer/add', 'ProductOfferController@store');
+=======
+>>>>>>> de839f2368e408c597ded507437507d8359afe9d
 });
 
 Route::group([
@@ -248,14 +246,6 @@ Route::group([
 		Route::post('cre/viewPayments', 'CREController@viewPayments');
 		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
 
-
-        /* Program */
-        Route::get('lead/{id}/program', 'LeadProgramController@show');
-        Route::post('lead/{id}/program', 'LeadProgramController@store');
-
-        
-
-
         /* Need to reconfigure */
         Route::get('cart/approval', 'CartApprovalController@show');
         Route::post('cart/approval', 'CartApprovalController@store');
@@ -282,10 +272,6 @@ Route::group([
 
 
         Route::get('cart/{id}', 'CartController@show');
-
-        Route::get('cart/{id}/registration/update', 'RegistrationController@show');
-        Route::post('cart/{id}/registration/update', 'RegistrationController@update');
-
 });
 
 Route::group([
@@ -322,6 +308,7 @@ Route::group([
 		Route::post('patient/{id}/recipes', 'RecipeController@show');
 		Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
 		Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
+
 });
 
 Route::group([
@@ -552,8 +539,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post('lead', 'LeadController@dialerCall');
 	Route::get('lead/addLead', 'LeadController@viewAddLeadForm');
 	Route::post('lead/saveLead', 'LeadController@saveLead');
+
 	Route::get('lead/search', 'LeadController@search');
 	Route::POST('lead/search', 'LeadController@search');
+
+
 	
 	
 	Route::get('lead/{id}/viewCreModal', 'ModalController@viewCre');
@@ -609,7 +599,6 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('api/lead/{id}/dispositions', 'APIController@dispositions');
 
 
-    Route::get('api/getRoles', 'RoleController@getRoles');
 
 	Route::get('api/survey/comments', 'SurveyController@comments');
 
@@ -741,10 +730,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/update', 'EmailTemplateController@update');
-
     Route::get('show/emailAttachment/{id}', 'EmailTemplateController@showAttachment');
     Route::get('update/emailAttachment/{id}', 'EmailTemplateController@getAttachment');
     Route::post('update/emailAttachment/{id}', 'EmailTemplateController@updateAttachment');
+  
 });
 
 

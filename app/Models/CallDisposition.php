@@ -11,6 +11,11 @@ class CallDisposition extends Model
 
     protected $fillable = ['lead_id', 'clinic', 'enquiry_no', 'disposition_id', 'name', 'remarks', 'callback', 'email', 'sms'];
 
+    public function getDates()
+    {
+       return ['callback', 'created_at', 'updated_at'];
+    }
+
     public function master()
     {
         return $this->belongsTo(Disposition::class, 'disposition_id');

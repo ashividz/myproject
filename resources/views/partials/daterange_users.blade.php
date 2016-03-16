@@ -3,15 +3,11 @@
         
         <div class="form-group">
           <select name="user" id="user">
-            <option>Select User</option>
+            <option value="">Select All</option>
 
           @foreach($users AS $user)
 
-                @if($user->name == $name)
-                    <option value="{{$user->name}}" selected>{{$user->name}}</option>
-                @else
-                    <option value="{{$user->name}}">{{$user->name}}</option>
-                @endif
+                <option value="{{ $user->name }}" {{ $user->name == $name ? 'selected' :'' }}>{{ $user->name }}</option>
 
           @endforeach 
 

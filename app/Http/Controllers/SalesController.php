@@ -22,15 +22,15 @@ class SalesController extends Controller
     public $url;
     private $menu;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->menu = 'sales';
-        $daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
-        $this->start_date = isset($daterange[0]) ? date('Y/m/d 0:0:0', strtotime($daterange[0])) : date("Y/m/01 0:0:0");
-        $this->end_date = isset($daterange[1]) ? date('Y/m/d 23:59:59', strtotime($daterange[1])) : date('Y/m/d 23:59:59');
-        $this->cre = Auth::user()->employee->name;
-        $this->url = env('CRM_LEAD_URL');
-    }
+    
+        $this->cre = isset($request->user) ? $request->user : null;
+        $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
+        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y-m-d 0:0:0", strtotime("-30 days"));
+        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');
+        
+    } 
 
     /**
      * Display a listing of the resource.
@@ -50,7 +50,9 @@ class SalesController extends Controller
     public function viewHotPipelines()
     {
 
-        $leads = Lead::getHotPipelines($this->start_date, $this->end_date);
+        $leads = Lead::getHotPipelines($this->start_date, $this->end_date, $this->cre);
+
+        $users = User::getUsersByRole('cre');
         //dd($leads);
 
         $data = array(
@@ -58,8 +60,9 @@ class SalesController extends Controller
             'section'       => 'hot',
             'start_date'    => $this->start_date,
             'end_date'      => $this->end_date,
-            'url'           => $this->url,
-            'leads'     => $leads
+            'leads'         => $leads,
+            'users'         =>  $users,
+            'name'          =>  $this->cre
         );
 
         return view('home')->with($data);
@@ -101,7 +104,7 @@ class SalesController extends Controller
         //dd($pipelines);
 
         $data   =   array(
-            'menu'          =>  $this->menu,
+            'menu'          =>  'sales',
             'section'       =>  'pipelines',
             'start_date'    =>  $this->start_date,
             'end_date'      =>  $this->end_date,

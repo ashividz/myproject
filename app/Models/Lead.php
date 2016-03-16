@@ -94,28 +94,17 @@ class Lead extends Model
         return $this->hasOne(LeadDnc::class);
     }
 
-
-    public function dialer()
-    {
-        return $this->hasOne(DialerPush::class, 'lead_id')->latest();
-    }
-
-    public function programs()
-    {
-        return $this->belongsToMany(Program::class);
-    }
-
-    public function carts()
-    {
-        return $this->hasMany(Cart::class)->orderBy('id', 'desc');
-    }
-
-
     private function bmi($weight, $height)
     {
         if ($weight && $height) {
             return round($weight*10000/($height*$height), 2);
         }
+    }
+
+
+    public function dialer()
+    {
+        return $this->hasOne(DialerPush::class, 'lead_id')->latest();
     }
     
     public function getEmailAttribute($value)
@@ -375,13 +364,36 @@ class Lead extends Model
 
     public static function getHotPipelines($start_date, $end_date, $cre = NULL)
     {
-        return Lead::select('marketing_details.*', 'd.created_at', 'd.name AS cre', 'd.remarks')
+        /*$leads =  Lead::select('marketing_details.*', 'd.created_at', 'd.name AS cre', 'd.remarks')
                     ->with('patient', 'patient.fees')
                     ->join('call_dispositions AS d', 'marketing_details.id', '=', 'd.lead_id')
                     ->where('d.disposition_id', 15)  
                     ->whereBetween('d.created_at', array($start_date, $end_date))               
                     ->limit(env('DB_LIMIT'))
-                    ->get();
+                    ->get();*/
+
+        $query = Lead::with('cre', 'patient.fees')
+
+                ->with(array('disposition' => function($q) {
+                        $q->where('disposition_id', 15);
+                }))
+
+                ->whereHas('dispositions', function($q) use ($start_date, $end_date){
+                    $q->whereBetween('callback', array($start_date, $end_date))
+                        ->where('disposition_id', 15);
+                });
+
+        if($cre) {
+            $query = $query->where('cre_name', $cre);
+        }
+
+        if(Auth::user()->hasRole('sales_tl')) {
+            $users = User::getUsersByRole('cre');
+            $users = array_pluck($users, 'name');
+            $query = $query->whereIn('cre_name', $users);
+        }
+
+        return $query->get();   
     }
 
     public static function getChannelPerformanceBySource($source, $start_date, $end_date)
