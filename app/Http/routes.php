@@ -188,6 +188,13 @@ Route::group([
         /* Settings Product Offer */
         Route::get('settings/product/{id}/offer', 'ProductOfferController@index');
         Route::post('settings/product/{id}/offer/add', 'ProductOfferController@store');
+
+        /* Settings Lead Program*/
+        Route::get('settings/program', 'ProgramController@index');
+        Route::post('settings/program/update', 'ProgramController@update');
+        Route::post('settings/program/add', 'ProgramController@store');
+
+        
 });
 
 Route::group([

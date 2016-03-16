@@ -22,6 +22,7 @@ class VerifyCsrfToken extends BaseVerifier
         'finance/saveCre',
         'finance/saveSource',
         'finance/saveAudit',
-        'herb/update'    
+        'herb/update',
+        'settings/program/update'   
     ];
 }
