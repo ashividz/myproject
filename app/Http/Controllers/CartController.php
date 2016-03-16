@@ -130,15 +130,9 @@ class CartController extends Controller
         $data = array(
             'message' => 'Order Processed', 
             'status' => 'success'
-<<<<<<< HEAD
         );  
+        
         return redirect('/cart/'.$id)->with($data);
-=======
-        );    
-
-        return redirect('/cart/view/'.$id)->with($data);
->>>>>>> de839f2368e408c597ded507437507d8359afe9d
-    }
 
     public function show($id)
     {

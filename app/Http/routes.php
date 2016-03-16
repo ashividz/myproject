@@ -129,7 +129,6 @@ Route::group([
 
 		Route::get('patientReport', 'PatientBTController@groupBTReport');
 		Route::post('patientReport', 'PatientBTController@groupBTReport');
-<<<<<<< HEAD
 
         /* Settings */
         Route::get('settings', 'SettingController@index');
@@ -189,8 +188,6 @@ Route::group([
         /* Settings Product Offer */
         Route::get('settings/product/{id}/offer', 'ProductOfferController@index');
         Route::post('settings/product/{id}/offer/add', 'ProductOfferController@store');
-=======
->>>>>>> de839f2368e408c597ded507437507d8359afe9d
 });
 
 Route::group([
