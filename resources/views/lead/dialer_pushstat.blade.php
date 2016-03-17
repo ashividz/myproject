@@ -21,7 +21,6 @@
                                 <th>Status</th>
                                 <th width="30%">Last Disposition </th>
                                 <th>Source</th>
-                                <th>Push Status </th>
                         </thead>
                         <tbody>
                             @foreach($leads AS $lead)
@@ -32,7 +31,8 @@
                                             <input type="hidden" name="phone[]" value="{{ $lead->phone }}">
                                         </td>
                                         <td>
-                                           <a href="/lead/{{$lead->id}}/viewDispositions" target="_blank">{{$lead->name}}</a> {{ $lead->country }}
+                                           <a href="/lead/{{$lead->id}}/viewDispositions" target="_blank">{{$lead->name}}</a> 
+                                            <span class="pull-right">{{ $lead->country }}</span>
                                         </td>
                                         <td>
                                             {{ $lead->created_at->format('jS M, Y') }}
@@ -60,12 +60,7 @@
                                         <td>
                                            {{ $lead->source->master->source_name or "" }}
                                         </td>
-                                       
-                                        <td>
-                                           {{$lead->output}}
-                                        </td>
-                                         
-                                  </tr>
+                                    </tr>
 
                             @endforeach
    
