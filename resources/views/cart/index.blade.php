@@ -195,7 +195,7 @@
     @endif
     
     @if(!$cart->payments->isEmpty() && $cart->state_id == 2) 
-        <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/registration/update" class="btn btn-danger">Update Order</a>
+        <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/approval/update" class="btn btn-danger">Update Order</a>
     @endif
 
         

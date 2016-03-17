@@ -84,44 +84,44 @@ $(document).ready(function ()
                                 <th>Push Status </th>
                         </thead>
                         <tbody>
-                            @foreach($push_stats AS $push_stat)
+                            @foreach($leads AS $lead)
                                  <tr>
                                         <td>
-                                            <input class='checkbox' type='checkbox' name='lead_ids[]' value="{{$push_stat['lead_id']}}">
-                                            <input type="hidden" name="push[]" value="{{$push_stat['push']}}">
-                                            <input type="hidden" name="phone[]" value="{{$push_stat['phone']}}">
-                                            <input type="hidden" name="cre_name[]" value="{{$push_stat['cre_name']}}">
-                                             <input type="hidden" name="dispo_date[]" value="{{$push_stat['dispo_date']}}">
-                                             <input type="hidden" name="dispo_remark[]" value="{{$push_stat['dispo_remark']}}">
-                                             <input type="hidden" name="callback[]" value="{{$push_stat['callback']}}">
-                                             <input type="hidden" name="username[]" value="{{$push_stat['username']}}">
-                                             <input type="hidden" name="source[]" value="{{$push_stat['source']}}">
-                                             <input type="hidden" name="lead_status[]" value="{{$push_stat['lead_status']}}">
-                                             <input type="hidden" name="lead_name[]" value="{{$push_stat['lead_name']}}">
-                                             <input type="hidden" name="cre_assign_date[]" value="{{$push_stat['cre_assign_date']}}">
+                                            <input class='checkbox' type='checkbox' name='lead_ids[]' value="{{$lead['lead_id']}}">
+                                            <input type="hidden" name="push[]" value="{{$lead['push']}}">
+                                            <input type="hidden" name="phone[]" value="{{$lead['phone']}}">
+                                            <input type="hidden" name="cre_name[]" value="{{$lead['cre_name']}}">
+                                             <input type="hidden" name="dispo_date[]" value="{{$lead['dispo_date']}}">
+                                             <input type="hidden" name="dispo_remark[]" value="{{$lead['dispo_remark']}}">
+                                             <input type="hidden" name="callback[]" value="{{$lead['callback']}}">
+                                             <input type="hidden" name="username[]" value="{{$lead['username']}}">
+                                             <input type="hidden" name="source[]" value="{{$lead['source']}}">
+                                             <input type="hidden" name="lead_status[]" value="{{$lead['lead_status']}}">
+                                             <input type="hidden" name="lead_name[]" value="{{$lead['lead_name']}}">
+                                             <input type="hidden" name="cre_assign_date[]" value="{{$lead['cre_assign_date']}}">
                                             
                                         </td>
                                          <td>
-                                           <a href="/lead/{{$push_stat['lead_id']}}/viewDispositions" target="_blank">{{$push_stat['lead_name']}}</a>
+                                           <a href="/lead/{{$lead['lead_id']}}/viewDispositions" target="_blank">{{$lead['lead_name']}}</a>
                                         </td>
                                         <td>
-                                           {{date('jS M, Y', strtotime($push_stat['cre_assign_date'])) }}
+                                           {{date('jS M, Y', strtotime($lead['cre_assign_date'])) }}
                                         </td>
                                         <td>
-                                           {{$push_stat['lead_status']}}
+                                           {{$lead['lead_status']}}
                                         </td>
                                         <td>
-                                          @if($push_stat['dispo_date']) {{date('jS M, Y', strtotime($push_stat['dispo_date'])) }} @endif<br><b>{{$push_stat['dispo_remark']}}</b>
+                                          @if($lead['dispo_date']) {{date('jS M, Y', strtotime($lead['dispo_date'])) }} @endif<br><b>{{$lead['dispo_remark']}}</b>
                                         </td>
                                         <td>
-                                           @if($push_stat['callback']) {{date('jS M, Y', strtotime($push_stat['callback'])) }} @endif
+                                           @if($lead['callback']) {{date('jS M, Y', strtotime($lead['callback'])) }} @endif
                                         </td>
                                         <td>
-                                           {{$push_stat['source']}}
+                                           {{$lead['source']}}
                                         </td>
                                        
                                         <td>
-                                           {{$push_stat['output']}}
+                                           {{$lead['output']}}
                                         </td>
                                          
                                   </tr>
