@@ -59,9 +59,6 @@ strong.danger {
 strong.success {
     background-color: #4CAE4C;
 }
-strong.warning {
-    background-color: #EACF0E;
-}
 
 .primary {
     color: #2E6DA4;
@@ -71,9 +68,6 @@ strong.warning {
 }
 .success {
     color: #4CAE4C;
-}
-.warning {
-    color: #EACF0E;
 }
 .popover {
     max-width: 1200px;

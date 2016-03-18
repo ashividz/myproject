@@ -17,6 +17,8 @@
             _token : "{{ csrf_token() }}"
         };
 
+        alert(data);
+
         $.ajax({
             context: this,
             type: "post",
@@ -34,7 +36,7 @@
         var quantity = $("#quantity\\["+id+"\\]").val();
         var price = $("#price\\["+id+"\\]").val();
         var discount = $("#discount\\["+id+"\\]").val(); 
-        var amount = (price - (discount*price/100))*quantity;
+        var amount = (price - (discount*price/100)*2)*quantity;
 
         $("#amount\\["+id+"\\]").val(amount);
     }
