@@ -51,23 +51,28 @@ class Cart extends Model
     
     public function status()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(CartStatus::class);
     }
 
     public function state()
     {
-        return $this->belongsTo(State::class, 'state_id');
+        return $this->belongsTo(CartState::class, 'state_id');
     }
 
     public function approvers()
     {
-        return $this->hasMany(OrderApprover::class, 'status_id');
+        return $this->hasMany(CartApprover::class, 'status_id');
     }
     
 
     public function statuses()
     {
         return $this->hasMany(CartStep::class);
+    }
+
+    public function step()
+    {
+        return $this->hasOne(CartStep::class)->latest();
     }
     
     public function steps()

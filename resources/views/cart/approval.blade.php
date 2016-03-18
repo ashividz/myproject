@@ -23,10 +23,14 @@
     /* Check Payment Approver */
 
     $disabled = '';
+    $discount = null;
     if($cart->status_id == 2) {
-        $discount = max(array_pluck($cart->products, 'pivot.discount'));
-        if ($discount > 0) {
-            if(!Helper::approveCartDiscount($discount)) {
+        $max_discount_value = max(array_pluck($cart->products, 'pivot.discount'));
+        if ($max_discount_value > 0) {
+
+            $discount = Discount::find($cart->step->discount_id +1);
+
+            if(!Helper::approveCartDiscount($cart, $discount)) {
                 $disabled = 'disabled';
             }
         }
@@ -128,15 +132,17 @@
                                 <td align="center">
                             @if($cart->status_id <> 4)
                                     <div class="form-group">
-                                        <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="3" checked> Approve
+                                        <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="{{ isset($discount) ? 4 : 3 }}" checked="checked"> Approve
                                         <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="2"> Reject                               
                                     </div> 
                                     <div class="form-group">    
                                        
-                                        <textarea name="remark[{{$cart->id}}]" class="form-control" style="width: 50%;"></textarea>
+                                        <textarea name="remark[{{$cart->id}}]" class="form-control">@if($cart->status_id == 2 && $discount)Discount Approval upto {{ $discount->value or '' }} %@endif</textarea>
                                     </div>
                                     <div class="form-group"> 
                                         <input type="hidden" name="cart[{{$cart->id}}]" value="{{$cart->id}}">
+                                        <input type="hidden" name="discount[{{$cart->id}}]" value="{{ $discount->value or '' }}"></input>
+                                        <input type="hidden" name="discount_id[{{$cart->id}}]" value="{{ $discount->id or '' }}"></input>
                                         <button type="submit" class="btn btn-primary" {{ $disabled }}>Save</button>
                                     </div>  
                             @elseif($cart->status_id == 4 && $cart->state_id <> 3)

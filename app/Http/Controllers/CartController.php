@@ -14,7 +14,7 @@ use App\Models\Cart;
 use App\Models\CartStep;
 use App\Models\LeadProgram;
 use App\Models\OrderProduct;
-use App\Models\WorkflowStatus;
+use App\Models\CartStatus;
 use App\Models\Currency;
 use App\Models\ProductCategory;
 use Auth;
@@ -27,7 +27,7 @@ class CartController extends Controller
     {
         $lead = Lead::find($id);
 
-        $statuses = WorkflowStatus::get();
+        $statuses = CartStatus::get();
 
         if (!$lead) {
             return "Lead Not found";
@@ -143,14 +143,14 @@ class CartController extends Controller
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
             ->find($id); 
 
-        $statuses = WorkflowStatus::get();
+        $statuses = CartStatus::get(); 
 
         $data = array(
             'cart'     =>  $cart, 
             'statuses'  =>  $statuses
         );
-
-        return view('cart.index')->with($data);
+        
+        return view('cart.index')->with($data); 
     }
     
 }

@@ -276,6 +276,10 @@ Route::group([
 
 
         Route::get('cart/{id}', 'CartController@show');
+
+
+        Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
+        Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
 });
 
 Route::group([

@@ -207,6 +207,7 @@ return [
         'Guzzle'            => GuzzleHttp\Client::class,
 
         'Step'              => App\Models\CartStep::class,
+        'Discount'          => App\Models\Discount::class,
 
     ],
 

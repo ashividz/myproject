@@ -85,12 +85,12 @@
                     </tr>
                 @foreach($cart->products as $product)
                     <tr class="{{$product->pivot->product_offer_id?'offer':''}}">
-                        <td>{{$product->category->name or ""}}</td>
-                        <td>{{$product->name}}
+                        <td>{{ $product->category->name or "" }}</td>
+                        <td>{{ $product->name }}
                         </td>
-                        <td>{{$product->description or ""}}</td>
-                        <td>{{$product->duration}} {{$product->unit->name or ""}}</td>
-                        <td>{{$product->pivot->quantity}}</td>
+                        <td>{{ $product->description or "" }}</td>
+                        <td>{{ $product->duration }} {{ $product->category->unit->name or "" }}</td>
+                        <td>{{ $product->pivot->quantity }}</td>
                         <td>
                     @if($product->pivot->product_offer_id)
                             <label>FREE</label>
@@ -195,7 +195,7 @@
     @endif
     
     @if(!$cart->payments->isEmpty() && $cart->state_id == 2) 
-        <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/registration/update" class="btn btn-danger">Update Order</a>
+        <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/approval/update" class="btn btn-danger">Update Order</a>
     @endif
 
         
