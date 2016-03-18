@@ -103,7 +103,7 @@ class CartApprovalController extends Controller
             $cart = Cart::find($request->get('id'));
 
             //Patient Registration
-            $patient = Patient::register($cart);
+            $patient = Patient::register($cart); 
 
             if ($patient) {
                 Order::store($cart);
@@ -116,8 +116,8 @@ class CartApprovalController extends Controller
             CartStep::store($cart->id, $cart->status_id, 3);
 
             $data = array(
-                'message' => 'Patient Registered', 
-                'status' => 'success'
+                'message'   => 'Order Placed', 
+                'status'    => 'success'
             );
         }
 

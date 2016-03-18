@@ -54,6 +54,6 @@ class Order extends Model
         //Update old Fee tables for now
         if (isset($cart->lead->patient)) {
             OrderPatient::fee($cart->lead->patient, $cart);
-        }
+        } 
     }
 }

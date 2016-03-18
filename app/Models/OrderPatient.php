@@ -43,8 +43,6 @@ class OrderPatient extends Model
     {
         foreach ($cart->payments as $payment) {
             Fee::store($patient, $payment);
-        }
-
-        
+        }        
     }
 }

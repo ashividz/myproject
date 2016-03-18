@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+
 use App\Models\Fee;
+
+use DB;
+use Auth;
 
 class Patient extends Model
 {
@@ -16,7 +19,7 @@ class Patient extends Model
 
     public function lead()
     {
-    	return $this->belongsTo(Lead::class, 'lead_id');
+        return $this->belongsTo(Lead::class, 'lead_id');
     }
 
     public function cfee()
@@ -162,7 +165,7 @@ class Patient extends Model
 
     public static function getActivePatients($nutritionist = NULL)
     {
-    	$query =  Patient::select('patient_details.*')
+        $query =  Patient::select('patient_details.*')
                 ->with('lead', 'cfee', 'doctor')
                 /*->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                     $join->on('patient_details.id', '=', 'f.patient_id');
@@ -493,5 +496,31 @@ class Patient extends Model
                 ->get();
         
         return $yuwowPatients;
+    }
+
+    public static function register($cart)
+    {
+        if($cart->lead->patient) {            
+            return $patient = $cart->lead->patient;
+
+        }
+        if (CartProduct::hasProductCategory($cart, 1)) {
+            $patient = Patient::store($cart->lead);
+            return $patient;
+        }
+
+        return null;       
+
+    }
+
+    public static function store($lead)
+    {
+        $patient = new Patient;
+
+        $patient->lead_id = $lead->id;
+        $patient->created_by = Auth::id();
+        $patient->save();
+
+        return $patient;
     }
 }

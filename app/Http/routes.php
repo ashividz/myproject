@@ -572,6 +572,10 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post('lead/{id}/email', 'EmailController@send');
 
 
+    Route::get('lead/{id}/program', 'LeadProgramController@show');
+    Route::post('lead/{id}/program', 'LeadProgramController@store');
+
+
 	
 
 	
