@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Cart;
-use App\Models\WorkflowStatus;
+use App\Models\CartStatus;
 use App\Models\CartStep;
 use App\Models\Patient;
 use App\Models\Order;
@@ -25,7 +25,7 @@ class CartApprovalController extends Controller
                     ->orderBy('carts.id', 'desc')
                     ->get(); //dd($carts);
 
-        $statuses = WorkflowStatus::get();
+        $statuses = CartStatus::get();
 
         $data = array(
              
@@ -54,7 +54,7 @@ class CartApprovalController extends Controller
 
                 } elseif ($state_id == 3) { //Approved
 
-                    $count = Status::count();
+                    $count = CartStatus::count();
 
                     //Complete State for same step
                     CartStep::store($cart->id, $cart->status_id, $state_id, $remark);
@@ -125,5 +125,33 @@ class CartApprovalController extends Controller
 
         return redirect('/cart/approval')->with($data);
 
+    }
+
+    public function modal($id)
+    {
+        $cart  = Cart::find($id);
+
+        $data = array(
+             
+            'cart'     => $cart
+        );    
+
+        return view('cart.modals.update')->with($data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $cart  = Cart::find($id);
+
+        //Reset Cart Step
+        CartStep::store($cart->id, $cart->status_id, 1, $request->remark); 
+        Cart::updateState($cart->id, 1);
+
+        $data = array(
+            'message' => 'Process updated', 
+            'status' => 'success'
+        );   
+
+        return back()->with($data);
     }
 }

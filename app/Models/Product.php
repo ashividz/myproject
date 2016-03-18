@@ -22,11 +22,6 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class ,'product_category_id');
     }
 
-    public function unit()
-    {
-        return $this->belongsTo(ProductUnit::class);
-    }
-
     public function offers()
     {
         return $this->hasMany(ProductOffer::class);

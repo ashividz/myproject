@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use App\Models\ApproverDiscount;
+use App\Models\ApproverPayment;
 use DateTime;
 use Auth;
 
@@ -87,4 +89,42 @@ class Helper {
 
 	    return array_multisort($sort_col, $dir, $arr);
 	}
+
+    public static function roles($user = null)
+    {
+        $roles = $user? $user->roles : Auth::user()->roles;
+        return array_pluck($roles, 'id');
+    }
+
+    /* Approve Cart Discount*/
+    public static function approveCartDiscount($discount)
+    {
+        $roles = Helper::roles();
+
+        $approvers = ApproverDiscount::select('approver_discount.*')
+                        ->join('discounts as d', 'd.id', '=', 'approver_discount.discount_id')
+                        ->where('d.value', '<=', $discount)
+                        ->whereIn('approver_role_id', $roles)
+                        ->get();
+
+        if ($approvers->isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    /* Approve Cart Payment Method*/
+    public static function approveCartPaymentMethod($payments)
+    {
+        $roles = Helper::roles();
+
+        $approvers = ApproverPayment::whereIn('payment_method_id', $payments)
+                        ->whereIn('approver_role_id', $roles)
+                        ->get();
+
+        if ($approvers->isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }
