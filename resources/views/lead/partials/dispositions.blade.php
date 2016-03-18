@@ -64,7 +64,7 @@
 		        </form>
            @if(Auth::user()->hasRole('cre'))
                 
-                 @if(isset($lead->dialer) && $lead->dialer->created_at->format('Y-m-d') == date('Y-m-d'))
+                 @if(isset($lead->dialer) && $lead->dialer->created_at->format('Y-m-d') <= date('Y-m-d'))
                      @if(isset($lead->disposition))
                          @if(($lead->cre && $lead->cre->cre != Auth::user()->employee->name) || !$lead->cre)
                                          <div>
