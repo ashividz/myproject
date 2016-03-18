@@ -17,8 +17,6 @@
             _token : "{{ csrf_token() }}"
         };
 
-        alert(data);
-
         $.ajax({
             context: this,
             type: "post",
@@ -59,6 +57,9 @@
 $(document).ready(function() {
     $('table tr').click(function(event) {
         if (event.target.type !== 'checkbox') {
+            if ($(':checkbox', this).is(":checked")) {
+                return false;
+            }
             $(':checkbox', this).trigger('click');
         }
     });
