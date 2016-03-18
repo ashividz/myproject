@@ -111,11 +111,6 @@ class Lead extends Model
         return $this->hasOne(DialerPush::class, 'lead_id')->latest();
     }
 
-    public function programs()
-    {
-        return $this->belongsToMany(Program::class);
-    }
-
     public function carts()
     {
         return $this->hasMany(Cart::class)->orderBy('id', 'desc');

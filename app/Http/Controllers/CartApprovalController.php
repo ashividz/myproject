@@ -84,19 +84,18 @@ class CartApprovalController extends Controller
                     
 
                     $discount_id = $request->input('discount_id.'.$id); //dd($discount_id);
- 
+                    //$discount_id = $discount_id == 1 ? 1 : $discount_id - 1;
+                    
 
+                    $discount = Discount::where('value', '<=', 25)
+                                ->where('id', $discount_id)->first(); //dd($discount);
 
-                    $discount = Discount::where('value', '>=', 25)->where('id', $discount_id +1);
-
-                    if($discount) {
-                        $state_id = 3;
-                    }
+                    $state_id = $discount ? 4 : 3;
 
                     //Complete State for same step
                     CartStep::store($cart->id, $cart->status_id, $state_id, $remark, $discount_id); 
 
-                    if($discount) {
+                    if(!$discount) {
 
                         //Create next CartStep
                         CartStep::nextStatus($id); 

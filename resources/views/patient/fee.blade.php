@@ -121,7 +121,7 @@
 						<option value="">Select Source</option>
 					@foreach($sources as $source)
 						@if(old('source'))
-							<option value="{{$source->id}}" {{$source->source_name == old('source')? 'selected':''}}>{{$source->source_name}}</option>
+							<option value="{{$source->id}}" {{$source->source_name == old('source')? 'selected':''}}>{{ $source->source_name or "" }}</option>
 						
 						@else
 							<option value="{{$source->id}}" {{$patient->lead->source && $source->source_name == $patient->lead->source->master->source_name ? 'selected':''}}>{{$source->source_name}}</option>

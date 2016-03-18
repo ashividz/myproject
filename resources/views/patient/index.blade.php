@@ -1,5 +1,5 @@
 @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('doctor') || Auth::user()->hasRole('registration'))	
-	@if($patient->lead->country!='IN') 	
+	@if($patient->lead->country != 'IN') 	
 	<?php
 		$alert = true;
 		if(Session::has('country_alert_time')){
