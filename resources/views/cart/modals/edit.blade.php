@@ -20,7 +20,7 @@
                         <td>{{$product->product->name or ""}}</td>
                         <td>{{$product->product->description or ""}}</td>
                         <td><input class="form-control" id="quantity" name="quantity" value="{{$product->quantity or ''}}" size="2"></td>
-                        <td>{{$product->price or ""}}</td>                        
+                        <td>{{ $product->cart->currency->symbol or "" }} {{$product->price or ""}}</td>                        
 
                         <td>
                             <input id="coupon" name="coupon" class="form-control" value="{{$product->coupon}}"size="10" >
@@ -78,7 +78,7 @@ $(document).ready(function()
         var quantity = $("#quantity").val();
         var price = {{$product->price or ""}};
         var discount = $("#discount").val(); 
-        var amount = (price - (discount*price/100)*2)*quantity;
+        var amount = (price - (discount*price/100))*quantity;
 
         $("#amount").val(amount);
     }        

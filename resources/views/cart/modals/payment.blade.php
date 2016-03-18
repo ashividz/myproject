@@ -4,7 +4,7 @@
             Add Payment Details
         </div>
         <div class="panel-body">
-            <form class="form-inline" action="/cart/{{$order->id}}/payment/add" method="POST">
+            <form class="form-inline" action="/cart/{{$cart->id}}/payment/add" method="POST">
 
                 <div class="form-group">
                     <label for="date">Payment Date :</label>
@@ -12,7 +12,10 @@
                 </div>
                 <div class="form-group">
                     <label for="amount">Amount :</label>
-                    <input id="amount" name="amount" class="form-control" size="7" value="{{$order->amount - $order->payment}}"></input>
+                    <div class="input-group">
+                        <label class="input-group-addon">{{ $cart->currency->symbol or ""}}</label>
+                        <input id="amount" name="amount" class="form-control" size="7" value="{{$cart->amount - $cart->payment}}"></input>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="payment_method">Payment Mode :</label>

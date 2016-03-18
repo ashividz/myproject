@@ -34,7 +34,7 @@
         var quantity = $("#quantity\\["+id+"\\]").val();
         var price = $("#price\\["+id+"\\]").val();
         var discount = $("#discount\\["+id+"\\]").val(); 
-        var amount = (price - (discount*price/100)*2)*quantity;
+        var amount = (price - (discount*price/100))*quantity;
 
         $("#amount\\["+id+"\\]").val(amount);
     }
@@ -115,11 +115,7 @@ $(document).ready(function() {
                     <tbody>
                 
                 @foreach($category->products as $product)
-                        <tr>
-                            <td><input type="checkbox" name="product_ids[]" value="{{$product->id}}"></td>
-                            <td>{{$product->name}}</td>
-                            <td>{{$product->description}}</td>
-                            <td><input id="quantity[{{$product->id}}]" name="quantity[{{$product->id}}]" class="form-control" value="1" size="2" onchange="changeQuantity({{$product->id}})"></td>
+
 <?php
     if($cart->lead->country == 'IN') {
 
@@ -136,6 +132,12 @@ $(document).ready(function() {
 
 
 ?>
+                    @if($price)
+                        <tr>
+                            <td><input type="checkbox" name="product_ids[]" value="{{$product->id}}"></td>
+                            <td>{{$product->name}}</td>
+                            <td>{{$product->description}}</td>
+                            <td><input id="quantity[{{$product->id}}]" name="quantity[{{$product->id}}]" class="form-control" value="1" size="2" onchange="changeQuantity({{$product->id}})"></td>
                             <td>
                                 {{$cart->currency->symbol or ""}} {{$price}}
                                 <input type="hidden" id="price[{{$product->id}}]" name="price[{{$product->id}}]" value="{{$price}}"></input>
@@ -169,6 +171,9 @@ $(document).ready(function() {
                             </td>
 
                         </tr>
+                    
+                    @endif <!--Price > 0 -->
+
                 @endforeach
 
                     </tbody>

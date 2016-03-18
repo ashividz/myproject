@@ -22,7 +22,7 @@ class CartPaymentController extends Controller
         $methods = PaymentMethod::get();
 
         $data = array(
-            'order'         =>  $cart,
+            'cart'         =>  $cart,
             'methods'       =>  $methods
         );
 

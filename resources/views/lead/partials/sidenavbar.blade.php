@@ -25,7 +25,5 @@
 	<li{!! (($section == "partials.tag") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/tags">Tags</a></li> 
 	<li{!! (($section == "partials.notes") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/notes">Notes</a></li> 
 	<li{!! (($section == "partials.survey") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/survey">Survey</a></li>  
-	<li{!! (($section == "partials.medicaltests") ? " class='selected'" : "") !!}><a href="http://crm/medical.php?clinic={{$patient->clinic  or $lead->patient->clinic }}&registration_no={{$patient->registration_no  or $lead->patient->registration_no }}" target="_blank">Medical Tests</a></li> 
-	<li{!! (($section == "partials.fitness") ? " class='selected'" : "") !!}><a href="http://crm/fitness.php?clinic={{$patient->clinic or $lead->patient->clinic }}&registration_no={{$patient->registration_no or $lead->patient->registration_no }}" target="_blank">Fitness</a></li> 
 </ul>
 @endif
