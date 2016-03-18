@@ -27,7 +27,7 @@ class CartController extends Controller
     {
         $lead = Lead::find($id);
 
-        $statuses = WorkflowStatus::get();
+        $statuses = CartStatus::get();
 
         if (!$lead) {
             return "Lead Not found";
