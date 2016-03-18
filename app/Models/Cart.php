@@ -61,13 +61,18 @@ class Cart extends Model
 
     public function approvers()
     {
-        return $this->hasMany(OrderApprover::class, 'status_id');
+        return $this->hasMany(CartApprover::class, 'status_id');
     }
     
 
     public function statuses()
     {
         return $this->hasMany(CartStep::class);
+    }
+
+    public function step()
+    {
+        return $this->hasOne(CartStep::class)->latest();
     }
     
     public function steps()

@@ -27,7 +27,7 @@ class CartController extends Controller
     {
         $lead = Lead::find($id);
 
-        $statuses = WorkflowStatus::get();
+        $statuses = CartStatus::get();
 
         if (!$lead) {
             return "Lead Not found";
@@ -142,15 +142,15 @@ class CartController extends Controller
         
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
             ->find($id); 
-
-        $statuses = CartStatus::get();
+            
+        $statuses = CartStatus::get(); 
 
         $data = array(
             'cart'     =>  $cart, 
             'statuses'  =>  $statuses
         );
-
-        return view('cart.index')->with($data);
+        
+        return view('cart.index')->with($data); 
     }
     
 }
