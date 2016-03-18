@@ -105,17 +105,16 @@ class Lead extends Model
             return round($weight*10000/($height*$height), 2);
         }
     }
-    
+
+    public function carts() 
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function dialer()
     {
         return $this->hasOne(DialerPush::class, 'lead_id')->latest();
     }
-
-    public function carts()
-    {
-        return $this->hasMany(Cart::class)->orderBy('id', 'desc');
-    }
-
     
     public function getEmailAttribute($value)
     {

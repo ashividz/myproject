@@ -78,7 +78,7 @@ $(document).ready(function()
         var quantity = $("#quantity").val();
         var price = {{$product->price or ""}};
         var discount = $("#discount").val(); 
-        var amount = (price - (discount*price/100))*quantity;
+        var amount = (price - (discount*price/100)*2)*quantity;
 
         $("#amount").val(amount);
     }        

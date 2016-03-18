@@ -16,26 +16,26 @@
 			Session::put($countryAlert);
 		}
 	?>
-	@if($alert)
-		<div class="row">
-			<div class="col-md-4 col-md-offset-4">
-				<div class="alert alert-danger warning">
-					<a class="close" data-dismiss="alert">×</a>
-					<strong><h5>This is a foreign client. Please check local time before calling</h5></strong> 
-				</div>
-			</div>
-		</div>
+    	@if($alert)
+    		<div class="row">
+    			<div class="col-md-4 col-md-offset-4">
+    				<div class="alert alert-danger warning">
+    					<a class="close" data-dismiss="alert">×</a>
+    					<strong><h5>This is a foreign client. Please check local time before calling</h5></strong> 
+    				</div>
+    			</div>
+    		</div>
 
-	<style type="text/css">
-		.warning {
-			position: fixed;
-			z-index: 9999;
-			width:400px;
-			min-height: 100px;
-			text-align: center;
-		}
-	</style>
-	@endif
+        	<style type="text/css">
+        		.warning {
+        			position: fixed;
+        			z-index: 9999;
+        			width:400px;
+        			min-height: 100px;
+        			text-align: center;
+        		}
+        	</style>
+    	@endif
 	@endif
 		<div class="col-md-3">
 			<div class="panel panel-default">
@@ -72,16 +72,15 @@
 		<div class="col-md-9">
 
 			<div class="row" id="sidebar">
-			  	@include('patient.partials.sidenavbar')
+			  	@include('lead.partials.sidenavbar')
 			</div>
 			<div class="row" style="margin-top:20px;">
 				@yield('top')
 			</div>
 		</div>
-	</div>
-	<div>
-		@yield('main')
-	</div>
+    	<div class="col-md-12">
+    		@yield('main')
+    	</div>
 @else
 	<h4>NOT AUTHORIZED</h4>
 @endif

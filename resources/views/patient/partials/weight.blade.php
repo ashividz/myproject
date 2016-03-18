@@ -39,7 +39,7 @@
 @endsection
 
 @section('main')
-<div class="container">  
+<div class="container1">  
     <div class="panel panel-default">
         <div class="panel-heading1">
         </div>

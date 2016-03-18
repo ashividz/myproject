@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
 
-use Auth;
-
 class CartStep extends Model
 {
     //protected $table = 'order_status';
@@ -18,12 +16,12 @@ class CartStep extends Model
 
     public function status()
     {
-        return $this->belongsTo(CartStatus::class, 'status_id');
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
     public function state()
     {
-        return $this->belongsTo(CartState::class, 'state_id');
+        return $this->belongsTo(State::class, 'state_id');
     }
 
     public function user()
@@ -41,22 +39,19 @@ class CartStep extends Model
                         ->first();
     }
 
-    public static function store($cart_id, $status_id, $state_id, $remark = null, $discount_id = null)
+    public static function store($cart_id, $status_id, $state_id, $remark = null)
     {
         $step = new CartStep;
 
         $step->cart_id          = $cart_id;
         $step->status_id        = $status_id;
         $step->state_id         = $state_id;
-        $step->discount_id      = $discount_id;
         $step->remark           = $remark;
-        $step->created_by       = Auth::id();
+        $step->created_by       = 1;//Auth::id();
         $step->save();
 
-        if($discount_id < 1) {
-            Cart::updateStatus($cart_id, $status_id); 
-            Cart::updateState($cart_id, $state_id); 
-        }
+        Cart::updateStatus($cart_id, $status_id); 
+        Cart::updateState($cart_id, $state_id); 
     }
 
     public static function nextStatus($id)

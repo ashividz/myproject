@@ -8,36 +8,24 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Cart;
-use App\Models\CartStatus;
+use App\Models\WorkflowStatus;
 use App\Models\CartStep;
 use App\Models\Patient;
 use App\Models\Order;
 use App\Models\OrderPatient;
-use App\Models\Discount;
-use App\Support\Helper;
 use Redirect;
 
 class CartApprovalController extends Controller
 {
     public function show()
-    {$roles = Helper::roles();
-
-        $carts = Cart::with('payments.method', 'steps')
-                    /*->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')*/
-                    ->whereHas('status.approvers', function($q) use ($roles){
-                        $q->whereIn('approver_role_id', $roles);
-                    })
+    {
+        $carts = Cart::select('carts.*')
+                    ->with('payments.method', 'steps')
+                    ->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')
                     ->orderBy('carts.id', 'desc')
-                    /*->where(function ($query) {
-                        $query->where('status_id', '=', 4)
-                              ->Where('state_id', '=', 3);
-                    })*/
-                    ->limit(10)
-                    ->get();
+                    ->get(); //dd($carts);
 
-                    
-
-        $statuses = CartStatus::get();
+        $statuses = WorkflowStatus::get();
 
         $data = array(
              
@@ -50,7 +38,7 @@ class CartApprovalController extends Controller
     }
 
     public function store(Request $request)
-    {//dd($request);
+    {
         if ($request->get('state')) {
             foreach($request->get('state') as $id => $state_id)
             {
@@ -66,15 +54,15 @@ class CartApprovalController extends Controller
 
                 } elseif ($state_id == 3) { //Approved
 
-                    $count = CartStatus::count();
+                    $count = Status::count();
 
                     //Complete State for same step
                     CartStep::store($cart->id, $cart->status_id, $state_id, $remark);
 
                     if($cart->status_id < $count) {
-
                         //Create next CartStep
-                        CartStep::nextStatus($id);                       
+                        CartStep::nextStatus($id);
+                        
 
                     }  else {                        
                         Cart::updateState($cart->id, $state_id); 
@@ -102,7 +90,7 @@ class CartApprovalController extends Controller
 
                         Cart::updateState($cart->id, 1);        
                     }                 
-                }              
+                } 
             }
 
             $data = array(
@@ -136,32 +124,6 @@ class CartApprovalController extends Controller
            
 
         return redirect('/cart/approval')->with($data);
-
-    }
-
-    public function modal($id)
-    {
-        $cart = Cart::find($id);
-
-        $data = array(
-                'cart'      => $cart
-            );
-
-        return view('cart.modals.update')->with($data);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $cart = Cart::find($id);
-
-        CartStep::store($cart->id, $cart->status_id, 1, $request->remark);
-
-        $data = array(
-                'message' => 'Cart Updated', 
-                'status' => 'success'
-        );
-
-        return back();
 
     }
 }

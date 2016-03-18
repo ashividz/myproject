@@ -2,7 +2,6 @@
 @section('main')
 <script type="text/javascript" src="/js/modals/herb.js"></script>
 <script type="text/javascript" src="/js/modals/mealtime.js"></script>
-<div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title">Herbs
@@ -108,7 +107,6 @@
 			</form>
 		</div>
 	</div>
-</div>
 @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('doctor'))
 <script type="text/javascript">
 

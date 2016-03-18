@@ -1,6 +1,6 @@
 @extends('patient.index')
 @section('main')
-<div class="container">
+<div class="container1">
 	<div id="carousel" class="carousel" data-ride="carousel">
   	<!-- Indicators -->
   	<ol class="carousel-indicators">
