@@ -53,7 +53,7 @@ class LeadController extends Controller
     public function dialerCall(Request $request)
     {
         
-        $mobile = $request->phone_no ? $request->phone_no: $request->ANI;
+        $mobile = $request->phone_no ? Helper::properMobile($request->phone_no): Helper::properMobile($request->ANI);
 
         if ($mobile) {
 
