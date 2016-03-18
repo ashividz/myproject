@@ -486,7 +486,7 @@
 
         @endif  
         </li>  
-        @if(Auth::user()->hasRole('admin'))                
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))                
         <li class="{{ $menu == 'settings' ? 'current' : '' }}">
             <a href="/settings" id="menu_settings" class="firstLevelMenu"><b>Settings</b></a>
             
