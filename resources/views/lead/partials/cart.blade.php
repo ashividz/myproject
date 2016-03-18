@@ -53,11 +53,11 @@
                             <tr>
                                 <td>
                                     <label>Country <div class='asterix'>*</div> :</label>   
-                                    {!! $lead->country == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->m_country->country_name or "" !!}
+                                    {!! $lead->country == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->m_country->country_name !!}
                                 </td>
                                 <td>
                                     <label>Region/State <div class='asterix'>*</div> :</label>   
-                                    {!! $lead->state == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->region->region_name or "" !!}
+                                    {!! $lead->state == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->region->region_name !!}
                                 </td>
                                 <td>
                                     <label>City <div class='asterix'>*</div> :</label>   
