@@ -18,16 +18,6 @@ class Fee extends Model
        return ['entry_date', 'start_date', 'end_date','created_at', 'updated_at'];
     }
 
-    public static function clean()
-    {
-    	//Update cre in Fee table
-        //DB::update("UPDATE fees_details f SET cre = (SELECT cre FROM patient_details p LEFT JOIN marketing_details m On m.id = p.lead_id LEFT JOIN (SELECT * FROM lead_cre A WHERE id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) c ON c.lead_id = m.id WHERE f.patient_id = p.id) WHERE cre iS NULL AND f.entry_date >= '2015-11-01'");
-        //Update source in Fee table
-        //DB::update("UPDATE fees_details f SET source_id = (SELECT c.source_id FROM patient_details p LEFT JOIN marketing_details m On m.id = p.lead_id LEFT JOIN (SELECT * FROM lead_sources A WHERE id = (SELECT MAX(id) FROM lead_sources B WHERE A.lead_id=B.lead_id)) c ON c.lead_id = m.id WHERE f.patient_id = p.id) WHERE f.source_id IS NULL AND f.entry_date >= '2015-11-01'");
-        //Update created_at field in Fee table
-        //DB::update("UPDATE fees_details f SET created_at = entry_date");
-    }
-
     public function patient()
     {
     	return $this->belongsTo(Patient::class);

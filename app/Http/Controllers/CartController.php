@@ -142,7 +142,7 @@ class CartController extends Controller
         
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
             ->find($id); 
-
+            
         $statuses = CartStatus::get(); 
 
         $data = array(

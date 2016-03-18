@@ -94,6 +94,11 @@ class Lead extends Model
         return $this->hasOne(LeadDnc::class);
     }
 
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class);
+    }
+
     private function bmi($weight, $height)
     {
         if ($weight && $height) {

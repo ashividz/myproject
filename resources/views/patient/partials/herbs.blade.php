@@ -48,11 +48,11 @@
 						<td>{{date('jS M, Y h:i A', strtotime($herb->created_at))}}</td>
 						<td>Dr. {{$herb->created_by}}</td>
 						<td>
-							<input type="checkbox" name="active" value="{{$herb->id}}" class="switch" data-size="mini" data-off-color="danger" {{$herb->deleted_at == NULL ?'checked':''}}>
+							<input type="checkbox" name="active" value="{{$herb->id}}" {{$herb->deleted_at == NULL ?'checked':''}}>
 
-							@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('seervice'))
+							@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service'))
 								<div class="pull-right">
-									<a href="#" id="{{$herb->id}}" onclick="deleteHerb(this.id)"><i class="fa fa-remove red"></i></a>
+									<a href="#" id="{{$herb->id}}" onclick="deleteHerb({{ $herb->id }})"><i class="fa fa-remove red"></i></a>
 								</div>
 							@endif
 							<p>{{$herb->deleted_at? date('jS M, Y', strtotime($herb->deleted_at)) :''}}
@@ -112,17 +112,15 @@
 @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('doctor'))
 <script type="text/javascript">
 
-	//Bootstrap Switch 
-	$('input[name="active"]').bootstrapSwitch();
-	
-	$('input[name="active"]').on('switchChange.bootstrapSwitch', function(event, state) {
-
-		var url = "/patient/herb/" + this.value + "/update"; //
+$(document).ready(function(){
+    $("input[type='checkbox']").on('change', function(){
+        var url = "/patient/herb/" + $(this).val() + "/update"; //
+        var state = $(this).is(":checked") ? 1 : 0;
         $.ajax(
         {
            type: "POST",
            url: url,
-           data: {state : state, "_token" : "{{ csrf_token()}}" }, // send Source Id.
+           data: {state : state, '_token' : '{{ csrf_token()}}' },
            success: function(data)
            {
                $('#alert').show();
@@ -134,27 +132,28 @@
                         location.reload();
                      });
                 }, 3000);
-           	},
-           	error: function(data) {
-			    var errors = data.responseJson;
+            },
+            error: function(data) {
+                var errors = data.responseJson;
 
-			    $('#alert').show();
-               	$('#alert').empty();
+                $('#alert').show();
+                $('#alert').empty();
 
-			    $.each(errors, function(index, value) {
-		            $('#alert').append("<li>"+value+"</li>");
-		        });
+                $.each(errors, function(index, value) {
+                    $('#alert').append("<li>"+value+"</li>");
+                });
 
-               	setTimeout(function()
+                setTimeout(function()
                 {
                     $('#alert').slideUp('slow').fadeOut(function() 
                     {
                         //location.reload();
                      });
                 }, 3000);
-			}
+            }
         });
-	});
+    });
+});
 
 	function deleteHerb(id) {
 

@@ -31,13 +31,13 @@ class DialerPushController extends Controller
 
       public function __construct(Request $request)
     {   
-        $this->limit = isset($request->limit) ? $request->limit : 1000;
+        $this->limit = isset($request->limit) ? $request->limit : 2000;
         $this->list_id = "sales01022016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
-        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y-01-01 0:0:0");
-        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');
+        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("2015-01-01 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('2015-01-15 23:59:59');
         
     }
 
@@ -130,59 +130,39 @@ public function getLeadsConsecutive(Request $request)
     {
         $users = User::getUsersByRole('cre');
         $cre = $request->user;
-        $disop_date = date('Y-m-d 0:0:0', strtotime('-3 days'));
-        $cur_date = date('Y-m-d 0:0:0');
-        $list_id = $this->list_id;
-        if(isset($request->limit))
-            $this->limit = $request->limit;
-        else
-             $this->limit = 1000;  
 
-        $leads = Lead::with('dnc')
-                        ->with('patient')
-                        ->with('sources.master', 'status')
-                        ->join(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  created_at < '$disop_date' and (callback IS NULL OR callback < '$cur_date')  and  disposition_id  IN('3','4','5','6','10') and id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS d"), function($join) {
-                                 $join->on('marketing_details.id', '=', 'd.lead_id');
-                                     
-                            })
-
-                        ->leftjoin(DB::raw("(SELECT * FROM dialer_push WHERE  name='$cre' and list_id='$list_id') as dp "), function($join) {
-                                 $join->on('marketing_details.id', '=', 'dp.lead_id');
-                                     
-                            })
-
-                       /* ->with(['lead.disposition'=> function($q) {
-                                $q->where('created_at', '<', date('Y-m-d 0:0:0', strtotime('-3 days')))
-                                $q->where('callback', '<', date('Y-m-d 0:0:0')))
-                                $q->whereIn('disposition_id', array('3','4','5','6','10'));
-                            }])*/
-                         //->with(array('patient.tags' => function($q) {
-                         //    $q->where('tags.name', '<>','VIP');
-                         //}))
-                        //->where('phone_dnd','=','1')
-                        
-                        ->where('status_id', '<>', 5)
-                        ->join(DB::raw("(SELECT * FROM lead_cre A WHERE cre = '$cre' and (deleted_at IS NULL OR deleted_at = '') and (created_at BETWEEN '$this->start_date' and '$this->end_date') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
-                                 $join->on('marketing_details.id', '=', 'c.lead_id');
-                            })
-                        ->select('dp.created_at as dialer_push_date', 'marketing_details.*', 'c.created_at as cre_assign_date', 'c.cre as cre_name', 'c.cre as cre_name', 'd.created_at as dispo_date', 'd.disposition_id as cdisposition_id', 'd.callback as callback')
-                        //->whereBetween('c.created_at', array($this->start_date, $this->end_date))
-                        //->where('c.cre', $cre)
-                        ->orderBy('c.created_at','desc')
-                        //->WhereNull('c.deleted_at')
-                        ->where('country','=','IN')
-                        ->limit($this->limit)->get();
+        $leads = Lead::select('marketing_details.*')
+            ->with('cre', 'disposition')
+            ->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
+            ->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id')
+            ->join(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE A.lead_id=B.lead_id)) AS cd'), function($join) {
+                $join->on('marketing_details.id', '=', 'cd.lead_id');
+            })
+            ->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id')
+            ->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))
+            ->whereNull('p.id')
+            ->whereNull('d.id')
+            ->whereNull('dp.id')
+            ->whereNotNull('marketing_details.source_id')
+            ->where('cd.created_at', '<=', '2016-2-31')
+            ->where(function($q) {
+                $q->where('marketing_details.country', 'IN')
+                    ->orWhereNull('marketing_details.country');
+            })
+            ->limit($this->limit)
+            ->get();
+        //dd($leads);
 
             //dd($leads);
-        $push_stats = [];
+        /*$push_stats = [];
         foreach($leads as $lead)
         {
 
-        //echo $lead->phone."<br>";
-        $push_stat = $this->push($lead, $cre);
-        if(array_filter($push_stat))
-        $push_stats[]  = $push_stat;
-        }
+            //echo $lead->phone."<br>";
+            $push_stat = $this->push($lead, $cre);
+            if(array_filter($push_stat))
+            $push_stats[]  = $push_stat;
+        }*/
         
         
         $data = array(
@@ -190,7 +170,7 @@ public function getLeadsConsecutive(Request $request)
             'menu'          => 'lead',
             'start_date'    => $this->start_date,
             'end_date'      => $this->end_date,
-            'push_stats'    => $push_stats,
+            'leads'         => $leads,
             'users'         => $users,
             'name'          => $this->cre,
             'limit'         => $this->limit,
@@ -252,31 +232,34 @@ public function getLeadsConsecutive(Request $request)
 
     public function execute(Request $request)
     {   
-        $lead_ids =  $request->lead_ids;
-        $push_stats = [];
-        $emp = Employee::where('name','LIKE',$this->cre)->first();
+        $lead_ids =  $request->id;
+
+        $list_id = $this->list_id;
+
+        //$emp = Employee::where('name','LIKE',$this->cre)->first();
+
         $i = 0;
         echo "<div style='text-align:left;height: 500px;width: 550px;overflow: auto'>";
         foreach($lead_ids as $lead_id)
         {
             $output= 'false2';
             $phone = $request->phone[$i];
-            $cre_name = $request->cre_name[$i];
-            $dispo_date = $request->dispo_date[$i];
-            $dispo_remark = $request->dispo_remark[$i];
-            $callback = $request->callback[$i];
-            $username = $request->username[$i];
-            $push = $request->push[$i];
-            $cre_assign_date = $request->cre_assign_date[$i];
-            $lead_name = $request->lead_name[$i];
-            $lead_status = $request->lead_status[$i];
-            $source = $request->source[$i];
-            $list_id = $this->list_id;
+            //$cre_name = $request->cre_name[$i];
+            //$dispo_date = $request->dispo_date[$i];
+            //$dispo_remark = $request->dispo_remark[$i];
+            //$callback = $request->callback[$i];
+            //$username = $request->username[$i];
+            //$push = $request->push[$i];
+            //$cre_assign_date = $request->cre_assign_date[$i];
+            //$lead_name = $request->lead_name[$i];
+            //$lead_status = $request->lead_status[$i];
+            //$source = $request->source[$i];
+            
            
-            if($push==1)
-            {
+            //if($push==1)
+            //{
             $ch = curl_init(DIALER_URI);
-            $encoded_params = "do=manualUpload&username=admin&password=User#7715$&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=".$username;
+            $encoded_params = "do=manualUpload&username=admin&password=NutriweL&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=";
             
             curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -284,27 +267,26 @@ public function getLeadsConsecutive(Request $request)
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $output = curl_exec($ch);
             curl_close($ch);
-            }
-          if($output == "Number added successfully.")
-          {
-                $lead = Lead::find($lead_id);
+            //}
+            if($output == "Number added successfully.")
+            {
+                //$lead = Lead::find($lead_id);
                 $dialer_push = New DialerPush;
                 $dialer_push->lead_id = $lead_id;
-                $dialer_push->user = $username;
-                $dialer_push->name = $cre_name;
+                //$dialer_push->user = $username;
+                //$dialer_push->name = $cre_name;
                
                 $dialer_push->phone = $phone;
-                $dialer_push->list_id =  $list_id;
+                //$dialer_push->list_id =  $list_id;
                 $dialer_push->created_by = Auth::user()->employee->name;
                 $dialer_push->status = $output;
                 $dialer_push->save();
-
             }
             
             /*$push_stat = array('cre_name' => $lead->cre_name,'lead_status' => $lead_status, 'source' => $source, 'cre_assign_date' => $cre_assign_date, 'push' => $push, 'lead_id'=>$lead_id,'phone'=>$phone, 'lead_name' => $lead_name, 'username' =>$username, 'output' => $output, 'dispo_date' => $dispo_date, 'dispo_remark' => $dispo_remark, 'callback' => $callback);
             $push_stats[] = $push_stat;*/
 
-            echo "<p><b>" . $lead_name . "</b>: Push Status <b>" . $output . "</b></p>";
+            echo "<p><b>" . $lead_id . "</b>: Push Status <b>" . $output . "</b></p>";
             $i++;
             
         }

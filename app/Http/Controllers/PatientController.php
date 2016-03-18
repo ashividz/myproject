@@ -71,7 +71,7 @@ class PatientController extends Controller
     }*/
 
     public function updateHerb($id, Request $request)
-    {
+    { 
         if(PatientHerb::active($id, $request->state))
         {
             return "Successfully updated";

@@ -75,7 +75,7 @@ class PatientHerb extends Model
         $herb->deleted_at = NULL;
         $herb->deleted_by = NULL;
 
-        if($state == 'false')
+        if($state == 0)
         {   
             //dd($state);
             $herb->deleted_at = date('Y-m-d h:i:s');
