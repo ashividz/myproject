@@ -29,7 +29,7 @@ class OrderPatient extends Model
             $po->patient_id = $patient->id;
             $po->order_id = $order->id;
             $po->duration = $duration;
-            $po->created_by = 1;//Auth::id();
+            $po->created_by = Auth::id();
             $po->save();
 
             //Update old Fee tables for now

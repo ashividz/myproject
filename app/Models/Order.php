@@ -45,7 +45,7 @@ class Order extends Model
                 $order->cart_id                 = $cart->id;
                 $order->product_category_id     = $category ->id;
                 $order->duration                = $duration;
-                $order->created_by              = 1;//Auth::id();
+                $order->created_by              = Auth::id();
                 $order->save();
             }
         }
