@@ -14,6 +14,11 @@ class Employee extends Model
     	return $this->hasOne(User::class, 'emp_id', 'id');
     }
 
+    public function sup()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_supervisor', 'employee_id', 'supervisor_employee_id');
+    }
+
     public function supervisor()
     {
         return $this->hasOne(EmployeeSupervisor::class, 'employee_id')->latest();

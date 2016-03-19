@@ -95,7 +95,11 @@
                                     </div>
 
                                     <div>
-                                        <label>CRE :</label> {{$cart->lead->cres->first()->user_id}}
+                                        <label>CRE :</label> {{ $cart->cre->employee->name or '' }}
+                                    </div>
+
+                                    <div>
+                                        <label>TL :</label> {{ $cart->cre->employee->sup->name or '' }}
                                     </div>                             
                                     
                                 </td>
