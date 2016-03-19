@@ -64,7 +64,7 @@ $(document).ready(function()
             type: "post",
             data: data,
             url: "/api/coupon/validate"
-        }).success(function(data, status){
+        }).success(function(data){
             /*$("#alert").show();
             $("#alert").append(data);*/
             console.log(data);

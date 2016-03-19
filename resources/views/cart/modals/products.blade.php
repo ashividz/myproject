@@ -150,7 +150,7 @@
             type: "post",
             data: data,
             url: "/api/coupon/validate"
-        }).success(function(data, status){
+        }).success(function(data){
             console.log(data);
             $(this).closest('td').next().find('input').val(data);
             calculateAmount(product_id);
