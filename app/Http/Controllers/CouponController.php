@@ -30,13 +30,13 @@ class CouponController extends Controller
         $id = 'p951be';
         $key ='847f7c49183fecbb32024b37871ad51d';
         $code =  $request->coupon;
-        $phone = $cart->lead->phone;
+        /*$phone = $cart->lead->phone;
         $email = $cart->lead->email;
-        $product = $request->product_id;
+        $product = $request->product_id;*/
         $time = time();
         $token = md5($time.$key);
        
-        $params = array('id' => $id, 'token' => $token,'code'=>$code,'product'=>$product,'phone'=>$phone,'email'=>$email);
+        $params = array('id' => $id, 'token' => $token,'code'=>$code);
 
 
         $postData = '';
@@ -45,9 +45,7 @@ class CouponController extends Controller
         { 
             $postData .= $k . '='.$v.'&'; 
         }
-        $postData .= 'productincart[]'.'='.'10'.'&';
-        $postData .= 'productincart[]'.'='.'2'.'&';
-       
+
         $postData = rtrim($postData, '&');
      
         $ch = curl_init();   
