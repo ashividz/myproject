@@ -14,6 +14,7 @@
 setlocale(LC_MONETARY, "en_IN");
 
 Route::get('orders', 'OrderController@index');
+Route::post('orders', 'OrderController@index');
 
 Route::group([
 	'middleware' => ['auth','roles'], 
