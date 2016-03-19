@@ -81,7 +81,7 @@ class CartController extends Controller
 
                 $cart = new Cart;
                 $cart->lead_id = $request->id;
-                $cart->cre_id = $lead->cres->first()->cre;//$request->cre;
+                $cart->cre_id = $lead->cres->first()->user_id;//$request->cre;
                 $cart->source_id = $lead->source_id;//$request->source;
                 $cart->currency_id = $request->currency;
                 $cart->created_by = Auth::id();
