@@ -33,7 +33,7 @@ class CartPayment extends Model
             $payment->payment_method_id   = $request->payment_method;
             $payment->date              = $request->date? date('Y-m-d', strtotime($request->date)) : date('Y-m-d');
             $payment->remark            = $request->remark;
-            $payment->created_by        = 1;//Auth::id();
+            $payment->created_by        = Auth::id();
             $payment->save();
 
             Cart::updatePayment($id);

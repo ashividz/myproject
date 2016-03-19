@@ -12,6 +12,7 @@ use App\Models\ProductCategory;
 use App\Models\Cart;
 use App\Models\CartProduct;
 use Redirect;
+use Auth;
 
 class CartProductController extends Controller
 {
@@ -60,7 +61,7 @@ class CartProductController extends Controller
                 $cartProduct->discount = $discount;
                 $cartProduct->quantity = $quantity;
                 $cartProduct->amount = $amount;
-                $cartProduct->created_by = 1;
+                $cartProduct->created_by = Auth::id();
                 $cartProduct->save(); 
 
                 //dd($cartProduct);
