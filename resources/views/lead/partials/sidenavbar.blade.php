@@ -4,11 +4,9 @@
   	<li{!! (($section == "partials.details") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/viewDetails">Lead Details</a></li>
   	<li{!! (($section == "partials.references") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/viewReferences">References</a></li>
  	<li{!! (($section == "partials.dispositions") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/viewDispositions">Call Dispositions</a></li> 
-@if((Auth::user()->hasRole('admin')))
 
     <li{!! (($section == "partials.program") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/program">Program</a></li> 
     <li{!! (($section == "partials.cart") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/cart">Cart</a></li> 
-@endif
  	<li{!! (($section == "partials.email") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/email">Email</a></li> 
 </ul>
 
