@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Lead;
+use App\Models\Employee;
 
 class LeadCre extends Model
 {
@@ -28,11 +29,13 @@ class LeadCre extends Model
     {
     	try 
     	{
-    		$leadCre = new LeadCre;
+    		$employee = Employee::where('name', $cre)->first();
+
+            $leadCre = new LeadCre;
 	    	$leadCre->lead_id = $lead->id;
-	    	//$leadCre->clinic = $lead->clinic;
-	    	//$leadCre->enquiry_no = $lead->enquiry_no;
-            $leadCre->user_id = isset($cre) ? Auth::user()->id : "" ;
+            
+            $leadCre->user_id = isset($cre) ? $employee->user->id : Auth::user()->id;
+
             $leadCre->cre = trim($cre) <> "" ? $cre : Auth::user()->employee->name;
             $leadCre->start_date = date('Y/m/d');
             $leadCre->created_by = Auth::user()->employee->name;

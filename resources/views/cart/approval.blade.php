@@ -95,7 +95,7 @@
                                     </div>
 
                                     <div>
-                                        <label>CRE :</label> {{$cart->cre->employee->name or ""}}
+                                        <label>CRE :</label> {{$cart->lead->cres->first()}}
                                     </div>                             
                                     
                                 </td>
