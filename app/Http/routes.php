@@ -13,6 +13,8 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
+Route::get('orders', 'OrderController@index');
+
 Route::group([
 	'middleware' => ['auth','roles'], 
 	'roles' => ['admin']], 
@@ -50,6 +52,8 @@ Route::group([
         Route::post('cart/approval', 'CartApprovalController@store');
 
 });
+
+
 
 Route::group([
 	'middleware' => ['auth','roles'], 
