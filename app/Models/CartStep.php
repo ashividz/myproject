@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
+use Auth;
 
 class CartStep extends Model
 {
@@ -47,7 +48,7 @@ class CartStep extends Model
         $step->status_id        = $status_id;
         $step->state_id         = $state_id;
         $step->remark           = $remark;
-        $step->created_by       = 1;//Auth::id();
+        $step->created_by       = Auth::id();
         $step->save();
 
         Cart::updateStatus($cart_id, $status_id); 
@@ -64,7 +65,7 @@ class CartStep extends Model
             $step->cart_id         = $cart->id;
             $step->status_id        = $cart->status_id + 1;
             $step->state_id         = 1;
-            $step->created_by       = 1;//Auth::id();
+            $step->created_by       = Auth::id();
             $step->save();
 
             Cart::updateStatus($cart->id, $cart->status_id + 1); 
@@ -83,7 +84,7 @@ class CartStep extends Model
             $step->status_id        = $cart->status_id;
             $step->state_id         = 1;
             $step->remark           = $remark;
-            $step->created_by       = 1;//Auth::id();
+            $step->created_by       = Auth::id();
             $step->save();
 
             Cart::updateStatus($cart->id, $cart->status_id); 
