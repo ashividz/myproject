@@ -402,6 +402,9 @@ Route::group([
         Route::get('patient/{id}/diets', 'PatientDietController@all');
         Route::get('patient/{id}/weight', 'PatientWeightController@index');
         Route::get('patient/{id}/measurements', 'PatientMeasurementController@index');
+
+        Route::get('patient/{id}/medicalTest', 'PatientBTController@showMedicalTest');
+        Route::post('patient/{id}/medicalTest', 'PatientBTController@storeMedicalTest');
         
                 
 });

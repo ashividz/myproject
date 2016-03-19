@@ -24,6 +24,7 @@
 	
 	<li{!! (($section == "partials.tag") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/tags">Tags</a></li> 
 	<li{!! (($section == "partials.notes") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/notes">Notes</a></li> 
-	<li{!! (($section == "partials.survey") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/survey">Survey</a></li>  
+	<li{!! (($section == "partials.survey") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/survey">Survey</a></li> 
+	<li{!! (($section == "partials.medicalTest") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/medicalTest">Medical Test</a></li>  
 </ul>
 @endif
