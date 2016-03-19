@@ -24,7 +24,7 @@
 
     $disabled = '';
     if($cart->status_id == 2) {
-        $discount = max(array_pluck($cart->products, 'pivot.discount'));
+        $discount = $cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
         if ($discount > 0) {
             if(!Helper::approveCartDiscount($discount)) {
                 $disabled = 'disabled';
