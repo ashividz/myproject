@@ -39,6 +39,18 @@ Route::group([
 		
 });
 
+
+Route::group([
+    'middleware' => ['auth','roles'], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl']], 
+    function() {
+
+        /* Cart Approval */
+        Route::get('cart/approval', 'CartApprovalController@show');
+        Route::post('cart/approval', 'CartApprovalController@store');
+
+});
+
 Route::group([
 	'middleware' => ['auth','roles'], 
 	'roles' => ['admin', 'marketing']], 
@@ -249,10 +261,6 @@ Route::group([
 		Route::get('cre/viewPayments', 'CREController@viewPayments');
 		Route::post('cre/viewPayments', 'CREController@viewPayments');
 		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
-
-        /* Need to reconfigure */
-        Route::get('cart/approval', 'CartApprovalController@show');
-        Route::post('cart/approval', 'CartApprovalController@store');
 
         /* Cart */
         Route::get('lead/{id}/cart', 'CartController@index');
@@ -746,7 +754,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('update/emailAttachment/{id}', 'EmailTemplateController@updateAttachment');
   
 });
-
 
 // Display all SQL executed in Eloquent
 Event::listen('illuminate.query', function($query)
