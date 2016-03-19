@@ -51,7 +51,7 @@
                                 <th>Cart Details</th>
                                 <th>
                                     Lead Details
-                                    <div style="display: inline;" data-html="true" data-toggle="popover" title="Lead Details" data-content="<li><b>DOB : </b>{{$cart->lead->dob}}</li><li><b>Gender : </b>{{$cart->lead->gender}}</li><li><b>Email : </b>{{$cart->lead->email}}</li><li><b>Phone : </b>{{$cart->lead->phone}}</li><li><b>Mobile : </b>{{$cart->lead->mobile}}</li><li><b>Address : </b>{{$cart->lead->address}}</li><li><b>Country : </b>{{$cart->lead->m_country->country_name or ''}}</li><li><b>State : </b>{{$cart->lead->region->region_name or ''}}</li><li><b>City : </b>{{$cart->lead->city}}</li><li><b>ZIP/PIN : </b>{{$cart->lead->zip}}</li>"><i class="fa fa-info-circle"></i></div>
+                                    <div style="display: inline;" data-html="true" data-toggle="popover" title="Lead Details" data-content="<li><b>DOB : </b>{{$cart->lead->dob->format}}</li><li><b>Gender : </b>{{$cart->lead->gender}}</li><li><b>Email : </b>{{$cart->lead->email}}</li><li><b>Phone : </b>{{$cart->lead->phone}}</li><li><b>Mobile : </b>{{$cart->lead->mobile}}</li><li><b>Address : </b>{{$cart->lead->address}}</li><li><b>Country : </b>{{$cart->lead->m_country->country_name or ''}}</li><li><b>State : </b>{{$cart->lead->region->region_name or ''}}</li><li><b>City : </b>{{$cart->lead->city}}</li><li><b>ZIP/PIN : </b>{{$cart->lead->zip}}</li>"><i class="fa fa-info-circle"></i></div>
                                 </th>
                                 <th>
                                     Payment Details

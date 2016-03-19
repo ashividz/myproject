@@ -41,7 +41,9 @@
                     @endif
                     </div>
                     <div class="col-md-3">
-            <? $products = $order->cart->products->where('product_category_id', $order->product_category_id) ?>
+            <?php 
+                $products = $order->cart->products->where('product_category_id', $order->product_category_id); 
+            ?>
                 @foreach($products as $product)
                         <div>
                             <label>Category : </label>
