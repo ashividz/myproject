@@ -92,7 +92,7 @@ class Patient extends Model
 
     public function medical() 
     {
-        return $this->hasOne(Medical::class);
+        return $this->hasMany(Medical::class)->orderBy('id', 'desc');
     }    
 
     public function herbs() 
