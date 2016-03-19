@@ -1,80 +1,3 @@
-<script type="text/javascript">
-    function changeQuantity(id) {
-        calculateAmount(id);
-    }
-
-    function changeDiscount(id) {
-        calculateAmount(id);
-    }
-    
-    $("#coupon\\[\\]").bind("change", function(){
-        var product_id = $(this).next('input').val();
-
-        var data = {
-            cart_id : {{$cart->id}}, 
-            product_id : product_id,
-            coupon : $(this).val(),
-            _token : "{{ csrf_token() }}"
-        };
-
-        $.ajax({
-            context: this,
-            type: "post",
-            data: data,
-            url: "/api/coupon/validate"
-        }).success(function(data, status){
-            console.log(data);
-            $(this).closest('td').next().find('input').val(data);
-            calculateAmount(product_id);
-        });        
-    });
-
-    function calculateAmount(id)
-    {
-        var quantity = $("#quantity\\["+id+"\\]").val();
-        var price = $("#price\\["+id+"\\]").val();
-        var discount = $("#discount\\["+id+"\\]").val(); 
-        var amount = (price - (discount*price/100))*quantity;
-
-        $("#amount\\["+id+"\\]").val(amount);
-    }
-
-    $(function () {
-        $('[data-toggle="popover"]').popover()
-    })
-    //dismiss-a-twitter-bootstrap-popover-by-clicking-outside
-    $('body').on('click', function (e) {
-        $('[data-toggle="popover"]').each(function () {
-            //the 'is' for buttons that trigger popups
-            //the 'has' for icons within a button that triggers a popup
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                $(this).popover('hide');
-            }
-        });
-    });
-</script>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('table tr').click(function(event) {
-        if (event.target.type !== 'checkbox') {
-            if ($(':checkbox', this).is(":checked")) {
-                return false;
-            }
-            $(':checkbox', this).trigger('click');
-        }
-    });
-
-    $("input[type='checkbox']").change(function (e) {
-        if ($(this).is(":checked")) { //If the checkbox is checked
-            $(this).closest('tr').addClass("selected"); 
-            //Add class on checkbox checked
-        } else {
-            $(this).closest('tr').removeClass("selected");
-            //Remove class on checkbox uncheck
-        }
-    });
-});
-</script>
 <div class="" id="products">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -203,3 +126,80 @@ $(document).ready(function() {
         border: 1px solid #e4c94b;
     }
 </style>
+<script type="text/javascript">
+    function changeQuantity(id) {
+        calculateAmount(id);
+    }
+
+    function changeDiscount(id) {
+        calculateAmount(id);
+    }
+    
+    $("#coupon\\[\\]").bind("change", function(){
+        var product_id = $(this).next('input').val();
+
+        var data = {
+            cart_id : {{$cart->id}}, 
+            product_id : product_id,
+            coupon : $(this).val(),
+            _token : "{{ csrf_token() }}"
+        };
+
+        $.ajax({
+            context: this,
+            type: "post",
+            data: data,
+            url: "/api/coupon/validate"
+        }).success(function(data, status){
+            console.log(data);
+            $(this).closest('td').next().find('input').val(data);
+            calculateAmount(product_id);
+        });        
+    });
+
+    function calculateAmount(id)
+    {
+        var quantity = $("#quantity\\["+id+"\\]").val();
+        var price = $("#price\\["+id+"\\]").val();
+        var discount = $("#discount\\["+id+"\\]").val(); 
+        var amount = (price - (discount*price/100))*quantity;
+
+        $("#amount\\["+id+"\\]").val(amount);
+    }
+
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+    //dismiss-a-twitter-bootstrap-popover-by-clicking-outside
+    $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+            //the 'is' for buttons that trigger popups
+            //the 'has' for icons within a button that triggers a popup
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('table tr').click(function(event) {
+        if (event.target.type !== 'checkbox') {
+            if ($(':checkbox', this).is(":checked")) {
+                return false;
+            }
+            $(':checkbox', this).trigger('click');
+        }
+    });
+
+    $("input[type='checkbox']").change(function (e) {
+        if ($(this).is(":checked")) { //If the checkbox is checked
+            $(this).closest('tr').addClass("selected"); 
+            //Add class on checkbox checked
+        } else {
+            $(this).closest('tr').removeClass("selected");
+            //Remove class on checkbox uncheck
+        }
+    });
+});
+</script>
