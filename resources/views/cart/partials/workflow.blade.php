@@ -60,6 +60,10 @@ strong.success {
     background-color: #4CAE4C;
 }
 
+strong.warning {
+    background-color: #F28C38;
+}
+
 .primary {
     color: #2E6DA4;
 }
@@ -68,6 +72,9 @@ strong.success {
 }
 .success {
     color: #4CAE4C;
+}
+.warning {
+    color:#F28C38;
 }
 .popover {
     max-width: 1200px;

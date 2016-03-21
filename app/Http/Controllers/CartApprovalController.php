@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Cart;
 use App\Models\CartStatus;
+use App\Models\Discount;
 use App\Models\CartStep;
 use App\Models\Patient;
 use App\Models\Order;
@@ -23,7 +24,7 @@ class CartApprovalController extends Controller
         $roles = Helper::roles(); //dd($roles);
 
         $carts = Cart::select('carts.*')
-                    ->with('payments.method', 'steps', 'cre.employee.sup')
+                    ->with('payments.method', 'steps', 'cre.employee.sup', 'step')
                     /*->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')*/
                     ->whereHas('approvers', function($q) use ($roles) {
                         $q->whereIn('approver_role_id', $roles);
@@ -76,13 +77,19 @@ class CartApprovalController extends Controller
 
                 }  elseif ($state_id == 4) { //Multiple Discount Approvers
                     
+                    //dd($request);
 
-                    $discount_id = $request->input('discount_id.'.$id); //dd($discount_id);
-                    //$discount_id = $discount_id == 1 ? 1 : $discount_id - 1;
+                    $step = CartStep::where('cart_id', $cart->id)->orderBy('id', 'desc')->first();
+                    //$request->input('discount_id.'.$id); 
+                    $discount_id = $step->discount_id + 1;
                     
+                    //dd($discount_id);
+                    $maxDiscount = max(array_pluck($cart->products, 'pivot.discount')); 
+                    //dd($maxDiscount);
 
-                    $discount = Discount::where('value', '<=', 25)
-                                ->where('id', $discount_id)->first(); //dd($discount);
+                    $discount = Discount::where('value', '<', $maxDiscount)
+                                ->where('id', $discount_id)->first(); 
+                                //dd($discount);
 
                     $state_id = $discount ? 4 : 3;
 
@@ -109,11 +116,11 @@ class CartApprovalController extends Controller
             $cart = Cart::find($request->get('id'));
 
             //Patient Registration
-            $patient = Patient::register($cart); 
+            $patient = Patient::register($cart);
 
-            if ($patient) {
-                Order::store($cart);
-            }
+            //if ($patient) {
+            Order::store($cart, $patient);
+            //}
 
             //Create Order
             //Order::store($cart);

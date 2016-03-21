@@ -7,6 +7,7 @@ use Auth;
 use Carbon\Carbon;
 
 use App\Models\ProductCategory;
+use App\Models\Fee;
 
 class Order extends Model
 {
@@ -30,7 +31,7 @@ class Order extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public static function store($cart)
+    public static function store($cart, $patient = null)
     {
         $categories = ProductCategory::get();
 
@@ -41,7 +42,7 @@ class Order extends Model
             if ($duration > 0) {
                 $order = new Order;
 
-                $order->patient_id              = $cart->lead->patient ? $cart->lead->patient->id : null;
+                $order->patient_id              = $patient->id;
                 $order->cart_id                 = $cart->id;
                 $order->product_category_id     = $category ->id;
                 $order->duration                = $duration;
@@ -52,8 +53,10 @@ class Order extends Model
 
 
         //Update old Fee tables for now
-        if (isset($cart->lead->patient)) {
-            OrderPatient::fee($cart->lead->patient, $cart);
+        if ($patient) {
+            foreach ($cart->payments as $payment) {
+                Fee::store($patient, $payment);
+            }    
         } 
     }
 }

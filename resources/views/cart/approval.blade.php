@@ -23,10 +23,16 @@
     /* Check Payment Approver */
 
     $disabled = '';
+    $maxDiscount = null;
+    $discount = null;
     if($cart->status_id == 2) {
-        $discount = $cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
-        if ($discount > 0) {
-            if(!Helper::approveCartDiscount($discount)) {
+        $maxDiscount = $cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
+        if ($maxDiscount > 0) {
+            $discount_id = $cart->step->discount_id + 1;
+            //var_dump($cart->step->discount_id); 
+            $discount = Discount::where('id', $discount_id)->first();
+
+            if(!Helper::approveCartDiscount($maxDiscount)) {
                 $disabled = 'disabled';
             }
         }
@@ -132,19 +138,21 @@
                                 <td align="center">
                             @if($cart->status_id <> 4)
                                     <div class="form-group">
-                                        <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="3" checked> Approve
+                                        <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="{{ $maxDiscount > 0 ? 4 : 3 }}" checked> Approve
                                         <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="2"> Reject                               
                                     </div> 
                                     <div class="form-group">    
                                        
-                                        <textarea name="remark[{{$cart->id}}]" class="form-control" style="width: 50%;"></textarea>
+                                        <textarea name="remark[{{$cart->id}}]" class="form-control">@if($discount)Discount approved upto {{ $discount->value }} %@endif
+                                        </textarea>
                                     </div>
                                     <div class="form-group"> 
                                         <input type="hidden" name="cart[{{$cart->id}}]" value="{{$cart->id}}">
+                                        <input type="hidden" name="discount_id" value=""></input>
                                         <button type="submit" class="btn btn-primary" {{ $disabled }}>Save</button>
                                     </div>  
                             @elseif($cart->status_id == 4 && $cart->state_id <> 3)
-                                    <a href="#" onclick="order({{$cart->id}})" class="btn btn-primary">Order</a>
+                                    <a href="#" onclick="order({{$cart->id}})" class="btn btn-primary">{{ $cart->lead->patient ? '' : 'Register Patient & '}}Place Order</a>
                             @endif                              
                                 </td>
                             </tr>

@@ -79,6 +79,22 @@ class CartController extends Controller
 
             return DB::transaction(function() use ($request, $lead) {
 
+                $cart = Cart::where('lead_id', $lead->id)
+                            ->orderBy('id', 'desc')
+                            ->first();
+
+                if(isset($cart)) {
+                    if ($cart->status_id <> 4 || ($cart->status_id == 4 && $cart->state_id <> 3)) {
+                        
+                        $data = array(
+                            'message' => 'Incomplete Cart already exists. Cannot create a new cart', 
+                            'status' => 'error'
+                        );
+
+                        return back()->with($data);
+                    }
+                }
+
                 $cart = new Cart;
                 $cart->lead_id = $request->id;
                 $cart->cre_id = $lead->cres->first()->user_id;//$request->cre;

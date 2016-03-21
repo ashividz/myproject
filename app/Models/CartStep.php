@@ -40,13 +40,14 @@ class CartStep extends Model
                         ->first();
     }
 
-    public static function store($cart_id, $status_id, $state_id, $remark = null)
+    public static function store($cart_id, $status_id, $state_id, $remark = null, $discount_id = null)
     {
         $step = new CartStep;
 
         $step->cart_id          = $cart_id;
         $step->status_id        = $status_id;
         $step->state_id         = $state_id;
+        $step->discount_id      = $discount_id;
         $step->remark           = $remark;
         $step->created_by       = Auth::id();
         $step->save();

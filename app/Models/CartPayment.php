@@ -37,7 +37,7 @@ class CartPayment extends Model
             $payment->created_by        = Auth::id();
             $payment->save();
 
-            Cart::updatePayment($id);
+            Cart::updatePayment($cartId);
 
             return true;
             

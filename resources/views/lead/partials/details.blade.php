@@ -204,7 +204,7 @@
 								<td>{{ date('jS M, Y', strtotime($fee->entry_date)) }}</td>
 								<td>{{ date('jS M, Y', strtotime($fee->start_date)) }}</td>
 								<td>{{ date('jS M, Y', strtotime($fee->end_date)) }}</td>
-								<td>{{ money_format('%i', $fee->total_amount) }}</td>
+								<td>{{ $fee->currency->symbol }} {{ $fee->total_amount }}</td>
 								<td>{{ $fee->cre }}</td>
 								<td>{{ $fee->source->source_name or "" }}</td>
 							</tr>

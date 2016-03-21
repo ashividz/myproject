@@ -70,6 +70,11 @@ class Cart extends Model
         return $this->hasMany(CartStep::class);
     }
     
+    public function step()
+    {
+        return $this->hasOne(CartStep::class)->latest();
+    }
+
     public function steps()
     {
         return $this->hasMany(CartStep::class)->orderBy('id', 'desc');

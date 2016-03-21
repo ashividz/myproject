@@ -28,6 +28,16 @@ class Fee extends Model
     	return $this->belongsTo(Source::class);
     }
 
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    public function cre()
+    {
+        return $this->belongsTo(User::class, 'cre_id');
+    }
+
     public static function conversionCount($cre = NULL, $start_date = NULL, $end_date = NULL) 
     {
         $start_date = isset($start_date) ? $start_date : date('Y/m/d 0:0:0');
@@ -183,21 +193,25 @@ class Fee extends Model
 
     public static function store($patient, $payment)
     {
-        $duration = CartProduct::getDietDuration($payment->order_id, 1);
+        $duration = CartProduct::getDietDuration($payment->cart_id, 1); 
 
         if ($duration) {
 
+            $cre = User::find($payment->cart->cre_id);
+
             $fee = new Fee;
-            $fee->patient_id = $patient->id;
-            $fee->total_amount = $payment->amount;
-            $fee->payment_mode = $payment->payment_mode_id;
-            $fee->entry_date = $payment->created_at;
-            $fee->start_date = Carbon::now()->addDay(1);
-            $fee->end_date = Carbon::now()->addDay($duration+1);
-            $fee->cre = $payment->cart->cre_id;
-            $fee->source_id = $payment->cart->source_id;
-            $fee->duration = $duration->days;
-            $fee->created_by = 1;//Auth::id();
+            $fee->patient_id        = $patient->id;
+            $fee->currency_id       = $payment->cart->currency_id;
+            $fee->total_amount      = $payment->amount;
+            $fee->payment_mode      = $payment->payment_mode_id;
+            $fee->entry_date        = $payment->created_at;
+            $fee->start_date        = Carbon::now()->addDay(1);
+            $fee->end_date          = Carbon::now()->addDay($duration+1);
+            $fee->cre               = $cre ? $cre->employee->name : '';
+            $fee->cre_id            = $payment->cart->cre_id;
+            $fee->source_id         = $payment->cart->source_id;
+            $fee->duration          = $duration;
+            $fee->created_by        = Auth::id();
             $fee->save();            
         }
         
