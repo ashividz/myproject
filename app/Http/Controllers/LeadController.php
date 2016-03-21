@@ -22,6 +22,8 @@ use App\Models\OBD;
 use App\Models\Cod;
 use App\Models\LeadDnc;
 use App\Models\City;
+use App\Models\User;
+
 use DB;
 use Auth;
 use App\Support\Helper;
@@ -245,6 +247,7 @@ class LeadController extends Controller
 
     public function viewDispositions($id)
     {
+             
         $lead = Lead::with('patient','dispositions.master')
                 ->with('dialer')
                 ->with(['disposition' => function($q){
@@ -252,7 +255,7 @@ class LeadController extends Controller
                     $q->whereBetween('created_at', Array(date('Y-m-d 0:0:0'), date('Y-m-d 23:59:59')));
                 }])
                 ->find($id);
-
+        
         if ($lead->country!='IN'){
             $city = new City;
             $flag = false;
@@ -285,10 +288,32 @@ class LeadController extends Controller
            $dept =  2;
         }
 
+
+        $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
+                            ->where('crl.phonenumber', '=', $lead->phone);
+            
+            if(trim($lead->mobile) <> '' && ( $lead->mobile <> $lead->phone)) {
+                $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', $lead->mobile);
+            }
+                    
+            
+        $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
+                                     $join->on('crl.disposition', '=', 'c.disponame');
+                                })
+                                ->join(DB::raw("(SELECT username, userfullname FROM ct_user) AS u"), function($join) {
+                                     $join->on('crl.username', '=', 'u.username');
+                                     })
+                                ->select('crl.username', 'crl.eventdate', 'crl.disposition', 'crl.duration', 'crl.filename', 'c.dispodesc', 'u.userfullname')
+                                ->orderby('crl.eventdate','desc')
+                                ->limit(10)->get();
+                              
+
+    
         $data = array(
             'menu'          =>  'lead',
             'section'       =>  'partials.dispositions',
             'dept'          =>  $dept,
+            'dialer_dispositions' => $dialer_dispositions,
             'lead'          =>  $lead
         );
 
