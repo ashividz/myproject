@@ -289,21 +289,26 @@ class LeadController extends Controller
         }
 
 
-        $dialer_dispositions = DB::connection('pgsql')->table('ct_user_call_log')
-        ->where('ct_user_call_log.phonenumber','=',$lead->phone)
-        ->join(DB::raw("(SELECT distinct disponame,dispodesc FROM ct_dispositions) AS c"), function($join) {
-                                     $join->on('ct_user_call_log.disposition', '=', 'c.disponame');
+        $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
+                            ->where('crl.phonenumber', '=', $lead->phone);
+            
+            if(trim($lead->mobile) <> '' && ( $lead->mobile <> $lead->phone)) {
+                $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', $lead->mobile);
+            }
+                    
+            
+        $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
+                                     $join->on('crl.disposition', '=', 'c.disponame');
                                 })
-        ->select('ct_user_call_log.username','ct_user_call_log.disposedate','ct_user_call_log.disposition','c.dispodesc')
-        ->orderby('ct_user_call_log.disposedate','desc')
-        ->limit(10)->get();
-        foreach($dialer_dispositions as $disposition)
-        {
+                                ->join(DB::raw("(SELECT username, userfullname FROM ct_user) AS u"), function($join) {
+                                     $join->on('crl.username', '=', 'u.username');
+                                     })
+                                ->select('crl.username', 'crl.eventdate', 'crl.disposition', 'crl.duration', 'crl.filename', 'c.dispodesc', 'u.userfullname')
+                                ->orderby('crl.eventdate','desc')
+                                ->limit(10)->get();
+                              
 
-            $cre_name = User::where('username','=',$disposition->username)->first()->employee->name;
-            $disposition->cre_name = $cre_name;
-        }
-
+    
         $data = array(
             'menu'          =>  'lead',
             'section'       =>  'partials.dispositions',

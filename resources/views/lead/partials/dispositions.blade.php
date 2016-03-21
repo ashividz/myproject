@@ -106,19 +106,21 @@
 </div>
 @endsection
 @section('main')
-<div class="container">
-	<div class="col-md-6">
+<div id="dispositions">
+	<div class="col-md-7">
 		<div class="panel panel-default">
+            <div class="panel-heading">                
+                <h5>CRM Dispositions</h5>
+            </div>  
 			<div class="panel-body">
-				<table class="table table-condensed">
+				<table class="table table-condensed table-bordered">
 					<thead>
 						<tr>
 							<th>#</th>
 							<th>Date</th>
-							<th width="60%">Disposition</th>
+							<th width="55%">Disposition</th>
 							<th>Name</th>
-							<th>Email</th>
-							<th>SMS</th>
+							<th>Email/SMS</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -127,14 +129,16 @@
 				<?php $i++ ?>
 						<tr>
 							<td>{{ $i }}</td>
-							<td>{{ date('jS-M-y H:i', strtotime($disposition->created_at)) }}</td>
-							<td><b>{{ $disposition->master->disposition or "" }}</b>  : 
+							<td>{{ date('jS-M-y h:i A', strtotime($disposition->created_at)) }}</td>
+							<td><b>{{ $disposition->master->disposition_code or "" }}</b>  : 
 								{{ $disposition->remarks }}
 								<small class="pull-right">{!! $disposition->callback ? "Callback On : " . date('jS-M-Y h:i A', strtotime($disposition->callback)) : "" !!}</small>
 							</td>
 							<td>{{ $disposition->name }}</td>
-							<td>{!! $disposition->email ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='Email Sent'></span></span>" : "" !!}</td>
-							<td align="center">{!! $disposition->sms ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='" . $disposition->sms . "'></span></span>" : "" !!}</td>
+							<td> 
+                                {!! $disposition->email ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='Email Sent'></span></span>" : "" !!}
+							    {!! $disposition->sms ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='" . $disposition->sms . "'></span></span>" : "" !!}
+                            </td>
 						</tr>
 			@endforeach
 					</tbody>
@@ -142,17 +146,21 @@
 			</div>
 		</div>		
 	</div>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="panel panel-default">
+            <div class="panel-heading">                
+                <h5>Dialer Dispositions</h5>
+            </div>  
             <div class="panel-body">
-                <table class="table table-condensed">
+                <table class="table table-condensed table-bordered">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Date</th>
-                            <th width="60%">Disposition</th>
+                            <th>Disposition</th>
+                            <th>Duration</th>
                             <th>Name</th>
-                            
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -161,11 +169,13 @@
                 <?php $i++ ?>
                         <tr>
                             <td>{{ $i }}</td>
-                            <td>{{ date('jS-M-y H:i', strtotime($disposition->disposedate)) }}</td>
-                            <td><b>{{ $disposition->disposition or "" }}</b>  : {{ $disposition->dispodesc or "" }}
+                            <td>{{ date('jS-M-y h:i A', strtotime($disposition->eventdate)) }}</td>
+                            <td><b>{{ $disposition->disposition or "" }}</b>
                                 
                             </td>
-                            <td>{{ $disposition->cre_name }}</td>
+                            <td>{{ $disposition->duration }}</td>
+                            <td>{{ $disposition->userfullname }}</td>
+                            <td><a href='/playAudio/?mediafile={{$disposition->filename}}'><i class="fa fa-play-circle"></i></a></td>
                         </tr>
             @endforeach
                     </tbody>
@@ -178,6 +188,9 @@
 	.links li {
 		line-height: 60px;
 	}
+    #dispositions table tbody tr td, #dispositions table thead tr th{
+        font-size: .8em;
+    }
 </style>
 
 <script type="text/javascript">
