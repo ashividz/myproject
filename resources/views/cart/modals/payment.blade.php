@@ -8,7 +8,7 @@
 
                 <div class="form-group">
                     <label for="date">Payment Date :</label>
-                    <input id="date" name="date" class="form-control" size="10" value="{{date('d/m/Y')}}" readonly></input>
+                    <input id="date" name="date" class="form-control" size="10" value="{{date('d-m-Y')}}" readonly></input>
                 </div>
                 <div class="form-group">
                     <label for="amount">Amount :</label>

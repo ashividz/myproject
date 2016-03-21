@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException as Exception;
 use Auth;
+use Carbon;
 
 class CartPayment extends Model
 {
@@ -23,15 +24,15 @@ class CartPayment extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public static function store($request, $id)
+    public static function store($request, $cartId)
     {
         try {
             $payment = new CartPayment;
 
-            $payment->cart_id          = $id;
+            $payment->cart_id           = $cartId;
             $payment->amount            = $request->amount;
-            $payment->payment_method_id   = $request->payment_method;
-            $payment->date              = $request->date? date('Y-m-d', strtotime($request->date)) : date('Y-m-d');
+            $payment->payment_method_id = $request->payment_method;
+            $payment->date              = $request->date? Carbon::parse($request->date) : Carbon::now();
             $payment->remark            = $request->remark;
             $payment->created_by        = Auth::id();
             $payment->save();

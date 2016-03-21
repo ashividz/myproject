@@ -13,15 +13,21 @@ use App\Models\CartStep;
 use App\Models\Patient;
 use App\Models\Order;
 use App\Models\OrderPatient;
+use App\Support\Helper;
 use Redirect;
 
 class CartApprovalController extends Controller
 {
     public function show()
     {
+        $roles = Helper::roles(); //dd($roles);
+
         $carts = Cart::select('carts.*')
-                    ->with('payments.method', 'steps')
-                    ->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')
+                    ->with('payments.method', 'steps', 'cre.employee.sup')
+                    /*->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')*/
+                    ->whereHas('approvers', function($q) use ($roles) {
+                        $q->whereIn('approver_role_id', $roles);
+                    })
                     ->orderBy('carts.id', 'desc')
                     ->get(); //dd($carts);
 
