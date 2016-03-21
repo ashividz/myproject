@@ -13,10 +13,12 @@ use App\Http\Requests\PatientBTRequest;
 use App\Models\Patient;
 use App\Models\PatientBT;
 use App\Models\User;
+use App\Models\Medical;
 
 use Auth;
 use DB;
 use Session;
+use Carbon;
 
 class PatientBTController extends Controller
 {
@@ -145,5 +147,27 @@ class PatientBTController extends Controller
         );
          return view('home')->with($data); 
     }
-    
+    public function showMedicalTest($id)
+    {
+        $patient = Patient::with('medical')->find($id);
+        $data = array(
+            'menu'          => 'patient',
+            'section'       => 'partials.medicalTest',
+            'patient'       =>  $patient,
+        );
+         return view('home')->with($data);   
+    }
+
+    public function storeMedicalTest($id,Request $request)
+    {
+        $patient                   = Patient::findOrFail($id);
+        $request->merge([
+            'patient_id'       => $patient->id, 
+            'clinic'           => $patient->clinic,
+            'registration_no'  => $patient->registration_no,
+            'date'             => Carbon::now()->toDateTimeString(),
+            ]);        
+        $medical                   = Medical::create($request->all());        
+        return back();
+    }
 }
