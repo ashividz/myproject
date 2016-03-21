@@ -22,6 +22,8 @@ use App\Models\OBD;
 use App\Models\Cod;
 use App\Models\LeadDnc;
 use App\Models\City;
+use App\Models\User;
+
 use DB;
 use Auth;
 use App\Support\Helper;
@@ -245,6 +247,7 @@ class LeadController extends Controller
 
     public function viewDispositions($id)
     {
+             
         $lead = Lead::with('patient','dispositions.master')
                 ->with('dialer')
                 ->with(['disposition' => function($q){
@@ -252,7 +255,7 @@ class LeadController extends Controller
                     $q->whereBetween('created_at', Array(date('Y-m-d 0:0:0'), date('Y-m-d 23:59:59')));
                 }])
                 ->find($id);
-
+        
         if ($lead->country!='IN'){
             $city = new City;
             $flag = false;
@@ -285,10 +288,27 @@ class LeadController extends Controller
            $dept =  2;
         }
 
+
+        $dialer_dispositions = DB::connection('pgsql')->table('ct_user_call_log')
+        ->where('ct_user_call_log.phonenumber','=',$lead->phone)
+        ->join(DB::raw("(SELECT distinct disponame,dispodesc FROM ct_dispositions) AS c"), function($join) {
+                                     $join->on('ct_user_call_log.disposition', '=', 'c.disponame');
+                                })
+        ->select('ct_user_call_log.username','ct_user_call_log.disposedate','ct_user_call_log.disposition','c.dispodesc')
+        ->orderby('ct_user_call_log.disposedate','desc')
+        ->limit(10)->get();
+        foreach($dialer_dispositions as $disposition)
+        {
+
+            $cre_name = User::where('username','=',$disposition->username)->first()->employee->name;
+            $disposition->cre_name = $cre_name;
+        }
+
         $data = array(
             'menu'          =>  'lead',
             'section'       =>  'partials.dispositions',
             'dept'          =>  $dept,
+            'dialer_dispositions' => $dialer_dispositions,
             'lead'          =>  $lead
         );
 

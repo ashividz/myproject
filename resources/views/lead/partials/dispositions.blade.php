@@ -107,7 +107,7 @@
 @endsection
 @section('main')
 <div class="container">
-	<div class="col-md-12">
+	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<table class="table table-condensed">
@@ -142,6 +142,37 @@
 			</div>
 		</div>		
 	</div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th width="60%">Disposition</th>
+                            <th>Name</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+            <?php $i=0 ?>
+            @foreach($dialer_dispositions as $disposition)
+                <?php $i++ ?>
+                        <tr>
+                            <td>{{ $i }}</td>
+                            <td>{{ date('jS-M-y H:i', strtotime($disposition->disposedate)) }}</td>
+                            <td><b>{{ $disposition->disposition or "" }}</b>  : {{ $disposition->dispodesc or "" }}
+                                
+                            </td>
+                            <td>{{ $disposition->cre_name }}</td>
+                        </tr>
+            @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>      
+    </div>
 </div>
 <style type="text/css">
 	.links li {
