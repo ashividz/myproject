@@ -20,7 +20,7 @@ class Diet extends Model
 
     public function getDates()
     {
-       return ['date'];
+       return ['date', 'date_assign'];
     }
 
     public function patient()

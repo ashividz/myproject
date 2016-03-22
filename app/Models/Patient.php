@@ -92,6 +92,11 @@ class Patient extends Model
 
     public function medical() 
     {
+        return $this->hasoNE(Medical::class)->latest();
+    }  
+
+    public function medicals() 
+    {
         return $this->hasMany(Medical::class)->orderBy('id', 'desc');
     }    
 
@@ -125,9 +130,14 @@ class Patient extends Model
         return $this->hasMany(PatientNote::class)->orderBy('id', 'desc');
     }
 
+    public function prakriti() 
+    {
+        return $this->hasOne(PatientPrakriti::class)->latest();
+    }
+
     public function prakritis() 
     {
-        return $this->hasMany(PatientPrakriti::class);
+        return $this->hasMany(PatientPrakriti::class)->orderBy('id', 'desc');
     }
 
     public function blood_type() 

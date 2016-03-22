@@ -40,7 +40,7 @@
 					<th>Blood Group</th>
 					<th>Medical</th>
 					<th>Blood Test</th>
-					<th>Fitness</th>
+					<th>Measurement</th>
 					<th>Prakriti</th>
 				</tr>
 			</thead>
@@ -49,30 +49,30 @@
 	@foreach($patients AS $patient)
 				<tr>
 					<td>{{$i++}}</td>
-					<td><a href="/lead/{{$patient->lead_id}}/viewDetails" target="_blank"> {{$patient->name or ""}} </a></td>
-					<td>{{$patient->start_date or ""}}</td>	
-					<td>{{$patient->end_date or ""}}</td>	
-					<td>{{$patient->nutritionist or ""}}</td>
-					<td>{{$patient->diet->date_assign or ''}}</td>	
+					<td><a href="/lead/{{ $patient->lead_id }}/viewDetails" target="_blank"> {{$patient->lead->name or "" }} </a></td>
+					<td>{{ $patient->fee ? $patient->fee->start_date->format('jS M Y') : "" }}</td>	
+					<td>{{ $patient->fee ? $patient->fee->end_date->format('jS M Y') : "" }}</td>	
+					<td>{{ $patient->nutritionist or "" }}</td>
+					<td>{{ $patient->diet ? $patient->diet->date_assign->format('jS M Y') : "" }}</td>	
 
-				@if(trim($patient->dob) == '')
+				@if(trim($patient->lead->dob) == '')
 					<td class="red">N</td>
-				@elseif(!Helper::validateDate($patient->dob))
-					<td class="yellow" title="{{$patient->dob or ''}}"><span style="color:yellow">X</span></td>	
+				@elseif(!Helper::validateDate($patient->lead->dob->format('Y-m-d')))
+					<td class="yellow" title="{{$patient->lead->dob->format('jS M, Y') }}"><span style="color:yellow">X</span></td>	
 				@else
-					<td class="green" title="{{$patient->dob or ''}}"><span style="color:green">Y</span></td>		
+					<td class="green" title="{{$patient->lead->dob->format('jS M, Y')}}"><span style="color:green">Y</span></td>		
 				@endif
 
-				@if(trim($patient->email) == '')
+				@if(trim($patient->lead->email) == '')
 					<td class="red" title="Email">N</td>
 				@else
-					<td class="green" title="{{$patient->email or ''}}"><span style="color:green">Y</span></td>
+					<td class="green" title="{{$patient->lead->email or ''}}"><span style="color:green">Y</span></td>
 				@endif					
 
-				@if(trim($patient->phone) == '')
+				@if(trim($patient->lead->phone) == '')
 					<td class="red" title="Phone}}">N</td>
 				@else
-					<td class="green" title="{{$patient->phone or ''}}"><span style="color:green">Y</span></td>
+					<td class="green" title="{{$patient->lead->phone or ''}}"><span style="color:green">Y</span></td>
 				@endif
 
 					<td class="{{ $patient->blood_group_id == '' || $patient->rh_factor_id == '' ? 'red' : 'green'}}">{{$patient->blood_type->name or "" }} {{$patient->rh_factor->code or ""}}</td>
@@ -83,16 +83,16 @@
 					<td class='green'  title='Medical Details'><span style="color:green">Y</span></td>
 				@endif
 
-				@if(isset($patient->medical_date))
-					<td class="{{$patient->medical_date >= $patient->fee_date ? 'green' : 'yellow'}}" title="{{$patient->medical_date or ''}}">{{date('Y-m-d', strtotime($patient->medical_date))}}</td>
+				@if(isset($patient->medical))
+					<td class="{{$patient->medical->created_at >= $patient->fee->fee_date ? 'green' : 'yellow'}}" title="Medical on {{$patient->medical->created_at->format('j M, Y') }}">{{ $patient->medical->created_at->format('j M, Y') }}</td>
 				@else
 					<td class='red'  title='Blood Test'></td>
 				@endif
 
-				@if(isset($patient->fitness_date))
-					<td class="{{$patient->fitness_date >= $patient->fee_date ? 'green' : 'yellow'}}" title="{{$patient->fitness_date or ''}}">{{date('Y-m-d', strtotime($patient->fitness_date))}}</td>
+				@if(isset($patient->measurement))
+					<td class="{{$patient->measurement->created_at >= $patient->fee->created_at ? 'green' : 'yellow'}}" title="Measurement on {{ $patient->measurement->created_at->format('j M, Y') }}">{{ $patient->measurement->created_at->format('j M, Y') }}</td>
 				@else
-					<td class='red'  title='Fitness Details'></td>
+					<td class='red'  title='Measurement Details'></td>
 				@endif
 
 					<td class="{{$patient->prakritis->isEmpty() ? 'red' :'green'}}" title="Prakriti"></td>	

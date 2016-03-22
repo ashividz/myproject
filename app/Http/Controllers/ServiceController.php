@@ -20,6 +20,7 @@ use App\Support\SMS;
 use DB;
 use Auth;
 use Mail;
+use Carbon;
 
 class ServiceController extends Controller
 {
@@ -103,27 +104,30 @@ class ServiceController extends Controller
 
     public function audit()
     {
-        $patients = Patient::select('patient_details.*', 'l.name', 'l.dob', 'l.email', 'l.phone', 'm.date AS medical_date', 'fd.date AS fitness_date', 'c.time_stamp AS constitution_date', 'f.entry_date AS fee_date', 'f.start_date', 'f.end_date')
+        /*$patients = Patient::select('patient_details.*', 'l.name', 'l.dob', 'l.email', 'l.phone', 'm.date AS medical_date', 'fd.date AS fitness_date', 'pp.created_at AS constitution_date', 'f.entry_date AS fee_date', 'f.start_date', 'f.end_date')
                     ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                         $join->on('patient_details.id', '=', 'f.patient_id');
                     })
-                    ->leftJoin(DB::raw('(SELECT * FROM fitness_details A WHERE id = (SELECT MAX(id) FROM fitness_details B WHERE A.clinic=B.clinic AND A.registration_no=B.registration_no)) AS fd'), function($join) {
-                        $join->on('patient_details.clinic', '=', 'fd.clinic');
-                        $join->on('patient_details.registration_no', '=', 'fd.registration_no');
+                    ->leftJoin(DB::raw('(SELECT * FROM fitness_details A WHERE id = (SELECT MAX(id) FROM fitness_details B WHERE A.patient_id=B.patient_id)) AS fd'), function($join) {
+                        $join->on('patient_details.id', '=', 'fd.patient_id');
                     })
-                    ->leftJoin(DB::raw('(SELECT * FROM medical A WHERE id = (SELECT MAX(id) FROM medical B WHERE A.clinic=B.clinic AND A.registration_no=B.registration_no)) AS m'), function($join) {
-                        $join->on('patient_details.clinic', '=', 'm.clinic');
-                        $join->on('patient_details.registration_no', '=', 'm.registration_no');
+                    ->leftJoin(DB::raw('(SELECT * FROM medical A WHERE id = (SELECT MAX(id) FROM medical B WHERE A.patient_id=B.patient_id)) AS m'), function($join) {
+                        $join->on('patient_details.id', '=', 'm.patient_id');
                     })                    
-                    ->leftJoin('constitution AS c', function($join) {
-                        $join->on('patient_details.clinic', '=', 'c.clinic');
-                        $join->on('patient_details.registration_no', '=', 'c.registration_no');
-                    })
+                    ->leftJoin('patient_prakritis AS pp', 'patient_details.id', '=', 'pp.patient_id')
+
                     ->leftJoin('marketing_details AS l', 'l.id', '=', 'patient_details.lead_id')
                     ->where('f.end_date', '>=', DB::RAW('CURDATE()'))
                     ->orderBy('f.end_date', 'DESC')
                     //->limit(env('DB_LIMIT'))
-                    ->get();
+                    ->get();*/
+
+        $patients = Patient::with('lead', 'fee', 'diet', 'medical', 'measurement', 'prakriti')
+                        ->whereHas('fees', function($q) {
+                            $q->where('end_date', '>=', Carbon::now());
+                        })
+                        ->limit(5)
+                        ->get();
 
         $data = array(
             'menu'      => $this->menu,

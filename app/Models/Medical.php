@@ -1,6 +1,6 @@
 <?php
 
-/*ALTER TABLE medical ADD column_name patient_id int(11);
+/*ALTER TABLE medical ADD patient_id int(11);
 ALTER TABLE medical ADD created_at datetime default '2016-03-19 00:00:00';
 ALTER TABLE medical ADD updated_at datetime default '2016-03-19 00:00:00';
 
