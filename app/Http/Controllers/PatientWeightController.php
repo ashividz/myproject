@@ -82,7 +82,7 @@ class PatientWeightController extends Controller
 
 	public function show($id)
 	{
-		$patient = Patient::with('fee')->find($id);
+		$patient = Patient::with('fee','lead')->find($id);
 
 		$start_date = $patient->fee->start_date;
 
@@ -151,7 +151,8 @@ class PatientWeightController extends Controller
             'menu'      	=> 'patient',
             'section'  	 	=> 'partials.weight',
             'days'  		=> $days,
-            'patient'		=>	$patient
+            'patient'		=> $patient,
+            'measurements'	=> $measurements,
         );
 
         return view('home')->with($data);
