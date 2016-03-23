@@ -20,7 +20,6 @@ use App\Support\SMS;
 use DB;
 use Auth;
 use Mail;
-use Carbon;
 
 class ServiceController extends Controller
 {
@@ -104,30 +103,21 @@ class ServiceController extends Controller
 
     public function audit()
     {
-        /*$patients = Patient::select('patient_details.*', 'l.name', 'l.dob', 'l.email', 'l.phone', 'm.date AS medical_date', 'fd.date AS fitness_date', 'pp.created_at AS constitution_date', 'f.entry_date AS fee_date', 'f.start_date', 'f.end_date')
+        $patients = Patient::select('patient_details.*', 'l.name', 'l.dob', 'l.email', 'l.phone', 'm.date AS medical_date', 'pm.created_at AS measurement_date', 'f.entry_date AS fee_date', 'f.start_date', 'f.end_date')
                     ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                         $join->on('patient_details.id', '=', 'f.patient_id');
                     })
-                    ->leftJoin(DB::raw('(SELECT * FROM fitness_details A WHERE id = (SELECT MAX(id) FROM fitness_details B WHERE A.patient_id=B.patient_id)) AS fd'), function($join) {
-                        $join->on('patient_details.id', '=', 'fd.patient_id');
+                    ->leftJoin(DB::raw('(SELECT * FROM patient_measurements A WHERE id = (SELECT MAX(id) FROM patient_measurements B WHERE A.patient_id=B.patient_id)) AS pm'), function($join) {
+                        $join->on('patient_details.id', '=', 'pm.patient_id');
                     })
                     ->leftJoin(DB::raw('(SELECT * FROM medical A WHERE id = (SELECT MAX(id) FROM medical B WHERE A.patient_id=B.patient_id)) AS m'), function($join) {
                         $join->on('patient_details.id', '=', 'm.patient_id');
-                    })                    
-                    ->leftJoin('patient_prakritis AS pp', 'patient_details.id', '=', 'pp.patient_id')
-
+                    }) 
                     ->leftJoin('marketing_details AS l', 'l.id', '=', 'patient_details.lead_id')
                     ->where('f.end_date', '>=', DB::RAW('CURDATE()'))
                     ->orderBy('f.end_date', 'DESC')
                     //->limit(env('DB_LIMIT'))
-                    ->get();*/
-
-        $patients = Patient::with('lead', 'fee', 'diet', 'medical', 'measurement', 'prakriti')
-                        ->whereHas('fees', function($q) {
-                            $q->where('end_date', '>=', Carbon::now());
-                        })
-                        ->limit(5)
-                        ->get();
+                    ->get();
 
         $data = array(
             'menu'      => $this->menu,

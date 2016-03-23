@@ -20,7 +20,7 @@ class Diet extends Model
 
     public function getDates()
     {
-       return ['date', 'date_assign'];
+       return ['date'];
     }
 
     public function patient()
@@ -51,6 +51,7 @@ class Diet extends Model
     {
         $patient = Patient::find($request->patient_id);
 
+        $message = '';
         $status = '';
 
         $diets = Diet::whereIn('id',$request->checkbox)->get();
@@ -62,7 +63,8 @@ class Diet extends Model
                 $sms_response = Diet::sendSMS($diet);
 
                 if ($sms_response) {
-                    $status .= '<li>Diet SMS Sent</li>';
+                    $message .= '<li>Diet SMS Sent</li>';
+                    $status = 'success';
                     Diet::setSMSResponse($diet, $sms_response);
                 }
             }                
@@ -78,15 +80,22 @@ class Diet extends Model
             $body .= Diet::emailFooter();
             
             if(Diet::email($patient, $body)) {
-                $status .= '<li>Diet Email Sent</li>';
+                $message .= '<li>Diet Email Sent</li>';
+                $status = 'success';
                 Diet::setEmailStatus($diets);
             }
         }
         else {
-            $status .= '<li>Email does not exist for '.$patient->lead->name.'</li>';
+            $message .= '<li>Email does not exist for '.$patient->lead->name.'</li>';
+            $status = 'error';
         }
 
-        return $status;
+        $data = array(
+            'message'       =>  $message,
+            'status'        =>  $status
+        );
+
+        return $data;
     }
 
     public static function sendSms($diet)

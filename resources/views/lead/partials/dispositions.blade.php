@@ -54,13 +54,9 @@
 		                </div>
 		            </div> 
 		            <p></p>
-		            <div class="row">               
+		            <div class="row">                       
 		                <div class="col-md-12 col-sm-12" align="center">
-                    @if($lead->cre_name <> '' && Auth::user()->hasRole('cre') && $lead->cre_name <> Auth::user()->employee->name && !$lead->dialer->isEmpty())
-                            <h4>This Lead belongs to <b>{{ $lead->cre_name }}</b></h4>
-                    @else
 		                    <button id="save" type="submit" name="save" class="btn btn-success"> Save Disposition</button>
-                    @endif
 		                </div>			                
 		            </div>          
 		            <input type="hidden" name="_token" value="{{ csrf_token() }}">

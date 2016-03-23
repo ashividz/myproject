@@ -106,16 +106,21 @@ class DietController extends Controller
         $diet->rem_dev = trim($request->rem_dev);
         $diet->save();
 
-        return redirect('patient/'.$id.'/diet')->with('status', 'Diet Added');
+        $data = array(
+            'message'    =>  'Diet Added',
+            'status'    =>  'success'
+        );
+
+        return redirect('patient/'.$id.'/diet')->with($data);
     }
 
     public function send(Request $request, $id)
     {
         $request->patient_id = $id; 
 
-        $status = Diet::send($request);
+        $data = Diet::send($request);
 
-        return redirect('patient/'.$id.'/diet')->with('status', $status);
+        return redirect('patient/'.$id.'/diet')->with($data);
     }
 
     

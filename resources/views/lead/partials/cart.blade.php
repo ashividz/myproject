@@ -54,7 +54,7 @@
                                 <td>
                                     <label>Country <div class='asterix'>*</div> :</label>   
                                     <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->country ? '' : 'required' }}">
-                                        {!! $lead->m_country->country_name !!}
+                                        {!! $lead->m_country->country_name or "" !!}
                                     </a>
                                 </td>
                                 <td>
@@ -72,7 +72,7 @@
 
                                 <td>
                                     <label>PIN/ZIP :</label> 
-                                    @if($lead->country == "IN") 
+                                @if($lead->country == "IN") 
                                     <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->zip == '' ? "required" : "" }}"> 
 
                                 @else
@@ -83,7 +83,15 @@
                                 </td>
                                 <td>
                                     <label>Source <div class='asterix'>*</div> :</label> 
-                                    {!! $lead->sources->isEmpty() ? '<a href="/lead/'.$lead->id.'/viewDetails" target="_blank" class="required"></a>' : $lead->source->master->source_name !!} 
+
+                                    <a href="/lead/'.$lead->id.'/viewDetails" target="_blank" class="{{ $lead->sources->isEmpty() ?'required' : '' }}">
+                                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
+                                        {!!  $lead->source->master->source_name or ""!!}
+                                @else
+                                        {{ $lead->source->master->channel->name or "" }}
+                                @endif 
+                                    </a>
+                                    
                                 </td>
                                 <td>
                                     <label>CRE <div class='asterix'>*</div> :</label> 

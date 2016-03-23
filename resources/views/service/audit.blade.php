@@ -53,7 +53,7 @@
 					<td>{{ $patient->fee ? $patient->fee->start_date->format('jS M Y') : "" }}</td>	
 					<td>{{ $patient->fee ? $patient->fee->end_date->format('jS M Y') : "" }}</td>	
 					<td>{{ $patient->nutritionist or "" }}</td>
-					<td>{{ $patient->diet ? $patient->diet->date_assign->format('jS M Y') : "" }}</td>	
+					<td></td>	
 
 				@if(trim($patient->lead->dob) == '')
 					<td class="red">N</td>
@@ -83,19 +83,19 @@
 					<td class='green'  title='Medical Details'><span style="color:green">Y</span></td>
 				@endif
 
-				@if(isset($patient->medical))
-					<td class="{{$patient->medical->created_at >= $patient->fee->fee_date ? 'green' : 'yellow'}}" title="Medical on {{$patient->medical->created_at->format('j M, Y') }}">{{ $patient->medical->created_at->format('j M, Y') }}</td>
+				@if(isset($patient->medical_date))
+					<td class="{{$patient->medical_date >= $patient->fee->fee_date ? 'green' : 'yellow'}}" title="Medical on {{$patient->medical_date }}">{{ $patient->medical_date }}</td>
 				@else
 					<td class='red'  title='Blood Test'></td>
 				@endif
 
-				@if(isset($patient->measurement))
-					<td class="{{$patient->measurement->created_at >= $patient->fee->created_at ? 'green' : 'yellow'}}" title="Measurement on {{ $patient->measurement->created_at->format('j M, Y') }}">{{ $patient->measurement->created_at->format('j M, Y') }}</td>
+				@if(isset($patient->measurement_date))
+					<td class="{{$patient->measurement_date >= $patient->fee->created_at ? 'green' : 'yellow'}}" title="Measurement on {{ $patient->measurement_date }}">{{ $patient->measurement_date }}</td>
 				@else
 					<td class='red'  title='Measurement Details'></td>
 				@endif
 
-					<td class="{{$patient->prakritis->isEmpty() ? 'red' :'green'}}" title="Prakriti"></td>	
+					<td class="{{ isset($patient->prakriti) ? 'red' :'green'}}" title="Prakriti"></td>	
 
 				</tr>
 	@endforeach
@@ -107,7 +107,7 @@
 <script type="text/javascript">
 $(document).ready(function() 
 {
-	$('#table').dataTable({
+	$('#table1').dataTable({
 
 	    "sPaginationType": "full_numbers",
 	    "iDisplayLength": 100,

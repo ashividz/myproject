@@ -842,39 +842,39 @@ function check_status()
 	<th><font face="Verdana" size="1">INSULIN (PP)</font></th>
 </tr>
 </thead>
-@if($patient->medical)
+@if(!$patient->medicals->isEmpty())
 <tbody>
-	@foreach($patient->medical as $medical)
+	@foreach($patient->medicals as $medical)
 	<tr>	
-	<td><font face="Verdana" size="1">{{$medical->date}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->hemoglobin}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->mcv}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->mch}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->mchc}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->esr}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->fasting}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->pp}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->sgot}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->sgpt}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->alkaline}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->ggtp}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->t3}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->t4}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->tsh}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->total}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->hdl}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->ldl}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->vldl}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->tri}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->urea}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->serum}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->uric}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->totall}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->proteins}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->seruma}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->prolactin_f}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->insulin_f}}</font></td>
-	<td><font face="Verdana" size="1">{{$medical->insulin_p}}</font></td>
+	<td><font face="Verdana" size="1">{{ $medical->date or ""  or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->hemoglobin or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->mcv or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->mch or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->mchc or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->esr or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->fasting or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->pp or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->sgot or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->sgpt or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->alkaline or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->ggtp or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->t3 or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->t4 or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->tsh or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->total or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->hdl or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->ldl or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->vldl or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->tri or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->urea or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->serum or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->uric or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->totall or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->proteins or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->seruma or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->prolactin_f or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->insulin_f or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->insulin_p or "" }}</font></td>
 	</tr>
 	@endforeach
 </tbody>
