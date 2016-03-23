@@ -2,7 +2,7 @@
 
 @section('top')
 <?php
-	$latestMedical = $patient->medical->first();	
+	$latestMedical = $patient->medical;	
 ?>
 <div class="panel panel-default">
 	<div class="panel-heading">
