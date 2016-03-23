@@ -32,15 +32,15 @@
 						</li>
 						<li>
 							<label>Profession</label>
-							<input type="text" id="height" name="profession" value="{{ $lead->profession }}">
+							<input type="text" id="profession" name="profession" value="{{ $lead->profession }}">
 						</li>
 						<li>
 							<label>Organization</label>
-							<input type="text" id="height" name="organization" value="{{ $lead->company }}">
+							<input type="text" id="organisation" name="organization" value="{{ $lead->company }}">
 						</li>
 						<li>
 							<label>Height (cms)</label>
-							<input type="text" id="height" name="height" value="{{ $lead->height }}">
+							<input type="text" id="height" class ="height" name="height" value="{{ $lead->height }}">
 						</li>
 						<li>
 							<label>Weight (Kgs)</label>
@@ -85,6 +85,18 @@
 	   		format:'d-m-Y'
 	   });
 	});
+</script>
+<script>
+$(document).ready(function(){
+    $("#height").blur(function(){
+        height = $("#height").val();
+        if( height != '' && $.isNumeric(height) && height>=100 && height<=200);
+        else if(height != ''){
+        	alert('Please enter a valid height in cms');
+        	$("#height").val('');
+        }
+    });
+});
 </script>
 <script type="text/javascript" src="/js/form.js"></script>	
 
