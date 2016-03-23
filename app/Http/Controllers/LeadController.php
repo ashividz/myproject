@@ -363,6 +363,10 @@ class LeadController extends Controller
 
     public function savePersonalDetails(Request $request, $id)
     {
+        if($request->height && is_numeric($request->height) && $request->height >=100 && $request->height <= 300);
+        elseif($request->height)
+            return 'Please enter a valid height in cms';
+
         try 
         {
             $lead = Lead::updateLead($id, $request);
