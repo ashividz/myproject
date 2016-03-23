@@ -364,7 +364,7 @@ class LeadController extends Controller
     {
         if($request->height && is_numeric($request->height) && $request->height >=100 && $request->height <= 300);
         elseif($request->height)
-            return 'Height should be in range 100-200cm';
+            return 'Please enter a valid height in cms';
 
         try 
         {
