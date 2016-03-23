@@ -1,3 +1,18 @@
+<?php
+/*Block authored by Sunil*/
+    $measurementsWithinDate = $measurements->filter(function ($item) use ($patient) {
+        return ($item->date > $patient->fee->start_date) || ($item->date = $patient->fee->start_date);
+    });
+    $initialWeight   = $measurementsWithinDate->sortBy('id')->first();
+    $latestWeight  = $measurementsWithinDate->sortByDesc('id')->first();
+    $initialBMI = null;
+    $latestBMI = null;
+    if($patient->lead->height && $patient->lead->height>0){  
+        $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+        $latestBMI= $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+    }
+/*end of the Block authored by Sunil*/
+?>
 @extends('patient.index')
 @section('top')
 <div class="col-md-3">  
@@ -21,18 +36,35 @@
 <div class="col-md-9">  
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="panel-title">Measurements</div>
+            <div class="panel-title">Weight Synopsis</div>
         </div>
-        <div class="panel-body">
-            <form id="form" class="form-inline">
-                <div class="form-group">
-                    <input type="text" name="arm" placeholder="Arm" size="6">
-                    <input type="text" name="abdomen" placeholder="Abdomen" size="6">
-                    <input type="text" name="thighs" placeholder="Thighs" size="6">
-                    <input type="text" name="Waist" placeholder="waist" size="6">
-                    <button class="btn btn-primary" disabled>Save</button>
-                </div>
-            </form>
+        <div class="panel-body">            
+            <label>Height</label> : {{$patient->lead->height .'cm'}}</span>
+            <table class="table table-bordered">              
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>date</th>
+                        <th>weight</th>
+                        <th>BMI</th>
+                    </tr>
+                </thead>                    
+                <tbody>
+                    <tr>
+                        <td>Initial weight</td>
+                        <td>{{$initialWeight ? date("F j, Y",strtotime($initialWeight->date)) :''}}</td>
+                        <td>{{$initialWeight ? $initialWeight->weight:''}}</td>
+                        <td>{{$initialBMI ? $initialBMI :''}}</td>
+                    </tr>
+                    <tr>
+                        <td>Latest weight</td>
+                        <td>{{$latestWeight ? date("F j, Y",strtotime($latestWeight->date)) :''}}</td>
+                        <td>{{$latestWeight ? $latestWeight->weight:''}}</td>
+                        <td>{{$latestBMI ? $latestBMI :''}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
         </div>
     </div>
 </div>
