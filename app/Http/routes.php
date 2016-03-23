@@ -44,7 +44,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles'], 
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl']], 
     function() {
 
@@ -288,7 +288,7 @@ Route::group([
         Route::post('cart/{id}/process', 'CartController@process');
 
 
-        Route::get('cart/{id}', 'CartController@show');
+        Route::get('cart/{id}/', 'CartController@show');
 
         Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
         Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
