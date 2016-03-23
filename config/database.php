@@ -80,8 +80,7 @@ return [
             'strict'    => false,
         ],
         /*
-        apt-get install php5-pgsql
-        php5enmod pgsql
+        sudo apt-get install php5-pgsql php5enmod pgsql
         sudo service apache2 restart
         */
         'pgsql' => [

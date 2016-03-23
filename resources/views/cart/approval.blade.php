@@ -26,7 +26,7 @@
     $maxDiscount = null;
     $discount = null;
     if($cart->status_id == 2) {
-        $maxDiscount = $cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
+        $maxDiscount = $cart->products &&$cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
         if ($maxDiscount > 0) {
             $discount_id = $cart->step->discount_id + 1;
             //var_dump($cart->step->discount_id); 
@@ -97,7 +97,15 @@
                                     </div>
                                 @endif 
                                     <div>
-                                        <label>Lead Source :</label> {{$cart->source->source_name}}
+                                        <label>Lead Source :</label> 
+
+                                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
+                                            {{$cart->source->source_name}}
+
+                                    @else
+                                            {{ $cart->source->channel->name or "" }}
+                                    @endif
+                                        
                                     </div>
 
                                     <div>

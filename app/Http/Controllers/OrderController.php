@@ -35,7 +35,7 @@ class OrderController extends Controller
             $orders = Order::get();
         }
 
-        $orders->load('category', 'cart.cre', 'cart.products', 'cart.currency');
+        $orders->load('category', 'cart.cre', 'cart.source', 'cart.products', 'cart.currency');
         
         $categories = ProductCategory::get();
 

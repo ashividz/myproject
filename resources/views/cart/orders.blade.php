@@ -96,7 +96,14 @@
                         </div>
                         <div>
                             <label>Lead Source : </label>
-                            {{ $order->cart->cre->employee->name or "" }}
+
+                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
+                                {{ $order->cart->source->source_name or ""}}
+
+                        @else
+                                {{ $order->cart->source->channel->name or "" }}
+                        @endif
+                            
                         </div>
                     </div>
                     <div class="col-md-3">

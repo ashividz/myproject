@@ -226,7 +226,7 @@ class LeadController extends Controller
 
     public function showLead($id)
     {
-        $lead = DB::table('marketing_details AS m')
+        /*$lead = DB::table('marketing_details AS m')
                 ->leftJoin('patient_details AS p', function($join)
                     {
                         $join->on('m.clinic', '=', 'p.clinic');
@@ -234,7 +234,8 @@ class LeadController extends Controller
                     })
                 ->where('m.id', '=', $id)
                 ->select('m.id', 'm.clinic', 'm.enquiry_no', 'm.name', 'm.phone', 'm.mobile', 'p.registration_no')
-                ->first();
+                ->first();*/
+        $lead = Lead::find($id);
 
         $data = array(
             'menu'      => 'lead',

@@ -1,10 +1,10 @@
-@if($lead->cre)
-	@if(Auth::user()->hasRole('cre') && $lead->cre->cre <> Auth::user()->employee->name)	
+@if($lead->cre_name <> '' && Auth::user()->hasRole('cre') && $lead->cre_name <> Auth::user()->employee->name && !$lead->dialer && Auth::id() <> 93)	
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 				<div class="alert alert-danger warning">
 					<a class="close" data-dismiss="alert">×</a>
-					<strong>This lead belongs to <h3>{{$lead->cre->cre}}</h3></strong> 
+					<h4>This lead <b>({{ $lead->id }})</b> belongs to </h4><strong><h2>{{$lead->cre->cre}}</h2></strong>
+                    Please contact your Senior or the Marketing Department. 
 				</div>
 			</div>
 		</div>
@@ -18,8 +18,7 @@
 			text-align: center;
 		}
 	</style>
-	@endif
-@endif
+@else
 
 @if($lead->country!='IN')
 <?php
@@ -140,3 +139,5 @@ $(document).ready(function(){
 		color: #444;
 	}
 </style>
+
+@endif

@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group">
                     <label>DOB :</label>
-                    {{ $cart->lead->dob <> '' ? $cart->lead->dob->format('jS M, Y') : '' }}
+                    {{ isset($cart->lead) && $cart->lead->dob <> '' ? $cart->lead->dob->format('jS M, Y') : '' }}
                 </div>
                 <div class="form-group">
                     <label>Gender :</label>
@@ -35,11 +35,11 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Amount :</label>
-                    {{$cart->currency->symbol or ""}} {{$cart->amount or ""}}
+                    {{$cart->currency->symbol or ""}} {{ $cart->amount or "" }}
                 </div>
                 <div class="form-group">
                     <label>Payment :</label>
-                    {{$cart->currency->symbol or ""}} {{$cart->payment}}
+                    {{$cart->currency->symbol or ""}} {{ $cart->payment or "" }}
                 </div>
                 <div class="form-group">
                     <label>Balance :</label>
