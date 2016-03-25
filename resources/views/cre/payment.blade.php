@@ -40,17 +40,22 @@
 						<td>
 							{{date('jS M, Y', strtotime($fee->end_date))}}
 						</td>
+
 						<td>
 							₹ {{money_format($fee->total_amount, 2)}}
 						</td>
+
 						<td>
-							{{$fee->source->source_name or ""}}
-							
-							@if(Auth::user()->hasRole('finance') || Auth::user()->hasRole('admin'))
-								<div class="pull-right">
-									<span class="break glyphicon glyphicon-edit orange" id="{{$fee->id}}"></span>
-								</div>
-							@endif
+                        
+                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('marketing') )
+                                {{ $fee->source->source_name or ""}}
+                                <div class="pull-right">
+                                    <span class="break glyphicon glyphicon-edit orange" id="{{$fee->id}}"></span>
+                                </div>
+                        @else
+                                {{ $fee->source->channel->name or "" }}
+                        @endif
+
 						</td>
 					</tr>
 
