@@ -290,10 +290,8 @@ class CREController extends Controller
         return view('home')->with($data);
     }
 
-    public function viewPayments()
+    public function payments()
     {
-        Fee::clean();
-        
         $users = User::getUsersByRole('cre');
 
         $fees = Fee::with('patient', 'patient.lead')

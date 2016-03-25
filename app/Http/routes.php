@@ -263,8 +263,8 @@ Route::group([
 		Route::post('cre/viewCountryPerformance', 'CREController@viewCountryPerformance');
 		Route::get('cre/viewProgramEndList', 'CREController@viewProgramEndList');
 		Route::post('cre/viewProgramEndList', 'CREController@viewProgramEndList');
-		Route::get('cre/viewPayments', 'CREController@viewPayments');
-		Route::post('cre/viewPayments', 'CREController@viewPayments');
+		Route::get('cre/payments', 'CREController@payments');
+		Route::post('cre/payments', 'CREController@payments');
 		Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
 
         /* Cart */

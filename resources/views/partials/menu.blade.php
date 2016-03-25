@@ -75,6 +75,18 @@
 
                 <li>
                     <a href="/lead/addLead" id="menu_lead_add">Add Lead</a>
+                </li>
+
+                <li>
+                    <a href="#" id="menu_cart" class="firstLevelMenu"><b>Cart Order</b></a>
+                    <ul>
+                        <li>
+                            <a href="/cart/approval" id="menu_cart_approval">Cart Approval</a>
+                        </li>
+                        <li>
+                            <a href="/orders" id="menu_orders">Orders</a>
+                        </li>
+                    </ul>
                 </li>                 
                                                 
             </ul> <!-- second level -->                        
@@ -112,7 +124,7 @@
                             <a href="/cre/viewChannelPerformance" id="menu_cre_channel_performance">Channel Performance</a>
                         </li>
                         <li>
-                            <a href="/cre/viewPayments" id="menu_cre_payments">Payments</a>
+                            <a href="/cre/payments" id="menu_cre_payments">Payments</a>
                         </li>                            
                         <li>
                             <a href="/cre/viewCountryPerformance" id="menu_cre_country_perormance">Country Performance</a>
@@ -514,7 +526,10 @@
                 </li>  
             </ul>
         </li>
-        @endif    
+        @endif  
+
+        
+
                     
     </ul> <!-- first level -->
     

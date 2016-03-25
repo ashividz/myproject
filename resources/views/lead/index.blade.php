@@ -2,7 +2,6 @@
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 				<div class="alert alert-danger warning">
-					<a class="close" data-dismiss="alert">×</a>
 					<h4>This lead <b>({{ $lead->id }})</b> belongs to </h4><strong><h2>{{$lead->cre->cre}}</h2></strong>
                     Please contact your Senior or the Marketing Department. 
 				</div>

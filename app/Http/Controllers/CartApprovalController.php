@@ -35,13 +35,14 @@ class CartApprovalController extends Controller
         $statuses = CartStatus::get();
 
         $data = array(
-             
-            'carts'     => $carts,
-            'statuses'  => $statuses,
+            'menu'      =>  'cart',
+            'section'   =>  'approval',
+            'carts'     =>  $carts,
+            'statuses'  =>  $statuses,
             'i'         =>  1
         );    
 
-        return view('cart.approval')->with($data);
+        return view('home')->with($data);
     }
 
     public function store(Request $request)
