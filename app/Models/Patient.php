@@ -92,7 +92,7 @@ class Patient extends Model
 
     public function medical() 
     {
-        return $this->hasOne(Medical::class)->latest();
+        return $this->hasOne(Medical::class)->latest('date');
     }  
 
     public function medicals() 
