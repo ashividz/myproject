@@ -141,7 +141,7 @@ class ModalController extends Controller
         return view('modals.mynutritionist')->with($data); 
     }
 
-    public function mycre($id) {
+    public function message($id) {
 
         $lead = Lead::find($id);
         $users = User::getUsers();
@@ -152,6 +152,6 @@ class ModalController extends Controller
             'id'        =>  $id
         );
 
-        return view('modals.mycre')->with($data); 
+        return view('lead.modals.message')->with($data); 
     }
 }

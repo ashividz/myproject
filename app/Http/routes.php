@@ -661,7 +661,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post('modal/saveMealtime', 'MealtimeController@savePatientMealtime');
 
 	Route::get('modal/{id}/mynutritionist', 'ModalController@mynutritionist');
-	Route::get('modal/{id}/mycre', 'ModalController@mycre');
+	Route::get('modal/{id}/message', 'ModalController@message');
 
 	Route::get('patient/{id}/app', 'YuWoWController@index');
 	Route::post('patient/{id}/app', 'YuWoWController@index');

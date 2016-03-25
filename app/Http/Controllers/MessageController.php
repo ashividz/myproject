@@ -98,7 +98,12 @@ class MessageController extends Controller
 
 		$receiver = MessageRecipient::saveRecipients($message, $request->recipients);
 
-		return "Message sent successfully";
+		$data = array(
+            'message'       => 'Message sent successfully',
+            'status'        =>  'success'
+        );
+
+        return back()->with($data);
 	}
 
 	public function compose()
