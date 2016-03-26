@@ -54,6 +54,7 @@
             </div>
         </div>      
     </div>
+@if(isset($dialer_dispositions))
     <div class="col-md-5">
         <div class="panel panel-default">
             <div class="panel-heading">                
@@ -91,6 +92,7 @@
             </div>
         </div>      
     </div>
+@endif
 </div>
 
 	<style type="text/css">

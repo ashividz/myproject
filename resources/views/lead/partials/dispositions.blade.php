@@ -91,11 +91,9 @@
 			<div class="panel-body links">
 				<ul>
 					<li title="Compose New Message" data-placement="left" data-toggle="tooltip">
-						<button id="message" value="{{$lead->id}}" class="btn btn-primary"><i class=" fa fa-envelope fa-2x"></i></button>
-					</li>
-					<li title="Call For My CRE, Nutritionist, Secondary Nutritionist, Doctor">
-						<button id="mynutritionist" value="{{$lead->id}}" class="btn btn-primary"><i class=" fa fa-user-md fa-2x"></i></button>
-					</li>
+						<a href="/modal/{{ $lead->id }}/message" data-toggle="modal" data-target="#modal" title="Send Message" class="btn btn-primary">
+                        <i class=" fa fa-envelope-o fa-2x"></i>
+                    </a>
                     <li title="Validate Coupon">
                         <a href="http://coupon/validation?lead_id={{$lead->id}}&amp;name={{$lead->name}}&amp;phone={{$lead->phone}}&amp;email={{$lead->email}}&amp;user_id={{Auth::User()->id}}" class="btn btn-primary default_popup"><i class='fa fa-gift fa-2x'></i></a>
                     </li>
@@ -104,6 +102,7 @@
 		</div>
 	</div>	
 </div>
+@include('partials.modal')
 @endsection
 @section('main')
 <div id="dispositions">

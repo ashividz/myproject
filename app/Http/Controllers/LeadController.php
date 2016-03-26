@@ -278,7 +278,8 @@ class LeadController extends Controller
                 $msg = $msg.'<br>Local Time : '.$city->first()->getLocalTime();
             if ($flag && $city->first() && $city->first()->country_code =='IN');            
             else
-                Session::flash('status',$msg);
+                Session::flash('message', $msg);
+                Session::flash('status', 'error');
         }                           
            
         $dept =  1;
