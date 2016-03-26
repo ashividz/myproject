@@ -846,7 +846,7 @@ function check_status()
 <tbody>
 	@foreach($patient->medicals as $medical)
 	<tr>	
-	<td><font face="Verdana" size="1">{{ $medical->date or ""  or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{ $medical->date or "" }}</font></td>
 	<td><font face="Verdana" size="1">{{$medical->hemoglobin or "" }}</font></td>
 	<td><font face="Verdana" size="1">{{$medical->mcv or "" }}</font></td>
 	<td><font face="Verdana" size="1">{{$medical->mch or "" }}</font></td>
