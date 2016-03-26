@@ -1,4 +1,4 @@
-@if($lead->cre_name <> '' && Auth::user()->hasRole('cre') && $lead->cre_name <> Auth::user()->employee->name && !$lead->dialer && Auth::id() <> 93)	
+@if($lead->cre && Auth::user()->hasRole('cre') && trim($lead->cre->cre) <> trim(Auth::user()->employee->name) && !$lead->dialer && Auth::id() <> 93)	
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">
 				<div class="alert alert-danger warning">
