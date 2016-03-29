@@ -56,6 +56,8 @@
 				<div class="panel-body">
 				@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
 					<label>{{$lead->sources->last()->master->source_name or ""}}</label>
+				@elseif($lead->sources->last()->master->channel->id==5 || $lead->sources->last()->master->channel->id ==6)
+					<label>{{ $lead->sources->last()->master->channel->name or "" }}:{{$lead->sources->last()->master->source_name or ""}}</label>
 				@else
 					<label>{{ $lead->sources->last()->master->channel->name or "" }}</label>
 				@endif
