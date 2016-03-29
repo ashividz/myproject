@@ -53,7 +53,7 @@ class ReportController extends Controller
 
     public function payments()
     {
-        Fee::clean();
+        //Fee::clean();
 
         $fees = Fee::with('patient')
                 ->with('source')
