@@ -176,4 +176,98 @@ class PatientWeightController extends Controller
 
 		return $this->show($id);
 	}
+
+	public function copyWeightFromIfitter($id)
+	{
+		$patient = Patient::with('lead.yuwow','fee')->find($id);		
+		$measurement = PatientWeight::where('patient_id', $patient->id)
+					->orderBy('id', 'desc')
+					->first();
+		$start_date = $patient->fee->start_date;		
+		$end_date = date('Y-m-d');
+		$today 	  = date('Y-m-d');
+		
+		if($measurement && $measurement->date >= $patient->fee->start_date) {
+			$start_date = date('Y-m-d', strtotime('+1 day', strtotime($measurement->date)));
+		}		
+		if($start_date < $today){
+			$iFitterWeights = $this->fetchWeightFromIfitter($patient->lead->email, $start_date,$end_date);
+			$updatedWeights = 0;
+			$dates= array();
+			if($iFitterWeights){
+				foreach($iFitterWeights as $iFitterWeight){
+					$weight = PatientWeight::where('patient_id', $patient->id)
+						->where('date', $iFitterWeight->date)
+						->first();
+					if(!$weight) {
+						$weight = new PatientWeight;
+					}
+
+					$weight->patient_id = $patient->id;
+					$weight->date 	= $iFitterWeight->date;
+					$weight->weight = $iFitterWeight->weight;
+					$weight->created_by = Auth::id();
+					$weight->save();
+					if(!in_array($weight->date, $dates))
+						$updatedWeights++;
+					else
+						$dates[] = $weight->date;
+					
+				}
+				return 'Total weights updatedWeights :'.$updatedWeights;
+			}    
+			else
+				return 'Sorry! Weight could not be updated from iFitter';
+		}
+		else
+			return 'weight is up to date';
+	}
+
+	public function fetchWeightFromIfitter($email,$start_date,$end_date)
+	{
+		//$emailId = $patient->lead->id;
+		$baseURI = "http://ifittrtest.azurewebsites.net/RestMerchantService.svc/GetUserReadings";
+        $emailId = $email;
+        $beginTimestamp = 1455793922;
+        $merchantId     = "RQAOCUIHD40JSXSIOJ";
+        $data = array("emailId" => $emailId, "$beginTimestamp" => $beginTimestamp, "merchantId" => $merchantId);
+        $data_string = json_encode($data);                                                                                 
+                                                                                                                     
+       	$ch = curl_init($baseURI);                                                                     
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($data_string))                                                                       
+        );                                                                                                                   
+                                                                                                                     
+        $result   = curl_exec($ch);
+        $response = json_decode($result);
+        $curlStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($curlStatus == 200) {
+        	if($response->Status == 'OK'){
+            	$records = $response->Data;
+            	//dd(count($records));
+            	$weights = array();
+            	foreach($records as $record){
+            		$obj = (object) [];
+            		$obj->date = date('Y-m-d',$record->RecordedForDate);
+            		$obj->weight = $record->Weight;
+            		if($obj->date >= $start_date && $obj->date <=$end_date)
+            			$weights[] = $obj;            		
+            	}
+            	if(count($weights)>0)
+            		return $weights;
+            	else
+            		return null;        
+           	}
+        	else {
+            	return null;
+        	}        
+    	} 
+    	else         
+        	return null;
+   	}	
+
 }
