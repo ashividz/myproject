@@ -75,7 +75,6 @@ class PatientWeightController extends Controller
 				$measurement->weight = $yuwow->dch_weight;
 				$measurement->save();
 			}
-
 				
 		}
 	}
@@ -269,5 +268,37 @@ class PatientWeightController extends Controller
     	else         
         	return null;
    	}	
+
+   	public function fullIfitterProfile($id)
+	{
+		$patient = Patient::findOrFail($id);
+		//$emailId = $patient->lead->id;
+		$baseURI = "http://ifittrtest.azurewebsites.net/RestMerchantService.svc/GetUserReadings";
+        $emailId = $patient->lead->email;
+        $beginTimestamp = 1455793922;
+        $merchantId     = "RQAOCUIHD40JSXSIOJ";
+        $data = array("emailId" => $emailId, "$beginTimestamp" => $beginTimestamp, "merchantId" => $merchantId);
+        $data_string = json_encode($data);                                                                                 
+                                                                                                                     
+       	$ch = curl_init($baseURI);                                                                     
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($data_string))                                                                       
+        );                                                                                                                   
+                                                                                                                     
+        $result   = curl_exec($ch);
+        $response = json_decode($result);
+	
+
+        if($response->Status == 'OK'){
+            return view('ifit')->with(['response'=>$response,'email'=>$emailId,'patient'=>$patient]);
+        }
+        else{
+            return json_encode(array("error code" => $response->ErrorCode, "ErrorMessage" => $response->ErrorMessage));
+        }
+	}	
 
 }

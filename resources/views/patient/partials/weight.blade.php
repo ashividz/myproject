@@ -69,6 +69,18 @@
         </div>
     </div>
 </div>
+<div class="col-md-3">      
+</div>
+<div class="col-md-6"> 
+<div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Full iFitter Profile</div>
+        </div>
+        <div class="panel-body">            
+            <a href="{{url('patient/'.$patient->id.'/fullIfitterProfile')}}">Click to see full iFitter profile</a>     
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('main')
