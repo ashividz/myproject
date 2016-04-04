@@ -414,6 +414,8 @@ Route::group([
         Route::get('bt/report/{id}', 'PatientBTController@fetchBTReport');
         Route::get('patient/{id}/diets', 'PatientDietController@all');
         Route::get('patient/{id}/weight', 'PatientWeightController@index');
+        Route::get('patient/{id}/fullIfitterProfile', 'PatientWeightController@fullIfitterProfile');
+        Route::post('patient/{id}/copyWeightFromIfitter', 'PatientWeightController@copyWeightFromIfitter');
         Route::get('patient/{id}/measurements', 'PatientMeasurementController@index');
 
         Route::get('patient/{id}/medicalTest', 'PatientBTController@showMedicalTest');
