@@ -595,15 +595,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('lead/{id}/program', 'LeadProgramController@show');
     Route::post('lead/{id}/program', 'LeadProgramController@store');
 
-
-    
-
-    
-
-
-    
-
-
     Route::get('lead/{id}', 'LeadController@showLead');
 
     Route::get('api/getCountryList', 'APIController@getCountryList');
@@ -629,8 +620,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('api/patients/age', 'APIController@ages');
     Route::get('api/lead/{id}/dispositions', 'APIController@dispositions');
 
-
-
     Route::get('api/survey/comments', 'SurveyController@comments');
 
     Route::get('api/template/{id}', 'HerbController@template');
@@ -651,9 +640,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('cod', 'AdminController@cod');
     Route::post('cod', 'AdminController@saveCod');
 
+    Route::get('modal/{id}/message', 'ModalController@message');
     
-
-
     Route::get('modal/{id}/payment', 'ModalController@payment');
     Route::get('modal/{id}/herb', 'ModalController@herb');
 
