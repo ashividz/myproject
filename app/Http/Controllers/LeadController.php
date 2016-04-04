@@ -290,24 +290,33 @@ class LeadController extends Controller
            $dept =  2;
         }
 
+        $dialer_dispositions = array();
 
-        $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
+        try {
+
+            $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
                             ->where('crl.phonenumber', '=', $lead->phone);
             
-            if(trim($lead->mobile) <> '' && ( $lead->mobile <> $lead->phone)) {
-                $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', $lead->mobile);
-            }
-                    
-            
-        $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
-                                     $join->on('crl.disposition', '=', 'c.disponame');
-                                })
+                if(trim($lead->mobile) <> '' && ( $lead->mobile <> $lead->phone)) {
+                    $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', $lead->mobile);
+                }
+                        
+                
+            $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
+                                    $join->on('crl.disposition', '=', 'c.disponame');
+                                    })
                                 ->join(DB::raw("(SELECT username, userfullname FROM ct_user) AS u"), function($join) {
                                      $join->on('crl.username', '=', 'u.username');
                                      })
                                 ->select('crl.username', 'crl.eventdate', 'crl.disposition', 'crl.duration', 'crl.filename', 'c.dispodesc', 'u.userfullname')
                                 ->orderby('crl.eventdate','desc')
                                 ->limit(10)->get();
+            
+        } catch (\Exception $e) {
+            
+            Session::flash("message", "Error connecting with Dialer Database");
+            Session::flash("status", "error");
+        }       
                               
 
     

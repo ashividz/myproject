@@ -32,6 +32,7 @@
             </form>
         </div>
     </div>
+    <button class="btn btn-primary" id="weight-copy-ifitter" value="{{$patient->id}}" >Copy from iFitter</button>        
 </div>
 <div class="col-md-9">  
     <div class="panel panel-default">
@@ -65,6 +66,18 @@
                 </tbody>
 
             </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-3">      
+</div>
+<div class="col-md-6"> 
+<div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Full iFitter Profile</div>
+        </div>
+        <div class="panel-body">            
+            <a href="{{url('patient/'.$patient->id.'/fullIfitterProfile')}}">Click to see full iFitter profile</a>     
         </div>
     </div>
 </div>
@@ -135,6 +148,53 @@ $(function () {
             data: weight
         }]
 
+    });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() 
+{
+    $('#weight-copy-ifitter').on('click', function(){
+        
+        var url = '/patient/'+this.value+'/copyWeightFromIfitter';
+        $.ajax(
+        {
+           type: "POST",
+           url: url,
+           data: {_token : '{{ csrf_token() }}'},
+           success: function(data)
+           {
+               $('#alert').show();
+               $('#alert').empty().append(data);
+                setTimeout(function()
+                {
+                    $('#alert').slideUp('slow').fadeOut(function() 
+                    {
+                        location.reload();
+                     });
+                }, 3000);
+           },
+           error : function(data) {
+                var errors = data.responseJSON;
+
+                console.log(errors);
+
+                $('#alert').show();
+                $('#alert').empty();
+                $.each(errors, function(index, value) {
+                    $('#alert').append("<li>"+value+"</li>");
+                });
+
+                setTimeout(function()
+                {
+                    $('#alert').slideUp('slow').fadeOut(function() 
+                    {
+                        //location.reload();
+                     });
+                }, 3000);
+           }
+        });
     });
 });
 </script>

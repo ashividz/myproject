@@ -11,13 +11,13 @@
             <?php    
                 if($category->id == 1 && $cart->lead->programs->isEmpty()) {
                     continue;
-                } else if ($category->id == 2 && $cart->lead->state<>'IN.07'){
+                } else if ($category->id == 2 && $cart->lead->country <> 'IN'){
                     continue;
-                } else if ($category->id == 3 && $cart->lead->country<>'IN'){
+                } else if ($category->id == 3 && $cart->lead->state <> 'IN.07'){
                     continue;
-                } else if ($category->id == 4 && $cart->lead->country<>'IN'){
+                }else if ($category->id == 4 && $cart->lead->country <> 'IN'){
                     continue;
-                } 
+                }
 
             ?>
                 <div>{{$category->name}}</div>
