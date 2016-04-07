@@ -89,8 +89,6 @@ class Nutritionist extends Model
         $nutritionist = new Nutritionist;
 
         $nutritionist->patient_id = $request->id;
-        $nutritionist->clinic = $patient->clinic;
-        $nutritionist->registration_no = $patient->registration_no;
         $nutritionist->nutritionist = $request->value;
         $nutritionist->secondary = $secondary;
         $nutritionist->created_by = Auth::user()->employee->name;
