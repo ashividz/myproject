@@ -13,8 +13,7 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
-Route::get('orders', 'OrderController@index');
-Route::post('orders', 'OrderController@index');
+
 
 
 
@@ -47,12 +46,27 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles'], 
-    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl']], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales_tl']], 
     function() {
 
         /* Cart Approval */
         Route::get('cart/approval', 'CartApprovalController@show');
         Route::post('cart/approval', 'CartApprovalController@store');
+
+        Route::get('orders', 'OrderController@index');
+        Route::post('orders', 'OrderController@index');
+
+});
+
+Route::group([
+    'middleware' => ['auth', 'roles'], 
+    'roles' => ['admin', 'sales', 'finance', 'marketing', 'service', 'service_tl']], 
+    function() {
+
+        /* Carts */
+
+        Route::get('orders', 'OrderController@index');
+        Route::post('orders', 'OrderController@index');
 
 });
 
@@ -500,11 +514,11 @@ Route::group([
     'roles' => ['admin', 'registration']], 
     function() {
 
-        Route::get('lead/{id}/register', 'PatientRegistrationController@index');
+        /*Route::get('lead/{id}/register', 'PatientRegistrationController@index');
         Route::post('lead/{id}/register', 'PatientRegistrationController@store');
 
         Route::get('patient/{id}/fee', 'FeeController@show');
-        Route::post('patient/{id}/fee', 'FeeController@store');
+        Route::post('patient/{id}/fee', 'FeeController@store');*/
 });
 
 Route::group([

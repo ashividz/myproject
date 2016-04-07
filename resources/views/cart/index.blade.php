@@ -164,7 +164,7 @@
                                 {{$payment->created_at->format('jS M, Y h:i A')}}
                             </td>
                             <td>
-                        @if($cart->status_id == 1 || $cart->state_id == 2)
+                        @if($cart->state_id == 2)
                                 <a href="#" onclick="deletePayment({{$payment->id}})" class="red"><i class="fa fa-close"></i></a>
                         @endif
                             </td>

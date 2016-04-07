@@ -22,7 +22,7 @@
 
     /* Check Payment Approver */
 
-    $disabled = '';
+    $disabled = 'disabled';
     $maxDiscount = null;
     $discount = null;
     if($cart->status_id == 2) {
@@ -32,17 +32,22 @@
             //var_dump($cart->step->discount_id); 
             $discount = Discount::where('id', $discount_id)->first();
 
-            if(!Helper::approveCartDiscount($maxDiscount)) {
-                $disabled = 'disabled';
+            if(Helper::approveCartDiscount($maxDiscount)) {
+                $disabled = '';
             }
         }
         
     } else if ($cart->status_id == 3) {
         $cart_payments = array_pluck($cart->payments, 'payment_method_id');
 
-        if(!Helper::approveCartPaymentMethod($cart_payments)) {            
-            $disabled = 'disabled';
+        if(Helper::approveCartPaymentMethod($cart_payments)) {            
+            $disabled = '';
         }
+    }
+
+
+    if (Auth::user()->hasRole('sales_tl') && $discount == null) {
+        $disabled = '';
     }
 ?>
         <div class="panel panel-default">
@@ -113,7 +118,7 @@
                                     </div>
 
                                     <div>
-                                        <label>TL :</label> {!! $cart->cre->employee->sup->pivot or '' !!}
+                                        <label>TL :</label> {!! $cart->cre->employee->sup->first()->name or '' !!}
                                     </div>                             
                                     
                                 </td>

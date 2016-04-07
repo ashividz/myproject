@@ -143,13 +143,28 @@
 	</style>	
 @endif
 @endif
+<?php
+    $data = "";
+    if($lead->created_by) {
+        $data .= '<b>Created By</b> : '.$lead->created_by.'<p>';
+    }
+    if($lead->created_at) {
+        $data .='<b>Created At</b> : '.$lead->created_at->format('jS M, Y h:i A').'<p>';
+    }
+    if($lead->updated_by) {
+        $data .= '<b>Updated By</b> : '.$lead->updated_by.'<p>';
+    }
+    if($lead->updated_at) {
+        $data .='<b>Updated At</b> : '.$lead->updated_at->format('jS M, Y h:i A').'<p>';
+    }
 
+?>
 
 <div class="container" style="margin-top:20px">
 	<div class="col-md-3">
 		<div class="panel panel-default">
 		  	<div class="panel-heading">
-		  		<div class="panel-title pull-right" data-html="true" data-toggle="popover" title="Lead Details" data-content="{{$lead->created_by ? '<b>Created By</b> : '.$lead->created_by.'<p>':''}}{{$lead->created_at ? '<b>Created At</b> : '.$lead->created_at->format('jS M, Y h:i A').'<p>':''}}"><i class="fa fa-info-circle"></i></div>
+		  		<div class="panel-title pull-right" data-html="true" data-toggle="popover" title="Lead Details" data-content="{!! $data !!}"><i class="fa fa-info-circle"></i></div>
 		    	<h1 class="panel-title"><?php echo $lead->name;?></h1>
 		  	</div>
 		  	<div class="panel-body">			  	
@@ -184,6 +199,10 @@
 				<label class="form-control"> M : {{$lead->mobile}} <a href="{{Lead::dialerUrl($lead->mobile)}}" target="_blank"><i class='fa fa-phone pull-right'></i></a>
 				</label>
 			@endif
+
+            @if($lead->cre_name)
+                <label class="form-control">CRE : {{ $lead->cre_name }}</label>
+            @endif
 				<label class="form-control" id="status">
 				</label>
 		  	</div>
