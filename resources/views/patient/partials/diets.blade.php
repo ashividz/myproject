@@ -50,7 +50,7 @@
 						<div class="remark">{{$diet->rem_dev}}</div></i>
 					</td>
 					<td>
-                           <?php
+                          <?php
                             $date_assign = date('Y-m-d',strtotime($diet->date_assign));
                             $first_weight = $patient->weights->first(function ($key, $value) use($date_assign){return $value['date'] > $date_assign;});
                             ?>

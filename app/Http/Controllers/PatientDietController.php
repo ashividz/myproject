@@ -23,7 +23,6 @@ class PatientDietController extends Controller
 
         $patient = Patient::with('herbs', 'diets', 'suit', 'weights')->find($id);
       
-
         $diets = Diet::where('patient_id', $id)
                     ->orderBy('date_assign', 'desc')
                     ->limit(12)

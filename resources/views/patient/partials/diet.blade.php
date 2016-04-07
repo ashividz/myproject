@@ -337,7 +337,7 @@
 							<i class="fa fa-copy pull-right blue" title="herbs"></i>
 						</td>
 						 <td>
-                            <?php
+                           <?php
                             $date_assign = date('Y-m-d',strtotime($diet->date_assign));
                             $first_weight = $patient->weights->first(function ($key, $value) use($date_assign){return $value['date'] > $date_assign;});
                             ?>
