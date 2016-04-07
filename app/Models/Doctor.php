@@ -32,8 +32,6 @@ class Doctor extends Model
         $doctor = new Doctor;
 
         $doctor->patient_id = $request->id;
-        $doctor->clinic = $patient->clinic;
-        $doctor->registration_no = $patient->registration_no;
         $doctor->name = $request->value;
         $doctor->created_by = Auth::user()->employee->name;
         $doctor->save();
