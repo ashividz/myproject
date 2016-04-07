@@ -83,18 +83,18 @@ class RecipeController extends Controller
         $ingredients = SentIngredient::where('patient_id','=',$id)->where('recipe_code','=',$recipe->recipe_code)->get();
         //dd($ingredients);
         $recipe_body = "<table border='0' width='100%' style='margin: 0px auto;border: 1px solid #d9d9d9;font-family: arial' cellspacing='0' cellpadding='0' ><tr><td colspan='3' style='padding: 10px;background: #80ccff;'><h3 style='margin: 0px;color: #444444'>{$recipe->recipe_name}</h3></td></tr>";
-        $recipe_body .=   "<tr><td colspan='3' style='padding: 0px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>
+        $recipe_body .=   "<tr><td colspan='3' style='padding: 0px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>
                             <table cellspacing='0' cellpadding='0' border='0'>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Servings</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$recipe->recipe_servings}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Calorie</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$recipe->recipe_calorie}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Preparation Duration</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$recipe->recipe_preparation_duration}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Remarks</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$recipe->recipe_remarks}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Notes</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$recipe->recipe_notes}</td></tr>
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Servings</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$recipe->recipe_servings}</td></tr>
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Calorie</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$recipe->recipe_calorie}</td></tr>
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Preparation Duration</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$recipe->recipe_preparation_duration}</td></tr>
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Remarks</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$recipe->recipe_remarks}</td></tr>
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Notes</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$recipe->recipe_notes}</td></tr>
                             </table></td></tr>";
 
 
@@ -104,9 +104,9 @@ class RecipeController extends Controller
         $recipe_body .= "<tr><td colspan='3' style='padding: 10px;background: #80ccff;'><h4 style='margin: 0px;color: #444444'>INGREDIENTS</h4></td></tr>";
         foreach($ingredients as $ingredient)
         {
-            $recipe_body .=   "<tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$ingredient->ingredient_name}</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$ingredient->quantity}</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$ingredient->unit}</td></tr>";
+            $recipe_body .=   "<tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$ingredient->ingredient_name}</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$ingredient->quantity}</td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$ingredient->unit}</td></tr>";
         
         }
         $recipe_body .= "</table>";
@@ -134,24 +134,21 @@ class RecipeController extends Controller
         $remarks = $request->remarks;
         $notes = nl2br($request->notes);
         $recipe_img_url = $request->recipe_img_url;
-
+        $patient = Patient::find($patient_id);
         $lead = Lead::find($lead_id);
 
         $recipe_body = "<table border='0' width='80%' style='margin: 0px auto;border: 1px solid #d9d9d9;font-family: arial' cellspacing='0' cellpadding='0' ><tr><td colspan='3' style='padding: 10px;background: #80ccff;'><h3 style='margin: 0px;color: #444444'>$recipe_name</h3></td></tr>";
-        $recipe_body .=   "<tr><td colspan='3' style='padding: 0px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>
-                            <table cellspacing='0' cellpadding='0' border='0'>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Servings</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$servings}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Calorie</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$calorie}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Cooking Duration</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$cooking_duration}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Preparation Duration</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$preparation_duration}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Remarks</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$remarks}</td></tr>
-                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>Notes</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$notes}</td></tr>
+        $recipe_body .=   "<tr><td colspan='3' style='padding: 0px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>
+                            <table width='100%' cellspacing='0' cellpadding='0' border='0'>
+                                 <tr><td style='background: #e6e6e6;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Servings</td>
+                                 <td style='background: #e6e6e6;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$servings}</td></tr>
+                                 <tr><td style='background: #d9d9d9;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Calorie</td>
+                                 <td style='background: #d9d9d9;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$calorie}</td></tr>
+                                 <tr><td style='background: #e6e6e6;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Cooking Duration</td>
+                                 <td style='background: #e6e6e6;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$cooking_duration}</td></tr>
+                                 <tr><td style='background: #d9d9d9;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>Preparation Duration</td>
+                                 <td style='background: #d9d9d9;padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$preparation_duration}</td></tr>
+                               
                             </table></td></tr>";
 
 
@@ -161,9 +158,13 @@ class RecipeController extends Controller
         $recipe_body .= "<tr><td colspan='3' style='padding: 10px;background: #80ccff;'><h4 style='margin: 0px;color: #444444'>INGREDIENTS</h4></td></tr>";
         for($i=0;$i<sizeof($item_names);$i++)
         {
-            $recipe_body .=   "<tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$item_names[$i]}</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$quantity[$i]}</td>
-                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #666666'>{$unit[$i]}</td></tr>";
+            if($i%2==0)
+                $bak_g = "background: #e6e6e6;";
+            else
+                $bak_g = "background: #d9d9d9;";
+            $recipe_body .=   "<tr><td style='$bak_g padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$item_names[$i]}</td>
+                                 <td style='$bak_g padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$quantity[$i]}</td>
+                                 <td style='$bak_g padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$unit[$i]}</td></tr>";
             $sent_ingredient = new SentIngredient;
             $sent_ingredient->patient_id = $patient_id;
             $sent_ingredient->recipe_code = $recipe_code;
@@ -173,7 +174,15 @@ class RecipeController extends Controller
             $sent_ingredient->created_by = Auth::user()->id;
             $sent_ingredient->save();
         }
-
+        $recipe_body .= "<tr><td colspan='3' style='background: #e6e6e6;padding: 0px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>
+                            <table cellspacing='0' cellpadding='0' border='0'>
+                                 
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'><b>Preparation Method</b></td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$notes}</td></tr>
+                                 <tr><td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'><b>Remarks</b></td>
+                                 <td style='padding: 5px;border: 1px solid #d9d9d9;border-right:none;border-top: none;color: #595959'>{$remarks}</td></tr>
+                            </table></td></tr>";
+        $date  = date('l,  jS F, Y');
         $recipe_body .= "</table>";
         $email_body = "<table width='auto' cellspacing='1' cellpadding='1' border='0' style='padding:0 20px;background-color:#fff;'>\n
                         <tbody>\n
@@ -185,6 +194,7 @@ class RecipeController extends Controller
                                                 <td width='70%'>\n
                                                     <div>\n
                                                         <h2>Namaste! {$lead->name},</h2>\n
+                                                        <p>Here is your recipe specially designed for you!</p>\n
                                                     </div>\n
                                                 </td>\n
                                                 <td align='center' valign='middle'>\n
@@ -199,6 +209,32 @@ class RecipeController extends Controller
                                 <td>\n
                                     <p>Thanks for choosing Dr. Shikha’s NutriHealth for your Diet Management at home.</p> 
 
+                                    <table width='auto' cellspacing='1' cellpadding='1' border='0' style='padding:0 20px;background-color:#fff;'>\n
+                                    <tr>\n
+                                        <td><div style='border:1px solid #e4c94b;background-color:#fff4c5;padding:5px 20px;text-align:center;margin-bottom:10px'>\n
+                                        <h3>Give the Gift of Health this New Year.</h3>\n
+                                        <h4>Get your Near &amp; Dear ones to join our preventive healthcare program &amp; win a free program for yourself!</h4>\n
+                                        <a target='_blank' href='http://nutrihealthsystems.com/newsletter/references/form.html'>Click here to leave your references</a>\n
+                                        </div>\n
+                                        </td>\n
+                                    </tr>\n
+                                    <tr>\n
+                                        <td width='50%' align='left' style='padding:10px 20px'>\n
+                                        <div style='width:200px'>\n
+                                        <h2 style='background-color:#087b3d;color:White;text-align:center;padding:5px'>$date</h2>\n
+                                        </div>\n
+                                        <h4>Nutritionist: $patient->nutritionist</h4>\n
+                                        </td>\n
+                                        <td align='right'>\n
+                                            <img src='http://nutrihealthsystems.com/assets/images/nutritionist.png' />\n
+                                        </td>\n
+                                    </tr>
+                                    <tr>\n
+                                        <td style='padding:10px 20px' colspan='2'>\n
+                                            <em>Gift your friends health this festive season. <a target='_blank' href='http://nutrihealthsystems.com/newsletter/references/form.html'>Refer someone</a> and earn surprise benefits.</em>\n
+                                        </td>\n
+                                    </tr>\n
+                                    </table>\n
                                     $recipe_body
 
                                     <p>Warm Regards, </p>NutriHealth Team\n
@@ -264,7 +300,7 @@ class RecipeController extends Controller
                         </tbody>\n
                     </table>";
 
-      
+      //return  $email_body;
 
         $sent_recipe = new SentRecipe;
         $sent_recipe->patient_id = $patient_id;
@@ -279,16 +315,16 @@ class RecipeController extends Controller
         $sent_recipe->created_by = Auth::user()->id;
         $sent_recipe->save();
         
-       /*Mail::queue([], [], function($message) use ($recipe_body, $lead)
+       Mail::queue([], [], function($message) use ($email_body, $lead, $recipe_name)
         {
             $from = 'sales@nutrihealthsystems.com';
             
             $message->to($lead->email, $lead->name)
-            ->subject("Recipe")
+            ->subject("Nutri-Health Recipe - $recipe_name")
             ->from($from, 'Nutri-Health Systems' );
              
-             $message->setBody($recipe_body, 'text/html');
-        });*/
+             $message->setBody($email_body, 'text/html');
+        }); 
         Session::flash('status', 'Recipe Sent to Patient!');
         return $this->show($id, $request);
     }

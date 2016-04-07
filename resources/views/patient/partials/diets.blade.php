@@ -49,7 +49,15 @@
 					<td>
 						<div class="remark">{{$diet->rem_dev}}</div></i>
 					</td>
-					<td>{{$diet->weight}}</td>
+					<td>
+                          <?php
+                            $date_assign = date('Y-m-d',strtotime($diet->date_assign));
+                            $first_weight = $patient->weights->first(function ($key, $value) use($date_assign){return $value['date'] > $date_assign;});
+                            ?>
+                            @if($first_weight)
+                            {{$first_weight->weight}}<br><small>{{date('jS M, Y', strtotime($first_weight->date))}}</small>
+                            @endif
+                        </td>
 				</tr>
 		@endforeach
 
