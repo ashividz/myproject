@@ -291,6 +291,7 @@
 						<th width="12%">Evening</th>
 						<th width="12%">Dinner</th>
 						<th width="12%">Herbs (&#8478;)</th>
+						<th width="12%">Weight</th>
 						<th width="12%">Remarks/Deviations</th>
 						<th>Email</th>
 						<th>SMS</th>
@@ -310,6 +311,7 @@
 							<div class="early_morning">{{$diet->early_morning}}</div>
 							<i class="fa fa-copy pull-right blue" title="early_morning"></i>
 						</td>-->
+
 						<td>
 							<div class="breakfast">{{$diet->breakfast}}</div>
 							<i class="fa fa-copy pull-right blue" title="breakfast"></i>
@@ -334,6 +336,15 @@
 							<div class="herbs">{{$diet->herbs}}</div>
 							<i class="fa fa-copy pull-right blue" title="herbs"></i>
 						</td>
+						 <td>
+                            <?php
+                            $date_assign = date('Y-m-d',strtotime($diet->date_assign));
+                            $first_weight = $patient->weights->first(function ($key, $value) use($date_assign){return $value['date'] > $date_assign;});
+                            ?>
+                            @if($first_weight)
+                            {{$first_weight->weight}}<br><small>{{date('jS M, Y', strtotime($first_weight->date))}}</small>
+                            @endif
+                        </td>
 						<td>
 							<div class="remark">{{$diet->rem_dev}}</div>
 							<i class="fa fa-copy pull-right blue" title="remark"></i>
