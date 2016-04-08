@@ -29,6 +29,7 @@ use Auth;
 use App\Support\Helper;
 use Redirect;
 use Session;
+use App\DND;
 
 class LeadController extends Controller
 {
@@ -516,11 +517,39 @@ class LeadController extends Controller
         }
 
         $lead = Lead::addLead($request);
-
+        $this->check($lead);
         //dd($lead);
 
         return redirect("/lead/" . $lead->id . "/viewDispositions");        
     }
+
+    public function check($lead)
+    {
+        $dnd = new DND;
+
+        if($dnd->scrub($lead->phone) == true){
+
+            echo '<p>Phone : '.$lead->id.$lead->name;
+            Lead::setPhoneDNDStatus($lead, 1);
+
+        } elseif ($dnd->scrub($lead->phone) == false) {
+            Lead::setPhoneDNDStatus($lead, 0);
+        }
+
+
+        
+        
+        if($dnd->scrub($lead->mobile) == true){
+
+            Lead::setMobileDNDStatus($lead, 1);
+            echo '<p>Mobile : '.$lead->id.$lead->name;
+
+        } elseif ($dnd->scrub($lead->mobile) == false) {
+
+            Lead::setMobileDNDStatus($lead, 0);
+        }
+    }
+
 
     public function deleteSource(Request $request)
     {

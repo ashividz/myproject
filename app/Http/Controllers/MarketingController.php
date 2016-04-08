@@ -20,6 +20,7 @@ use App\Models\DialerPush;
 use App\Models\Status;
 use DB;
 use Auth;
+use App\DND;
 
 class MarketingController extends Controller
 {
@@ -169,7 +170,7 @@ class MarketingController extends Controller
 
             //Save Lead
             $lead = Lead::saveLead($request, $i);          
-
+            $this->check($lead);
             //Save Cre
             LeadCre::saveCre($lead, $request->cre[$i]);
 
@@ -207,8 +208,35 @@ class MarketingController extends Controller
         }
 
         $lead = Lead::addLead($request);
-
+        $this->check($lead);
         return redirect("/lead/" . $lead->id . "/viewDispositions");
+    }
+
+    public function check($lead)
+    {
+        $dnd = new DND;
+
+        if($dnd->scrub($lead->phone) == true){
+
+            echo '<p>Phone : '.$lead->id.$lead->name;
+            Lead::setPhoneDNDStatus($lead, 1);
+
+        } elseif ($dnd->scrub($lead->phone) == false) {
+            Lead::setPhoneDNDStatus($lead, 0);
+        }
+
+
+        
+        
+        if($dnd->scrub($lead->mobile) == true){
+
+            Lead::setMobileDNDStatus($lead, 1);
+            echo '<p>Mobile : '.$lead->id.$lead->name;
+
+        } elseif ($dnd->scrub($lead->mobile) == false) {
+
+            Lead::setMobileDNDStatus($lead, 0);
+        }
     }
 
     public function search(Request $request) 
