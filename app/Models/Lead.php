@@ -8,6 +8,7 @@ use DB;
 use App\Support\Helper;
 use Auth;
 use Carbon\Carbon;
+use App\DND;
 
 class Lead extends Model
 {
@@ -203,7 +204,6 @@ class Lead extends Model
             $lead->phone = isset($request->phone) ? Helper::properMobile($request->phone) : Helper::properMobile($request->mobile);
             $lead->mobile = isset($request->mobile) ? Helper::properMobile($request->mobile) : Helper::properMobile($request->phone);
             $lead->email = $request->email;
-
             $lead->country = $request->country;
             $lead->state = $request->state;
             $lead->city = $request->city; 
@@ -214,10 +214,32 @@ class Lead extends Model
         }
             
         $lead->created_by = Auth::user()->employee->name;
-
+        Lead::checkDND($lead);
         $lead->save();
 
         return $lead;
+    }
+
+    public static function checkDND($lead)
+    {
+        $dnd = new DND;
+
+        if($dnd->scrub($lead->phone) == true){
+
+            $lead->phone_dnd = 1;
+
+        } elseif ($dnd->scrub($lead->phone) == false) {
+            $lead->phone_dnd = 0;
+        }
+
+        if($dnd->scrub($lead->mobile) == true){
+
+            $lead->mobile_dnd = 1;
+
+        } elseif ($dnd->scrub($lead->mobile) == false) {
+
+            $lead->mobile_dnd = 0;
+        }
     }
 
     public static function updateLead($id, $request)
