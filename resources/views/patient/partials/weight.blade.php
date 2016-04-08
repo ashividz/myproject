@@ -99,13 +99,21 @@ $(function () {
     var weight = [
 @foreach($days as $day)
     @if($day->weight)
-            [Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($day->date)))}}), {{$day->weight}}],
+        <?php
+            $time    = strtotime($day->date);
+            $utcTime = date('Y',$time).','.(date('m',$time)-1).','.date('d',$time);
+        ?>
+            [Date.UTC({{$utcTime}}), {{$day->weight}}],
     @endif
 @endforeach
     ],
     smooth_weight = [
 @foreach($days as $day)
-            [Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($day->date)))}}), {{$day->smooth_weight}}],
+        <?php
+            $time    = strtotime($day->date);
+            $utcTime = date('Y',$time).','.(date('m',$time)-1).','.date('d',$time);
+        ?>
+            [Date.UTC({{$utcTime}}), {{$day->smooth_weight}}],
 @endforeach
     ];
 
@@ -124,9 +132,15 @@ $(function () {
         },
 
         xAxis: {
+            <?php
+                $startTime    = strtotime($days->first()->date);
+                $endTime      = strtotime($days->last()->date);  
+                $startUTCTime = date('Y',$startTime).','.(date('m',$startTime)-1).','.date('d',$startTime);
+                $endUTCTime   = date('Y',$endTime).','.(date('m',$endTime)-1).','.date('d',$endTime);
+            ?>
             type: 'datetime',
-            min: Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($days->first()->date)))}}),
-            max: Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($days->last()->date)))}}),
+            min: Date.UTC({{$startUTCTime}}),
+            max: Date.UTC({{$endUTCTime}}),
         },
 
         yAxis: {
