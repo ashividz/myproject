@@ -383,43 +383,79 @@ class ReportController extends Controller
     {
         $users = User::getUsersByRole('cre');
         
-        $sources = Source::get();
+        if(isset($request->user) && $request->user!="Select User")
+        {
+            $cre_name = $request->user;
+            $cres = User::join(DB::raw("(SELECT * FROM employees where name='$cre_name') AS e"), function($join) {
+                    $join->on('users.emp_id', '=', 'e.id');
+                })->select('e.name as name')->get();
+        }
+        else
+        {
+            $cres = $users;
+        }
+        //dd($cres);
+        
+        $i = 1;
 
-        foreach ($sources as $source) {
-            
-            $source->leads = Lead::leftJoin(DB::raw('(SELECT * FROM lead_cre A WHERE id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c'), function($join) {
-                    $join->on('marketing_details.id', '=', 'c.lead_id');
-                })
-                ->where('cre', $this->user)
-                ->where('source_id', $source->id)
-                ->whereBetween('c.created_at', array($this->start_date, $this->end_date))
-                ->count();
+        /*$lead_ids= DB::table('lead_cre')->select(["lead_id"])
+                        ->groupBy("lead_id")
+                        ->havingRaw("count(lead_id) = 1")->get();
+                        $resultArray = json_decode(json_encode($lead_ids), true);
+                        $comma_separated ="";
+                        foreach($lead_ids as $lead_id)
+                        {
+                          $comma_separated .= "','". $lead_id->lead_id;
+                        }
 
-            $patients = Patient::join('fees_details AS f', 'f.patient_id', '=', 'patient_details.id') 
-                        ->where('cre', $this->user)
-                        ->where('source_id', $source->id) 
-                        ->whereBetween('f.entry_date', array($this->start_date, $this->end_date))
-                        ->get();
+        $comma_separated = "'0x".$comma_separated."'";*/
+        foreach($cres as $cre)
+        {
+            $sources = Source::get();
 
-            //echo $source->source_name . " : ".$patients->count() . " - Rs.  ".$patients->sum('total_amount') . "<p>";
+              // $lead_ids =     DB::select("select lead_id from lead_cre group by lead_id having count(lead_id)=1");
+           
+             //dd($comma_separated);
+            foreach ($sources as $source) {
+                
+                $source->leads = Lead::join(DB::raw("(SELECT * FROM lead_cre A WHERE (created_at BETWEEN '$this->start_date' and  '$this->end_date') and cre='$cre->name' group by lead_id) AS c"), function($join) {
+                                                $join->on('marketing_details.id', '=', 'c.lead_id');
+                                            })
+                                        ->where('cre', $cre->name)
+                                        ->where('source_id', $source->id)
+                                        ->count();
 
-            $source->patients = $patients->count();
-            $source->amount = $patients->sum('total_amount');
+                $patients = Patient::join('fees_details AS f', 'f.patient_id', '=', 'patient_details.id') 
+                            ->where('cre', $cre->name)
+                            ->where('source_id', $source->id) 
+                            ->whereBetween('f.entry_date', array($this->start_date, $this->end_date))
+                            ->get();
+
+                //echo $source->source_name . " : ".$patients->count() . " - Rs.  ".$patients->sum('total_amount') . "<p>";
+
+                $source->patients = $patients->count();
+                $source->amount = $patients->sum('total_amount');
+            }
+            $cre->sources =  $sources;
+           /*if( $i==9)
+           dd($cre);*/
+        $i++;
         }
 
-        //dd($sources);
+            //dd($sources);
 
-        $data = array(
-            'menu'          =>  $this->menu,
-            'section'       => 'cre.channel',
-            'users'         =>  $users,
-            'name'          =>  $this->user,
-            'sources'       =>  $sources,
-            'start_date'    =>  $this->start_date,
-            'end_date'      =>  $this->end_date
-        );
+            $data = array(
+                'menu'          =>  $this->menu,
+                'section'       => 'cre.channel',
+                'users'         =>  $users,
+                'name'          =>  $this->user,
+                'sources'       =>  $sources,
+                'cres'       =>  $cres,
+                'start_date'    =>  $this->start_date,
+                'end_date'      =>  $this->end_date
+            );
 
-        return view('home')->with($data);
+            return view('home')->with($data);
     }
 
     public function emails()
