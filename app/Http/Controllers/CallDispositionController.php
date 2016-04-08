@@ -163,7 +163,7 @@ class CallDispositionController extends Controller
         }
         elseif (Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre')) 
         {
-            $message = "We were unable to reach you for free counseling on Dr.Shikha's Weight Loss at Home advisory. Pls call 18001036663 for counselor " . $caller . ".\n";
+            $message = "We were unable to reach you for counseling on Dr.Shikha's Weight Loss at Home advisory. Pls call 18001036663 for counselor " . $caller . ".\n";
             $message .= "http://goo.gl/hRyWeS" . "\n";
             return $message;
         }
