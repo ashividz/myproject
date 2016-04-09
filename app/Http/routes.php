@@ -701,7 +701,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('report/patients/new', 'ReportController@getNewPatients');
 
     Route::get('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');    
-    Route::post('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');   
+    Route::post('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');  
+
+    Route::get('report/cre/newLeadsourcePerformance', 'ReportController@creWiseNewLeadSourcePerformance');    
+    Route::post('report/cre/newLeadsourcePerformance', 'ReportController@creWiseNewLeadSourcePerformance');  
 
     Route::get('report/leads/performance', 'ReportController@dailyPerformance');
     Route::post('report/leads/performance', 'ReportController@dailyPerformance');

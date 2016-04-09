@@ -488,6 +488,9 @@
                         <li>
                             <a href="/report/cre/sourcePerformance" id="menu_cre_source-performance" class="arrow">Source Performance</a>
                         </li> 
+                        <li>
+                            <a href="/report/cre/newLeadsourcePerformance" id="menu_cre_source-performance" class="arrow">New Leads Source Performance</a>
+                        </li> 
                     </ul>
                 </li>
                 <li>

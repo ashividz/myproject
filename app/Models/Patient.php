@@ -173,6 +173,11 @@ class Patient extends Model
         return $this->hasMany(PatientMeasurement::class)->orderBy('id', 'DESC');
     }
 
+     public function lead_cre() 
+    {
+        return $this->hasMany(LeadCre::class, 'lead_id', 'lead_id');
+    }
+
     public static function getActivePatients($nutritionist = NULL)
     {
         $query =  Patient::select('patient_details.*')

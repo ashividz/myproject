@@ -458,6 +458,81 @@ class ReportController extends Controller
             return view('home')->with($data);
     }
 
+
+     public function creWiseNewLeadSourcePerformance(Request $request)
+     {
+        $users = User::getUsersByRole('cre');
+        
+        if(isset($request->user) && $request->user!="Select User")
+        {
+            $cre_name = $request->user;
+            $cres = User::join(DB::raw("(SELECT * FROM employees where name='$cre_name') AS e"), function($join) {
+                    $join->on('users.emp_id', '=', 'e.id');
+                })->select('e.name as name')->get();
+        }
+        else
+        {
+            $cres = $users;
+        }
+        //dd($cres);
+        
+        $i = 1;
+
+       /*  $lead_ids= DB::table('lead_cre')->select(["lead_id"])
+        ->groupBy("lead_id")
+        ->havingRaw("count(lead_id) = 1")->get();
+        $resultArray = json_decode(json_encode($lead_ids), true);*/
+
+        foreach($cres as $cre)
+        {
+            $sources = Source::get();
+
+            foreach ($sources as $source) {
+                    $date1 = $this->start_date;
+                    $date2 = $this->end_date;
+                    $source->leads = Lead::whereHas('cres', function ($query) use($date1, $date2, $cre){
+                                          $query->where('cre',$cre->name)
+                                         ->whereBetween('created_at', array($date1, $date2));
+                                        }, '=','1')
+                                    ->where('source_id', $source->id)
+                                    ->count();
+
+                    $patients = Patient::join('fees_details AS f', 'f.patient_id', '=', 'patient_details.id') 
+                                    ->whereHas('lead_cre', function ($query) use($date1, $date2, $cre){
+                                          $query->where('cre',$cre->name)
+                                         ->whereBetween('created_at', array($date1, $date2));
+                                        }, '=','1')
+                                ->where('source_id', $source->id) 
+                                ->whereBetween('f.entry_date', array($this->start_date, $this->end_date))
+                                ->get();
+
+                    //echo $source->source_name . " : ".$patients->count() . " - Rs.  ".$patients->sum('total_amount') . "<p>";
+
+                    $source->patients = $patients->count();
+                    $source->amount = $patients->sum('total_amount');
+            }
+            $cre->sources =  $sources;
+            /*if( $i==9)
+            dd($cre);*/
+            $i++;
+        }
+
+            //dd($sources);
+
+            $data = array(
+                'menu'          =>  $this->menu,
+                'section'       => 'cre.channel',
+                'users'         =>  $users,
+                'name'          =>  $this->user,
+                'sources'       =>  $sources,
+                'cres'       =>  $cres,
+                'start_date'    =>  $this->start_date,
+                'end_date'      =>  $this->end_date
+            );
+
+            return view('home')->with($data);
+    }
+
     public function emails()
     {
         $emails = Email::whereBetween('created_at', array($this->start_date, $this->end_date))
