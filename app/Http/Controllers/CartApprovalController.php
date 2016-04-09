@@ -19,27 +19,42 @@ use Redirect;
 
 class CartApprovalController extends Controller
 {
+    protected $daterange;
+    protected $start_date;
+    protected $end_date;
+
+    public function __construct(Request $request)
+    {
+    
+        $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
+        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y-m-d 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');
+        
+    } 
+
     public function show()
     {
         $roles = Helper::roles(); //dd($roles);
 
-        $carts = Cart::select('carts.*')
-                    ->with('payments.method', 'steps', 'cre.employee.sup', 'step')
+        $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step')
                     /*->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')*/
                     ->whereHas('approvers', function($q) use ($roles) {
                         $q->whereIn('approver_role_id', $roles);
                     })
-                    ->orderBy('carts.id', 'desc')
+                    ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                    ->orderBy('id', 'desc')
                     ->get(); //dd($carts);
 
         $statuses = CartStatus::get();
 
         $data = array(
-            'menu'      =>  'cart',
-            'section'   =>  'approval',
-            'carts'     =>  $carts,
-            'statuses'  =>  $statuses,
-            'i'         =>  1
+            'menu'          =>  'cart',
+            'section'       =>  'approval',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'carts'         =>  $carts,
+            'statuses'      =>  $statuses,
+            'i'             =>  1
         );    
 
         return view('home')->with($data);
@@ -130,8 +145,8 @@ class CartApprovalController extends Controller
             CartStep::store($cart->id, $cart->status_id, 3);
 
             $data = array(
-                'message'   => 'Order Placed', 
-                'status'    => 'success'
+                'message'       => 'Order Placed', 
+                'status'        => 'success'
             );
         }
 

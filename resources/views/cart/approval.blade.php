@@ -2,7 +2,10 @@
 
 @section('content')
 <div class="container">
-    <form id="form" method="post" class="form">
+    <div>
+        @include('partials.daterange')
+    </div>
+    <form id="form" action="/cart/approval/save" method="post" class="form">
 
 @foreach($carts as $cart)
 <?php
@@ -118,7 +121,7 @@
                                     </div>
 
                                     <div>
-                                        <label>TL :</label> {!! $cart->cre->employee->sup->first()->name or '' !!}
+                                        <label>TL :</label> {!! $cart->cre->employee->sup->last()->name or '' !!}
                                     </div>                             
                                     
                                 </td>
@@ -151,13 +154,12 @@
                                 <td align="center">
                             @if($cart->status_id <> 4)
                                     <div class="form-group">
-                                        <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="{{ $maxDiscount > 0 ? 4 : 3 }}" checked> Approve
+                                        <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="{{ $maxDiscount > 0 ? 4 : 3 }}"> Approve
                                         <input type="radio" id="state[]" name="state[{{$cart->id}}]" value="2"> Reject                               
                                     </div> 
                                     <div class="form-group">    
                                        
-                                        <textarea name="remark[{{$cart->id}}]" class="form-control">@if($discount)Discount approved upto {{ $discount->value }} %@endif
-                                        </textarea>
+                                        <textarea name="remark[{{$cart->id}}]" class="form-control">@if($discount)Discount approved upto {{ $discount->value }} %@endif</textarea>
                                     </div>
                                     <div class="form-group"> 
                                         <input type="hidden" name="cart[{{$cart->id}}]" value="{{$cart->id}}">

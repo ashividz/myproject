@@ -46,12 +46,13 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles'], 
-    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales_tl']], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl']], 
     function() {
 
         /* Cart Approval */
         Route::get('cart/approval', 'CartApprovalController@show');
-        Route::post('cart/approval', 'CartApprovalController@store');
+        Route::post('cart/approval', 'CartApprovalController@show');
+        Route::post('cart/approval/save', 'CartApprovalController@store');
 
         Route::get('orders', 'OrderController@index');
         Route::post('orders', 'OrderController@index');
