@@ -317,12 +317,16 @@ class RecipeController extends Controller
         
        Mail::queue([], [], function($message) use ($email_body, $lead, $recipe_name)
         {
-            $from = 'sales@nutrihealthsystems.com';
-            
+            $from = 'diet@nutrihealthsystems.co.in';
             $message->to($lead->email, $lead->name)
+            ->bcc("diet@nutrihealthsystems.co.in")
             ->subject("Nutri-Health Recipe - $recipe_name")
             ->from($from, 'Nutri-Health Systems' );
              
+             //Add CC
+            if (trim($lead->email_alt) <> '') {
+                $message->cc($lead->email_alt, $lead->name);
+            }
              $message->setBody($email_body, 'text/html');
         }); 
         Session::flash('status', 'Recipe Sent to Patient!');
