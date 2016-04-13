@@ -15,7 +15,7 @@
                         <thead>
                             <tr>
                                 <th>Nutritionist</th>
-                                <th>Total clients</th>
+                                <th>Clients serviced as on {{date("F j, Y")}}</th>
                                 <th>using yuwow</th>
                                 <th>%</th>
                             </tr>

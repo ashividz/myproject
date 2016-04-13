@@ -197,14 +197,14 @@ class YuWoWController extends Controller
     {
         $onDateServicedClients =  Patient::select(DB::raw('count(patient_details.id) onDateServicedClients, ifnull(patient_details.nutritionist,"") as nutritionist'))
                 ->whereHas('fee', function($query){
-                    $query->where('end_date', '>=', DB::RAW('CURDATE()'))->where('start_date', '<', DB::RAW('CURDATE()'));
+                    $query->where('end_date', '>=', DB::RAW('DATE_ADD(CURDATE(), INTERVAL -1 DAY)'))->where('start_date', '<', DB::RAW('CURDATE()'));
                 })
                 ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
                 ->get();
         
         $yuwowUsers =  Patient::select(DB::raw('count(patient_details.id) yuwowUsers, ifnull(patient_details.nutritionist,"") as nutritionist'))
                 ->whereHas('fee', function($query){
-                    $query->where('end_date', '>=', DB::RAW('CURDATE()'))->where('start_date', '<', DB::RAW('CURDATE()'));
+                    $query->where('end_date', '>=', DB::RAW('DATE_ADD(CURDATE(), INTERVAL -1 DAY)'))->where('start_date', '<', DB::RAW('CURDATE()'));
                 })
                 ->where(function($query){
                     $query->has('lead.yuwow.deviation')
@@ -235,7 +235,7 @@ class YuWoWController extends Controller
                 $obj = (object) [];
                 $obj->nutritionist            = $nutritionist;
                 $obj->onDateServicedClients   = $yuwowRecord['onDateServicedClients'];
-                $obj->yuwowUsers              = $yuwowRecord['yuwowUsers'];            
+                $obj->yuwowUsers              = isset($yuwowRecord['yuwowUsers']) ? $yuwowRecord['yuwowUsers'] : 0;            
                 $yuwowUsage[]                 = $obj;
             }
         }
