@@ -190,7 +190,7 @@
     @endif
     
         
-    @if(!$cart->products->isEmpty() && ($cart->amount - $cart->payment) <> 0)
+    @if(!$cart->products->isEmpty() && ($cart->amount == 0 || ($cart->amount - $cart->payment) <> 0))
         <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment/add" class="btn btn-primary">Add Payment</a>
     @endif
     

@@ -108,7 +108,7 @@
                                         <label>Lead Source :</label> 
 
                                     @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
-                                            {{$cart->source->source_name}}
+                                            {{$cart->source->source_name or "" }}
 
                                     @else
                                             {{ $cart->source->channel->name or "" }}
@@ -117,24 +117,25 @@
                                     </div>
 
                                     <div>
-                                        <label>CRE :</label> {{ $cart->cre->employee->name or '' }}
+                                        <label>CRE :</label> {{ $cart->cre->employee->name or "" }}
                                     </div>
 
                                     <div>
-                                        <label>TL :</label> {!! $cart->cre->employee->sup->last()->name or '' !!}
+                                        <label>TL :</label> {!! $cart->cre ? $cart->cre->employee->sup->last()->name : "" !!}
                                     </div>                             
                                     
                                 </td>
                                 <td>
-                                    <div><label>Amount :</label> {{$cart->currency->symbol}} {{$cart->amount}}</div>
+                                    <div><label>Amount :</label> {{ $cart->currency->symbol or "" }} {{ $cart->amount }}</div>
                                     <div>
-                                        <label>Payment :</label> {{$cart->currency->symbol}} {{$cart->payment}}
+                                        <label>Payment :</label> {{ $cart->currency->symbol or "" }} {{ $cart->payment }}
                                     </div>
-                                    <div><label>Balance :</label> {{$cart->currency->symbol}} {{$cart->amount- $cart->payment}}</div>
+                                    <div><label>Balance :</label> {{$cart->currency->symbol or "" }} {{$cart->amount- $cart->payment }}</div>
                                 </td>
 
                                 <td>
                                     <table class="table table-condensed">
+                            
                                 @foreach($cart->products as $product)
                                         <tr>
                                             <td>{{$product->name}}</td>
@@ -149,6 +150,7 @@
                                             <td>{{$product->pivot->coupon}} {!!$product->pivot->discount ? " <small>(".$product->pivot->discount."%)</small>" : '' !!}</td>
                                         </tr>
                                 @endforeach
+
                                     </table>
                                 </td>
                                 <td align="center">

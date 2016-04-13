@@ -614,7 +614,7 @@ class LeadController extends Controller
                 $phone = isset($data[1]) ? $data[1] : '';
                 $email = isset($data[2]) ? $data[2] : '';
                 $country = isset($data[3]) ? $data[3] : '';
-                $state = isset($data[4]) ? $data[4] : '';;
+                $state = isset($data[4]) ? $data[4] : '';
                 $city = isset($data[5]) ? $data[5] : '';
                 $src = isset($data[6]) ? $data[6] : '';
                 $query = isset($data[7]) ? $data[7] : '';

@@ -516,10 +516,10 @@ Route::group([
     function() {
 
         /*Route::get('lead/{id}/register', 'PatientRegistrationController@index');
-        Route::post('lead/{id}/register', 'PatientRegistrationController@store');
+        Route::post('lead/{id}/register', 'PatientRegistrationController@store');*/
 
         Route::get('patient/{id}/fee', 'FeeController@show');
-        Route::post('patient/{id}/fee', 'FeeController@store');*/
+        Route::post('patient/{id}/fee', 'FeeController@store');
 });
 
 Route::group([
