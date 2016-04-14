@@ -69,7 +69,7 @@ function getMessages() {
             if (moment(created_at).isSame(moment(), 'day')) {
                 created_at = moment(created_at).format("hh:mm a");
             } else {
-                created_at = moment(created_at).format("MM MMM, hh:mm a");   
+                created_at = moment(created_at).format("DD MMM YYYY, hh:mm a");   
             }
             
 
