@@ -15,8 +15,6 @@ setlocale(LC_MONETARY, "en_IN");
 
 
 
-
-
 Route::group([
     'middleware' => ['auth','roles'], 
     'roles' => ['admin']], 
@@ -309,6 +307,11 @@ Route::group([
 
         Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
         Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
+
+        Route::get('quiz', 'QuizController@index');
+        Route::get('quiz/start', 'QuizController@show');
+        Route::post('quiz/{questionNumber}', 'QuizController@proposeSolution');
+        Route::post('getQuestion', 'QuizController@getQuestion');
 });
 
 Route::group([
@@ -716,7 +719,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('report/patients/new', 'ReportController@getNewPatients');
 
     Route::get('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');    
-    Route::post('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');   
+    Route::post('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');  
+
+    Route::get('report/cre/newLeadsourcePerformance', 'ReportController@creWiseNewLeadSourcePerformance');    
+    Route::post('report/cre/newLeadsourcePerformance', 'ReportController@creWiseNewLeadSourcePerformance');  
 
     Route::get('report/leads/performance', 'ReportController@dailyPerformance');
     Route::post('report/leads/performance', 'ReportController@dailyPerformance');

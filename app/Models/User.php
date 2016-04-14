@@ -52,6 +52,11 @@ class User extends Model implements AuthenticatableContract,
                     ->withPivot('id');
     }
 
+     public function replies()
+    {
+        return $this->hasMany(Reply::class, 'user_id');
+    }
+
     public function hasRole($name, $requireAll = false)
     {
         if (is_array($name)) {
