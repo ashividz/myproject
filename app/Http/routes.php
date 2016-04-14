@@ -16,8 +16,6 @@ setlocale(LC_MONETARY, "en_IN");
 Route::get('orders', 'OrderController@index');
 Route::post('orders', 'OrderController@index');
 
-
-
 Route::group([
     'middleware' => ['auth','roles'], 
     'roles' => ['admin']], 
@@ -294,6 +292,11 @@ Route::group([
 
         Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
         Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
+
+        Route::get('quiz', 'QuizController@index');
+        Route::get('quiz/start', 'QuizController@show');
+        Route::post('quiz/{questionNumber}', 'QuizController@proposeSolution');
+        Route::post('getQuestion', 'QuizController@getQuestion');
 });
 
 Route::group([
