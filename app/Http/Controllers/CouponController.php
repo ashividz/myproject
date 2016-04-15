@@ -26,7 +26,7 @@ class CouponController extends Controller
         }
 
         
-        $url = 'http://api.nutrihealthsystems.com/coupon/validate';
+        $url =  env('COUPON_VALIDATION_URL');
         $id = 'p951be';
         $key ='847f7c49183fecbb32024b37871ad51d';
         $code =  $request->coupon;
