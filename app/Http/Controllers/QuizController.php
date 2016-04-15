@@ -197,9 +197,7 @@ class QuizController extends Controller {
     }
     else
         $autosubmit = 1;
-    //return $proposedSolutionResult;
-
-        // pass to response detailed results on proposed solution
+    
         $proposedSolutionWithDetailedResult = [];
         foreach ($proposedSolution as $answerId) {
             foreach ($answers as $answer) {

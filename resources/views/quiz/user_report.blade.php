@@ -43,7 +43,12 @@
                                          {{$reply->answer->description}}
                                         </td>
                                          <td>
-                                         {{$reply->is_correct}}
+                                         
+                                          @if($reply->is_correct)
+                                            <span class="glyphicon glyphicon-ok" style="color:green;"></span>
+                                          @else
+                                            <span class="glyphicon glyphicon-remove" style="color:red;"></span>
+                                           @endif
                                         </td>
                                         <td>
                                          {{$reply->duration}}
