@@ -26,9 +26,9 @@ class CouponController extends Controller
         }
 
         
-        $url =  env('COUPON_VALIDATION_URL');
-        $id = 'p951be';
-        $key ='847f7c49183fecbb32024b37871ad51d';
+        $url = env('COUPON_VALIDATION_URL');
+        $id  = env('COUPON_VALIDATION_ID');
+        $key = env('COUPON_VALIDATION_KEY');
         $code =  $request->coupon;
         /*$phone = $cart->lead->phone;
         $email = $cart->lead->email;
