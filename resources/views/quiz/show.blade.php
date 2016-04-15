@@ -68,7 +68,7 @@
         (function(){
             var hasTimer = false;
                 $('.timer_div').timer({
-                    duration: '20m',
+                    duration: '{{$quiz_duration}}',
                     format: '%H:%M:%S',
                     editable: true,
                     callback: function() {
