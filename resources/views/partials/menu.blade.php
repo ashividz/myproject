@@ -134,7 +134,9 @@
                         </li>
                     </ul>
                 </li>    
-                    
+                      <li>
+                    <a href="/quiz" id="menu_cre_end">Quiz</a>
+                </li>
                                            
                                                 
             </ul> <!-- second level -->                        

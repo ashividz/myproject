@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Reply;
+use App\Models\User;
 use Session;
 use DB;
 use Auth;
@@ -83,6 +84,7 @@ class QuizController extends Controller {
                      ->select(DB::raw('*'))
                     ->first();
         $gp = explode(",",$settings->question_group);
+        $quiz_duration = $settings->quiz_duration;
         //dd($gp);         
         $questions = Question::orderByRaw("RAND()")->whereIn('id',$gp)->get();
         Session::put('questions', $questions);
@@ -98,11 +100,64 @@ class QuizController extends Controller {
             'questionIndex' => '0',
             'question'       => $question,
             'total_questions' => $total_questions,
+            'quiz_duration'   => $quiz_duration,
             'answers'        => $answers,
             'alreadyAppear' => $alreadyAppear,
             'next'           => $nextQuestionLink
         );
         return view('home')->with($data);
+    }
+
+    public function showReport() {
+        $users_appeared = User::with('employee')
+        ->join(DB::raw('(select user_id, sum(is_correct) as is_correct, count(user_id) as total_attempted from quiz_replies group by user_id) AS qr'), function($join) {
+                $join->on('users.id', '=', 'qr.user_id');
+            })->orderBy('is_correct')->get();
+        $data = array(
+            'menu'      => 'quiz',
+            'section'   => "show_report",
+            'users_appeared' => $users_appeared
+        );
+        return view('home')->with($data);
+                //dd( $users);
+    }
+
+     public function setAnswer($id) {
+        $replies = Reply::with('question','answer')->where('user_id',$id)->orderBy('is_correct','desc')->get();
+       
+       // dd($reply->question->rightAnswer()->description);
+        foreach($replies as $reply)
+        {
+        if($reply->is_correct==1)
+            $reply->user_answer = $reply->question->rightAnswer()->id;
+        else
+        {
+            $answers = $reply->question->answers;
+            $wrong_answer = $answers->first(function ($key, $answer) {
+                            return $answer->is_correct == 0;
+                            });
+            $reply->user_answer = $wrong_answer->id;
+        }
+            $reply->save();
+        }
+      
+        return ;
+                //dd( $users);
+    }
+
+    public function showUserReport($id) {
+        $replies = Reply::with('question','answer')->where('user_id',$id)->orderBy('is_correct','desc')->get();
+        //$reply = $replies->first();
+       // dd($reply->question->rightAnswer()->description);
+        $user_name = User::find($id)->employee->name;
+        $data = array(
+            'menu'      => 'quiz',
+            'section'   => "user_report",
+            'user_name' => $user_name,
+            'replies' => $replies
+        );
+        return view('home')->with($data);
+                //dd( $users);
     }
 
     public function proposeSolution(Request $request) {
@@ -115,7 +170,7 @@ class QuizController extends Controller {
         
         // Prepare array of proposed answers
         $proposedSolution = [];
-
+        $user_answer = $request->chosenAnswer;
         if(isset($request->chosenAnswer))
         {
             
@@ -140,7 +195,7 @@ class QuizController extends Controller {
         
     }
     else
-        $proposedSolutionResult = 0;
+        $proposedSolutionResult = 3;
     //return $proposedSolutionResult;
 
         // pass to response detailed results on proposed solution
@@ -159,8 +214,8 @@ class QuizController extends Controller {
         else
             $alreadyAnswered = false;
         if (\Auth::user() && !$reply) {
-     
-            \Auth::user()->replies()->create(['quiz_question_id' => $questionId, 'is_correct' => $proposedSolutionResult, 'duration' => $quiz_time]);
+     if($proposedSolutionResult != 3)
+            \Auth::user()->replies()->create(['quiz_question_id' => $questionId, 'is_correct' => $proposedSolutionResult, 'duration' => $quiz_time, 'user_answer' => $user_answer]);
         }
 
         return response()->json([

@@ -312,6 +312,9 @@ Route::group([
         Route::get('quiz/start', 'QuizController@show');
         Route::post('quiz/{questionNumber}', 'QuizController@proposeSolution');
         Route::post('getQuestion', 'QuizController@getQuestion');
+        Route::get('quiz/report', 'QuizController@showReport');
+        Route::get('quiz/user/{id}/report', 'QuizController@showUserReport');
+        Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
 });
 
 Route::group([
