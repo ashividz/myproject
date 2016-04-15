@@ -29,6 +29,13 @@ $('form').on('submit', function(e) {
 
 $('.next-question-button').on('click', function(e){
 e.preventDefault();
+$('.panel-heading').find('span.glyphicon').remove();
+if($('.next-question-button').html()=='Finish')
+{
+
+ alert('Your response has been submitted! Result will publish soon.');
+ return false;
+}
 var url = "/getQuestion";
 var form = $('#quiz_form');
             var url = url;
@@ -49,7 +56,7 @@ var form = $('#quiz_form');
                 var width = (qn *100) / response.total_questions;
 
                 $('.progress-bar').css('width', width+'%');
-                if(response.total_questions == response.qn)
+                if(response.total_questions == qn)
                 $('.next-question-button').html('Finish');
                 $('.next-question-button').hide();
                 $('.next-question-button').css('display','none');

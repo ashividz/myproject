@@ -7390,3 +7390,18 @@ height: 30px !important;
     color: #9fabc6;
     font-size: 16px;
 }
+.report_percent
+{
+
+background: #85d55d;
+border-radius: 2px;
+height: 20px;
+padding-top: 3px;
+padding-left: 3px;
+}
+.report_percent.fail
+{
+
+background: #ff6666;
+
+}

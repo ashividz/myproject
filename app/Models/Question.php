@@ -23,6 +23,13 @@ class Question extends Model {
         return Question::where('topic_id', '=', $topic->id)->orderBy('created_at', 'DESC')->get()[$questionNumber - 1];
     }
 
+    public function rightAnswer() {
+        $answers = $this->answers;
+        $right_answer = $answers->first(function ($key, $answer) {
+                            return $answer->is_correct == 1;
+                            });
+        return $right_answer;
+    }
     public function nextQuestionLink($questionNumber) {
 
         $nextQuestionLink = [];
