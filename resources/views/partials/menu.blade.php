@@ -25,6 +25,9 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="/quiz" id="menu_quiz">Quiz</a>
+                </li>
                             
             </ul> <!-- second level -->                        
         </li>
