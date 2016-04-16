@@ -171,6 +171,7 @@ class QuizController extends Controller {
         // Prepare array of proposed answers
         $proposedSolution = [];
         $user_answer = $request->chosenAnswer;
+        $autosubmit = 0;
         if(isset($request->chosenAnswer))
         {
             
@@ -195,10 +196,8 @@ class QuizController extends Controller {
         
     }
     else
-        $proposedSolutionResult = 3;
-    //return $proposedSolutionResult;
-
-        // pass to response detailed results on proposed solution
+        $autosubmit = 1;
+    
         $proposedSolutionWithDetailedResult = [];
         foreach ($proposedSolution as $answerId) {
             foreach ($answers as $answer) {
@@ -213,8 +212,9 @@ class QuizController extends Controller {
             $alreadyAnswered = true;
         else
             $alreadyAnswered = false;
+        if($autosubmit == 0)
         if (\Auth::user() && !$reply) {
-     if($proposedSolutionResult != 3)
+     
             \Auth::user()->replies()->create(['quiz_question_id' => $questionId, 'is_correct' => $proposedSolutionResult, 'duration' => $quiz_time, 'user_answer' => $user_answer]);
         }
 
