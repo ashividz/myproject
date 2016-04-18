@@ -135,7 +135,7 @@ public function getLeadsConsecutive(Request $request)
             ->with('cre', 'disposition')
             ->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
             ->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id')
-            ->join(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE A.lead_id=B.lead_id)) AS cd'), function($join) {
+            ->leftjoin(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE A.lead_id=B.lead_id)) AS cd'), function($join) {
                 $join->on('marketing_details.id', '=', 'cd.lead_id');
             })
             ->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id')
@@ -144,7 +144,11 @@ public function getLeadsConsecutive(Request $request)
             ->whereNull('d.id')
             ->whereNull('dp.id')
             ->whereNotNull('marketing_details.source_id')
-            ->where('cd.created_at', '<=', '2016-2-31')
+            ->where(function($q) {
+                $q->where('cd.created_at', '<=', '2016-2-31')
+                    ->orWhereNull('cd.id');
+            })
+            //->where('cd.created_at', '<=', '2016-2-31')
             ->where(function($q) {
                 $q->where('marketing_details.country', 'IN')
                     ->orWhereNull('marketing_details.country');
