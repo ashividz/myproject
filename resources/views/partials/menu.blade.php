@@ -455,6 +455,9 @@
                         <li>
                             <a href="/report/quality/survey" id="menu_quality_survey" class="arrow">Survey</a>
                         </li> 
+                        <li>
+                            <a href="/report/quality/nutritionistAppointments" id="menu_quality_nutritionistAppointments" class="arrow">Nutritionist Appointments</a>
+                        </li> 
                     </ul>
                 </li> 
                 <li>
