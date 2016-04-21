@@ -394,14 +394,7 @@
                         </li>                          
                     </ul>                    
                 </li>                                  
-                <li>
-                    <a href="#" id="menu_quality_carts">Carts</a>  
-                    <ul>
-                        <li>
-                                <a href="/carts" id="menu_quality_carts">Cart Status</a>
-                        </li>                 
-                    </ul>
-                </li>
+                
             </ul> <!-- second level -->                        
         </li>
     @endif
@@ -510,12 +503,22 @@
                 </li>
                 <li>
                     <a href="/report/emails" id="menu_report_email">Emails</a> 
-                </li>                
-                                                
-            </ul> <!-- second level -->
+                </li>                                                               
+            
 
+        @endif
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('marketing')  || Auth::user()->hasRole('quality')||Auth::user()->hasRole('registration'))                 
+                <li>
+                    <a href="#" id="menu_cart">Carts</a>  
+                    <ul>
+                        <li>
+                                <a href="/carts" id="menu_cart_carts">Cart Status</a>
+                        </li>                 
+                    </ul>
+                </li>  
+        </li>
         @endif  
-        </li>  
+        </ul> <!-- second level -->  
         @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))                
         <li class="{{ $menu == 'settings' ? 'current' : '' }}">
             <a href="/settings" id="menu_settings" class="firstLevelMenu"><b>Settings</b></a>
