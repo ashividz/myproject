@@ -155,7 +155,7 @@ class RecipeController extends Controller
         
 
 
-        $recipe_body .= "<tr><td colspan='3' style='padding: 10px;background: #80ccff;'><h4 style='margin: 0px;color: #444444'>INGREDIENTS</h4></td></tr>";
+          $recipe_body .= "<tr><td colspan='3' style='padding: 10px;background: #80ccff;'><h4 style='margin: 0px;color: #444444'>INGREDIENTS</h4></td></tr>";
         for($i=0;$i<sizeof($item_names);$i++)
         {
             if($i%2==0)
