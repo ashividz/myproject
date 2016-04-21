@@ -576,6 +576,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('quality/patient/{id}/survey', 'SurveyController@patientSurvey');
     Route::post('quality/patient/{id}/survey', 'SurveyController@savePatientSurvey');
 
+    Route::get('carts', 'CartReportController@cartStatusReport');
+    Route::post('carts', 'CartReportController@cartStatusReport');
     
 
     Route::get('master/dispositions', 'DispositionMasterController@getDispositions');
