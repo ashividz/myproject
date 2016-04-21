@@ -268,3 +268,59 @@ form button, input[type=submit], input[type=button]  {
 	padding-left:30px;
 	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.5);
 }
+
+/** Workflow **/
+#workflow .col-md-3 {
+    padding: 0px 0px 40px 0px;
+    text-align: center;
+}
+.base {
+    height: 2px;
+    background-color: #a3a3a3;
+    width: 100%;
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}
+strong {
+    background-color: #fff;
+    border: 2px solid #a3a3a3;
+    border-radius: 50%;
+    box-shadow: 0 0 2px #2abd2a inset;
+    color: #019856;
+    display: inline-block;
+    padding: 15px;
+    position: relative;
+    text-align: center;
+    top: -15px;
+    font-size: 16px;
+}
+strong.primary {
+    background-color: #2E6DA4;
+}
+strong.danger {
+    background-color: #D43F3A;
+}
+strong.success {
+    background-color: #4CAE4C;
+}
+
+strong.warning {
+    background-color: #F28C38;
+}
+
+.primary {
+    color: #2E6DA4;
+}
+.danger {
+    color: #D43F3A;
+}
+.success {
+    color: #4CAE4C;
+}
+.warning {
+    color:#F28C38;
+}
+.popover {
+    max-width: 1200px;
+}
