@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use App\Models\Lead;
 use App\Models\Employee;
+use LeadStatus;
 
 class LeadCre extends Model
 {
@@ -42,7 +43,12 @@ class LeadCre extends Model
 	    	$leadCre->save();
 
             Lead::updateCre($lead->id, $leadCre->cre);
-	    	
+            
+            $lastStatus = LeadStatus::getLastStatus($lead);
+            
+            if($lastStatus->master->id == 5 || $lastStatus->master->id == 6)
+                LeadStatus::saveStatus($lead, 1);
+
             return $leadCre;
     	} 
     	catch (\Illuminate\Database\QueryException $e) 
