@@ -13,24 +13,65 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Cart id</th>
-                            <th>Lead id</th>
-                            <th>Patient id</th>
-                            <th>Name</th>
-                            <th>Created By</th>
-                            <th>Created At</th>                            
+                            <th></th>
+                            <th style="width:12%;">Cart Details</th>
+                            <th style="width:12%;">Lead Details</th>
+                            <th style="width:12%;">Products</th>
+                            <th style="width:12%;">Payments</th>                           
                             <th style="width:50%;">status</th>
                         </tr>
                     </thead>
                     <tbody>
                 @foreach($carts as $cart)
                         <tr>
-                            <td><a href="/cart/{{$cart->id}}" target="_blank"> {{$cart->id}}</a></td>
-                            <td><a href="/lead/{{$cart->lead->id}}/viewDetails" target="_blank">{{$cart->lead->id}}</a></td>
-                            <td><a href="/patient/{{ $cart->lead->patient->id or ""}}/viewDetails" target="_blank">{{ $cart->lead->patient->id or ""}}</a></td>
-                            <td>{{$cart->lead->name}}</td>
-                            <td>{{$cart->user}}</td>
-                            <td>{{$cart->created_at->format('jS M Y, h:i A')}}</td>
+                            <td>
+                                <a href="/cart/{{$cart->id}}" target="_blank"> {{$cart->id}}</a>
+                            </td>
+                            <td>                                
+                                <div>
+                                    <label>Creator : </label>{{ $cart->creator->employee->name or "" }} 
+                                </div><div>
+                                    <label>Date : </label>{{ $cart->created_at->format('j-M-y, h:i A') }}</span>
+                                </div>
+                                <div>
+                                    <label>CRE : </label> {{ $cart->cre->employee->name or "" }} 
+                                </div>
+                                <div>
+                                    <label>TL : </label> {!! $cart->cre && !$cart->cre->employee->sup->isEmpty() ? $cart->cre->employee->sup->last()->name : "XNX" !!}
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <label>Name : </label>
+                                    {{$cart->lead->name}}
+                                </div>
+                                <div>
+                                    <label>Lead Id : </label>
+                                    <a href="/lead/{{ $cart->lead_id or ""}}/viewDetails" target="_blank">{{ $cart->lead_id or ""}}</a>
+                                </div>
+                                <div>
+                                    <label>Patient Id : </label>
+                                    <a href="/patient/{{ $cart->lead->patient->id or ""}}/viewDetails" target="_blank">{{ $cart->lead->patient->id or ""}}</a>
+                                </div>
+                            </td>
+                            <td>
+                                @foreach($cart->products as $product)
+                                    <li>
+                                        {{ $product->name }}
+                                        {!! $product->pivot->discount > 0 ? "<small><em>(" . $product->pivot->discount."%)</em><small>" : "" !!}
+                                    </li>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach($cart->payments as $payment)
+                                    <li>
+                                        {{ $payment->amount }} - {{ $payment->method->name or "" }}
+                                        <small>
+                                            <em>{!! $payment->remark <> '' ? '<br>( '.$payment->remark.' )' : '' !!}</em>
+                                        </small>
+                                    </li>
+                                @endforeach
+                            </td>
                             <td><div>@include('cart.partials.workflow')</div></td>                             
                             
 
