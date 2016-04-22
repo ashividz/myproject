@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="/css/theme/mws-theme.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts/icomoon/style.css" media="screen">
 
-
+        <link rel="stylesheet" href="/css/jquery/jquery-ui.css">
   		<script type="text/javascript" src="/js/jquery.min.js"></script>
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
