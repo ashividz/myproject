@@ -46,7 +46,7 @@ class LeadCre extends Model
             
             $lastStatus = LeadStatus::getLastStatus($lead);
             
-            if($lastStatus->master->id == 5 || $lastStatus->master->id == 6)
+            if($lastStatus && ($lastStatus->master->id == 5 || $lastStatus->master->id == 6))
                 LeadStatus::saveStatus($lead, 1);
 
             return $leadCre;
