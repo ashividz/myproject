@@ -59,7 +59,7 @@ class CouponController extends Controller
 
         $output = json_decode($output);
 
-        if ($output->valid) {
+        if ($output && $output->valid) {
             $percentage = $output->percentage;
         }
         return $percentage;

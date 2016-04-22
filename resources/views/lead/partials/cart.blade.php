@@ -84,7 +84,7 @@
                                 <td>
                                     <label>Source <div class='asterix'>*</div> :</label> 
 
-                                    <a href="/lead/'.$lead->id.'/viewDetails" target="_blank" class="{{ $lead->sources->isEmpty() ?'required' : '' }}">
+                                    <a href="/lead/{{ $lead->id }}/viewDetails" target="_blank" class="{{ $lead->sources->isEmpty() ?'required' : '' }}">
                                 @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
                                         {!!  $lead->source->master->source_name or ""!!}
                                 @else

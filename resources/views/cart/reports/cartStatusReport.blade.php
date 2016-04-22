@@ -29,9 +29,9 @@
                             </td>
                             <td>                                
                                 <div>
-                                    <label>Creator : </label>{{ $cart->creator->employee->name or "" }} 
+                                    <label>Creator : </label> {{ $cart->creator->employee->name or "" }} 
                                 </div><div>
-                                    <label>Date : </label>{{ $cart->created_at->format('j-M-y, h:i A') }}</span>
+                                    <label>Date : </label> {{ $cart->created_at->format('j-M-y, h:i A') }}</span>
                                 </div>
                                 <div>
                                     <label>CRE : </label> {{ $cart->cre->employee->name or "" }} 

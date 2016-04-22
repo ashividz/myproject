@@ -29,13 +29,14 @@
     $maxDiscount = null;
     $discount = null;
     if($cart->status_id == 2) {
-        $maxDiscount = $cart->products &&$cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
+        $maxDiscount = $cart->products && $cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
+        //echo $maxDiscount;
         if ($maxDiscount > 0) {
             $discount_id = $cart->step->discount_id + 1;
             //var_dump($cart->step->discount_id); 
             $discount = Discount::where('id', $discount_id)->first();
 
-            if(Helper::approveCartDiscount($maxDiscount)) {
+            if(Helper::approveCartDiscount($maxDiscount, $discount_id)) {
                 $disabled = '';
             }
         }

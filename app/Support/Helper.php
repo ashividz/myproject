@@ -97,13 +97,14 @@ class Helper {
     }
 
     /* Approve Cart Discount*/
-    public static function approveCartDiscount($discount)
+    public static function approveCartDiscount($discount, $discount_id)
     {
         $roles = Helper::roles();
 
         $approvers = ApproverDiscount::select('approver_discount.*')
                         ->join('discounts as d', 'd.id', '=', 'approver_discount.discount_id')
                         ->where('d.value', '<=', $discount)
+                        ->where('discount_id', $discount_id)
                         ->whereIn('approver_role_id', $roles)
                         ->get();
 
