@@ -748,6 +748,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('report/quality/survey', 'SurveyController@survey');
 
     Route::get('report/quality/nutritionistAppointments', 'ServiceController@appointments');
+    Route::post('report/quality/nutritionistAppointments', 'ServiceController@appointments');
     
     Route::get('report/registration/fees', 'PatientRegistrationController@showPatientFeeStatus');
     Route::post('report/registration/fees', 'PatientRegistrationController@showPatientFeeStatus');
