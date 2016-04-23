@@ -122,7 +122,7 @@
                                     </div>
 
                                     <div>
-                                        <label>TL :</label> {!! $cart->cre ? $cart->cre->employee->sup->last()->name : "" !!}
+                                        <label>TL :</label> {!! $cart->cre && !$cart->cre->employee->sup->isEmpty() ? $cart->cre->employee->sup->last()->name : "" !!}
                                     </div>                             
                                     
                                 </td>
