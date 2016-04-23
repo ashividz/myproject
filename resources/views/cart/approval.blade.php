@@ -12,7 +12,7 @@
     $payments = '';
     $steps = '';
     foreach ($cart->payments as $payment) {
-        $payments .= "<li>".$cart->currency->symbol.$payment->amount." <small>via</small> <span class='primary'><b>".$payment->method->name."</b></span> <small>on <em>".$payment->created_at->format('jS M, Y, h:i:A')."</em></small>";
+        $payments .= "<li>".$cart->currency->symbol.$payment->amount." <small>via</small> <span class='primary'><b>".$payment->method->name."</b></span> <small>on <em>".date('jS M, Y',strtotime($payment->date))."</em></small>";
         $payments .= $payment->remark <> '' ? " <small>(".$payment->remark.")</small>" : "";
         $payments .= "</li>";
     }
