@@ -346,6 +346,7 @@ Route::group([
         Route::get('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
         Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
         Route::get('service/reports/appointments', 'ServiceController@appointments');   
+        Route::post('service/reports/appointments', 'ServiceController@appointments');   
 
         Route::get('patient/{id}/recipes', 'RecipeController@show');
         Route::post('patient/{id}/recipes', 'RecipeController@show');

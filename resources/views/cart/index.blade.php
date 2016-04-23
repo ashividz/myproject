@@ -148,7 +148,7 @@
                             <th>Amount</th>
                             <th>Payment Method</th>
                             <th>Remark</th>
-                            <th></th>
+                            <th>Payment date</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -161,7 +161,7 @@
                             <td>{{$payment->remark}}</td>
                             <td>
                                 {{$payment->user or ""}}
-                                {{$payment->created_at->format('jS M, Y h:i A')}}
+                                {{date('jS M, Y',strtotime($payment->date))}}
                             </td>
                             <td>
                         @if($cart->status_id == 1 || $cart->state_id == 2)
