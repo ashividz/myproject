@@ -335,29 +335,33 @@ class Patient extends Model
     
     }
 
-    public static function getAppointments()
+    public static function getAppointments($date = NULL)
     {
+        if(!$date)
+            $date = date('Y-m-d');
+        $start_day_time = date('Y-m-d 00:00:00',strtotime($date));
+        $end_day_time   = date('Y-m-d 23:59:59',strtotime($date));       
+
         $totalPatients = DB::table('patient_details')
-        ->join('fees_details',function($join){
+        ->join('fees_details',function($join) use($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'));
+            ->on('end_date','>=',DB::raw("'$date'"));
         })      
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
         ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as totalPatients'))
-        ->get();
-
-
+            ->get();
+        
         $todaysAppointments = DB::table('patient_details')
-        ->join('fees_details',function($join){
+        ->join('fees_details',function($join) use ($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'));
+            ->on('end_date','>=',DB::raw("'$date'"));
         })        
         ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')
-        ->leftJoin(DB::raw('(select * from diets where date_assign >curdate() ) as diets'),function($join){
+        ->leftJoin(DB::raw("(select * from diets where date_assign > '$date' ) as diets"),function($join) use($date,$start_day_time){
             $join->on('patient_details.id','=','diets.patient_id')                
-            ->on('diets.date_assign','=',DB::raw('date_add(curdate(),interval 1 + IFNULL(advance_diet,0) day)'))
+            ->on('diets.date_assign','=',DB::raw("date_add('$date',interval 1 + IFNULL(advance_diet,0) day)"))
             ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
-            ->on('diets.updated_at','<',DB::raw('curdate()'));
+            ->on('diets.updated_at','<',DB::raw("'$start_day_time'"));
         })
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
         ->whereNull('diets.patient_id')
@@ -365,67 +369,59 @@ class Patient extends Model
         ->get();
 
         $currentAppointments = DB::table('patient_details')
-        ->join('fees_details',function($join){
+        ->join('fees_details',function($join) use ($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'));
+            ->on('end_date','>=',DB::raw("'$date'"));
         })        
-        ->leftJoin(DB::raw('(select * from diets where date_assign >curdate() ) as diets'),function($join){
+        ->leftJoin(DB::raw("(select * from diets where date_assign >'$date' ) as diets"),function($join) use ($date,$end_day_time){
             $join->on('patient_details.id','=','diets.patient_id')                
-            ->on('diets.date_assign','=',DB::raw('date_add(curdate(),interval 1 + IFNULL(advance_diet,0) day)'))
-            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'));
+            ->on('diets.date_assign','=',DB::raw("date_add('$date',interval 1 + IFNULL(advance_diet,0) day)"))
+            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
+            ->on('diets.updated_at','<=',DB::raw("'$end_day_time'"));
         })
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
         ->whereNull('diets.patient_id')
         ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as currentAppointments'))
         ->get();
-
+        
         $diets = DB::table('patient_details')
-        ->join('fees_details',function($join){
+        ->join('fees_details',function($join) use ($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'));
+            ->on('end_date','>=',DB::raw("'$date'"));
         })        
-        ->leftJoin(DB::raw('(select * from diets where date_assign >curdate() ) as diets'),function($join){
+        ->leftJoin(DB::raw("(select * from diets where date_assign >'$date') as diets"),function($join) use ($date,$start_day_time,$end_day_time){
             $join->on('patient_details.id','=','diets.patient_id')                
-            ->on('diets.date_assign','=',DB::raw('date_add(curdate(),interval 1 + IFNULL(advance_diet,0) day)'))
+            ->on('diets.date_assign','=',DB::raw("date_add('$date',interval 1 + IFNULL(advance_diet,0) day)"))
             ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
-            ->on('diets.updated_at','>=',DB::raw('curdate()'));
+            ->on('diets.updated_at','>=',DB::raw("'$start_day_time'"))
+            ->on('diets.updated_at','<=',DB::raw("'$end_day_time'"));
         })
         ->whereNotNull('diets.patient_id')
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
         ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as diets'))
-        ->get();
+        ->get();           
 
         //breaks mean diets not sent for more than 7 days
-        $brakes = DB::table('patient_details')
-        ->join('fees_details',function($join){
+        $breaks = DB::table('patient_details')
+        ->join('fees_details',function($join) use ($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'))
-            ->on('start_date', '<', DB::raw('date_sub(curdate(),interval 7 day)'));
+            ->on('end_date','>=',DB::raw("'$date'"))
+            ->on('start_date', '<', DB::raw("date_sub('$date',interval 7 day)"));
         })
         ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')        
-        ->leftJoin(DB::raw('( select distinct (patient_id ) from diets where (email=1 and date_assign > date_sub(curdate(),interval 7 day))  group by patient_id) as diets'),function($join){
+        ->leftJoin(DB::raw("( select distinct (patient_id ) from diets where (email=1 and date_assign > date_sub('$date',interval 7 day))  group by patient_id) as diets"),function($join){
             $join->on('patient_details.id','=','diets.patient_id');
         })
         ->whereNull('diets.patient_id')
         ->whereRaw('fees_details.patient_id IN (SELECT DISTINCT d.patient_id FROM diets d WHERE d.patient_id = fees_details.patient_id AND date_assign >= fees_details.entry_date)')
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
-        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as brakes'))
+        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as breaks'))
         ->get(); 
 
-
-        $totalPatients = DB::table('patient_details')
-        ->join('fees_details',function($join){
-            $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'));
-        })      
-        ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
-        ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as totalPatients'))
-        ->get();
-
          $dietNotStarted = DB::table('patient_details')
-        ->join('fees_details',function($join){
+        ->join('fees_details',function($join) use ($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
-            ->on('end_date','>=',DB::raw('curdate()'));
+            ->on('end_date','>=',DB::raw("'$date'"));
         })
         ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')        
         ->whereRaw('fees_details.patient_id NOT IN (SELECT DISTINCT d.patient_id FROM diets d WHERE d.patient_id = fees_details.patient_id AND date_assign >= fees_details.entry_date)')
@@ -446,9 +442,9 @@ class Patient extends Model
         ->whereNotNull('call_dispositions.lead_id')
         ->select(DB::raw('patient_details.nutritionist as nutritionist,count(distinct(patient_details.id)) as calls'))
         ->get();*/
-        $brakes = array_combine(
-            array_map(function($o) { return $o->nutritionist; }, $brakes),
-            array_map(function($o) { return array('brakes' => $o->brakes); }, $brakes)
+        $breaks = array_combine(
+            array_map(function($o) { return $o->nutritionist; }, $breaks),
+            array_map(function($o) { return array('breaks' => $o->breaks); }, $breaks)
         );
 
         $todaysAppointments = array_combine(
@@ -481,7 +477,7 @@ class Patient extends Model
             array_map(function($o) { return array('dietNotStarted' => $o->dietNotStarted); }, $dietNotStarted)
         );
         
-        $app = array_merge_recursive($todaysAppointments,$currentAppointments,$diets,$totalPatients,$brakes,$dietNotStarted);
+        $app = array_merge_recursive($todaysAppointments,$currentAppointments,$diets,$totalPatients,$breaks,$dietNotStarted);
         //$app = array_merge_recursive($todaysAppointments,$currentAppointments,$calls,$diets,$totalPatients);
         $appointments = array();
         foreach ($app as $nutritionist => $appointment) {
@@ -490,7 +486,7 @@ class Patient extends Model
             $obj->todaysAppointments   = isset($appointment['todaysAppointments']) ? $appointment['todaysAppointments'] : 0;
             $obj->currentAppointments  = isset($appointment['currentAppointments']) ?$appointment['currentAppointments']:0;
             //$obj->calls                = isset($appointment['calls']) ? $appointment['calls'] : 0 ;
-            $obj->brakes               = isset($appointment['brakes']) ? $appointment['brakes'] : 0;
+            $obj->breaks               = isset($appointment['breaks']) ? $appointment['breaks'] : 0;
             $obj->diets                = isset($appointment['diets']) ? $appointment['diets'] : 0;
             $obj->totalPatients        = isset($appointment['totalPatients']) ? $appointment['totalPatients'] : 0;
             $obj->dietNotStarted       = isset($appointment['dietNotStarted']) ? $appointment['dietNotStarted'] : 0;

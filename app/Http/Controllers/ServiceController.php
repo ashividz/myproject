@@ -24,6 +24,7 @@ use Mail;
 class ServiceController extends Controller
 {
     protected $menu;
+    protected $date;
     protected $daterange;
     protected $start_date;
     protected $end_date;
@@ -36,8 +37,9 @@ class ServiceController extends Controller
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/d 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
+        $this->date = isset($_POST['date']) ? date('Y-m-d', strtotime($_POST['date'])) : date("Y-m-d");
  
-    }
+    }   
 
     public function index()
     {
@@ -304,11 +306,12 @@ class ServiceController extends Controller
 
     public function appointments()
     {
-        $appointments = Patient::getAppointments();
+        $appointments = Patient::getAppointments($this->date);
         $data = array(
             'menu'           => 'service',
             'section'        => 'appointments',
-            'appointments'   => $appointments,       
+            'appointments'   => $appointments,
+            'date'           => $this->date,
         );
         
         return view('home')->with($data);

@@ -1,6 +1,9 @@
 <div class="jumbotron" style="margin:0;padding:0;">
     <div class="panel panel-default">       
         <div class="panel-heading">         
+            <div class="pull-right">
+                    @include('/partials/date') 
+            </div>  
             <div class="pull-left">
                 <h4>Nutritionist wise appointments</h4>                
             </div>            
@@ -18,8 +21,8 @@
                             <th>SN</th>
                             <th>Nutritionist</th>
                             <th>Total Patients</th>                            
-                            <th>Today's Appointments</th>                            
-                            <th>Remaining Appointments</th>                            
+                            <th>Appointments on {{date('jS M, Y',strtotime($date))}}</th>                            
+                            <th>Remaining Appointments on {{date('jS M, Y',strtotime($date))}}</th>                            
                             <th>total diets(no of patients)</th> 
                             <th>diet not sent for 7 days</th> 
                             <th>diet not started</th> 
@@ -32,7 +35,7 @@
                         $totalTodaysAppointments  = 0;
                         $totalCurrentAppointments = 0;
                         $totalDiets               = 0;
-                        $totalBrakes              = 0;
+                        $totalBreaks              = 0;
                         $totalDietNotStarted           = 0;
                     ?>
                     @foreach($appointments as $appointment)
@@ -43,7 +46,7 @@
                             <td>{{$appointment->todaysAppointments}}</td>
                             <td>{{$appointment->currentAppointments}}</td>
                             <td>{{$appointment->diets}}</td>
-                            <td>{{$appointment->brakes}}</td>
+                            <td>{{$appointment->breaks}}</td>
                             <td>{{$appointment->dietNotStarted}}</td>
                         </tr>
                     <?php 
@@ -51,7 +54,7 @@
                         $totalTodaysAppointments    += $appointment->todaysAppointments;
                         $totalCurrentAppointments   += $appointment->currentAppointments;
                         $totalDiets                 += $appointment->diets;
-                        $totalBrakes                += $appointment->brakes;
+                        $totalBreaks                += $appointment->breaks;
                         $totalDietNotStarted        += $appointment->dietNotStarted;
                     ?>
                     @endforeach
@@ -65,7 +68,7 @@
                             <td>{{$totalTodaysAppointments}}</td>
                             <td>{{$totalCurrentAppointments}}</td>
                             <td>{{$totalDiets}}</td>
-                            <td>{{$totalBrakes}}</td>
+                            <td>{{$totalBreaks}}</td>
                             <td>{{$totalDietNotStarted}}</td>
                         </tr>
                     </tfoot>
