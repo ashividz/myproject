@@ -103,7 +103,7 @@ class Helper {
 
         $approvers = ApproverDiscount::select('approver_discount.*')
                         ->join('discounts as d', 'd.id', '=', 'approver_discount.discount_id')
-                        ->where('d.value', '<=', $discount)
+                        ->where('d.value', '<=', $discount + 5)
                         ->where('discount_id', $discount_id)
                         ->whereIn('approver_role_id', $roles)
                         ->get();
