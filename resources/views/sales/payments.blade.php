@@ -1,30 +1,103 @@
+<div id="orders">
 <?php 
     $daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
     $start_date = isset($daterange[0]) ? date('Y/m/d 0:0:0', strtotime($daterange[0])) : date("Y/m/d 0:0:0");
 ?>
-@include('partials/daterange', array('start_date' => $start_date, 'ajax' => 1))    
+    <input type="text" name="daterange" id="daterange" v-model="daterange" size="25" readonly @keyup.down="daterangeChange"/>  
     <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download orders</a>
 
-    <table id="orders" class="table table-bordered">
+    <table id="order-table" class="table table-bordered">
         
         <thead>
             <tr>
-                <th>#</th>
                 <th>Date</th>
                 <th>Transaction Id</th>
                 <th>Name</th>
-                <th>Country</th>
-                <th>City</th>
+                <th>Location</th>
                 <th>Payment Method</th>
                 <th>Amount</th>
                 <th>Status Message</th>
                 <th>CRE</th>
-            </tr>
-            
+            </tr>            
         </thead>
+        <tbody>
+            <tr v-for="order in orders" v-bind:class="{ 'success' : order.payment_status == 'C',  'fail' : order.payment_status == 'F',  'incomplete' : order.payment_status == 'P' }">
+                <td>@{{ order.order_date }}</td>
+                <td>@{{ order.transaction_id }}</td>
+                <td>
+                     @{{ order.firstname + " " + order.lastname }}
+                    <span class="pull-right" v-if="order.lead_id">
+                        <a href="/lead/@{{ order.lead_id}}" target="_blank">
+                            <button>
+                            <i class="fa fa-arrows-alt"></i>
+                            </button>
+                        </a>
+                    </span>
+                        
+                </td>
+                <td>@{{ order.country + ", " + order.city }}</td>
+                <td>@{{ order.payment_method }}</td>
+                <td>@{{ order.currency + " " + order.total_amount }}</td>
+                <td>@{{ order.message }}</td>
+                <td>@{{ order.cre }}</td>
+            </tr>
+        </tbody>
     </table>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#orders',
 
-<script type="text/javascript">
+        data: {
+            orders: [],
+            daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            start_date: '',
+            end_date: '',
+            timer: '',
+        },
+
+        ready: function(){
+            this.getOrders();
+            this.timer = setInterval(this.getOrders, 30000)
+        },
+
+        methods: {
+
+            getOrders() {
+                $.getJSON("/api/onlinePayments", {'start_date': this.start_date, 'end_date' : this.end_date}, function(orders){
+                    this.orders = orders;
+                    console.log(orders);
+                }.bind(this));
+            },
+            daterangeChange() {
+                alert(this.daterange);
+            }
+        },
+        computed: {
+            /*daterange() {
+                return moment(this.start_date).format('YYYY-MM-DD') + ' - ' + moment(this.end_date).format('YYYY-MM-DD');
+            },*/
+
+            start_date() {
+                var range = this.daterange.split(" - ");
+                return moment(range[0]).format('YYYY-MM-DD') + ' 0:0:0';
+            },
+
+            end_date() {
+                var range = this.daterange.split(" - ");
+                return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
+            }
+        },
+        beforeDestroy() {
+            clearIntervall(this.timer)
+        }
+    })
+
+    vm.$watch('daterange', function (val) {
+        this.getOrders();
+    })
+</script>
+<!--<script type="text/javascript">
 
 function AutoReload()
 {
@@ -78,15 +151,15 @@ function getOrders() {
     })
 }
 </script>
-
+-->
 <style type="text/css">
-    #orders tr.success td {
+    tr.success {
         background-color: rgb(108, 208, 147);
     }
-    .fail {
+    tr.fail {
         background-color: rgb(236, 106, 106);
     }
-    .incomplete {
+    tr.incomplete {
         background-color: rgb(240, 240, 140);
     }
 </style>
@@ -94,7 +167,20 @@ function getOrders() {
 <script type="text/javascript">
 $(document).ready(function() 
 {
-    
+    $('#daterange').daterangepicker(
+    { 
+      ranges: 
+      {
+         'Today': [new Date(), new Date()],
+         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+         'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
+         'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+         'This Month': [moment().startOf('month'), moment().endOf('month')],
+         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      }, 
+      format: 'YYYY-MM-DD' 
+    }
+  );   
 
     $( "#downloadCSV" ).bind( "click", function() 
     {

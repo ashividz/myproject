@@ -41,6 +41,6 @@ class WebsiteController extends Controller
     		}
     		
     	}
-    	return $orders;
+    	return json_encode($orders);
 	}
 }

@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Events\NewMessage;
 
 use App\Models\Message;
 use App\Models\MessageRecipient;
 use App\Models\User;
+use App\Models\Employee;
 use Auth;
 use DB;
 
@@ -98,12 +100,23 @@ class MessageController extends Controller
 
 		$receiver = MessageRecipient::saveRecipients($message, $request->recipients);
 
+        //$count = ;
+
+        for ($i=0; $i < count($request->recipients); $i++) {
+
+            $employee = Employee::where('name', $request->recipients[$i])->first(); 
+            if ($employee) {
+                event(new NewMessage($employee));
+            }            
+        }
+        
 		$data = array(
             'message'       => 'Message sent successfully',
             'status'        =>  'success'
         );
 
-        return back()->with($data);
+        return "Message sent successfully";
+        //return back()->with($data);
 	}
 
 	public function compose()

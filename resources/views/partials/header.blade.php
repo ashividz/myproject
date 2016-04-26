@@ -87,6 +87,10 @@
 		<!-- Select 2 -->
 		<script type="text/javascript" src="/js/select2.full.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="/css/select2.min.css">
+
+        <!-- VueJS -->
+        <script src="/plugins/vue/vue.min.js"></script>
+        
     </head>
     <body>
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
@@ -168,7 +172,7 @@
 					<a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-envelope"></i></a>
 		 
 					<!-- Unred messages count -->
-					<span class="mws-dropdown-notif new-message-count"></span>
+					<span class="mws-dropdown-notif">@{{ unread }}</span>
 		 
 					<!-- Messages dropdown -->
 					<div class="mws-dropdown-box">
@@ -208,6 +212,7 @@
 			@include('partials/menu')		
     </div>
 <script>
+/*
 function autoReload()
 {
   getUnreadMessageCount();
@@ -225,7 +230,7 @@ function getUnreadMessageCount() {
     .done(function( data ) {
     	$('.new-message-count').empty().append(data);
     });
-};
+};*/
 @if (count($errors) > 0 || Session::has('status'))
 	$('#alert').show().slideUp().delay().slideDown();
 @endif

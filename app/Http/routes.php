@@ -75,6 +75,15 @@ Route::group([
     'middleware' => ['auth','roles'], 
     'roles' => ['admin', 'marketing']], 
     function() {
+        Route::get('notifications', function() {
+            //$employee = App\Models\Employee::find(1);
+            //\Redis::publish('unread', $user);
+            event(new App\Events\NewNotification());
+            //\Cache::put('foo', 'bar', 10);
+            //return \Cache::get('foo');
+            //\Redis::set('name', 'Saaz Rai');
+            //return \Redis::get('name');
+        });
         Route::get('marketing', 'MarketingController@index');
 
         Route::get('marketing/leads', 'MarketingController@viewLeads');
@@ -637,6 +646,9 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('api/getUnreadMessageCount', 'MessageController@getUnreadMessageCount');
     Route::get('api/getMessages', 'MessageController@getMessages');
+
+    Route::get('api/getUnreadNotificationCount', 'NotificationController@getUnreadNotificationCount');
+    Route::get('api/getUnreadNotifications', 'NotificationController@getUnreadNotifications');
 
     Route::get('api/onlinePayments', 'WebsiteController@onlinePayments');
     Route::get('api/getTagList', 'APIController@getTagList');
