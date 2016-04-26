@@ -1,5 +1,5 @@
 <?php
-
+//Auth::loginUsingId(11);
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -242,6 +242,7 @@ Route::group([
         Route::POST('sales/hot', 'SalesController@viewHotPipelines');   
         Route::get('sales/pipelineStatus', 'SalesController@viewPipelineStatus');
         Route::post('sales/pipelineStatus', 'SalesController@viewPipelineStatus');
+
 });
 
 Route::group([
@@ -520,6 +521,9 @@ Route::group([
             
         Route::get('sales/payments', 'SalesController@viewPayments');
         Route::POST('sales/payments', 'SalesController@viewPayments');
+
+        Route::get('sales/paymentsNew', 'SalesController@viewPaymentsNew');
+        Route::POST('sales/paymentsNew', 'SalesController@viewPaymentsNew');
 });
 
 Route::group(['middleware' => 'auth'], function() {
@@ -621,6 +625,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('api/getMessages', 'MessageController@getMessages');
 
     Route::get('api/onlinePayments', 'WebsiteController@onlinePayments');
+    Route::get('api/onlinePaymentsNew', 'WebsiteController@onlinePaymentsNew');
     Route::get('api/getTagList', 'APIController@getTagList');
 
     Route::get('api/patients/age', 'APIController@ages');
