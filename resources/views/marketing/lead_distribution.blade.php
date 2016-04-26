@@ -110,10 +110,10 @@
 								<input class='form-control' type='text' name='name[{{$i}}]' value='{{$query->name}}' placeholder='Name' required>
 							</td>
 							<td>
-								<input class='form-control' size='14' type='text' name='phone[{{$i}}]' value='{{$query->phone}}' placeholder='Phone' required>
+								<input class='form-control' size='14' type='text' name='phone[{{$i}}]' value='{{$query->phone}}' placeholder='Phone' {!!Lead::isExistingMobile($query->phone) ? 'style="background-color:#f2dede;" title="duplicate phone"':''!!}required>
 							</td>
 							<td>
-								<input class='form-control' type='text' name='email[{{$i}}]' value='{{$query->email}}' placeholder='Email'>
+								<input class='form-control' type='text' name='email[{{$i}}]' value='{{$query->email}}' placeholder='Email' {!!Lead::isExistingEmail($query->email) ? 'style="background-color:#f2dede;" title="duplicate email"':''!!}>
 							</td>
 							<td>
 								<div class='dropdown'>
