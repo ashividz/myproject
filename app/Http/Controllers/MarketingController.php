@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
+use App\Support\Helper;
 
 use App\Models\Query;
 use App\Models\Source;
@@ -146,7 +147,7 @@ class MarketingController extends Controller
             }
             //dd($request);   
             //Check Duplicate Lead
-            $lead = Lead::where('phone', $request->phone[$i])->first();
+            $lead = Lead::where('phone', Helper::properMobile($request->phone[$i]))->first();
 
             if (!isset($lead)) {
                 $lead = Lead::where('email', $request->email[$i])->first();
