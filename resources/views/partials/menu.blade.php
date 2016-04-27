@@ -193,6 +193,11 @@
                 </li>
                 <li>
                     <a href="/sales/payments" id="menu_sales_payments">Online Payments</a>
+                    <ul>
+                        <li>
+                            <a href="/sales/paymentsNew" id="menu_sales_pipeline_status">Online Payments New</a>
+                        </li>
+                    </ul>
                 </li> 
                 <li>
                     <a href="#" id="menu_sales_reports">Reports</a>
