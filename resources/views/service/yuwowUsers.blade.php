@@ -5,7 +5,9 @@
             <h4>yuwow Users({{$name}})</h4> 
             </div>
             <div class="pull-right">
-                @include('nutritionist/partials/users') 
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('yuwow_support'))
+                    @include('partials/users')
+                @endif
             </div>            
         </div>
 

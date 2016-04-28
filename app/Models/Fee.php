@@ -212,7 +212,8 @@ class Fee extends Model
             $fee->source_id         = $payment->cart->source_id;
             $fee->duration          = $duration;
             $fee->created_by        = Auth::id();
-            $fee->save();            
+            $fee->save();
+            LeadStatus::saveStatus($patient->lead, 5);            
         }
         
     }

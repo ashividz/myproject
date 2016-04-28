@@ -79,6 +79,20 @@ return [
             'prefix'    => '',
             'strict'    => false,
         ],
+
+         //NHS
+        'mysql3' => [
+            'driver'    => 'mysql',
+            'host'      => 'newwebwp.db.11345018.hostedresource.com',
+            'port'      => '3306',
+            'database'  => 'newwebwp',
+            'username'  => 'newwebwp',
+            'password'  => 'NwH@987#',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
         /*
         sudo apt-get install php5-pgsql php5enmod pgsql
         sudo service apache2 restart
