@@ -340,12 +340,7 @@ Route::group([
 
         Route::get('herb/template/add', 'HerbController@templateForm');
         Route::post('herb/template/add', 'HerbController@templateSave');
-
-        Route::get('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
-        Route::post('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
         
-        Route::get('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
-        Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
         Route::get('service/reports/appointments', 'ServiceController@appointments');   
         Route::post('service/reports/appointments', 'ServiceController@appointments');   
 
@@ -353,6 +348,18 @@ Route::group([
         Route::post('patient/{id}/recipes', 'RecipeController@show');
         Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
         Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
+
+});
+
+Route::group([
+    'middleware' => ['auth','roles'], 
+    'roles' => ['admin', 'doctor', 'service', 'service_tl','yuwow_support']], function() {
+
+        Route::get('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
+        Route::post('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
+        
+        Route::get('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
+        Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
 
 });
 
