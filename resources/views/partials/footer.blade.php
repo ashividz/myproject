@@ -1,5 +1,4 @@
 Unread Notification count = @{{ unreadNotificationCount }}
-<script src="/plugins/vue/vue.min.js"></script>
 <script src="/plugins/socket/socket.io.js"></script>
 <script type="text/javascript">
     var socket = io('{{ env('APP_URL') }}:3001');
@@ -10,7 +9,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
         data: {
             unread: null,
             notifications : [],
-            unreadNotificationCount: null,
+            unreadNotificationCount: 0,
         },
 
         ready: function(){
@@ -22,7 +21,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
             }.bind(this));
 
             socket.on("user{{ Auth::id() }}:App\\Events\\NewNotification", function(data){
-                this.notifications.push(data.notifications);
+                this.notifications = data.notifications;
                 this.unreadNotificationCount = data.unreadNotificationCount;
                 console.log(data);
             }.bind(this));
@@ -36,7 +35,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
                 .done(function( data ) {
                     this.unread = data;
                 }.bind(this));
-            }
+            }   
         }
 
     })

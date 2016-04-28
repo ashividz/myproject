@@ -82,8 +82,11 @@ class CREController extends Controller
      *
      * @return Response
      */
-    public function viewLeads(Request $request)
+    public function viewLeads(Request $request, $id = null)
     {
+        if($id) {
+            $this->cre = User::find($id)->employee->name;
+        }
         
         $leads = Lead::getLeadsByUser($this->cre, $this->start_date, $this->end_date);
         

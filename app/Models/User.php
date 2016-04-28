@@ -119,17 +119,26 @@ class User extends Model implements AuthenticatableContract,
                 ->get();
     }
 
-    public static function getUsersByRole($role)
+    public static function getUsersByRole($role, $user_id = null)
     {
         $users =  User::join('employees AS e', 'e.id', '=', 'emp_id')
                 ->join('role_user AS ru', 'users.id', '=', 'user_id')
                 ->join('roles AS r', 'r.id', '=', 'ru.role_id');
 
-        if(Auth::user()->hasRole('sales_tl')) {
+        if(Auth::user()->hasRole('sales_tl')  || $user_id) {
+            if ($user_id) {
+                $user = User::find($user_id);
+                if ($user) {
+                    $user_id = $user->emp_id;
+                }
+            } else {
+                $user_id = Auth::user()->emp_id;
+            }
+
             $users = $users->join(DB::raw('(SELECT * FROM employee_supervisor A WHERE id = (SELECT MAX(id) FROM employee_supervisor B WHERE A.employee_id=B.employee_id)) AS s'), function($join) {
                         $join->on('e.id', '=', 's.employee_id');
                     })
-                ->where('s.supervisor_employee_id', Auth::user()->employee->id);//
+                ->where('s.supervisor_employee_id', $user_id);//
         }
 
         $users = $users->where('r.name', $role)

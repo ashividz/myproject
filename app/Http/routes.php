@@ -259,13 +259,26 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth','roles'], 
-    'roles' => ['admin', 'sales', 'sales_tl']], 
+    'roles' => ['admin', 'sales', 'sales_tl', 'marketing']], 
     function() {
         Route::get('sales', 'SalesController@index');
         Route::get('sales/hot', 'SalesController@viewHotPipelines');
         Route::POST('sales/hot', 'SalesController@viewHotPipelines');   
         Route::get('sales/pipelineStatus', 'SalesController@viewPipelineStatus');
         Route::post('sales/pipelineStatus', 'SalesController@viewPipelineStatus');
+
+
+        Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');
+        Route::get('api/leadStatusReport', 'SalesReportController@leadStatusReport');
+
+});
+Route::group([
+    'middleware' => ['auth','roles'], 
+    'roles' => ['admin', 'sales', 'sales_tl', 'marketing']], 
+    function() {
+        
+        Route::get('cre/{id}/leads', 'CREController@viewLeads');
+        Route::post('cre/{id}/leads', 'CREController@viewLeads');
 });
 
 Route::group([
@@ -630,6 +643,9 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('lead/{id}', 'LeadController@showLead');
 
+    Route::get('api/getStatusList', function() {
+        return App\Models\Status::get();
+    });
     Route::get('api/getCountryList', 'APIController@getCountryList');
     Route::get('api/getRegionList', 'APIController@getRegionList');
     Route::get('api/getCityList', 'APIController@getCityList');

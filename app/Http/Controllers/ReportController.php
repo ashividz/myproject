@@ -579,5 +579,4 @@ class ReportController extends Controller
         return view('home')->with($data);
                        
     }
-    
 }

@@ -90,7 +90,6 @@
 
         <!-- VueJS -->
         <script src="/plugins/vue/vue.min.js"></script>
-        
     </head>
     <body>
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
@@ -108,7 +107,7 @@
         </div>
 
 <style type="text/css">
-    #alert {
+    #alert, #loader {
         position: fixed;
         margin-top: 150px;
         width: 500px;
@@ -118,7 +117,6 @@
     }
 </style>
 <script type="text/javascript">
-   
     @if (Session::has('message') || count($errors) > 0)
         $('#alert').show();
     @if(Session::get('status')=='success')
@@ -152,7 +150,9 @@
 					<a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-exclamation-sign"></i></a>
 		 
 					<!-- Unread notification count -->
-					<span class="mws-dropdown-notif">0</span>
+					<span class="mws-dropdown-notif">
+                        @{{ unreadNotificationCount }}               
+                    </span>
 		 
 					<!-- Notifications dropdown -->
 					<div class="mws-dropdown-box">
@@ -161,7 +161,27 @@
 								<!-- Here goes all the messages -->
 							</ul>
 							<div class="mws-dropdown-viewall">
-								<a href="#">View All Notifications</a>
+                                <div v-for="notification in notifications" style="background-color: #f9f9f9; border: 1px solid #ddd">                                    
+                                    
+                                    <span v-if="notification.lead_id">
+                                        <a href="/lead/@{{ notification.lead_id}}" target="_blank">
+                                            @{{ notification.subject }}
+                                            (@{{ notification.lead_id}})
+                                            <em class="pull-right">
+                                                @{{ notification.created_at }}
+                                            </em>
+
+                                        </a>
+                                    </span>
+                                    <span v-else>
+                                        @{{ notification.subject }}
+                                        <em class="pull-right">
+                                            @{{ 
+                                            notification.created_at }}
+                                        </em>                                    
+                                    </span>
+                                </div>
+								<a href="notifications">View All Notifications</a>
 							</div>
 						</div>
 					</div>
@@ -212,25 +232,6 @@
 			@include('partials/menu')		
     </div>
 <script>
-/*
-function autoReload()
-{
-  getUnreadMessageCount();
-  setTimeout(function(){autoReload();}, 30000);
-}
-
-$(document).ready(function () {
-    getUnreadMessageCount();
-    setTimeout(function(){autoReload();}, 30000);
-});
-
-function getUnreadMessageCount() {
-	var url = "/api/getUnreadMessageCount";
-  	$.getJSON(url)
-    .done(function( data ) {
-    	$('.new-message-count').empty().append(data);
-    });
-};*/
 @if (count($errors) > 0 || Session::has('status'))
 	$('#alert').show().slideUp().delay().slideDown();
 @endif

@@ -1,11 +1,6 @@
 <div id="orders">
-<?php 
-    $daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
-    $start_date = isset($daterange[0]) ? date('Y/m/d 0:0:0', strtotime($daterange[0])) : date("Y/m/d 0:0:0");
-?>
-    <input type="text" name="daterange" id="daterange" v-model="daterange" size="25" readonly @keyup.down="daterangeChange"/>  
+    <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
     <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download orders</a>
-
     <table id="order-table" class="table table-bordered">
         
         <thead>
@@ -68,9 +63,6 @@
                     this.orders = orders;
                     console.log(orders);
                 }.bind(this));
-            },
-            daterangeChange() {
-                alert(this.daterange);
             }
         },
         computed: {
@@ -93,7 +85,7 @@
         }
     })
 
-    vm.$watch('daterange', function (val) {
+    vm.$watch('daterange', function (newval, oldval) {
         this.getOrders();
     })
 </script>
@@ -169,18 +161,22 @@ $(document).ready(function()
 {
     $('#daterange').daterangepicker(
     { 
-      ranges: 
-      {
-         'Today': [new Date(), new Date()],
-         'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-         'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
-         'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
-         'This Month': [moment().startOf('month'), moment().endOf('month')],
-         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-      }, 
-      format: 'YYYY-MM-DD' 
-    }
-  );   
+        ranges: 
+        {
+            'Today': [new Date(), new Date()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
+            'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }, 
+        format: 'YYYY-MM-DD' 
+        }
+    );   
+    $('#daterange').on('apply.daterangepicker', function(ev, picker) 
+    {   
+        $('#daterange').trigger('change'); 
+    });
 
     $( "#downloadCSV" ).bind( "click", function() 
     {
