@@ -118,8 +118,8 @@
 						<td><a href="/lead/{{$reference->id}}/viewDispositions" target="_blank">{{$reference->id}}</a></td>
 						<td>
 						@if(isset($reference->patient))
-							<a href="http://crm/patient.php?clinic={{$reference->patient->clinic}}&registration_no={{$reference->patient->registration_no}}" target="_blank"> 
-								{{ $reference->patient->registration_no}}
+							<a href="/patient/{{$reference->patient->id}}/diet" target="_blank"> 
+								{{ $reference->patient->id}}
 							</a>
 						@endif
 						</td>
