@@ -271,6 +271,9 @@ Route::group([
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');
         Route::get('api/leadStatusReport', 'SalesReportController@leadStatusReport');
 
+        Route::get('sales/report/pipelines', 'PipelineController@index');
+        Route::get('api/getHotPipelines', 'PipelineController@hotPipelines');
+
 });
 Route::group([
     'middleware' => ['auth','roles'], 
@@ -369,6 +372,10 @@ Route::group([
         Route::post('patient/{id}/recipes', 'RecipeController@show');
         Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
         Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
+
+        /** Hot Pipeline**/
+        Route::get('lead/{id}/pipeline', 'PipelineController@modal'); 
+        Route::post('lead/{id}/pipeline', 'PipelineController@store'); 
 
 });
 
@@ -653,6 +660,10 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('lead/{id}', 'LeadController@showLead');
 
+    Route::get('api/getCurrencies', function() {
+        return App\Models\Currency::get();
+    });
+
     Route::get('api/getStatusList', function() {
         return App\Models\Status::get();
     });
@@ -704,6 +715,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('cod', 'AdminController@saveCod');
 
     Route::get('modal/{id}/message', 'ModalController@message');
+
+
     
     Route::get('modal/{id}/payment', 'ModalController@payment');
     Route::get('modal/{id}/herb', 'ModalController@herb');

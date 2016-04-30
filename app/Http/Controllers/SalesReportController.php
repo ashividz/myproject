@@ -29,8 +29,9 @@ class SalesReportController extends Controller
 
     public function leadStatusReport(Request $request)
     {
-        $start_date = $request->start_date ? $request->start_date : Carbon::now()->subDays(30);
+        $start_date = $request->start_date ? $request->start_date : Carbon::now()->subDays(30); 
         $end_date = $request->end_date ? $request->end_date : Carbon::now();
+        //echo $start_date . " - ". $end_date."<br>";
         $cres = User::getUsersByRole('cre', $request->user_id);
         foreach ($cres as $cre) {
             $leads = Lead::with(['dispositions' => function($q) use($cre) {

@@ -94,7 +94,13 @@
 					<li title="Compose New Message" data-placement="left" data-toggle="tooltip">
 						<a href="/modal/{{ $lead->id }}/message" data-toggle="modal" data-target="#modal" title="Send Message" class="btn btn-primary">
                         <i class=" fa fa-envelope-o fa-2x"></i>
-                    </a>
+                        </a>
+                    </li>
+                    <li title="Create Hot Pipeline" data-placement="left" data-toggle="tooltip">
+                        <a href="/lead/{{ $lead->id }}/pipeline" data-toggle="modal" data-target="#modal" class="btn btn-danger">
+                        <i class=" fa fa-fire fa-2x"></i>
+                        </a>
+                    </li>
                     <li title="Validate Coupon">
                         <a href="http://coupon/validation?lead_id={{$lead->id}}&amp;name={{$lead->name}}&amp;phone={{$lead->phone}}&amp;email={{$lead->email}}&amp;user_id={{Auth::User()->id}}" class="btn btn-primary default_popup"><i class='fa fa-gift fa-2x'></i></a>
                     </li>

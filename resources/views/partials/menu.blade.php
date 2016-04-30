@@ -205,6 +205,12 @@
                         <li>
                             <a href="/sales/pipelineStatus" id="menu_sales_pipeline_status">Pipeline Status</a>
                         </li>
+                        <li>
+                            <a href="/sales/report/lead/status" id="menu_sales_lead_status">Lead Status</a>
+                        </li>
+                        <li>
+                            <a href="/sales/report/pipelines" id="menu_sales_lead_status">Hot Pipelines</a>
+                        </li>
                     </ul>
                 </li>   
                             

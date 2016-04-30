@@ -8,7 +8,9 @@
 				<th>Lead Assign Date</th>
 				<th>Lead Source</th>
 				<th>Status</th>
-				<th>CRM Disposition</th>
+                <th>Last Disposition Date</th>
+                <th>Disposition Count</th>
+				<th>Disposition</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -26,15 +28,17 @@
 		@endif
 		
 		    	<td><div style="display:none">{{$lead->status_id}} {{$lead->status->name or ""}}</div><div class="status" data-score="{{ $lead->status_id }}"></div></td>
+                <td>
+                    {{ $lead->disposition->created_at or "" }}
+                </td>
+                <td>
+                    {{ $lead->dispositions->where('name', $name)->count() }}
+                </td>
 		    	
 		    	<td width='30%'>
 		    		[ {{ $lead->dispositions->where('name', $name)->count() . "/" . $lead->dispositions()->count()}} ] 
 		    		<b>{{ $lead->disposition->master->disposition or "NA" }} : </b> 
 		    		{{ $lead->disposition->remarks or "" }}<p>
-		    		<small>
-
-		    			{{ isset($lead->disposition) ? date('M j, Y h:i A',strtotime($lead->disposition->created_at))  : ""}}
-		    		</small>
 		    	</td>
 
 		    </tr>

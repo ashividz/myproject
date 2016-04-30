@@ -91,16 +91,16 @@ class CREController extends Controller
         $leads = Lead::getLeadsByUser($this->cre, $this->start_date, $this->end_date);
         
         //dd($leads);
-        $section = "leads";
+        //$section = "leads";
 
         $users = User::getUsersByRole('cre');
 
         $data = array(
-            'section'       => $section,
+            'menu'          => $this->menu,
+            'section'       => "leads",
             'start_date'    => $this->start_date,
             'end_date'      => $this->end_date,
             'url'           => $this->url,
-            'menu'          => $this->menu,
             'leads'         => $leads,
             'users'         => $users,
             'name'          => $this->cre,
