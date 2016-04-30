@@ -373,9 +373,6 @@ Route::group([
         Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
         Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
 
-        /** Hot Pipeline**/
-        Route::get('lead/{id}/pipeline', 'PipelineController@modal'); 
-        Route::post('lead/{id}/pipeline', 'PipelineController@store'); 
 
 });
 
@@ -653,6 +650,11 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('lead/{id}/saveDetails', 'LeadController@saveDetails');
     Route::get('lead/{id}/email', 'EmailController@show');
     Route::post('lead/{id}/email', 'EmailController@send');
+
+    
+    /** Hot Pipeline**/
+    Route::get('lead/{id}/pipeline', 'PipelineController@modal'); 
+    Route::post('lead/{id}/pipeline', 'PipelineController@store'); 
 
 
     Route::get('lead/{id}/program', 'LeadProgramController@show');
