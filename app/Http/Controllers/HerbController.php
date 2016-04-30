@@ -25,10 +25,10 @@ class HerbController extends Controller
 {
 	public function herbs($id)
 	{
-		$lead = Lead::find($id);
-
-		$patient = Patient::with('herbs')
+        $patient = Patient::with('herbs','lead')
 					->find($id);
+
+        $lead    = $patient->lead;
 
 		$templates = HerbTemplate::get();
 
