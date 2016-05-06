@@ -32,7 +32,7 @@ class DialerPushController extends Controller
       public function __construct(Request $request)
     {   
         $this->limit = isset($request->limit) ? $request->limit : 2000;
-        $this->list_id = "sales01022016";
+        $this->list_id = "sales06052016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
