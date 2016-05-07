@@ -32,7 +32,7 @@ class DialerPushController extends Controller
       public function __construct(Request $request)
     {   
         $this->limit = isset($request->limit) ? $request->limit : 2000;
-        $this->list_id = "sales06052016";
+        $this->list_id = "sales01052016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
@@ -248,6 +248,7 @@ public function getLeadsConsecutive(Request $request)
         {
             $output= 'false2';
             $phone = $request->phone[$i];
+            $cre_name = $request->cre_name[$i];
             //$cre_name = $request->cre_name[$i];
             //$dispo_date = $request->dispo_date[$i];
             //$dispo_remark = $request->dispo_remark[$i];
@@ -263,7 +264,7 @@ public function getLeadsConsecutive(Request $request)
             //if($push==1)
             //{
             $ch = curl_init(DIALER_URI);
-            $encoded_params = "do=manualUpload&username=admin&password=NutriweL&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=";
+            $encoded_params = "do=manualUpload&username=admin&password=NutriweL&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=$cre_name";
             
             curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);
