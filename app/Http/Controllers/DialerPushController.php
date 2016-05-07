@@ -130,7 +130,8 @@ public function getLeadsConsecutive(Request $request)
     {
         $users = User::getUsersByRole('cre');
         $cre = $request->user;
-
+        $dispo_date = date('Y-m-d 0:0:0', strtotime('-15 days'));
+        
         $leads_qry = Lead::select('marketing_details.*')
             ->with('cre', 'disposition');
              if(isset($request->user))
@@ -151,7 +152,7 @@ public function getLeadsConsecutive(Request $request)
             ->whereNull('p.id')
             ->whereNull('d.id')
             ->whereNull('dp.id')
-            ->where('cd.created_at', '<', '2016-03-31 00:00:00');
+            ->where('cd.created_at', '<', $dispo_date);
             //->whereNotNull('marketing_details.source_id')
             
             
