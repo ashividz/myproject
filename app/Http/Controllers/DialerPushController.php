@@ -32,7 +32,7 @@ class DialerPushController extends Controller
       public function __construct(Request $request)
     {   
         $this->limit = isset($request->limit) ? $request->limit : 2000;
-        $this->list_id = "sales01052016";
+        $this->list_id = "sales01022016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
@@ -133,9 +133,12 @@ public function getLeadsConsecutive(Request $request)
 
         $leads = Lead::select('marketing_details.*')
             ->with('cre', 'disposition')
+            ->join(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                                     $join->on('marketing_details.id', '=', 'c.lead_id');
+                                })
             ->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
             ->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id')
-            ->leftjoin(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE A.lead_id=B.lead_id)) AS cd'), function($join) {
+            ->leftjoin(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE created_at <= "2015-03-31 00:00:00" and id = (SELECT MAX(id) FROM call_dispositions B WHERE A.lead_id=B.lead_id)) AS cd'), function($join) {
                 $join->on('marketing_details.id', '=', 'cd.lead_id');
             })
             ->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id')
@@ -145,14 +148,10 @@ public function getLeadsConsecutive(Request $request)
             ->whereNull('dp.id')
             //->whereNotNull('marketing_details.source_id')
             ->where(function($q) {
-                $q->where('cd.created_at', '<=', '2015-03-31')
+                $q->where('cd.created_at', '<=', '2016-03-31 00:00:00')
                     ->orWhereNull('cd.id');
             })
-            //->where('cd.created_at', '<=', '2016-2-31')
-            ->where(function($q) {
-                $q->where('marketing_details.country', 'IN')
-                    ->orWhereNull('marketing_details.country');
-            })
+            
             ->limit($this->limit)
             ->get();
         //dd($leads);

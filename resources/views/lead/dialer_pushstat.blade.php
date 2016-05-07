@@ -29,7 +29,9 @@
                                         <td>
                                             <input type='checkbox' class='checkbox'  name='id[]' value="{{ $lead->id }}">
                                             <input type="hidden" name="phone[]" value="{{ $lead->phone }}">
+                                             @if($lead->cre)
                                             <input type="hidden" name="cre_name[]" value="{{$lead->cre->cre}}">
+                                            @endif
                                         </td>
                                         <td>
                                            <a href="/lead/{{$lead->id}}/viewDispositions" target="_blank">{{$lead->name}}</a> 
