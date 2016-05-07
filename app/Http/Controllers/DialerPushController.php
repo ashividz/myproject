@@ -145,7 +145,7 @@ public function getLeadsConsecutive(Request $request)
             ->whereNull('dp.id')
             //->whereNotNull('marketing_details.source_id')
             ->where(function($q) {
-                $q->where('cd.created_at', '<=', '2015-12-31')
+                $q->where('cd.created_at', '<=', '2015-04-01')
                     ->orWhereNull('cd.id');
             })
             //->where('cd.created_at', '<=', '2016-2-31')
