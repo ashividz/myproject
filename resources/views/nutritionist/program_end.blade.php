@@ -2,7 +2,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="pull-right">
-				@include('nutritionist/partials/users')
+				@include('nutritionist/partials/daterange_users')
 			</div>
 			<h4>Program End</h4>
 		</div>
@@ -12,6 +12,7 @@
 					<tr>
 						<th>#</th>
 						<th>Name</th>
+						<th>Nutritionist</th>
 						<th>Start Date</th>
 						<th>End Date</th>
 						<th>CRE</th>
@@ -35,7 +36,7 @@
 					<tr>
 						<td>{{$i++}}</td>
 						<td><a href="/lead/{{$patient->lead->id}}/viewDetails" target="_blank">{{$patient->lead->name}}</a><div class="pull-right" data-html="true" data-toggle="tooltip" title="{!!$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><span class="label {{$patient->tags->isEmpty() ? 'label-danger': 'label-success'}}"><i class="fa fa-tags"></i></span></a></div></td>
-
+						<td>{{$patient->nutritionist}}</td>
 						<td>{{$fee->start_date->format('Y-m-d')}}</td>
 						<td>{{$fee->end_date->format('Y-m-d')}}</td>
 						
