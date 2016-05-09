@@ -66,7 +66,7 @@
                 
                  @if(isset($lead->dialer) && $lead->dialer->created_at->format('Y-m-d') <= date('Y-m-d'))
                      @if(isset($lead->disposition))
-                         @if(($lead->cre && $lead->cre->cre != Auth::user()->employee->name) || !$lead->cre)
+                         @if(($lead->cre && $lead->cre->cre != Auth::user()->employee->name && $lead->cre->cre != $lead->cre->created_by) || !$lead->cre)
                                          <div>
                                             <form method="POST" action="/lead/{{ $lead->id }}/selfAssign" role="form" class="form-inline" id="form_selfassign">
                                              <input type="hidden" name="_token" value="{{ csrf_token() }}">
