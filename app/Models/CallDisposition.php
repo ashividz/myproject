@@ -9,7 +9,7 @@ class CallDisposition extends Model
 {
     protected $table = "call_dispositions";
 
-    protected $fillable = ['lead_id', 'clinic', 'enquiry_no', 'disposition_id', 'name', 'remarks', 'callback', 'email', 'sms'];
+    protected $fillable = ['lead_id', 'disposition_id', 'name', 'remarks', 'callback', 'email', 'sms'];
 
     public function getDates()
     {

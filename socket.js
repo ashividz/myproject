@@ -1,4 +1,5 @@
-var server = require('http').Server();
+var https = require('https'),  
+var server = https.createServer();
 var io = require('socket.io')(server);
 var Redis = require('ioredis');
 var redis = new Redis();

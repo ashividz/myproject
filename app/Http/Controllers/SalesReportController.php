@@ -74,6 +74,16 @@ class SalesReportController extends Controller
                         ->get();
 
             $cre->counts = $counts;
+
+            /*try {
+
+                $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
+                            ->where('crl.phonenumber', '=', $lead->phone);
+            } catch (\Exception $e) {
+            
+                Session::flash("message", "Error connecting with Dialer Database");
+                Session::flash("status", "error");
+            }   */  
         }
         return $cres;
     }
