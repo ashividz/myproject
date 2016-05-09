@@ -28,11 +28,11 @@ class OrderController extends Controller
     {
         if ($request->category_id) {
 
-            $orders = Order::where('product_category_id', '=', $request->category_id)->get();
+            $orders = Order::where('product_category_id', '=', $request->category_id)->orderBy('id', 'desc')->get();
 
         } else {
 
-            $orders = Order::get();
+            $orders = Order::orderBy('id', 'desc')->get();
         }
 
         $orders->load('category', 'cart.cre', 'cart.source', 'cart.products', 'cart.currency');
