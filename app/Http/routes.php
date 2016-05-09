@@ -1,5 +1,5 @@
 <?php
-//Auth::loginUsingId(11);
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -56,6 +56,16 @@ Route::group([
         Route::post('orders', 'OrderController@index');
 
 });
+
+Route::group([
+    'middleware' => ['auth', 'roles'], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality']], 
+    function() {
+    Route::get('carts', 'CartReportController@cartStatusReport');
+    Route::post('carts', 'CartReportController@cartStatusReport');
+
+});
+
 
 Route::group([
     'middleware' => ['auth', 'roles'], 
@@ -612,10 +622,6 @@ Route::group(['middleware' => 'auth'], function() {
     
     Route::get('quality/patient/{id}/survey', 'SurveyController@patientSurvey');
     Route::post('quality/patient/{id}/survey', 'SurveyController@savePatientSurvey');
-
-    Route::get('carts', 'CartReportController@cartStatusReport');
-    Route::post('carts', 'CartReportController@cartStatusReport');
-    
 
     Route::get('master/dispositions', 'DispositionMasterController@getDispositions');
 

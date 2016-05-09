@@ -6,6 +6,7 @@
                 <select v-model="user">
                     <option v-for="user in users"  v-bind:value="user.id">@{{ user.name }}</option>
                 </select>
+                <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download Lead status</a>
             </span>
         @endif
         </div>
@@ -22,14 +23,12 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="first">
 
-                    <table class="table table-bordered">
+                    <table class="table table-bordered lead_status">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Leads</th> 
-                                <th v-for="status in statuses">
-                                    @{{ status.name }}
-                                </th>
+                                <th v-for="status in statuses">@{{ status.name }}</th>
                                 <th>Not Attempted</th>                        
                                 <th>Not called since last 4 days</th>
                                 <th>Less than 4 attempts</th>
@@ -71,25 +70,23 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Total</th>
-                                <th>@{{ cres1 | total 'leads' }}</th>
-                                <th colspan="6"></th>
-                                <th>@{{ cres1 | total 'never' }}</th>
-                                <th>@{{ cres1 | total 'last' }}</th>
-                                <th>@{{ cres1 | total 'calls' }}</th>
+                                <td>Total</td>
+                                <td>@{{ cres1 | total 'leads' }}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td>@{{ cres1 | total 'never' }}</td>
+                                <td>@{{ cres1 | total 'last' }}</td>
+                                <td>@{{ cres1 | total 'calls' }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="second">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered lead_status">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Leads</th> 
-                                <th v-for="status in statuses">
-                                    @{{ status.name }}
-                                </th>
+                                <th v-for="status in statuses">@{{ status.name }}</th>
                                 <th>Not Attempted</th>                        
                                 <th>Leads not called for last 4 days</th>
                                 <th>Less than 4 dispositions</th>
@@ -131,25 +128,23 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Total</th>
-                                <th>@{{ cres2 | total 'leads' }}</th>
-                                <th colspan="6"></th>
-                                <th>@{{ cres2 | total 'never' }}</th>
-                                <th>@{{ cres2 | total 'last' }}</th>
-                                <th>@{{ cres2 | total 'calls' }}</th>
+                                <td>Total</td>
+                                <td>@{{ cres2 | total 'leads' }}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td>@{{ cres2 | total 'never' }}</td>
+                                <td>@{{ cres2 | total 'last' }}</td>
+                                <td>@{{ cres2 | total 'calls' }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="third">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered lead_status">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Leads</th> 
-                                <th v-for="status in statuses">
-                                    @{{ status.name }}
-                                </th>
+                                <th v-for="status in statuses">@{{ status.name }}</th>
                                 <th>Not Attempted</th>                        
                                 <th>Leads not called for last 4 days</th>
                                 <th>Less than 4 dispositions</th>
@@ -191,25 +186,23 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Total</th>
-                                <th>@{{ cres3 | total 'leads' }}</th>
-                                <th colspan="6"></th>
-                                <th>@{{ cres3 | total 'never' }}</th>
-                                <th>@{{ cres3 | total 'last' }}</th>
-                                <th>@{{ cres3 | total 'calls' }}</th>
+                                <td>Total</td>
+                                <td>@{{ cres3 | total 'leads' }}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td>@{{ cres3 | total 'never' }}</td>
+                                <td>@{{ cres3 | total 'last' }}</td>
+                                <td>@{{ cres3 | total 'calls' }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="fourth">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered lead_status">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Leads</th> 
-                                <th v-for="status in statuses">
-                                    @{{ status.name }}
-                                </th>
+                                <th v-for="status in statuses">@{{ status.name }}</th>
                                 <th>Not Attempted</th>                        
                                 <th>Leads not called for last 4 days</th>
                                 <th>Less than 4 dispositions</th>
@@ -235,8 +228,8 @@
                                         <em>(@{{ cre.leads > 0 ? (cre.never/cre.leads*100).toFixed(2) : 0 }}%)</em>
                                     </small>
                                 </td>
-                                <td
-                                    >@{{ cre.last }}
+                                <td>
+                                    @{{ cre.last }}
                                     <small class="pull-right">
                                         <em>(@{{ cre.leads > 0 ? (cre.last/cre.leads*100).toFixed(2) : 0 }}%)</em>
                                     </small>
@@ -251,12 +244,12 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Total</th>
-                                <th>@{{ cres4 | total 'leads' }}</th>
-                                <th colspan="6"></th>
-                                <th>@{{ cres4 | total 'never' }}</th>
-                                <th>@{{ cres4 | total 'last' }}</th>
-                                <th>@{{ cres4 | total 'calls' }}</th>
+                                <td>Total</td>
+                                <td>@{{ cres4 | total 'leads' }}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td>@{{ cres4 | total 'never' }}</td>
+                                <td>@{{ cres4 | total 'last' }}</td>
+                                <td>@{{ cres4 | total 'calls' }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -335,3 +328,39 @@
         }, 0)
     })
 </script> 
+<script type="text/javascript">
+$(document).ready(function() 
+{
+    $( "#downloadCSV" ).bind( "click", function() 
+    {
+        var csv_value = $('.tab-pane.active').find('small').remove();
+        
+        $( "td" ).each(function() {
+            t = $(this).text();
+            t = t.replace(/[\r\n]+/g, '');
+            $(this).text(t);
+            //console.log(t);
+        });      
+        
+
+        $('.tab-pane.active').find('small').remove();        
+        var csv_value = $('.tab-pane.active').find('table').table2CSV({
+                delivery: 'value'
+            });
+        console.log(csv_value);
+        downloadFile('leadstatus.csv','data:text/csv;charset=UTF-8,' + encodeURIComponent(csv_value));
+        $("#csv_text").val(csv_value);
+        location.reload();
+    });
+
+    function downloadFile(fileName, urlData){
+        var aLink = document.createElement('a');
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("click");
+        aLink.download = fileName;
+        aLink.href = urlData ;
+        aLink.dispatchEvent(evt);
+    }
+});
+</script>                   
+</div>

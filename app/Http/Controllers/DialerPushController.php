@@ -130,12 +130,21 @@ public function getLeadsConsecutive(Request $request)
     {
         $users = User::getUsersByRole('cre');
         $cre = $request->user;
-
-        $leads = Lead::select('marketing_details.*')
-            ->with('cre', 'disposition')
-            ->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
+        $dispo_date = date('Y-m-d 0:0:0', strtotime('-15 days'));
+        
+        $leads_qry = Lead::select('marketing_details.*')
+            ->with('cre', 'disposition');
+             if(isset($request->user))
+                    $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE cre = '$cre' and (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                             $join->on('marketing_details.id', '=', 'c.lead_id');
+                        });
+                else
+                    $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                             $join->on('marketing_details.id', '=', 'c.lead_id');
+                        });
+            $leads_qry->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
             ->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id')
-            ->leftjoin(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE A.lead_id=B.lead_id)) AS cd'), function($join) {
+            ->leftjoin(DB::raw('(SELECT id, lead_id, created_at FROM call_dispositions A WHERE A.created_at <= "2016-03-31 00:00:00" and id = (SELECT MAX(id) FROM call_dispositions B WHERE  A.lead_id=B.lead_id)) AS cd'), function($join) {
                 $join->on('marketing_details.id', '=', 'cd.lead_id');
             })
             ->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id')
@@ -143,17 +152,11 @@ public function getLeadsConsecutive(Request $request)
             ->whereNull('p.id')
             ->whereNull('d.id')
             ->whereNull('dp.id')
-            ->whereNotNull('marketing_details.source_id')
-            ->where(function($q) {
-                $q->where('cd.created_at', '<=', '2016-2-31')
-                    ->orWhereNull('cd.id');
-            })
-            //->where('cd.created_at', '<=', '2016-2-31')
-            ->where(function($q) {
-                $q->where('marketing_details.country', 'IN')
-                    ->orWhereNull('marketing_details.country');
-            })
-            ->limit($this->limit)
+            ->where('cd.created_at', '<', $dispo_date);
+            //->whereNotNull('marketing_details.source_id')
+            
+            
+            $leads = $leads_qry->limit($this->limit)
             ->get();
         //dd($leads);
 
@@ -248,6 +251,7 @@ public function getLeadsConsecutive(Request $request)
         {
             $output= 'false2';
             $phone = $request->phone[$i];
+            $cre_name = $request->cre_name[$i];
             //$cre_name = $request->cre_name[$i];
             //$dispo_date = $request->dispo_date[$i];
             //$dispo_remark = $request->dispo_remark[$i];
@@ -263,7 +267,7 @@ public function getLeadsConsecutive(Request $request)
             //if($push==1)
             //{
             $ch = curl_init(DIALER_URI);
-            $encoded_params = "do=manualUpload&username=admin&password=NutriweL&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=";
+            $encoded_params = "do=manualUpload&username=admin&password=NutriweL&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=$cre_name";
             
             curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);

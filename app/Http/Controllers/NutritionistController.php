@@ -17,6 +17,7 @@ class NutritionistController extends Controller
     protected $daterange;
     protected $start_date;
     protected $end_date;
+    protected $allUsers;
     protected $menu = "nutritionist";
 
     public function __construct(Request $request)
@@ -26,6 +27,7 @@ class NutritionistController extends Controller
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date('Y-m-d', strtotime('-5 days'));
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d', strtotime('+5 days'));
+        $this->allUsers = $request->user=='' ? true : false;
         
     } 
     
@@ -106,7 +108,10 @@ class NutritionistController extends Controller
     {
         $users = User::getUsersByRole('nutritionist');
 
-        $patients = Patient::getActivePatients($this->nutritionist);
+        if($this->allUsers)
+            $patients = Patient::getProgramEnd($this->start_date,$this->end_date);
+        else
+            $patients = Patient::getProgramEnd($this->start_date,$this->end_date,$this->nutritionist);
 
         $data = array(            
             'menu'              =>  $this->menu,

@@ -241,16 +241,18 @@ class Patient extends Model
         return $query->orderBy('days')->get();
     }
 
-    public static function getProgramEnd($start_date, $end_date) {
+    public static function getProgramEnd($start_date, $end_date, $nutritionist =NULL) {
 
-        return Patient::select('patient_details.*')
+        $query = Patient::select('patient_details.*')
                 ->with('lead', 'lead.disposition', 'lead.status', 'lead.cre', 'lead.source')
-                ->with('fee')
+                ->with('fee','cfee','doctor')
                 ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                         $join->on('patient_details.id', '=', 'f.patient_id');
                     })
-                ->whereBetween('f.end_date', array($start_date, $end_date))
-                ->limit(env('DB_LIMIT'))
+                ->whereBetween('f.end_date', array($start_date, $end_date));    
+        if($nutritionist)
+            $query = $query->where('nutritionist',$nutritionist);
+        return $query->limit(env('DB_LIMIT'))
                 ->get();
     }
 

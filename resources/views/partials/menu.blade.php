@@ -518,7 +518,7 @@
             
 
         @endif
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('marketing')  || Auth::user()->hasRole('quality')||Auth::user()->hasRole('registration'))                 
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('marketing')  || Auth::user()->hasRole('quality')||Auth::user()->hasRole('registration')||Auth::user()->hasRole('sales_tl'))                 
                 <li>
                     <a href="#" id="menu_cart">Carts</a>  
                     <ul>
