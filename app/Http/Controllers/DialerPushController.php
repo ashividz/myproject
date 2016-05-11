@@ -126,7 +126,7 @@ public function getLeadsConsecutive(Request $request)
 
     }
 
-    public function getLeads(Request $request)
+    public function getLeads2(Request $request)
     {
         $users = User::getUsersByRole('cre');
         $cre = $request->user;
@@ -151,7 +151,7 @@ public function getLeadsConsecutive(Request $request)
             ->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))
             ->whereNull('p.id')
             ->whereNull('d.id')
-            ->whereNull('dp.id')
+            //->whereNull('dp.id')
             ->where('cd.created_at', '<', $dispo_date);
             //->whereNotNull('marketing_details.source_id')
             
@@ -186,6 +186,72 @@ public function getLeadsConsecutive(Request $request)
         return view('home')->with($data);
        //$this->push("9582405381", "harsh");
     }
+
+ public function getLeads(Request $request)
+    {
+        $users = User::getUsersByRole('cre');
+        $cre = $request->user;
+        $disop_date = date('Y-m-d 0:0:0', strtotime('-3 days'));
+        $cur_date = date('Y-m-d 0:0:0');
+        $list_id = $this->list_id;
+        $leads = null;
+
+      if(isset($cre) && !is_null($cre))
+      {
+        $leads = Lead::select('marketing_details.*')
+                        ->with('disposition', 'cre')
+                       
+                        ->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
+                        ->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id')
+                        ->leftjoin(DB::raw("(SELECT * FROM dialer_push WHERE  name='$cre') as dp "), function($join) {
+                                 $join->on('marketing_details.id', '=', 'dp.lead_id');
+                            })
+                        ->join(DB::raw("(SELECT * FROM lead_cre A WHERE cre = '$cre' and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                             $join->on('marketing_details.id', '=', 'c.lead_id');
+                            })
+                        ->leftjoin(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  (callback IS NULL OR callback < '$cur_date')  and  disposition_id  IN('2','3','4','5','6','7','10','12','13','14') and id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS cd"), function($join) {
+                                 $join->on('marketing_details.id', '=', 'cd.lead_id');
+                                     
+                            })
+                        
+                        ->whereNull('p.id')
+                        ->whereNull('d.id')
+                        ->whereNull('dp.id')
+                        ->where(function($q)  {
+                            $q->where('cd.id','>','0')
+                              ->orWhereNull('cd.id');
+                            })
+                        ->whereNotIn('marketing_details.status_id', [4, 5])
+                        ->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))  
+                        //->where('marketing_details.status_id', '<>', 5)
+                        //->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))
+                        
+                        //->orderBy('cd.created_at','desc')
+                        //->WhereNull('c.deleted_at')
+                        //->where('country','=','IN')
+                        ->where(function($q)  {
+                            $q->where('marketing_details.country','=','IN')
+                              ->orWhereNull('marketing_details.country')
+                              ->orWhere('marketing_details.country','=','');
+                            })
+                        ->limit($this->limit)->get();
+       }
+//dd($leads);
+            $data = array(
+            'section'       => 'dialer_pushstat',
+            'menu'          => 'lead',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'leads'         => $leads,
+            'users'         => $users,
+            'name'          => $this->cre,
+            'limit'         => $this->limit,
+            'i'             => 1
+        ); 
+        return view('home')->with($data);
+    }
+
+
 
     public function push($lead, $cre)
     {
