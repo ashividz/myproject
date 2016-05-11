@@ -23,6 +23,7 @@
                                 <th>Source</th>
                         </thead>
                         <tbody>
+                        @if($leads)
                             @foreach($leads AS $lead)
                                  <tr>
                                         <td>{{ $i++ }}</td>
@@ -66,7 +67,7 @@
                                     </tr>
 
                             @endforeach
-   
+                        @endif
                         </tbody>
                     </table>
                      <button class="btn btn-primary">Push Leads</button>
