@@ -195,7 +195,7 @@ public function getLeadsConsecutive(Request $request)
         $cur_date = date('Y-m-d 0:0:0');
         $list_id = $this->list_id;
         $leads = null;
-       
+        $username = null;
       if(isset($cre) && !is_null($cre))
       {
         $emp = Employee::where('name','LIKE',$cre)->first();
@@ -262,6 +262,7 @@ public function getLeadsConsecutive(Request $request)
             'end_date'      => $this->end_date,
             'leads'         => $leads,
             'users'         => $users,
+            'username'      => $username,
             'name'          => $this->cre,
             'limit'         => $this->limit,
             'i'             => 1
@@ -324,9 +325,8 @@ public function getLeadsConsecutive(Request $request)
     public function execute(Request $request)
     {   
         $lead_ids =  $request->id;
-
         $list_id = $this->list_id;
-
+        $username =  $request->username;
         //$emp = Employee::where('name','LIKE',$this->cre)->first();
 
         $i = 0;
@@ -336,8 +336,7 @@ public function getLeadsConsecutive(Request $request)
             $output= 'false2';
             $phone = $request->phone[$i];
             $cre_name = $request->cre_name[$i];
-             $emp = Employee::where('name','LIKE',$cre_name)->first();
-             $username = $emp->user->username;
+         
              //dd($username);
             //$cre_name = $request->cre_name[$i];
             //$dispo_date = $request->dispo_date[$i];

@@ -71,7 +71,7 @@
                         </tbody>
                     </table>
                      <button class="btn btn-primary">Push Leads</button>
-
+                     <input type='hidden' name='username' value='{{ $username or "" }}' />
                 </form>
 
             </div>          
@@ -90,7 +90,7 @@ $(document).ready(function()
         $("input:checkbox").prop('checked', $(this).prop("checked"));
     });
 
-    $("#push-form").submit(function(event) {
+    $("#push-form2").submit(function(event) {
 
 
         event.preventDefault();
