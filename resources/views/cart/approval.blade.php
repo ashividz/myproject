@@ -50,7 +50,7 @@
     }
 
 
-    if (Auth::user()->hasRole('sales_tl') && $discount == null) {
+    if ((Auth::user()->hasRole('sales_tl')||Auth::user()->hasRole('sales')) && $discount == null) {
         $disabled = '';
     }
 ?>
