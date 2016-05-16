@@ -195,9 +195,12 @@ public function getLeadsConsecutive(Request $request)
         $cur_date = date('Y-m-d 0:0:0');
         $list_id = $this->list_id;
         $leads = null;
-
+        $username = null;
       if(isset($cre) && !is_null($cre))
       {
+        $emp = Employee::where('name','LIKE',$cre)->first();
+        $username = $emp->user->username;
+           
         $leads = Lead::select('marketing_details.*')
                         ->with('disposition', 'cre')
                        
@@ -209,7 +212,7 @@ public function getLeadsConsecutive(Request $request)
                         ->join(DB::raw("(SELECT * FROM lead_cre A WHERE cre = '$cre' and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
                              $join->on('marketing_details.id', '=', 'c.lead_id');
                             })
-                        ->leftjoin(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  (callback IS NULL OR callback < '$cur_date')  and  disposition_id  IN('2','3','4','5','6','7','10','12','13','14') and id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS cd"), function($join) {
+                        ->leftjoin(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS cd"), function($join) {
                                  $join->on('marketing_details.id', '=', 'cd.lead_id');
                                      
                             })
@@ -217,6 +220,21 @@ public function getLeadsConsecutive(Request $request)
                         ->whereNull('p.id')
                         ->whereNull('d.id')
                         ->whereNull('dp.id')
+
+                        ->whereIn('cd.disposition_id',[2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 14])
+                        ->where(function($q) use($cur_date) {
+                              $q->whereRaw("cd.callback < '$cur_date'")
+                              ->orWhereNull('cd.callback');
+                            })
+
+                       
+                        /*->where(function($q) use($cur_date) {
+                            $q->whereIn('cd.disposition_id',[2, 3, 4, 5, 6, 7, 8, 10, 12, 13, 14])
+                              ->where(function($r) use($cur_date)  {
+                            $r->whereRaw("cd.callback < '$cur_date'")
+                              ->orWhereNull('cd.callback');
+                            });
+                            })*/
                         ->where(function($q)  {
                             $q->where('cd.id','>','0')
                               ->orWhereNull('cd.id');
@@ -244,6 +262,7 @@ public function getLeadsConsecutive(Request $request)
             'end_date'      => $this->end_date,
             'leads'         => $leads,
             'users'         => $users,
+            'username'      => $username,
             'name'          => $this->cre,
             'limit'         => $this->limit,
             'i'             => 1
@@ -306,9 +325,8 @@ public function getLeadsConsecutive(Request $request)
     public function execute(Request $request)
     {   
         $lead_ids =  $request->id;
-
         $list_id = $this->list_id;
-
+        $username =  $request->username;
         //$emp = Employee::where('name','LIKE',$this->cre)->first();
 
         $i = 0;
@@ -318,6 +336,8 @@ public function getLeadsConsecutive(Request $request)
             $output= 'false2';
             $phone = $request->phone[$i];
             $cre_name = $request->cre_name[$i];
+         
+             //dd($username);
             //$cre_name = $request->cre_name[$i];
             //$dispo_date = $request->dispo_date[$i];
             //$dispo_remark = $request->dispo_remark[$i];
@@ -332,15 +352,19 @@ public function getLeadsConsecutive(Request $request)
            
             //if($push==1)
             //{
-            $ch = curl_init(DIALER_URI);
-            $encoded_params = "do=manualUpload&username=admin&password=NutriweL&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=$cre_name";
+            $ch = curl_init("http://192.168.1.203/test.ajax");
+            $encoded_params = "do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=".$username;
             
-            curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
+            /*curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $output = curl_exec($ch);
-            curl_close($ch);
+            curl_close($ch);*/
+            $output = file_get_contents("http://192.168.1.203/test.ajax?".$encoded_params);
+
+            
+            
             //}
             if($output == "Number added successfully.")
             {
