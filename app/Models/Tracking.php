@@ -15,12 +15,6 @@ class Tracking extends Model
         'created_by'
     ];
 
-    protected $hidden = array(
-        'invoice',
-        //'created_at',
-        //'updated_at'
-    );
-
     /** Status Detail **/
     public function setStatusDetailAttribute($value)
     {
@@ -151,5 +145,10 @@ class Tracking extends Model
     public function returned()
     {
         return $this->hasOne(Tracking::class, 'parent_id', 'id');
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(TrackingInvoice::class, 'tracking_id', 'id');
     }
 }

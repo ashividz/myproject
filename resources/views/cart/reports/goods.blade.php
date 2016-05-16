@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="panel-body">
-            <form id="form" method="post" class="form-inline" action="/service/diets/send">
+            <form id="form" method="post" class="form-inline" action="">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -52,7 +52,7 @@
                                 </div>
                                 <div>
                                     <label>Patient Id : </label>
-                                    <a href="/patient/{{ $cart->lead->patient->id or ""}}/viewDetails" target="_blank">{{ $cart->lead->patient->id or ""}}</a>
+                                    <a href="/patient/{{ $cart->lead->patient->id or ""}}/diets" target="_blank">{{ $cart->lead->patient->id or ""}}</a>
                                 </div>
                             </td>
                             <td>
@@ -98,20 +98,3 @@
 </div>
 <script type="text/javascript" src="/js/workflow.js"></script>
 @include('partials.modal')
-<script>
-var vm = new Vue({
-    el: 'body',
-    data: {
-        name: 'Vue.js'
-    },
-    // define methods under the `methods` object
-    methods: {
-        addTracking: function (event) {
-            // `this` inside methods point to the Vue instance
-            alert('Hello ' + this.name + '!')
-            // `event` is the native DOM event
-            alert(event.target.tagName)
-        }
-    }
-})
-</script>

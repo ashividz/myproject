@@ -1,39 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
+    <div class="row">
 
-    <!-- jQuery -->
-    <script src="/plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="/plugins/bootstrap/bootstrap.min.css">
-    <script src="/plugins/bootstrap/bootstrap.min.js"></script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" type="text/css" href="/plugins/font-awesome/font-awesome.min.css">
-
-    <!-- VueJS -->
-    <script src="/plugins/vue/vue.min.js"></script>
-    <script src="/plugins/vue/vue-resource.min.js"></script>
-
-    <!-- Moment JS -->
-    <script src="/plugins/moment/moment.min.js"></script>
-
-    <!-- Main css -->
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    
-</head>
-<body>
-    <div class="container1">
-
-        <div id="alert" v-show="loading" style="text-align:center" class="alert alert-warning">
+        <div id="loader" v-show="loading" style="text-align:center" class="alert alert-warning">
             <img src="/images/loading.gif">
         </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">
                 <button class="btn btn-success" v-on:click="sync()" disabled="@{{ loading }}">Sync with FedEx</button>
+                <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
             </div>
             <div class="panel-body">
                 <table class="table table-condensed">
@@ -61,12 +35,12 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="" class="1btn btn1-primary">
+                                <a href="/track/@{{ tracking.id }}/invoice" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
                                     <i class="fa fa-file-pdf-o"></i>
                                 </a>
                             </td>
                             <td>
-                                <a href="/track/@{{ tracking.id }}/" data-toggle="modal" data-target="#modal" >
+                                <a href="/track/@{{ tracking.id }}/" data-toggle="modal" data-target="#modal">
                                     @{{ tracking.id }}
                                 </a>
                                 <div v-if="tracking.returned" title="Return Tracking Id">
@@ -106,9 +80,9 @@
     </div>
 @include('partials.modal')
 <style type="text/css">
-    #alert {
+    #loader {
         position: fixed;
-        margin-top: 150px;
+        margin-top: 0px;
         width: 200px;
         left: 40%;
         z-index: 9999;
@@ -127,7 +101,10 @@
 
         data: {
             loading: false,
-            trackings: []
+            trackings: [],
+            daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            start_date: '',
+            end_date: '',
         },
 
         ready: function(){
@@ -137,7 +114,7 @@
         methods: {
 
             getTrackings() {
-                this.$http.get("/api/getTrackings").success(function(data){
+                this.$http.get("/api/getTrackings", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
                     this.trackings = data;
                 }).bind(this);
             },
@@ -148,6 +125,21 @@
                     this.trackings = data;
                     this.loading = false;
                 }).bind(this);
+            }
+        },
+        computed: {
+            /*daterange() {
+                return moment(this.start_date).format('YYYY-MM-DD') + ' - ' + moment(this.end_date).format('YYYY-MM-DD');
+            },*/
+
+            start_date() {
+                var range = this.daterange.split(" - ");
+                return moment(range[0]).format('YYYY-MM-DD') + ' 0:0:0';
+            },
+
+            end_date() {
+                var range = this.daterange.split(" - ");
+                return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
             }
         }
     })
@@ -163,6 +155,31 @@
         }
       return moment(value).format('D MMM');
     })
+    vm.$watch('daterange', function (newval, oldval) {
+        this.getTrackings();
+    })
 </script>
-</body>
-</html>
+<script type="text/javascript">
+$(document).ready(function() 
+{
+    $('#daterange').daterangepicker(
+    { 
+        ranges: 
+        {
+            'Today': [new Date(), new Date()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
+            'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }, 
+        format: 'YYYY-MM-DD' 
+        }
+    );   
+    $('#daterange').on('apply.daterangepicker', function(ev, picker) 
+    {   
+        $('#daterange').trigger('change'); 
+    });
+
+});
+</script>

@@ -100,7 +100,7 @@ class PatientBTController extends Controller
             $patient_bt->remark = $request->input('remark');
             $patient_bt->mime = $f->getMimeType(); //application/pdf
             $patient_bt->size = $f->getSize(); //20,00,000 B
-            $patient_bt->created_by = Auth::user()->id;
+            $patient_bt->created_by = Auth::id();
             $patient_bt->report_date = $request->report_date;
             
             $patient_bt->save();

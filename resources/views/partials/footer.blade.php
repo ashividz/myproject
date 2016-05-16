@@ -7,7 +7,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
         el: 'body',
 
         data: {
-            unread: null,
+            unnreadMessageCount: null,
             notifications : [],
             unreadNotificationCount: 0,
         },
@@ -16,7 +16,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
             this.getUnreadMessageCount();
 
             socket.on("user{{ Auth::id() }}:App\\Events\\NewMessage", function(data){
-                this.unread = data.count;
+                this.unreadMessageCount = data.count;
                 console.log(data);
             }.bind(this));
 

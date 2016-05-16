@@ -7,8 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <!-- CSS -->
-        <link rel="stylesheet" href="/css/font-awesome.css">
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/plugins/font-awesome/font-awesome.min.css">
+        <link rel="stylesheet" href="/plugins/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="/css/theme/mws-style.css">
 		<link rel="stylesheet" type="text/css" href="/css/icons/icol16.css" media="screen">
 		<link rel="stylesheet" type="text/css" href="/css/icons/icol32.css" media="screen">
@@ -17,11 +17,13 @@
         <link rel="stylesheet" href="/css/theme/mws-theme.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts/icomoon/style.css" media="screen">
 
-        <link rel="stylesheet" href="/css/jquery/jquery-ui.css">
-  		<script type="text/javascript" src="/js/jquery.min.js"></script>
-        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+        
+  		<script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
 
+        <!-- jQuery Ui -->
+        <script type="text/javascript" src="/plugins/jquery-ui/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/plugins/jquery-ui/jquery-ui.css">
         <!-- JS --
         <script src="/js/angular/angular.min.js"></script>
 		<script src="/js/angular/angular-sanitize.js"></script>
@@ -90,6 +92,7 @@
 
         <!-- VueJS -->
         <script src="/plugins/vue/vue.min.js"></script>
+        <script src="/plugins/vue/vue-resource.min.js"></script>
     </head>
     <body>
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
@@ -192,7 +195,7 @@
 					<a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-envelope"></i></a>
 		 
 					<!-- Unred messages count -->
-					<span class="mws-dropdown-notif">@{{ unread }}</span>
+					<span class="mws-dropdown-notif">@{{ unreadMessageCount }}</span>
 		 
 					<!-- Messages dropdown -->
 					<div class="mws-dropdown-box">

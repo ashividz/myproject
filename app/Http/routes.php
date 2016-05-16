@@ -16,6 +16,10 @@ setlocale(LC_MONETARY, "en_IN");
     /** Tracking**/
     Route::get('tracking','TrackingController@index');
     Route::get('track/{id}','TrackingController@modal');
+
+    Route::get('track/{id}/invoice','TrackingInvoiceController@modal');
+    Route::post('track/{id}/invoice','TrackingInvoiceController@store');
+
     Route::get('api/getTrackings','TrackingController@getTrackings');
     Route::get('api/sync','TrackingController@sync');
 

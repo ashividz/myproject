@@ -37,16 +37,23 @@ class TrackingController extends Controller
      */
     public function index()
     {
-        return view('shipping.tracking');
+        $data = array(
+            'menu'      =>  'shipping',
+            'section'   =>  'tracking'
+        );
+
+        return view('home')->with($data);
     }
 
-    public function getTrackings()
+    public function getTrackings(Request $request = null)
     {   
-        //$this->syncTrackings();
-        //$returns = Tracking::select('return_id')->whereNotNull('return_id')->get()->toArray(); //dd($returns);
+        $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
 
-        $trackings =  Tracking::with('cart.lead', 'returned')
+        $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
+
+        $trackings =  Tracking::with('cart.lead', 'returned', 'invoice')
                         ->whereNull('parent_id')
+                        ->whereBetween('created_at', [$start_date, $end_date])
                         ->get(); //dd($trackings);
         foreach ($trackings as $tracking) {
             
@@ -245,10 +252,12 @@ class TrackingController extends Controller
         }
         if (!isset($tracking->estimated_delivery_timestamp)) {
             return;
-        }        
+        } 
+        $mobile = $tracking->cart->lead->mobile ? $tracking->cart->lead->mobile : $tracking->cart->lead->phone;   
+
         $message = $this->getShippedMessage($tracking, $event);
         $sms = new SMS;
-        $sms_response = $sms->send('9650306590', $message);
+        $sms_response = $sms->send($mobile, $message);
         $this->saveIntimation($tracking->id, 'OC', $message, $sms_response, false);
     }
 
@@ -259,9 +268,10 @@ class TrackingController extends Controller
         if ($intimation) {
             return;
         }
+        $mobile = $tracking->cart->lead->mobile ? $tracking->cart->lead->mobile : $tracking->cart->lead->phone; 
         $message = $this->getDeliveredMessage($tracking, $event);
         $sms = new SMS;
-        $sms_response = $sms->send('9650306590', $message);
+        $sms_response = $sms->send($mobile, $message);
         $this->saveIntimation($tracking->id, 'DL', $message, $sms_response, false);
     }
 
@@ -272,9 +282,10 @@ class TrackingController extends Controller
         if ($intimation) {
             return;
         }
+        $mobile = $tracking->cart->lead->mobile ? $tracking->cart->lead->mobile : $tracking->cart->lead->phone; 
         $message = $this->getOutForDeliveryMessage($tracking, $event);
         $sms = new SMS;
-        $sms_response = $sms->send('9650306590', $message);
+        $sms_response = $sms->send($mobile, $message);
         $this->saveIntimation($tracking->id, 'OD', $message, $sms_response, false);
     }
 
@@ -299,7 +310,13 @@ class TrackingController extends Controller
     }*/
     private function getShippedMessage($tracking, $event)
     {
-        $message = 'Namaste '.$tracking->cart->lead->name.'! Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' has been shipped';
+        $message = '';
+
+        if (isset($tracking->cart->lead)) {
+            $message .= 'Namaste '.$tracking->cart->lead->name.'! ';
+        }
+        
+        $message .= 'Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' has been shipped';
 
         if ($tracking->estimated_delivery_timestamp) {
             $message .= ' and is expected to be delivered by '. Carbon::parse($tracking->estimated_delivery_timestamp)->format('D, jS M h:i A');
