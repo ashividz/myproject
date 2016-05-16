@@ -27,6 +27,9 @@
 
 <script type="text/javascript">
     $('#modal').on('hidden.bs.modal', function () {
-        location.reload();
+        //location.reload();
     })
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+    });
 </script>

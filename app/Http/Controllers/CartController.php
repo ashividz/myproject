@@ -168,5 +168,10 @@ class CartController extends Controller
 
         return view('cart.index')->with($data);
     }
+
+    public function tracking($id)
+    {
+        return view('shipping.modal.add')->with('id', $id);
+    }
     
 }

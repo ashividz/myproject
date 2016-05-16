@@ -67,7 +67,7 @@ $(document).ready(function()
                     {
                         location.reload();
                      });
-                }, 300000);
+                }, 3000);
            }
         });
 

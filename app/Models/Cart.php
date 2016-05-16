@@ -86,6 +86,11 @@ class Cart extends Model
         return $this->hasMany(CartPayment::class);
     }
 
+    public function trackings()
+    {
+        return $this->hasMany(Tracking::class, 'cart_id', 'id')->select('id', 'cart_id');
+    }
+
     public static function updateAmount($id)
     {
         $cart = Cart::find($id);

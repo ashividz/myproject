@@ -333,3 +333,50 @@ strong.warning {
  -o-transform: rotate(45deg);
  transform: rotate(45deg);
 }
+/** Tracking**/
+.statusbar {
+    background:url(/images/statusbar.png);
+    display: inline-block;
+    overflow: hidden;
+}
+.statusbar.in_progress {
+    width: 99px;
+    height: 17px;
+    background-position: -143px -35px;
+}
+.statusbar.picked_up {
+    width: 99px;
+    height: 16px;
+    background-position: -345px -38px;
+}
+.statusbar.in_transit {
+    width: 99px;
+    height: 17px;
+    background-position: -42px -35px;
+}
+.statusbar.exception {
+    width: 98px;
+    height: 16px;
+    background-position: -398px -20px;
+}
+.statusbar.delivered {
+    width: 99px;
+    height: 17px;
+    background-position: -244px -21px;
+}
+.description {        
+    font-size: 1.2em;
+    font-weight:700;
+}
+.description.delivered {
+    color: green;
+}
+.description.exception {
+    color: red;
+}
+.description.in_transit {
+    color: #482E88;
+}
+.description.in_progress {
+    color: #D2B208;
+}

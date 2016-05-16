@@ -37,19 +37,25 @@
                         <tbody>
                             <tr v-for="cre in cres1">
                                 <td>
-                                    <a href="/cre/@{{ cre.id }}/leads" target="_blank">@{{ cre.name }}</a>
+                                    @{{ cre.name }}
                                 </td>
                                 <td>
-                                    <b>@{{ cre.leads }}</b>
+                                    <a href="/cre/@{{ cre.id }}/leads" class="dropdown-toggle" data-toggle="modal" data-target="#modal">                                       
+                                        <b>@{{ cre.leads }}</b>
+                                    </a>
                                 </td>
                                 <td v-for="count in cre.counts">
-                                    @{{ count.cnt }}
+                                    <a href="/cre/@{{ cre.id }}/leads/?status=@{{ count.id }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
+                                        @{{ count.cnt }}
+                                    </a>
                                     <small class="pull-right">
                                         <em>(@{{ cre.leads > 0 ? (count.cnt/cre.leads*100).toFixed(2) : 0 }}%)</em>
                                     </small>
                                 </td>
                                 <td>
-                                    @{{ cre.never }}
+                                    <a href="/cre/@{{ cre.id }}/leads/?never" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
+                                        @{{ cre.never }}
+                                    </a>
                                     <small class="pull-right">
                                         <em>(@{{ cre.leads > 0 ? (cre.never/cre.leads*100).toFixed(2) : 0 }}%)</em>
                                     </small>
@@ -258,6 +264,7 @@
         </div>
     </div>
 </div>
+@include('partials/modal')
 <script>
     //var tab = require('vue-strap').tab;
     var vm = new Vue({

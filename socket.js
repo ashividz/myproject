@@ -1,5 +1,11 @@
 var https = require('https'),  
-var server = https.createServer();
+    fs =    require('fs');        
+
+var options = {
+    key:    fs.readFileSync('/etc/apache2/ssl/amikus/apache.key'),
+    cert:   fs.readFileSync('/etc/apache2/ssl/amikus/apache.crt')
+};
+var server = https.createServer(options);
 var io = require('socket.io')(server);
 var Redis = require('ioredis');
 var redis = new Redis();

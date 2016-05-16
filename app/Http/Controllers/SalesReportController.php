@@ -85,6 +85,8 @@ class SalesReportController extends Controller
                 Session::flash("status", "error");
             }   */  
         }
+
+        //dd($cres);
         return $cres;
     }
 }

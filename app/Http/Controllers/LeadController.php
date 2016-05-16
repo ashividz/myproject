@@ -575,7 +575,12 @@ class LeadController extends Controller
             if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
             {
                 $cre = LeadCre::find($request->id);
+                $lead = Lead::find($cre->lead_id);
+
                 $cre->delete();
+
+                $this->updateCre($lead);
+
                 return "CRE Deleted";
             }
             
@@ -585,6 +590,14 @@ class LeadController extends Controller
             return $e;
         }
         
+    }
+
+    public function updateCre($lead)
+    {
+        $cre = LeadCre::where('lead_id', $lead->id)->orderBy('id', 'desc')->limit(1)->first();
+
+        $lead->cre_name = $cre->cre;
+        $lead->save();
     }
 
     public function saveCre(Request $request)
@@ -906,7 +919,6 @@ class LeadController extends Controller
         return view('home')->with($data);
     }
 
-    
     public function saveVoice(Request $request)
     {
         $leadSource = LeadSource::find($request->id);

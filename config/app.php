@@ -136,6 +136,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Arkitecht\FedEx\Laravel\Providers\FedExServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -205,6 +206,7 @@ return [
         'CallDisposition'   => App\Models\CallDisposition::class,
         'Carbon'            => Carbon\Carbon::class,
         'Guzzle'            => GuzzleHttp\Client::class,
+        'FedEx'             => Arkitecht\FedEx\Laravel\Facades\FedEx::class,
 
         'Step'              => App\Models\CartStep::class,
         'Discount'          => App\Models\Discount::class,

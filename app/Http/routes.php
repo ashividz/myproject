@@ -13,6 +13,15 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
+    /** Tracking**/
+    Route::get('tracking','TrackingController@index');
+    Route::get('track/{id}','TrackingController@modal');
+    Route::get('api/getTrackings','TrackingController@getTrackings');
+    Route::get('api/sync','TrackingController@sync');
+
+    /**Cart Goods Tracking for Ashish**/
+    Route::get('carts/goods', 'CartReportController@goods');
+    Route::post('carts/goods', 'CartReportController@goods');
 
 
 Route::group([
@@ -292,6 +301,8 @@ Route::group([
         
         Route::get('cre/{id}/leads', 'CREController@viewLeads');
         Route::post('cre/{id}/leads', 'CREController@viewLeads');
+
+        Route::get('cre/{id}/leads', 'CreReportController@leads');
 });
 
 Route::group([
@@ -336,6 +347,9 @@ Route::group([
         Route::post('cart/{id}/payment/add', 'CartPaymentController@store');
 
         Route::post('cart/{id}/process', 'CartController@process');
+
+        Route::get('cart/{id}/tracking', 'CartController@tracking');
+        Route::post('cart/{id}/tracking', 'TrackingController@store');
 
 
         Route::get('cart/{id}/', 'CartController@show');
@@ -833,6 +847,8 @@ Route::group(['middleware' => 'auth'], function() {
 
         return view('home')->with($data);
     });
+
+    
 
     Route::get('home', 'CREController@index');
 

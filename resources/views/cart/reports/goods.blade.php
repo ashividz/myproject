@@ -18,7 +18,8 @@
                             <th style="width:12%;">Lead Details</th>
                             <th style="width:12%;">Products</th>
                             <th style="width:12%;">Payments</th>                           
-                            <th style="width:45%;">status</th>
+                            <th style="width:45%;">Status</th>                           
+                            <th style="width:5%;">Track</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +73,20 @@
                                     </li>
                                 @endforeach
                             </td>
-                            <td><div>@include('cart.partials.workflow')</div></td>
+                            <td><div>@include('cart.partials.workflow')</div></td>                             
+                            <td style="text-align:center">
+
+                                @foreach($cart->trackings as $tracking)
+                                    <a href="/track/{{ $tracking->id or "" }}" data-toggle="modal" data-target="#modal">
+                                    {{ $tracking->id }}
+                                    </a>
+                                @endforeach
+                            
+                                <a href="/cart/{{ $cart->id }}/tracking" data-toggle="modal" data-target="#modal" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                            <td>
+
                         </tr>
                         
                 @endforeach     
@@ -83,3 +97,21 @@
     </div>
 </div>
 <script type="text/javascript" src="/js/workflow.js"></script>
+@include('partials.modal')
+<script>
+var vm = new Vue({
+    el: 'body',
+    data: {
+        name: 'Vue.js'
+    },
+    // define methods under the `methods` object
+    methods: {
+        addTracking: function (event) {
+            // `this` inside methods point to the Vue instance
+            alert('Hello ' + this.name + '!')
+            // `event` is the native DOM event
+            alert(event.target.tagName)
+        }
+    }
+})
+</script>

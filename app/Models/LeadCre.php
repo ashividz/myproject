@@ -11,7 +11,7 @@ use LeadStatus;
 
 class LeadCre extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.

@@ -1,7 +1,7 @@
 Unread Notification count = @{{ unreadNotificationCount }}
 <script src="/plugins/socket/socket.io.js"></script>
 <script type="text/javascript">
-    var socket = io('{{ env('APP_URL') }}:3001');
+    var socket = io('//amikus:3001');
 
     new Vue({
         el: 'body',

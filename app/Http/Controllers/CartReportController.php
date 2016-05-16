@@ -35,7 +35,7 @@ class CartReportController extends Controller
 
     public function cartStatusReport()
     {
-        $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step')                    
+        $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step', 'trackings')          
                     ->whereBetween('created_at', array($this->start_date, $this->end_date))
                     ->orderBy('id', 'desc')
                     ->get(); //dd($carts);
@@ -45,6 +45,31 @@ class CartReportController extends Controller
         $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'cartStatusReport',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'carts'         =>  $carts,
+            'statuses'      =>  $statuses,
+            'i'             =>  1
+        );    
+
+        return view('home')->with($data);
+    }
+
+    public function goods()
+    {
+        $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step', 'trackings', 'products') 
+                    ->whereHas('products.category', function($query){
+                        $query->whereIn('id', [2,4]);
+                    })         
+                    ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                    ->orderBy('id', 'desc')
+                    ->get(); //dd($carts);
+
+        $statuses = CartStatus::get();
+
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'goods',
             'start_date'    =>  $this->start_date,
             'end_date'      =>  $this->end_date,
             'carts'         =>  $carts,
