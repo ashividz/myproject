@@ -10,13 +10,4 @@ use Auth;
 class TrackingInvoice extends Model
 {
     public $table = 'tracking_invoice';
-     
-    protected $fillable  = [
-        'tracking_id'
-    ];
-
-    public function getRouteKeyName()
-    {
-        return 'tracking_id';
-    }
 }

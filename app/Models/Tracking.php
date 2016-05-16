@@ -149,6 +149,6 @@ class Tracking extends Model
 
     public function invoice()
     {
-        return $this->hasOne(TrackingInvoice::class, 'tracking_id', 'id');
+        return $this->hasOne(TrackingInvoice::class, 'id', 'id');
     }
 }
