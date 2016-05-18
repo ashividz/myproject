@@ -7,13 +7,27 @@
 				<h4>Churn Leads</h4>
 			</div>	
 			<div class="panel-body">
-
+				<form id="form2" class="form-inline" method="POST" action="">
+					<b>FILTER</b>		
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="pan" checked="true" onchange="filter(this.id)"> PAN India
+				    	</label>
+				  	</div>		
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="int" checked="true" onchange="filter(this.id)"> International
+				    	</label>
+				  	</div>
+				</form>
+				
 				<form id="form" class="form-inline" action="/marketing/leads/churn/save" method="post">
 					<table id="leads" class="table table-bordered">
 						<thead>
 							<tr>
 								<td><input type="checkbox" id="checkAll"></td>
 								<td>Name</td>
+								<td>Country</td>
 								<td>CRE Assigned Date</td>
 								<td>Source</td>
 								<td>Status</td>
@@ -25,13 +39,25 @@
 
 					@foreach($leads AS $lead)
 
-							<tr>
+							<?php
+								$filter = "";
+									if ($lead->country == 'IN' || trim($lead->country) == '' || !$lead->country) {
+										$filter = "pan";
+										$checkboxclass = "pancheck";
+									}
+									else{
+										$filter = "int";
+										$checkboxclass = "intcheck";
+									}
+							?>
+							<tr class = "{{$filter}}">
 								<td>
-									<input class='checkbox' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
+									<input class='checkbox {{$checkboxclass}}' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
 								</td>
 								<td>
 									<a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name"}}</a>
 								</td>
+								<td>{{$lead->country}}</td>
 								<td>
 									{{date('jS M Y', strtotime($lead->cre->created_at))}}
 								</td>
@@ -125,7 +151,24 @@ $(document).ready(function()
 	});	
 
 	$("#checkAll").change(function () {
-	    $("input:checkbox").prop('checked', $(this).prop("checked"));
+	    if($("#pan").is(':checked'))
+	    	$(".pancheck").prop('checked', $(this).prop("checked"));
+	    if($("#int").is(':checked'))
+	    	$(".intcheck").prop('checked', $(this).prop("checked"));
 	});
 });
+</script>
+<script type="text/javascript">
+	function filter(id)
+	{
+		if($("#" + id).is(':checked'))
+	    	$('tr.' + id).show();  // checked
+		else{
+	    	$('tr.' + id).hide();// unchecked
+		    if(id=="pan")
+		    	$(".pancheck").prop('checked', false);
+		    if(id=="int")
+		    	$(".intcheck").prop('checked', false);
+		}
+	}
 </script>
