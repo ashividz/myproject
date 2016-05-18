@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Employee;
 use Auth;
 use DB;
+use Carbon;
 
 class MessageController extends Controller
 {
@@ -67,7 +68,7 @@ class MessageController extends Controller
 	{
 		$user = $this->user;
 
-		return  Message::select('messages.*', 'mr.read_at')
+		return  Message::select('messages.*', 'mr.read_at', 'mr.action_at')
 					->with('lead')
 					->join('message_recipient as mr', 'mr.message_id', '=', 'messages.id')
 					->where('mr.name', $user)
@@ -76,7 +77,67 @@ class MessageController extends Controller
 					->get();
 	}
 
-	public function toggle(Request $request)
+    public function getAllMessages(Request $request = null)
+    {
+        $users = null;//dd($request->filter_unread);
+
+        $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+
+        $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
+
+        if ($request->role) {
+            $users = User::getUsersByRole($request->role);
+            $users = $users->pluck('name');
+        }
+
+        $query =  Message::with('recipients')
+                    ->with(['lead' => function($q){
+                        $q->select('id', 'name');
+                    }])
+                    ->orderBy('id', 'desc')
+                    ->whereBetween('created_at', [$start_date, $end_date]);
+
+        if ($users) {
+            $query->whereHas('recipients', function($q) use ($users, $request){
+                $q->whereIn('name', $users);
+                if ($request->filter_unread == 'true') {
+                    $q->whereNull('read_at');
+                } 
+                if ($request->filter_action == 'true') {
+                    $q->whereNull('action_at');
+                } 
+            });
+        }
+        
+        $messages = $query->limit(500)->get();
+
+        return $messages;
+    }
+
+    public function setRead(Request $request)
+    {
+        $message = MessageRecipient::where('message_id', $request->id)
+                    ->where('name', $this->user)
+                    ->first();
+        if ($message) {
+            $message->read_at = $message->read_at == null ? date('Y-m-d H:i:s') : $message->read_at;
+            $message->save();
+        }
+    }
+
+    public function setAction(Request $request)
+    {
+        $message = MessageRecipient::where('message_id', $request->id)
+                    ->where('name', $this->user)
+                    ->first();
+        if ($message) {
+            $message->action_at = $message->action_at == null ? date('Y-m-d H:i:s') : $message->action_at;
+            $message->read_at = $message->read_at == null ? date('Y-m-d H:i:s') : $message->read_at;
+            $message->save();
+        }
+    }
+	
+    public function toggle(Request $request)
 	{
 		$message = MessageRecipient::where('message_id', $request->id)
 					->where('name', $this->user)

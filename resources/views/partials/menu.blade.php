@@ -264,6 +264,9 @@
                         </li>                          
                     </ul>
                 </li>
+                <li>
+                    <a href="/service/messages">Messages</a>
+                </li>
 
                             
             </ul> <!-- second level -->                        

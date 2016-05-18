@@ -1,25 +1,33 @@
 
 <div class="container1">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<span class="panel-title col-md-2">Messages</span>
-            <input type="text" id="daterange" v-model="daterange" size="25" readonly/> 
-		</div>	
-		<div class="panel-body">
-			<table class="table table-striped" id="messages">
-				<thead>
-					<tr>
-						<th width="15%">From</th>
-						<th width="15%">To</th>
-						<th width="20%">Subject</th>
-						<th>Body</th>
-						<th width="15%">Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="message in messages">
-						<td>@{{message.from }}</td>
-						<td>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="panel-title col-md-2">Messages</span>
+            <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+            <div class="roles">
+                Nutritionist : <input type="radio" name="role" value="nutritionist" v-model="role">
+                Doctor : <input type="radio" name="role" value="doctor" v-model="role"> 
+                Service : <input type="radio" name="role" value="service" v-model="role"> 
+                Service TL : <input type="radio" name="role" value="service_tl" v-model="role"> 
+                Filter Unread : <input type="checkbox" name="filter_unread" v-model='filter_unread'>
+                Filter Action : <input type="checkbox" name="filter_action" v-model='filter_action'>
+            </div>               
+        </div>  
+        <div class="panel-body">
+            <table class="table table-striped" id="messages">
+                <thead>
+                    <tr>
+                        <th width="15%">From</th>
+                        <th width="15%">To</th>
+                        <th width="15%">Subject</th>
+                        <th>Body</th>
+                        <th width="15%">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="message in messages">
+                        <td>@{{message.from }}</td>
+                        <td>
                             <div v-for="recipient in message.recipients">
                                 @{{ recipient.name }}
                                 <div class="pull-right">
@@ -31,9 +39,9 @@
                                     </div>
                                 </div>                                    
                             </div>
-						</td>
-						<td>@{{ message.subject }}</td>
-						<td>
+                        </td>
+                        <td>@{{ message.subject }}</td>
+                        <td>
                             @{{ message.body }}
                             <span v-if='message.lead' class='view pull-right'>
                                 <a href='/lead/@{{ message.lead.id }}/viewDispositions' target='_blank'> @{{ message.lead.name }}
@@ -41,14 +49,14 @@
                                 </a>
                             </span>
                         </td>
-						<td>
+                        <td>
                             <div class="pull-right">@{{ message.created_at | format_date }}</div>
                         </td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <script>
     var vm = new Vue({
@@ -59,7 +67,11 @@
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
-            timer: ''
+            timer: '',
+            role: 'nutritionist',
+            loading: false,
+            filter_unread: false,
+            filter_unread: false,
         },
 
         ready: function(){
@@ -70,8 +82,10 @@
         methods: {
 
             getAllMessages() {
-                this.$http.get("/api/getAllMessages", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
+                this.loading = true;
+                this.$http.get("/api/getAllMessages", { 'start_date': this.start_date, 'end_date' : this.end_date, 'role' : this.role, 'filter_unread' : this.filter_unread, 'filter_action' : this.filter_action }).success(function(data){
                     this.messages = data;
+                    this.loading = false;
                 }).bind(this);
             }
         },
@@ -105,6 +119,15 @@
     vm.$watch('daterange', function (newval, oldval) {
         this.getAllMessages();
     })
+    vm.$watch('role', function (newval, oldval) {
+        this.getAllMessages();
+    })
+    vm.$watch('filter_unread', function (newval, oldval) {
+        this.getAllMessages();
+    })
+    vm.$watch('filter_action', function (newval, oldval) {
+        this.getAllMessages();
+    })
 </script>
 <script type="text/javascript">
 $(document).ready(function() 
@@ -130,3 +153,12 @@ $(document).ready(function()
 
 });
 </script>
+<style type="text/css">
+.roles {
+    display: inline-block;
+    margin-left: 40px;
+}
+.roles input {
+    margin-right: 20px;
+}
+</style>

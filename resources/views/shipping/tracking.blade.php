@@ -1,9 +1,5 @@
     <div class="row">
 
-        <div id="loader" v-show="loading" style="text-align:center" class="alert alert-warning">
-            <img src="/images/loading.gif">
-        </div>
-
         <div class="panel panel-default">
             <div class="panel-heading">
                 <button class="btn btn-success" v-on:click="sync()" disabled="@{{ loading }}">Sync with FedEx</button>
@@ -80,16 +76,7 @@
     </div>
 @include('partials.modal')
 <style type="text/css">
-    #loader {
-        position: fixed;
-        margin-top: 0px;
-        width: 200px;
-        left: 40%;
-        z-index: 9999;
-        text-align: center;        
-        background-color: #333333;
-        border-color: #CAC5BC;
-    }
+    
     table.table {
         font-size: 12px;
     }

@@ -317,4 +317,13 @@ class ServiceController extends Controller
         return view('home')->with($data);
     }
 
+    public function showMessages()
+    {
+        $data = array(
+            'menu'           => 'service',
+            'section'        => 'reports.messages'
+        );
+        return view('home')->with($data);   
+    }
+
 }

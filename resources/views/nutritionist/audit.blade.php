@@ -59,7 +59,7 @@
 
 				@if(trim($patient->lead->dob) == '')
 					<td class="red">N</td>
-				@elseif(!Helper::validateDate($patient->lead->dob) || $patient->lead->dob > date('Y-m-d', strtotime('-10 years')))
+				@elseif($patient->lead->dob > date('Y-m-d', strtotime('-10 years')))
 					<td class="yellow" title="{{$patient->lead->dob or ''}}"><span style="color:yellow">X</span></td>	
 				@else
 					<td class="green" title="{{$patient->lead->dob or ''}}"><span style="color:green">Y</span></td>		
@@ -97,7 +97,15 @@
 					<td class='green'  title='Medical Details'><span style="color:green">Y</span></td>
 				@endif
 
-					<td class="{{$patient->prakritis->isEmpty() ? 'red' :'green'}}" title="Prakriti"></td>	
+                @if($patient->prakritis->isEmpty())
+					<td class="red" title="Prakriti">
+                        N
+                    </td>	
+                @else
+                    <td class="green" title="Prakriti">
+                        <span style="color:green">Y</span>
+                    </td>   
+                @endif
 				</tr>
 	@endforeach
 

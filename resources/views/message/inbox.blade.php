@@ -1,6 +1,6 @@
 @extends('message.index')
 @section('main')
-<div class="container">
+<div class="container1" id="inbox">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<span class="panel-title">Inbox</span> 
@@ -9,95 +9,137 @@
 			</div>
 		</div>	
 		<div class="panel-body">
-			<table class="table" id="messages">
+			<table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th width="15%">From</th>
+                        <th>Subject</th>
+                        <th>Body</th>
+                        <th width="15%">Date</th>
+                        <th width="10%">Action Taken</th>
+                    </tr>
+                </thead>
 				<tbody>
-
+                    <tr v-for='message in messages' id='@{{ message.id }}' v-bind:class="{ 'unread': !message.read_at }">
+                        <td v-on:click='setReadMessage(message.id)'>
+                            <i v-if='!message.read_at' class="fa fa-envelope"></i>
+                        </td>
+                        <td v-on:click='setReadMessage(message.id)'>@{{ message.from }}</td>
+                        <td v-on:click='setReadMessage(message.id)'>@{{ message.subject }}</td>
+                        <td v-on:click='setReadMessage(message.id)'>
+                            @{{ message.body }}
+                            <span v-if='message.lead' class='view pull-right'>
+                                <a href='/lead/@{{ message.lead.id }}/viewDispositions' target='_blank'> @{{ message.lead.name }}
+                                    <img class='aTn pull-right' src='/images/cleardot.gif'>
+                                </a>
+                            </span>
+                        </td>
+                        <td>
+                            <div>@{{ message.created_at | format_date }}</div>
+                        </td>
+                        <td>
+                            <div v-if="message.action_at">
+                                <i class="fa fa-check-square-o green"></i>
+                            </div>
+                            <div v-else>
+                                <input type="checkbox" checked="@{{ message.action_at }}" v-on:click='setMessageAction(message.id)'/>
+                            </div>
+                        </td>
+                    </tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
+<style type="text/css">
+table thead tr {
+    color: #111;
+    font-weight: 800;
+} 
+</style>
+<script>
+    Vue.http.headers.common['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
 
-function autoReloadMessages()
-{
-  getMessages();
+    var vm1 = new Vue({
+        el: 'body',
 
-  setTimeout(function(){autoReloadMessages();}, 30000);
-}
+        data: {
+            messages: [],
+            daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            start_date: '',
+            end_date: '',
+            timer: '',
+            unreadMessageCount: 0,
+            unreadNotificationCount: 0,
+        },
 
-$(document).ready(function () {
-    //$('#messages').dataTable();
-    getMessages();
-    setTimeout(function(){autoReloadMessages();}, 30000);
-});
+        ready: function(){
+            this.getMessages();
+            this.timer = setInterval(this.getMessages, 100000);
+            this.getUnreadMessageCount();
+        },
+        methods: {
 
+            getMessages() {
+                this.$http.get("/api/getMessages", {'start_date': this.start_date, 'end_date' : this.end_date})
+                .success(function(data){
+                    this.messages = data;
+                }).bind(this);
+            },
 
-function getMessages() {
-    var url = "/api/getMessages"
-   	$.getJSON(url)
-    	.success(function( data ) {
-        $("#messages tbody").empty();
-        var i = 0;
+            setReadMessage(id) {
+                //alert(id);
+                this.$http.post('/api/message/setRead', {id : id})
+                .success(function (data, status, request) {
+                    this.getMessages();
+                    this.getUnreadMessageCount();
+                })
+                .error(function (data, status, request) {
+                   
+                });
+            },
 
-        	//console.log(data);
-        $.each(data, function(i, field) { 
-            i++;
-            console.log(field.read_at);
-            if (field.read_at == null) {
-                status = 'unread';
+            setMessageAction(id) {
+                this.$http.post('/api/Message/setAction', {id : id})
+                .success(function (data, status, request) {
+                    this.getMessages();
+                    this.getUnreadMessageCount();
+                })
+                .error(function (data, status, request) {
+                   
+                });
+            },
+
+            getUnreadMessageCount() {
+                var url = "/api/getUnreadMessageCount";
+
+                $.getJSON(url)
+                .done(function( data ) {
+                    this.unreadMessageCount = data;
+                }.bind(this));
             }
-            else {
-                status = 'read';
-            };
-            var subject = field.subject == null ? '(No subject)' : field.subject;
+        },
+        beforeDestroy() {
+            clearIntervall(this.timer)
+        },
+    })    
 
-            $("#messages").append("<tr class='" + status + "' id='" + field.id + "'>");
-            $("#messages tr:last").append("<td>" + i + "</td>");
-            $("#messages tr:last").append("<td>" + field.from + "</td>");
-            $("#messages tr:last").append("<td>" + subject + "</td>");
-            $("#messages tr:last").append("<td>" + field.body + "</td>");
-
-            if(field.lead == null) {
-            	$("#messages tr:last").append("<td></td>");
-            }
-            else {
-            	$("#messages tr:last").append("<td><div class='view'><a href='/lead/" + field.lead.id +"/viewDispositions' target='_blank'>" + field.lead.name + "<img class='aTn pull-right' src='/images/cleardot.gif'></a></div></td>");
-            }
-            
-            var created_at = new Date(field.created_at);
-            if (moment(created_at).isSame(moment(), 'day')) {
-                created_at = moment(created_at).format("hh:mm a");
-            } else {
-                created_at = moment(created_at).format("DD MMM YYYY, hh:mm a");   
-            }
-            
-
-            $("#messages tr:last").append("<td><div class='pull-right'>" + created_at + "</div></td>");;
-            $("#messages").append("</tr>");
-        });
+    vm1.$watch('action', function(val) {
+        alert(val);
     })
-    .fail(function(jqXHR, textStatus, errorThrown) { alert('getJSON request failed! ' + textStatus); })
-}
-</script>
-<script type="text/javascript">
 
-	//Table row click
-	$("#messages").on('click', 'tr', function() {
-		var id = this.id;
-		var url = "/message/toggle"; 
-        $.ajax(
-        {
-           type: "POST",
-           url: url,
-           data: {id : id, "_token" : "{{ csrf_token()}}" }, // send Source Id.
-           success: function(data)
-           	{               
-				$('#' + id).toggleClass("unread");
-				$('#' + id + ' td.new_message').toggleClass("new-message");
-				getUnreadMessageCount();
-           	}
-        });
-	});
+    Vue.filter('format_date', function (value) {
+        if (value == null) {
+            return null;
+        }
+      return moment(value).format('D MMM hh:mm A');
+    })
+    Vue.filter('format_date2', function (value) {
+        if (value == null) {
+            return null;
+        }
+      return moment(value).format('D MMM');
+    })
 </script>
 @endsection

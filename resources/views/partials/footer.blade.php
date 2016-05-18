@@ -7,7 +7,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
         el: 'body',
 
         data: {
-            unnreadMessageCount: null,
+            unreadMessageCount: 0,
             notifications : [],
             unreadNotificationCount: 0,
         },
@@ -33,7 +33,7 @@ Unread Notification count = @{{ unreadNotificationCount }}
 
                 $.getJSON(url)
                 .done(function( data ) {
-                    this.unread = data;
+                    this.unreadMessageCount = data;
                 }.bind(this));
             }   
         }

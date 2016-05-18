@@ -567,6 +567,8 @@ Route::group([
         
         Route::get('service/reports/diet_not_started', 'ServiceController@dietNotStarted');
 
+        Route::get('service/messages', 'ServiceController@showMessages');
+
 });
 
 Route::group([
@@ -709,6 +711,9 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('api/getUnreadMessageCount', 'MessageController@getUnreadMessageCount');
     Route::get('api/getMessages', 'MessageController@getMessages');
+    Route::get('api/getAllMessages', 'MessageController@getAllMessages');
+    Route::post('api/message/setRead', 'MessageController@setRead');
+    Route::post('api/Message/setAction', 'MessageController@setAction');
 
     Route::get('api/getUnreadNotificationCount', 'NotificationController@getUnreadNotificationCount');
     Route::get('api/getUnreadNotifications', 'NotificationController@getUnreadNotifications');

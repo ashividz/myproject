@@ -93,8 +93,14 @@
         <!-- VueJS -->
         <script src="/plugins/vue/vue.min.js"></script>
         <script src="/plugins/vue/vue-resource.min.js"></script>
+
     </head>
     <body>
+        <!-- Loader -->
+        <div id="loader" v-show="loading" style="text-align:center" >
+            <img src="/images/loading.gif">
+        </div>
+        <!-- Loader ends -->
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
 
             <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
@@ -110,7 +116,7 @@
         </div>
 
 <style type="text/css">
-    #alert, #loader {
+    #alert {
         position: fixed;
         margin-top: 150px;
         width: 500px;
