@@ -40,6 +40,9 @@ class Query extends Model
         $query->state = isset($request->state) ? $request->state : "";
         $query->city = $request->city;
         $query->email = $request->email;
+      
+        if(isset($request->shs))
+        $query->shs = $request->shs;
 
         if (isset($request->mobile) <> "") {
             $query->phone = $request->mobile;
