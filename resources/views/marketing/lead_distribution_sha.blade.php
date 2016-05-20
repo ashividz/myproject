@@ -69,6 +69,10 @@
 		<div class="heading">
 				
 			<div style="margin-bottom:20px; padding:20px">
+			<div style='display: inline-block;'>
+			@include('partials/daterange')
+			</div>
+			<div style='display: inline-block;'>
 				<form id="form2" class="form-inline" method="POST" action="">
 					<b style='margin-left:30px'>FILTER</b>		
 				  	<div class="checkbox">
@@ -87,7 +91,7 @@
 				    	</label>
 				  	</div>
 				</form>
-
+				</div>
 							
 
 			</div>

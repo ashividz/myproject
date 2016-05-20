@@ -278,6 +278,11 @@
                                     
                 <li>
                     <a href="/marketing/lead_distribution" id="menu_lead_distribution">Lead Distribution</a>
+                     <ul>
+                        <li>
+                            <a href="/marketing/shs_lead_distribution" id="menu_leads">SHA Lead Distribution</a>
+                        </li>
+                        </ul>
                 </li>
 
                 <li>
