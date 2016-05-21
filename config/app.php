@@ -137,6 +137,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Arkitecht\FedEx\Laravel\Providers\FedExServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -210,6 +211,8 @@ return [
 
         'Step'              => App\Models\CartStep::class,
         'Discount'          => App\Models\Discount::class,
+
+        'Excel'             => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

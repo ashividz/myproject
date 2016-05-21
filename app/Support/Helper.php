@@ -92,7 +92,7 @@ class Helper {
 
     public static function roles($user = null)
     {
-        $roles = $user? $user->roles : Auth::user()->roles;
+        $roles = $user ? $user->roles : Auth::user()->roles;
         return array_pluck($roles, 'id');
     }
 

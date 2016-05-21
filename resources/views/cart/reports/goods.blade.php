@@ -76,13 +76,13 @@
                             <td><div>@include('cart.partials.workflow')</div></td>                             
                             <td style="text-align:center">
 
-                                @foreach($cart->trackings as $tracking)
-                                    <a href="/track/{{ $tracking->id or "" }}" data-toggle="modal" data-target="#modal">
-                                    {{ $tracking->id }}
+                                @foreach($cart->shippings as $shipping)
+                                    <a href="/track/{{ $shipping->id or "" }}" data-toggle="modal" data-target="#modal">
+                                    {{ $shipping->id }}
                                     </a>
                                 @endforeach
                             
-                                <a href="/cart/{{ $cart->id }}/tracking" data-toggle="modal" data-target="#modal" class="btn btn-primary">
+                                <a href="/cart/{{ $cart->id }}/shipping" data-toggle="modal" data-target="#modal" class="btn btn-primary">
                                     <i class="fa fa-plus"></i>
                                 </a>
                             <td>

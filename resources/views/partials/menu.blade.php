@@ -416,9 +416,19 @@
                     
         <li class="{{ $menu == 'reports' ? 'current' : '' }}">
             <a href="/report" id="menu_report" class="firstLevelMenu"><b>Reports</b></a>
-        
+            
         
             <ul>
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl')  || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('registration')) 
+                <li>
+                    <a href="#">Sales</a>  
+                    <ul>
+                        <li>
+                            <a href="/sales/report/performance">Performance</a>
+                        </li> 
+                    </ul>
+                </li>
+            @endif
 
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl')  || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('registration')) 
                 <li>

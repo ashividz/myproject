@@ -26,6 +26,15 @@ class MessageController extends Controller
 		$this->user = Auth::user()->employee->name;
 	}
 
+    public function index()
+    {
+        $data = array(
+            'menu'          =>  'admin',
+            'section'       =>  'messages.index'
+        );
+        return view('home')->with($data);
+    }
+
 	public function getUnreadMessageCount()
 	{
 		$user = $this->user;
@@ -88,6 +97,8 @@ class MessageController extends Controller
         if ($request->role) {
             $users = User::getUsersByRole($request->role);
             $users = $users->pluck('name');
+        } else if($request->user) {
+             $users = [$request->user];
         }
 
         $query =  Message::with('recipients')

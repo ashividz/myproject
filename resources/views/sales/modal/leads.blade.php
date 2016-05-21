@@ -26,7 +26,7 @@
                 @endif
             </td>
             <td>
-                {{ $lead->source->master->source_name or "" }}
+                {{ $lead->source->master->channel->name or "" }}
             </td>
             <td>
                 {{ $lead->status->name or ""}}

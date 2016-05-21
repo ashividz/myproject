@@ -13,7 +13,7 @@ class MessageRecipient extends Model
 
 	public function message()
 	{
-		$this->hasOne(Message::class);
+		return $this->belongsTo(Message::class);
 	}
 
 	public static function saveRecipients($message, $recipients)

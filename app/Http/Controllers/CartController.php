@@ -17,12 +17,25 @@ use App\Models\OrderProduct;
 use App\Models\CartStatus;
 use App\Models\Currency;
 use App\Models\ProductCategory;
+use App\Models\Carrier;
 use Auth;
 use Redirect;
 use DB;
+use Excel;
+use Carbon;
 
 class CartController extends Controller
 {
+    protected $start_date;
+    protected $end_date;
+
+    public function __construct(Request $request)
+    {
+        $this->start_date = $request->start_date ? $request->start_date : Carbon::now()->format('Y-m-d'); 
+        $this->end_date = $request->end_date ? $request->end_date : Carbon::now();
+
+    }
+
     public function index($id)
     {
         $lead = Lead::find($id);
@@ -169,9 +182,98 @@ class CartController extends Controller
         return view('cart.index')->with($data);
     }
 
-    public function tracking($id)
+    public function shipping($id)
     {
-        return view('shipping.modal.add')->with('id', $id);
+        $carriers = Carrier::all();
+
+        $data   = [
+            'id'        => $id,
+            'carriers'  => $carriers
+        ];
+
+        return view('shipping.modal.add')->with($data);
+    }
+
+    public function getCarts()
+    {
+        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method')
+                    ->with(['source' => function($q) {
+                        $q->select('id', 'source_name as name');
+                    }])
+                    ->with(['lead.patient' => function($q) {
+                        $q->select('id', 'lead_id');
+                    }])
+                    ->with('cre.employee.supervisor.employee')
+                    ->whereBetween('created_at', [$this->start_date, $this->end_date])
+                    ->orderBy('id', 'desc')
+                    ->get();
+
+        return $carts;
     }
     
+    public function download()
+    {
+        $carts = $this->getCarts();
+
+        if (!$carts->isEmpty()) {
+            Excel::create('SalesPerformanceReport', function($excel) use($carts) {
+
+                $excel->sheet('Sheetname', function($sheet) use($carts) {
+                    //$sheet->fromArray($carts);
+                        
+
+                    $sheet->appendRow(array(
+                           'Date', 
+                           'Cart Status',
+                           'Cart Id', 
+                           'Lead Id',
+                           'Lead Source',
+                           'CRE',
+                           'TL',
+                           'Name',
+                           'Patient Id',
+                           'Amount',
+                           'Payment Date',
+                           'Payment Method',
+                           'Payment Amount',
+                           'Payment Remark',
+                        ));
+                    foreach ($carts as $cart) {
+                        $date       = $cart->created_at;
+                        $status     = $cart->status->name." - ".$cart->state->name;
+                        $id         = $cart->id;
+                        $lead_id    = $cart->lead_id;
+                        $source     = $cart->source['name'];
+                        $cre        = $cart->cre->employee->name;
+                        $tl         = isset($cart->cre->employee->supervisor) ? $cart->cre->employee->supervisor->employee->name: '' ;
+                        $name       = $cart->lead->name;
+                        $patient_id = isset($cart->lead->patient) ? $cart->lead->patient->id : '' ;
+                        $amount     = $cart->amount; 
+                        $payment_date   = !$cart->payments->isEmpty() ? $cart->payments->last()->date : null;
+                        $payment_method = !$cart->payments->isEmpty() ? $cart->payments->last()->method->name : null;
+                        $payment_amount = !$cart->payments->isEmpty() ? $cart->payments->last()->amount : null;
+                        $payment_remark = !$cart->payments->isEmpty() ? $cart->payments->last()->remark : null;
+                        
+
+                        $sheet->appendRow(array(
+                            $date,
+                            $status,
+                            $id,
+                            $lead_id,
+                            $source,
+                            $cre,
+                            $tl,
+                            $name,
+                            $patient_id,
+                            $amount,
+                            $payment_date,
+                            $payment_method,
+                            $payment_amount,
+                            $payment_remark
+                        ));
+                    }
+                });
+            })->download('xls');;
+        }
+    }
 }

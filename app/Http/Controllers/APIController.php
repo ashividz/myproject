@@ -159,17 +159,24 @@ class APIController extends Controller
 
     public function getUsers(Request $request) //For Editable
     {
-        $json_array = array();
+        if ($request->role) {
+            $json_array = array();
 
-        $role = $request->role;
+            $role = $request->role;
 
-        $users =  User::getUsersByRole($role);        
+            $users =  User::getUsersByRole($role);        
 
-        foreach ($users as $user) {
-            $json_array[$user->name] = $user->name;
+            foreach ($users as $user) {
+                $json_array[$user->name] = $user->name;
+            }
+
+            return json_encode($json_array);
         }
-
-        return json_encode($json_array);
+        
+        return User::select('users.id', 'name')
+                ->join('employees', 'employees.id', '=', 'emp_id')
+                ->orderBy('name')
+                ->get();  
     }
 
     public function getTagList()

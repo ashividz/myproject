@@ -10,12 +10,22 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Lead;
 use App\Models\Status;
+use App\Models\Cart;
 
 use Carbon;
 use DB;
 
 class SalesReportController extends Controller
-{    
+{   
+    protected $start_date;
+    protected $end_date;
+
+    public function __construct(Request $request)
+    {
+        $this->start_date = $request->start_date ? $request->start_date : Carbon::now()->format('Y-m-d'); 
+        $this->end_date = $request->end_date ? $request->end_date : Carbon::now();
+
+    }
 
     public function viewLeadStatus()
     {
@@ -30,7 +40,8 @@ class SalesReportController extends Controller
     public function leadStatusReport(Request $request)
     {
         $start_date = $request->start_date ? $request->start_date : Carbon::now()->subDays(30); 
-        $end_date = $request->end_date ? $request->end_date : Carbon::now();
+        $end_date = $this->end_date;
+
         //echo $start_date . " - ". $end_date."<br>";
         $cres = User::getUsersByRole('cre', $request->user_id);
         foreach ($cres as $cre) {
@@ -89,4 +100,16 @@ class SalesReportController extends Controller
         //dd($cres);
         return $cres;
     }
+
+    public function performance()
+    {
+        $data = [
+            'menu'      => 'reports',
+            'section'   =>  'sales.performance'
+        ];
+
+        return view('home')->with($data);
+    }
+
+    
 }

@@ -14,8 +14,11 @@ use App\Models\CartStep;
 use App\Models\Patient;
 use App\Models\Order;
 use App\Models\OrderPatient;
+use App\Models\User;
 use App\Support\Helper;
+
 use Redirect;
+use Auth;
 
 class CartApprovalController extends Controller
 {
@@ -36,14 +39,34 @@ class CartApprovalController extends Controller
     {
         $roles = Helper::roles(); //dd($roles);
 
-        $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step')
-                    /*->join('cart_approver as ca', 'ca.status_id', '=', 'carts.status_id')*/
+        $users = [];
+
+        if (Auth::user()->hasRole('service_tl') || 
+            Auth::user()->hasRole('service')) {
+            
+            $users = User::getUsersByRole('nutritionist');
+            $users = $users->pluck('id');
+
+        } elseif (Auth::user()->hasRole('sales_tl') || 
+            Auth::user()->hasRole('sales')) {
+            
+            $users = User::getUsersByRole('cre');
+            $users = $users->pluck('id');
+        }; 
+
+        //dd($users);
+
+        $query = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step')
                     ->whereHas('approvers', function($q) use ($roles) {
                         $q->whereIn('approver_role_id', $roles);
                     })
-                    ->whereBetween('created_at', array($this->start_date, $this->end_date))
-                    ->orderBy('id', 'desc')
-                    ->get(); //dd($carts);
+                    ->whereBetween('created_at', array($this->start_date, $this->end_date));
+
+        if($users) {
+            $query = $query->whereIn('created_by', $users);
+        }
+
+        $carts = $query->orderBy('id', 'desc')->get(); //dd($carts);
 
         $statuses = CartStatus::get();
 

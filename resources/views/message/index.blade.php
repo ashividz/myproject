@@ -9,6 +9,4 @@
 	<div>
 		@yield('main')
 	</div>
-</div>
-
-	
+</div>	

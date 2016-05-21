@@ -339,30 +339,40 @@ strong.warning {
     display: inline-block;
     overflow: hidden;
 }
-.statusbar.in_progress {
+.statusbar.in_progress, .statusbar.status11, .statusbar.status13, .statusbar.status14, .statusbar.oc {
     width: 99px;
     height: 17px;
     background-position: -143px -35px;
 }
-.statusbar.picked_up {
+.statusbar.picked_up, .statusbar.status21, .statusbar.status23, .statusbar.status24 {
     width: 99px;
     height: 16px;
     background-position: -345px -38px;
 }
-.statusbar.in_transit {
+.statusbar.in_transit, .statusbar.status31, .statusbar.status33, .statusbar.status34 {
     width: 99px;
     height: 17px;
     background-position: -42px -35px;
 }
-.statusbar.exception {
+.statusbar.exception, .statusbar.status12, .statusbar.status22, .statusbar.status32, .statusbar.status42 {
     width: 98px;
     height: 16px;
     background-position: -398px -20px;
 }
-.statusbar.delivered {
+.statusbar.delivered, .statusbar.status43, .statusbar.status44 {
     width: 99px;
     height: 17px;
     background-position: -244px -21px;
+}
+.statusbar.status41 {
+    width: 99px;
+    height: 17px;
+    background-position: -398px 0px;
+}
+.statusbar.null { 
+    width: 99px;
+    height: 17px;
+    background-position: -298px 0px;
 }
 .description {        
     font-size: 1.2em;

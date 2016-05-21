@@ -14,14 +14,17 @@
 setlocale(LC_MONETARY, "en_IN");
 
     /** Tracking**/
-    Route::get('tracking','TrackingController@index');
-    Route::get('track/{id}','TrackingController@modal');
+    Route::get('shipping','ShippingController@index');
+    Route::get('api/getShippings','ShippingController@getShippings');
+
+    Route::get('shipping/fedex','FedExController@index');
+    Route::get('shipping/track/{id}','FedExController@modal');
 
     Route::get('track/{id}/invoice','TrackingInvoiceController@modal');
     Route::post('track/{id}/invoice','TrackingInvoiceController@store');
 
-    Route::get('api/getTrackings','TrackingController@getTrackings');
-    Route::get('api/sync','TrackingController@sync');
+    Route::get('api/getTrackings','FedExController@getTrackings');
+    Route::get('api/sync','FedExController@sync');
 
     /**Cart Goods Tracking for Ashish**/
     Route::get('carts/goods', 'CartReportController@goods');
@@ -50,14 +53,15 @@ Route::group([
         /* Delete User Role */
         Route::post('user/role/delete', 'RoleUserController@destroy');
 
-        
+        Route::get('admin/messages', 'MessageController@index');
+        Route::post('message/recipient/delete', 'MessageRecipientController@destroy');
         
 });
 
 
 Route::group([
     'middleware' => ['auth', 'roles'], 
-    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl']], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service']], 
     function() {
 
         /* Cart Approval */
@@ -332,34 +336,7 @@ Route::group([
         Route::post('cre/payments', 'CREController@payments');
         Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
 
-        /* Cart */
-        Route::get('lead/{id}/cart', 'CartController@index');
-        Route::post('lead/{id}/cart', 'CartController@store');
-
-        Route::get('cart/{id}/product/add', 'CartProductController@show');
-        Route::post('cart/{id}/product/add', 'CartProductController@store');
-
-        Route::post('cart/{id}/product/delete', 'CartProductController@destroy');
-        Route::post('cart/{id}/payment/delete', 'CartPaymentController@destroy');
-
-        Route::get('cart/product/{id}/edit', 'CartProductController@edit');
-        Route::post('cart/product/{id}/edit', 'CartProductController@update');
-
-        Route::post('api/coupon/validate', 'CouponController@validateCoupon');
-
-        Route::get('cart/{id}/payment/add', 'CartPaymentController@show');
-        Route::post('cart/{id}/payment/add', 'CartPaymentController@store');
-
-        Route::post('cart/{id}/process', 'CartController@process');
-
-        Route::get('cart/{id}/tracking', 'CartController@tracking');
-        Route::post('cart/{id}/tracking', 'TrackingController@store');
-
-
-        Route::get('cart/{id}/', 'CartController@show');
-
-        Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
-        Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
+        
 
         Route::get('quiz', 'QuizController@index');
         Route::get('quiz/start', 'QuizController@show');
@@ -840,6 +817,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('report/patients/occupation', 'ReportController@occupation');
     Route::post('report/patients/occupation', 'ReportController@occupation');
 
+    Route::get('sales/report/performance', 'SalesReportController@performance');
+    Route::get('sales/report/getCarts', 'CartController@getCarts');
+    Route::get('sales/report/performance/download', 'CartController@download');
+
 
     Route::get('testimonial/videos', 'TestimonialController@show');
 
@@ -881,3 +862,34 @@ Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+
+
+    /* Cart */
+    Route::get('lead/{id}/cart', 'CartController@index');
+    Route::post('lead/{id}/cart', 'CartController@store');
+
+    Route::get('cart/{id}/product/add', 'CartProductController@show');
+    Route::post('cart/{id}/product/add', 'CartProductController@store');
+
+    Route::post('cart/{id}/product/delete', 'CartProductController@destroy');
+    Route::post('cart/{id}/payment/delete', 'CartPaymentController@destroy');
+
+    Route::get('cart/product/{id}/edit', 'CartProductController@edit');
+    Route::post('cart/product/{id}/edit', 'CartProductController@update');
+
+    Route::post('api/coupon/validate', 'CouponController@validateCoupon');
+
+    Route::get('cart/{id}/payment/add', 'CartPaymentController@show');
+    Route::post('cart/{id}/payment/add', 'CartPaymentController@store');
+
+    Route::post('cart/{id}/process', 'CartController@process');
+
+    Route::get('cart/{id}/shipping', 'CartController@shipping');
+    Route::post('cart/{id}/shipping', 'ShippingController@store');
+
+
+    Route::get('cart/{id}/', 'CartController@show');
+
+    Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
+    Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
