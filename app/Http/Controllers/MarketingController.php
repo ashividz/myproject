@@ -19,6 +19,8 @@ use App\Models\LeadStatus;
 use App\Models\Patient;
 use App\Models\DialerPush;
 use App\Models\Status;
+use App\Models\LeadProgram;
+
 use DB;
 use Auth;
 use App\DND;
@@ -78,6 +80,7 @@ class MarketingController extends Controller
         $nlp = $this->fetchQueries(2);
 
     	$queries = Query::whereBetween('date', array($this->start_date, $this->end_date))
+                    ->whereNull('shs')
                     //->where('status', 0)
                     ->with('lead' ,'lead.source', 'lead.cre')
     				->get();
@@ -104,6 +107,40 @@ class MarketingController extends Controller
     	return view('home')->with($data);
     }
 
+     public function viewSHSLeadDistribution()
+    {
+        //dd(Query::getLastQueryId(2));
+        $website = $this->fetchQueries(1);
+        $nlp = $this->fetchQueries(2);
+
+        $queries = Query::whereBetween('date', array($this->start_date, $this->end_date))
+                    ->where('shs', '1')
+                    //->where('status', 0)
+                    ->with('lead' ,'lead.source', 'lead.cre')
+                    ->get();
+
+        $sources = Source::get();
+
+        $countries = Country::get();
+
+        $users = User::getUsersByRole('cre');
+
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'lead_distribution_sha',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'queries'       =>  $queries,
+            'sources'       =>  $sources,
+            'countries'     =>  $countries,
+            'users'         =>  $users,
+            'website'       =>  $website,
+            'nlp'           =>  $nlp
+        );
+
+        return view('home')->with($data);
+    }
+
     private function fetchQueries($vendor)
     {
         $count = 0;
@@ -113,7 +150,7 @@ class MarketingController extends Controller
 
             $client = new \GuzzleHttp\Client(['base_uri' => 'http://website']);
             $response = $client->request('GET','/query/' . $vendor . '/' . $query_id);
-            
+            //dd($response);
             $queries = $response->getBody()->getContents();
             $queries = json_decode($queries);
             
@@ -170,7 +207,7 @@ class MarketingController extends Controller
             }
 
             //Save Lead
-            $lead = Lead::saveLead($request, $i);          
+            $lead = Lead::saveLead($request, $i);
             $this->check($lead);
             //Save Cre
             LeadCre::saveCre($lead, $request->cre[$i]);
@@ -187,6 +224,70 @@ class MarketingController extends Controller
 
 
         return $this->viewLeadDistribution();
+    }
+
+    public function saveSHSLeadDistribution(Request $request)
+    {
+      $size = count($request->cre);
+
+        for ($i=1; $i <= $size; $i++) { 
+
+            //Skip if no CRE
+            if($request->cre[$i] == "")
+            {    
+
+                //dd($request->cre[$i]);          
+                continue;
+            }
+            //dd($request);   
+            //Check Duplicate Lead
+            $lead = Lead::where('phone', Helper::properMobile($request->phone[$i]))->first();
+
+            if (!isset($lead)) {
+                $lead = Lead::where('email', $request->email[$i])->first();
+            }            
+
+            if(isset($lead)) //Lead already exists.
+            {
+                //Check if Source Exists
+
+                if(!LeadSource::ifSameSource($lead, $request->source[$i]))
+                {
+                    LeadSource::saveSource($lead, $request, $i); //Add lead source if source does not exist.
+                }
+                
+                //Update Query Status as Lead Already Exists
+
+                Query::updateQuery($request->id[$i], $lead, 2); //
+
+                continue;
+            }
+
+            //Save Lead
+            $lead = Lead::saveLead($request, $i);
+
+            
+            $lead_program = new LeadProgram;
+            $lead_program->lead_id = $lead->id;
+            $lead_program->program_id = "10";
+            $lead_program->save();
+
+            $this->check($lead);
+            //Save Cre
+            LeadCre::saveCre($lead, $request->cre[$i]);
+
+            //Save Source
+            LeadSource::saveSource($lead, $request, $i);
+
+            //Save Status
+            LeadStatus::saveStatus($lead, 1);
+
+            //Update Query Status as Lead Saved
+            //Query::updateQuery($request->id[$i], $lead, 1);
+        }
+
+
+        return $this->viewSHSLeadDistribution();
     }
 
     public function viewAddLead()
