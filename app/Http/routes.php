@@ -118,6 +118,8 @@ Route::group([
 
         Route::get('marketing/lead_distribution', 'MarketingController@viewLeadDistribution');
         Route::post('marketing/lead_distribution', 'MarketingController@saveLeadDistribution');
+        Route::get('marketing/shs_lead_distribution', 'MarketingController@viewSHSLeadDistribution');
+        Route::post('marketing/shs_lead_distribution', 'MarketingController@saveSHSLeadDistribution');
         Route::get('marketing/addLead', 'MarketingController@viewAddLead');
         Route::post('marketing/addLead', 'MarketingController@saveLead');
         Route::get('marketing/search', 'MarketingController@search');
