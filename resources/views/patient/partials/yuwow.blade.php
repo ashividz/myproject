@@ -80,7 +80,7 @@ $(function () {
 					<th>Deviation</th>
                     <th>Body Fat(%)</th>  
                     <th>Hydration(%)</th>
-                    <th>Muslcle mass(%)</th>
+                    <th>Muscle mass(%)</th>
                     <th>Bone Weight(%)</th>
 				</tr>				
 			</thead>
