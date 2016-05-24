@@ -110,9 +110,9 @@ class YuWoWController extends Controller
 
                     $day->date = $date;
 
-                    $weight = Healthtrack::where('dch_cust_id', $user->Id)
+                    $htrack = Healthtrack::where('dch_cust_id', $user->Id)
                                     ->where('dch_date_recording', $date)
-                                    ->select('dch_weight')
+                                    ->select('*')
                                     ->first();
 
                     $fitness = Fitness::where('dcf_cust_id', $user->Id)
@@ -130,7 +130,13 @@ class YuWoWController extends Controller
                                     ->select('dch_health_diary')
                                     ->first();
 
-                    $day->weight = isset($weight->dch_weight) ? $weight->dch_weight : '';
+                    if(isset($htrack)){
+                        $day->weight      = $htrack->dch_weight ? $htrack->dch_weight : '';
+                        $day->body_fat    = $htrack->body_fat ? $htrack->body_fat : '';
+                        $day->muscle_mass = $htrack->muscle_mass ? $htrack->muscle_mass : '';
+                        $day->bone_weight = $htrack->bone_weight ? $htrack->bone_weight : '';
+                        $day->hydration   = $htrack->hydration ? $htrack->hydration : '';
+                    }
                     $day->fitness = isset($fitness->dcf_fitness_brief) ? $fitness->dcf_fitness_brief : '';
                     $day->deviation = isset($deviation->dcd_deviation_notes) ? $deviation->dcd_deviation_notes : '';
                     $day->diary = isset($diary->dch_health_diary) ? $diary->dch_health_diary : '';
