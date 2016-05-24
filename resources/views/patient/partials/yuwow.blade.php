@@ -78,6 +78,10 @@ $(function () {
 					<th>Diary</th>
 					<th>Fitness</th>
 					<th>Deviation</th>
+                    <th>Body Fat(%)</th>  
+                    <th>Hydration(%)</th>
+                    <th>Muslcle mass(%)</th>
+                    <th>Bone Weight(%)</th>
 				</tr>				
 			</thead>
 			<tbody>
@@ -89,6 +93,10 @@ $(function () {
 					<td>{{$day->diary}}</td>
 					<td>{{$day->fitness}}</td>
 					<td>{{$day->deviation}}</td>
+                    <td>{{$day->body_fat}}</td>
+                    <td>{{$day->hydration}}</td>
+                    <td>{{$day->muscle_mass}}</td>
+                    <td>{{$day->bone_weight}}</td>
 				</tr>
 
 		@endforeach
