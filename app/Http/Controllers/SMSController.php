@@ -10,5 +10,13 @@ use App\Models\EmailTemplate;
 
 class SMSController extends Controller
 {
+    public function bulk()
+    {
+        $data = [
+            'menu'      =>  'marketing',
+            'section'   =>  'bulksms'
+        ];
 
+        return view('home')->with($data);
+    }
 }

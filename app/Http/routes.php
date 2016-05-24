@@ -264,6 +264,8 @@ Route::group([
         Route::post('settings/program/update', 'ProgramController@update');
         Route::post('settings/program/add', 'ProgramController@store');
 
+        /** Bulk SMS **/
+        Route:get('marketing/sms', 'SMSController@bulk');
         
 });
 
