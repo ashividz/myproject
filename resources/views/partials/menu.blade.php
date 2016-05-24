@@ -95,7 +95,7 @@
             </ul> <!-- second level -->                        
         </li>
 
-    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('cre') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl'))    
+    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('cre') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('marketing'))    
         <li class="{{ $menu == 'cre' ? 'current' : '' }}">
             <a href="/cre" id="menu_pim_viewPimModule" class="firstLevelMenu"><b>CRE</b></a>
             
@@ -183,7 +183,7 @@
         </li>
     @endif
 
-    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl'))
+    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('marketing'))
         <li class="{{ $menu == 'sales' ? 'current' : '' }}">
             <a href="/sales" id="menu_sales" class="firstLevelMenu"><b>Sales</b></a>
             
