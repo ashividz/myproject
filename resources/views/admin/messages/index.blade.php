@@ -1,5 +1,5 @@
 
-<div class="container1">
+<div class="container1" id="messages">
     <div class="panel panel-default">
         <div class="panel-heading">
             <span class="panel-title col-md-2">Messages</span>
@@ -59,8 +59,8 @@
 <script>
     Vue.http.headers.common['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
 
-    var vm = new Vue({
-        el: 'body',
+    var vm1 = new Vue({
+        el: 'messages',
 
         data: {
             messages: [],
@@ -127,10 +127,10 @@
         }
       return moment(value).format('D MMM');
     })
-    vm.$watch('daterange', function (newval, oldval) {
+    vm1.$watch('daterange', function (newval, oldval) {
         this.getAllMessages();
     })
-    vm.$watch('user', function (newval, oldval) {
+    vm1.$watch('user', function (newval, oldval) {
         this.getAllMessages();
     })
 </script>

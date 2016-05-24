@@ -7,22 +7,21 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Models\Tracking;
-use App\Models\TrackingInvoice;
+use App\Models\Shipping;
+use App\Models\CartInvoice;
 
 use Auth;
 use Session;
 
-class TrackingInvoiceController extends Controller
+class CartInvoiceController extends Controller
 {   
 
     public function modal($id)
     {
-        $tracking = Tracking::find($id);
+        $shipping = Shipping::where('cart_id', $id)->first();
 
         $data = [
-            'tracking'      => $tracking,
-            'invoice'       => $tracking->invoice
+            'shipping'      => $shipping
         ];
         return view('shipping.modal.invoice')->with($data);
     }
@@ -31,13 +30,10 @@ class TrackingInvoiceController extends Controller
     {
         if ($request->hasFile('invoice')) {
             $file = $request->file('invoice');
-            $invoice = TrackingInvoice::find($id);
 
-            if (!$invoice) {
-                $invoice = new TrackingInvoice;
-                $invoice->id = $id;
-                $invoice->created_by = Auth::id();
-            }
+            $invoice = new CartInvoice;
+            $invoice->cart_id = $id;
+            $invoice->created_by = Auth::id();
             
             $invoice->file = base64_encode(file_get_contents($file->getRealPath()));;
             $invoice->mime = $file->getMimeType(); //application/pdf

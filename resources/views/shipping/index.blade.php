@@ -1,4 +1,4 @@
-    <div class="container">
+    <div class="container" id="shipping">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
@@ -28,7 +28,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="/track/@{{ shipping.id }}/invoice" v-bind:class="{ 'red': !shipping.invoice }" data-toggle="modal" data-target="#modal" >
+                                <a href="/cart/@{{ shipping.cart_id }}/invoice" v-bind:class="{ 'red': !shipping.invoice }" data-toggle="modal" data-target="#modal" >
                                     <i class="fa fa-file-pdf-o"></i>
                                 </a>
                             </td>
@@ -62,8 +62,8 @@
     
 </style>
 <script>
-    var vm = new Vue({
-        el: 'body',
+    var vm1 = new Vue({
+        el: '#shipping',
 
         data: {
             loading: false,
@@ -121,7 +121,7 @@
         }
       return moment(value).format('D MMM');
     })
-    vm.$watch('daterange', function (newval, oldval) {
+    vm1.$watch('daterange', function (newval, oldval) {
         this.getshippings();
     })
 </script>

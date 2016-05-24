@@ -1,4 +1,3 @@
-Unread Notification count = @{{ unreadNotificationCount }}
 <script src="/plugins/socket/socket.io.js"></script>
 <script type="text/javascript">
     var socket = io('//amikus:3001');

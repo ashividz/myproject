@@ -20,8 +20,8 @@ setlocale(LC_MONETARY, "en_IN");
     Route::get('shipping/fedex','FedExController@index');
     Route::get('shipping/track/{id}','FedExController@modal');
 
-    Route::get('track/{id}/invoice','TrackingInvoiceController@modal');
-    Route::post('track/{id}/invoice','TrackingInvoiceController@store');
+    Route::get('cart/{id}/invoice','CartInvoiceController@modal');
+    Route::post('cart/{id}/invoice','CartInvoiceController@store');
 
     Route::get('api/getTrackings','FedExController@getTrackings');
     Route::get('api/sync','FedExController@sync');
