@@ -167,7 +167,7 @@
                                     <div class="form-group"> 
                                         <input type="hidden" name="cart[{{$cart->id}}]" value="{{$cart->id}}">
                                         <input type="hidden" name="discount_id" value=""></input>
-                                        <button type="submit" class="btn btn-primary" {{ $disabled }}>Save</button>
+                                        <button type="submit" class="btn btn-primary" {{ $disabled }} onclick="this.disabled=true;this.form.submit();">Save</button>
                                     </div>  
                             @elseif($cart->status_id == 4 && $cart->state_id <> 3)
                                     <a href="#" onclick="order({{$cart->id}})" class="btn btn-primary">{{ $cart->lead->patient ? '' : 'Register Patient & '}}Place Order</a>
