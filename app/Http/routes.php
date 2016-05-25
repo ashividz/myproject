@@ -55,11 +55,7 @@ Route::group([
 
         Route::get('admin/messages', 'MessageController@index');
         Route::post('message/recipient/delete', 'MessageRecipientController@destroy');
-
-        Route::get('lead/interested', 'LeadController@interested');
-        Route::post('lead/interested', 'LeadController@interested');
-        Route::get('lead/converted', 'LeadController@converted');
-        Route::post('lead/converted', 'LeadController@converted');
+        
 });
 
 
@@ -274,6 +270,11 @@ Route::group([
         /** Bulk SMS **/
         Route::get('marketing/sms', 'SMSController@bulk');
         Route::get('api/getLeads', 'LeadsController@getLeads');
+
+        Route::get('lead/interested', 'LeadController@interested');
+        Route::post('lead/interested', 'LeadController@interested');
+        Route::get('lead/converted', 'LeadController@converted');
+        Route::post('lead/converted', 'LeadController@converted');
         
 });
 
