@@ -55,7 +55,11 @@ Route::group([
 
         Route::get('admin/messages', 'MessageController@index');
         Route::post('message/recipient/delete', 'MessageRecipientController@destroy');
-        
+
+        Route::get('lead/interested', 'LeadController@interested');
+        Route::post('lead/interested', 'LeadController@interested');
+        Route::get('lead/converted', 'LeadController@converted');
+        Route::post('lead/converted', 'LeadController@converted');
 });
 
 

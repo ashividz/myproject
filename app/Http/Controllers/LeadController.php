@@ -931,5 +931,148 @@ class LeadController extends Controller
         return $voice->name;
     }
 
+       public function interested(Request $request)
+    {
+        $users = User::getUsersByRole('cre');
+        $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
+        $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
+
+        $this->start_date = isset($this->daterange[0]) ? date('Y-m-d 0:0:0', strtotime($this->daterange[0])) : date("2016-05-01 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y-m-d 23:59:59', strtotime($this->daterange[1])) : date('2016-05-15 23:59:59');
+        $this->limit = isset($request->limit) ? $request->limit : 2000;
+        $leads = null;
+        $start_date = $this->start_date;
+        $end_date = $this->end_date;
+           
+      /*  $leads = Lead::select('marketing_details.*')
+                        ->with('dispositions', 'cre', 'patient.fees', 'employee.supervisor.employee')
+                       
+                        ->leftjoin(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE  id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS cd"), function($join) {
+                              $join->on('marketing_details.id', '=', 'cd.lead_id');
+                             })
+                       
+                        ->where('cd.disposition_id', '=', 9)
+                        ->whereBetween('cd.created_at', array($this->start_date, $this->end_date))
+                        ->get();*/
+
+         $leads = Lead::with('dispositions', 'cre', 'patient.fees', 'employee.supervisor.employee')
+                       
+                        //->leftJoin('call_dispositions as cd', 'cd.lead_id', '=', 'marketing_details.id')
+                        ->whereHas('dispositions', function($q) use($start_date, $end_date){
+                                    // $q->where('call_dispositions.disposition_id', 14);
+                                    $q->whereBetween('call_dispositions.created_at', array($start_date, $end_date))
+                                    ->where('call_dispositions.disposition_id', 9);
+                                    //$q->whereRaw("call_dispositions.created_at between  '$start_date' and '$end_date'");
+                            })
+                        //->where('cd.disposition_id', '=', 9)
+                        //->whereBetween('cd.created_at', array($this->start_date, $this->end_date))
+                        ->select('marketing_details.*')
+                        ->get();
+
+         //dd($leads->first());
+         $converted = $leads->filter(function($lead) {
+                            return $lead->patient;
+                        })->count();               
+       
+         //dd($leads);
+            $data = array(
+            'section'       => 'interested',
+            'menu'          => 'lead',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'leads'         => $leads,
+            'users'         => $users,
+           'converted'      => $converted,
+            'name'          => $this->cre,
+            'limit'         => $this->limit,
+            'i'             => 1
+        ); 
+        return view('home')->with($data);
+    }
+
+       public function converted(Request $request)
+    {
+        $users = User::getUsersByRole('cre');
+        $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
+        $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
+
+        $this->start_date = isset($this->daterange[0]) ? date('Y-m-d 0:0:0', strtotime($this->daterange[0])) : date("2016-05-01 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y-m-d 23:59:59', strtotime($this->daterange[1])) : date('2016-05-15 23:59:59');
+        $this->limit = isset($request->limit) ? $request->limit : 2000;
+        $leads = null;
+        $start_date = $this->start_date;
+        $end_date = $this->end_date;
+         $fee_date = date('Y-m-d 0:0:0', strtotime('-1 days', strtotime($start_date)));
+     
+        /*$interested = null;
+          $leads = CallDisposition::select('call_dispositions.*')
+          ->with('lead.patient.fees')
+                        ->where('call_dispositions.disposition_id', 9)
+                        ->whereBetween('call_dispositions.created_at', array($start_date, $end_date))
+                        ->Join('marketing_details as m', 'm.id', '=', 'call_dispositions.lead_id')
+                        
+                        ->count();
+        dd($leads);
+         $data = array(
+            'section'       => 'converted_interested',
+            'menu'          => 'lead',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'leads'         => $leads,
+            'users'         => $users,
+            'interested'    => $interested,
+            'name'          => $this->cre,
+            'limit'         => $this->limit,
+            'i'             => 1
+        ); 
+        return view('home')->with($data);*/
+           
+        $leads = Lead::with('dispositions', 'cre', 'employee.supervisor.employee', 'patient.fees')
+                        ->whereHas('dispositions', function($q) use($start_date, $end_date){
+                                    // $q->where('call_dispositions.disposition_id', 14);
+                                    $q->whereBetween('call_dispositions.created_at', array($start_date, $end_date));
+                                    //$q->whereRaw("call_dispositions.created_at between  '$start_date' and '$end_date'");
+                            })
+                       ->Join('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
+                       ->join(DB::raw("(SELECT * FROM fees_details fd1 WHERE id = (SELECT min(id) FROM fees_details fd2 WHERE fd1.patient_id=fd2.patient_id)) AS fd"), function($join) {
+                             $join->on('p.id', '=', 'fd.patient_id');
+                            })
+                       ->where('fd.created_at', '>', $start_date)
+                       ->select('marketing_details.*', 'fd.created_at as conversion_date')
+                       ->get();
+
+         
+                     
+
+        //dd($leads);
+       
+
+                      /*  $interested = $leads->filter(function($lead) {
+                            $dispositions = $lead->dispositions;
+                            $dispositions = $dispositions->filter(function($disposition) 
+                                {
+                                    if($disposition->disposition_id == 9) {
+                                        return true;
+                                    }
+                                })->count();
+                        })->count(); */
+
+                                   
+       
+        //dd($leads);
+            $data = array(
+            'section'       => 'converted_interested',
+            'menu'          => 'lead',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'leads'         => $leads,
+            'users'         => $users,
+            
+            'name'          => $this->cre,
+            'limit'         => $this->limit,
+            'i'             => 1
+        ); 
+        return view('home')->with($data);
+    }
     
 }
