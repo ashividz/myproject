@@ -160,7 +160,13 @@ class MessageController extends Controller
 
 	public function send(Request $request)
 	{
-		//dd($request);
+		//make usernames list unique
+        $recipients = array_unique($request->recipients);
+        $messageRecipients = array();
+        foreach($recipients as $recipient){
+            $messageRecipients[] = $recipient;
+        }
+        //dd($request);
 		$message = new Message;
 		$message->from = $this->user;
 		//$message->to = $request->to;
@@ -170,7 +176,7 @@ class MessageController extends Controller
 		$message->lead_id = $request->lead_id;
 		$message->save();
 
-		$receiver = MessageRecipient::saveRecipients($message, $request->recipients);
+		$receiver = MessageRecipient::saveRecipients($message, $messageRecipients);
 
         //$count = ;
 
@@ -193,7 +199,7 @@ class MessageController extends Controller
 
 	public function compose()
 	{
-		$users = User::getUsers();
+		$users = User::getUsersWithEmployee();        
 
 		$data = array(
             'menu'          =>  'message',
