@@ -79,7 +79,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles'], 
-    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality']], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality','service_tl']], 
     function() {
     Route::get('carts', 'CartReportController@cartStatusReport');
     Route::post('carts', 'CartReportController@cartStatusReport');
