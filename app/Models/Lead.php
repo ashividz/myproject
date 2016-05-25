@@ -40,6 +40,11 @@ class Lead extends Model
         return $this->hasMany(LeadCre::class, 'lead_id')->orderBy('id', 'desc');        
     }    
 
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'cre_name', 'name');
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');

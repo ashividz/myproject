@@ -343,6 +343,14 @@
                         <li>
                             <a href="/patientReport" id="menu_dnc">Patient Report</a>
                         </li>
+
+                        <li>
+                            <a href="/lead/interested" id="menu_dnc">Interested</a>
+                        </li>
+
+                        <li>
+                            <a href="/lead/converted" id="menu_dnc">Converted</a>
+                        </li>
                     </ul>
                 </li>
                             
