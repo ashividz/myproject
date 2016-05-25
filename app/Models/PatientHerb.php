@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Patient;
 use App\Models\PatientHerbMealtime;
@@ -12,6 +13,8 @@ use Auth;
 class PatientHerb extends Model
 {
     protected $table = "patient_herb";
+    use SoftDeletes;
+
 
     public function herb()
     {
@@ -70,7 +73,7 @@ class PatientHerb extends Model
 
     public static function active($id, $state)
     {
-        $herb = PatientHerb::find($id);
+        $herb = PatientHerb::withTrashed()->find($id);
         
         $herb->deleted_at = NULL;
         $herb->deleted_by = NULL;

@@ -79,4 +79,23 @@ class CartReportController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function showBalancePayments()
+    {
+        $data = array(
+            'menu'          =>  'reports',
+            'section'       =>  'sales.balance_payments'
+        );    
+
+        return view('home')->with($data);
+    }
+
+    public function getBalancePayments()
+    {
+        $carts = Cart::with('lead.patient')
+                ->whereRaw('payment - amount > 0')
+                ->get();   
+
+        return $carts;
+    }
 }

@@ -30,12 +30,17 @@ class CartStep extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public static function getCartStepByStatus($id, $status)
+    public static function getCartStepByStatus($id, $status, $updated_at = null)
     {
-        return CartStep::where('cart_id', $id)
+        $query =  CartStep::where('cart_id', $id)
                         ->where('status_id', $status)
-                        ->with('state')
-                        ->orderBy('id', 'desc')
+                        ->with('state');
+        if ($updated_at) {
+            //dd($updated_at);
+            $query->where('updated_at', '>=', $updated_at);
+        }
+
+        return  $query->orderBy('id', 'desc')
                         ->limit(1)
                         ->first();
     }

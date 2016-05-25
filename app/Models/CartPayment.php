@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException as Exception;
 use Auth;
 use Carbon;
+use App\Models\CartStep;
 
 class CartPayment extends Model
 {
@@ -27,6 +28,19 @@ class CartPayment extends Model
     public static function store($request, $cartId)
     {
         try {
+            if(CartPayment::isPartPayment($cartId)) {
+                $status_id = 3;
+                $state_id = 1;
+                $cart = Cart::find($cartId);
+                $cart->status_id = $status_id;
+                $cart->state_id = $state_id;
+                $cart->save();
+
+                $step = CartStep::store($cartId, 1, 3);
+                $step = CartStep::store($cartId, $status_id, $state_id);
+            }
+
+
             $payment = new CartPayment;
 
             $payment->cart_id           = $cartId;
@@ -45,5 +59,16 @@ class CartPayment extends Model
             return false;
         }
             
+    }
+
+    public static function isPartPayment($id) 
+    {
+        $cart = Cart::find($id);
+
+        if ($cart->payments->isEmpty() && $cart->status_id <> 4) {
+            return false;
+        }
+
+        return true;
     }
 }

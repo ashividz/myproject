@@ -50,7 +50,7 @@
     }
 
 
-    if ((Auth::user()->hasRole('sales_tl')||Auth::user()->hasRole('sales')) && $discount == null) {
+    if ((Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service')) && $discount == null) {
         $disabled = '';
     }
 ?>
@@ -85,7 +85,7 @@
                                     <div>
                                         <label>Cart Id :</label> <a href="/cart/{{$cart->id}}" target="_blank"> {{$cart->id}}</a>
                                     </div>
-                                        <label>Created By :</label> {{$cart->user}}
+                                        <label>Created By :</label> {{ $cart->creator->employee->name or "" }}
                                     </div>
                                     <div>
                                         <label>Created At :</label> {{$cart->created_at->format('jS M Y, h:i A')}}

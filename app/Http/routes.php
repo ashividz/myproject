@@ -72,6 +72,9 @@ Route::group([
         Route::get('orders', 'OrderController@index');
         Route::post('orders', 'OrderController@index');
 
+        Route::get('sales/report/balancepayments', 'CartReportController@showBalancePayments');
+        Route::get('api/getBalancePayments', 'CartReportController@getBalancePayments');
+
 });
 
 Route::group([
@@ -265,7 +268,8 @@ Route::group([
         Route::post('settings/program/add', 'ProgramController@store');
 
         /** Bulk SMS **/
-        Route:get('marketing/sms', 'SMSController@bulk');
+        Route::get('marketing/sms', 'SMSController@bulk');
+        Route::get('api/getLeads', 'LeadsController@getLeads');
         
 });
 

@@ -180,6 +180,12 @@
     @endif
     <!-- Payment Details End -->
 
+    
+        
+@if(!$cart->products->isEmpty() && ($cart->amount == 0 || ($cart->amount - $cart->payment) <> 0))
+    <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment/add" class="btn btn-primary">Add Payment</a>
+@endif
+
 @if($cart->status_id == 1 || $cart->state_id == 2)
     
     @if($cart->product_category_id == 1 && $cart->programs->isEmpty())
@@ -187,11 +193,6 @@
     @else
         <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/product/add" class="btn btn-success">Add Product</a>
 
-    @endif
-    
-        
-    @if(!$cart->products->isEmpty() && ($cart->amount == 0 || ($cart->amount - $cart->payment) <> 0))
-        <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment/add" class="btn btn-primary">Add Payment</a>
     @endif
     
     @if(!$cart->payments->isEmpty() && $cart->state_id == 2) 

@@ -25,7 +25,10 @@ class HerbController extends Controller
 {
 	public function herbs($id)
 	{
-        $patient = Patient::with('herbs','lead')
+        $patient = Patient::with(['herbs' => function($q) {
+                        $q->withTrashed();
+                    }])
+                    ->with('lead')
 					->find($id);
 
         $lead    = $patient->lead;

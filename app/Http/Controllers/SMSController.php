@@ -14,9 +14,14 @@ class SMSController extends Controller
     {
         $data = [
             'menu'      =>  'marketing',
-            'section'   =>  'bulksms'
+            'section'   =>  'sms'
         ];
 
         return view('home')->with($data);
+    }
+
+    public function getLeads(Request $request)
+    {
+
     }
 }

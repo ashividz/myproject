@@ -60,7 +60,7 @@ class CartApprovalController extends Controller
                     ->whereHas('approvers', function($q) use ($roles) {
                         $q->whereIn('approver_role_id', $roles);
                     })
-                    ->whereBetween('created_at', array($this->start_date, $this->end_date));
+                    ->whereBetween('updated_at', array($this->start_date, $this->end_date));
 
         if($users) {
             $query = $query->whereIn('created_by', $users);

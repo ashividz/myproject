@@ -193,20 +193,30 @@ class Fee extends Model
 
     public static function store($patient, $payment)
     {
-        $duration = CartProduct::getDietDuration($payment->cart_id, 1); 
+        $duration = CartProduct::getDietDuration($payment->cart_id, 1);         
 
         if ($duration) {
+            $start_date = Carbon::now()->addDay(1);
+            $end_date = Carbon::now()->addDay($duration+1);
+
+            $lastFee = Fee::where('cart_id', $payment->cart_id)->first();
+
+            if ($lastFee) {
+                $start_date = $lastFee->start_date;
+                $end_date = $lastFee->end_date;
+            }
 
             $cre = User::find($payment->cart->cre_id);
 
             $fee = new Fee;
             $fee->patient_id        = $patient->id;
+            $fee->cart_id           = $payment->cart_id;
             $fee->currency_id       = $payment->cart->currency_id;
             $fee->total_amount      = $payment->amount;
             $fee->payment_mode      = $payment->payment_mode_id;
             $fee->entry_date        = $payment->created_at;
-            $fee->start_date        = Carbon::now()->addDay(1);
-            $fee->end_date          = Carbon::now()->addDay($duration+1);
+            $fee->start_date        = $start_date;
+            $fee->end_date          = $end_date;
             $fee->cre               = $cre ? $cre->employee->name : '';
             $fee->cre_id            = $payment->cart->cre_id;
             $fee->source_id         = $payment->cart->source_id;
