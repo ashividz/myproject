@@ -90,7 +90,7 @@ $(document).ready(function()
         $("input:checkbox").prop('checked', $(this).prop("checked"));
     });
 
-    $("#push-form2").submit(function(event) {
+    $("#push-form").submit(function(event) {
 
 
         event.preventDefault();
