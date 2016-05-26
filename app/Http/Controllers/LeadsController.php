@@ -527,17 +527,5 @@ class LeadsController extends Controller
 
     }
 
-    /** For Bulk SMS**/
-    public function getLeads(Request $request)
-    {
-        $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-
-        $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
-
-        $query = Lead::with('patient.fees')
-                    ->whereBetween('created_at', [$start_date, $end_date]);
-        $leads = $query->get();
-
-        return $leads;
-    }
+    
 }

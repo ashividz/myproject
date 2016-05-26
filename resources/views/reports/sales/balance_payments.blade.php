@@ -1,23 +1,23 @@
-    <div class="row">
+    <div class="container-fluid" id="payments">
 
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
+            <div class="panel-heading"> 
                 <span class="pull-right">
                     <a href='/sales/report/performance/download?start_date=@{{ start_date }}&end_date=@{{ end_date }}' class="btn btn-primary" v-on:click="download">Download</a>
                 </span>                
             </div>
             <div class="panel-body">
-                <table class="table table-condensed table-bordered">
+                <table class="table table-condensed table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Date</th>
                             <th>Status</th>
                             <th>Lead Details</th>
-                            <th width="10%">CRE</th>
-                            <th width="30%">Payment Details</th>
-                            <th width="25%">Product Details</th>
-                            <th>Amount</th>
+                            <th>CRE</th>
+                            <th>Product Details</th>
+                            <th>Payment Details</th>
+                            <th>Program</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,7 +33,7 @@
                                     @{{ cart.lead.name }}
                                 </a>
                                 <div v-if="cart.lead.patient">
-                                    Patient Id : <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
+                                    <b>Patient Id</b> : <a href="/patient/@{{ cart.lead.patient.id }}/diet" target="_blank">
                                         @{{ cart.lead.patient.id }}
                                     </a>
                                 </div>
@@ -44,32 +44,38 @@
                             <td>
                                 @{{ cart.cre.employee.name }}
                                 <div>
-                                    @{{ cart.cre.employee.supervisor.employee.name }}
+                                    <b>TL : </b>@{{ cart.cre.employee.supervisor.employee.name }}
                                 </div>
                             </td>
                             <td>
-                                <table class="table table-bordered">
-                                    <tr v-for='payment in cart.payments'>
-                                        <td>@{{ payment.amount | currency cart.currency.symbol }}</td>
-                                        <td>@{{ payment.method.name }}</td>
-                                        <td>@{{ payment.date }}</td>
-                                        <td>@{{ payment.remark }}</td>
-                                    </tr>
-                                </table>
+                                <li v-for='product in cart.products'>
+                                    @{{ product.name }} (@{{ product.pivot.quantity }})
+                                </li>
                             </td>
                             <td>
-                                <table class="table table-bordered">
-                                    <tr v-for='product in cart.products'>
-                                        <td>@{{ product.name }}</td>
-                                        <td>@{{ product.pivot.quantity }}</td>
-                                        <td>@{{ product.pivot.price | currency cart.currency.symbol }}</td>
-                                        <td>@{{ product.pivot.discount | discount }}%</td>
-                                        <td>@{{ product.pivot.amount | currency cart.currency.symbol }}</td>
-                                    </tr>
-                                </table>
+                                <div>
+                                    <b>Amount : </b>@{{ cart.amount | currency cart.currency.symbol }}
+                                </div>
+                                <div>
+                                    <b>Payment : </b>@{{ cart.payment | currency cart.currency.symbol }}
+                                </div>
+                                <hr>
+                                <div>
+                                    <b>Balance : </b>@{{ cart.amount - cart.payment | currency cart.currency.symbol }}
+                                </div>
                             </td>
                             <td>
-                                @{{ cart.amount | currency cart.currency.symbol }}
+                                <div>
+                                    <b>Start Date</b> : @{{ cart.lead.patient.fees[0].start_date | format_date2 }}
+                                </div>
+                                <div>
+                                    <b>End Date</b> : @{{ cart.lead.patient.fees[0].end_date | format_date2 }}
+                                </div>  
+                                <hr>
+                                <b>Duration : </b> @{{ cart.lead.patient.fees[0].duration }} days                              
+                            </td>
+                            <td>
+                                Button
                             </td>
                         </tr>
                     </tbody>
@@ -83,11 +89,14 @@
     table.table {
         font-size: 12px;
     }
+    hr {
+        margin: 5px;
+    }
     
 </style>
 <script>
     var vm = new Vue({
-        el: 'body',
+        el: '#payments',
 
         data: {
             loading: false,
@@ -105,22 +114,12 @@
 
             getCarts() {
                 this.loading = true;
-                this.$http.get("/api/getBalancePayments", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
+                this.$http.get("/api/getBalancePayments", {'start_date': this.start_date, 'end_date' : this.end_date})
+                .success(function(data){
                     this.carts = data;
                     this.loading = false;
                 }).bind(this);
             },
-        },
-        computed: {
-            start_date() {
-                var range = this.daterange.split(" - ");
-                return moment(range[0]).format('YYYY-MM-DD') + ' 0:0:0';
-            },
-
-            end_date() {
-                var range = this.daterange.split(" - ");
-                return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
-            }
         }
     })
     Vue.filter('format_date', function (value) {
@@ -134,9 +133,6 @@
             return null;
         }
       return moment(value).format('D MMM');
-    })
-    vm.$watch('daterange', function (newval, oldval) {
-        this.getCarts();
     })
 </script>
 <script type="text/javascript">

@@ -92,9 +92,11 @@ class CartReportController extends Controller
 
     public function getBalancePayments()
     {
-        $carts = Cart::with('lead.patient')
-                ->whereRaw('payment - amount > 0')
-                ->get();   
+        $carts = Cart::with('lead.patient.fees', 'cre.employee.supervisor.employee', 'currency', 'status', 'state', 'products')
+                ->where('status_id', '4')
+                ->whereRaw('amount - payment > 0')
+                //->orderBy('id', 'desc')
+                ->get();
 
         return $carts;
     }

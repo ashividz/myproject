@@ -4,8 +4,7 @@
             <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
             <div class="location">
                 NCR : <input type="radio" value="ncr" name="location" checked>
-                Pan India : <input type="radio" value="pan" name="location"> 
-                Internationl : <input type="radio" value="int" name="location" >
+                Pan India : <input type="radio" value="pan" name="location">
 
                 Filter Unread : <input type="checkbox" name="filter_unread" v-model='filter_unread'>
                 Filter Action : <input type="checkbox" name="filter_action" v-model='filter_action'>
@@ -33,8 +32,6 @@
                             </td>
                             <td>
                                 @{{ lead.city }}
-                                @{{ lead.state }}
-                                @{{ lead.country }}
                             </td>
                             <td>
                                 @{{ lead.patient.fees[0].start_date | format_date2 }}
@@ -58,8 +55,7 @@
             leads: [],
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
-            end_date: '',
-            location:
+            end_date: ''
         },
 
         ready: function(){

@@ -94,6 +94,9 @@
         <script src="/plugins/vue/vue.min.js"></script>
         <script src="/plugins/vue/vue-resource.min.js"></script>
 
+        <!-- Sparkline -->
+        <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  -->      
+
     </head>
     <body>
         <!-- Loader -->

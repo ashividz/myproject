@@ -268,8 +268,10 @@ Route::group([
         Route::post('settings/program/add', 'ProgramController@store');
 
         /** Bulk SMS **/
-        Route::get('marketing/sms', 'SMSController@bulk');
-        Route::get('api/getLeads', 'LeadsController@getLeads');
+        Route::get('marketing/sms/patients', 'SMSController@patients');
+        Route::get('api/getLeads', 'SMSController@getLeads');
+        Route::post('api/getPatients', 'SMSController@getPatients');
+        Route::post('api/sendSMS', 'SMSController@send');
 
         Route::get('lead/interested', 'LeadController@interested');
         Route::post('lead/interested', 'LeadController@interested');

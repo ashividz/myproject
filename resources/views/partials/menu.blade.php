@@ -439,6 +439,9 @@
                         <li>
                             <a href="/sales/report/performance">Performance</a>
                         </li> 
+                        <li>
+                            <a href="/sales/report/balancepayments">Balance Payments</a>
+                        </li>
                     </ul>
                 </li>
             @endif
