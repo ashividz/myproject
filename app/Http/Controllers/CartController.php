@@ -196,6 +196,9 @@ class CartController extends Controller
 
     public function getCarts()
     {
+        $start_date = $this->start_date;
+        $end_date = $this->end_date;
+
         $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
@@ -204,7 +207,10 @@ class CartController extends Controller
                         $q->select('id', 'lead_id');
                     }])
                     ->with('cre.employee.supervisor.employee')
-                    ->whereBetween('created_at', [$this->start_date, $this->end_date])
+                    ->whereHas('payments', function($q) use ($start_date, $end_date) {
+                        $q->whereBetween('created_at', [$start_date, $end_date]);
+                    })
+                    //->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->orderBy('id', 'desc')
                     ->get();
 

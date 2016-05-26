@@ -2,7 +2,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
+                <b>Payment Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
                 <span class="pull-right">
                     <a href='/sales/report/performance/download?start_date=@{{ start_date }}&end_date=@{{ end_date }}' class="btn btn-primary" v-on:click="download">Download</a>
                 </span>                

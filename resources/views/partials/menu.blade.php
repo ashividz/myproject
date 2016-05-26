@@ -353,6 +353,15 @@
                         </li>
                     </ul>
                 </li>
+
+                <li>
+                    <a href="#">SMS</a>
+                    <ul>
+                        <li>
+                            <a href="/marketing/sms/patients">Patients</a>
+                        </li>
+                    </ul>
+                </li>
                             
             </ul> <!-- second level -->                        
         </li>
