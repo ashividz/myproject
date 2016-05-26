@@ -17,6 +17,7 @@ use App\Models\Status;
 use App\Models\LeadCre;
 use DB;
 use Auth;
+use App\Support\Helper;
 
 define("DIALER_URI",  'http://192.168.1.203/test.ajax');
 
@@ -32,7 +33,7 @@ class DialerPushController extends Controller
       public function __construct(Request $request)
     {   
         $this->limit = isset($request->limit) ? $request->limit : 2000;
-        $this->list_id = "sales01022016";
+        $this->list_id = "sales06052016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
@@ -126,7 +127,77 @@ public function getLeadsConsecutive(Request $request)
 
     }
 
-    public function getLeads2(Request $request)
+     public function getLeads(Request $request)
+    {
+        $users = User::getUsersByRole('cre');
+        $cre = $request->user;
+        $dispo_date = date('2016-03-30 0:0:0');
+        $cur_date = date('Y-m-d 0:0:0');
+        //dd( $this->end_date );
+        $leads_qry = Lead::select('marketing_details.*')
+            ->with('cre')
+              ->with(['disposition' => function($q) use($dispo_date, $cur_date){
+                    $q->whereIn('disposition_id',[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14])
+                    ->where('created_at', '<', $dispo_date)
+                    ->where(function($r) use($cur_date) {
+                              $r->whereRaw("callback < '$cur_date'")
+                              ->orWhereNull('callback');
+                            });
+                }]);
+
+             
+
+             if(isset($request->user) && $request->user != "Select User")
+                    $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE cre = '$cre' and (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                             $join->on('marketing_details.id', '=', 'c.lead_id');
+                        });
+             else
+                    $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                             $join->on('marketing_details.id', '=', 'c.lead_id');
+                        });
+            
+           
+
+            $leads_qry->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id');
+           
+
+            $leads_qry->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id');
+           
+            //$leads_qry->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id');
+            $leads_qry->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))
+                        ->whereNull('p.id')
+                        ->whereNull('d.id')
+                        //->whereNull('dp.id')
+                       
+                        ->where(function($q)  {
+                                $q->where('marketing_details.country','=','IN')
+                                  ->orWhereNull('marketing_details.country')
+                                  ->orWhere('marketing_details.country','=','');
+                         });
+          
+            //->whereNotNull('marketing_details.source_id')
+            
+            
+            $leads = $leads_qry->limit($this->limit)->get();
+              
+        
+            $data = array(
+                'section'       => 'dialer_pushstat',
+                'menu'          => 'lead',
+                'start_date'    => $this->start_date,
+                'end_date'      => $this->end_date,
+                'leads'         => $leads,
+                'users'         => $users,
+                'name'          => $this->cre,
+                'limit'         => $this->limit,
+                'i'             => 1
+            ); 
+            return view('home')->with($data);
+           //$this->push("9582405381", "harsh");
+    }
+
+
+    public function getLeads3(Request $request)
     {
         $users = User::getUsersByRole('cre');
         $cre = $request->user;
@@ -187,7 +258,7 @@ public function getLeadsConsecutive(Request $request)
        //$this->push("9582405381", "harsh");
     }
 
- public function getLeads(Request $request)
+ public function getLeads2(Request $request)
     {
         $users = User::getUsersByRole('cre');
         $cre = $request->user;
@@ -335,6 +406,8 @@ public function getLeadsConsecutive(Request $request)
         {
             $output= 'false2';
             $phone = $request->phone[$i];
+
+            $phone = Helper::properMobile($phone);
             $cre_name = $request->cre_name[$i];
          
              //dd($username);
@@ -353,7 +426,7 @@ public function getLeadsConsecutive(Request $request)
             //if($push==1)
             //{
             $ch = curl_init("http://192.168.1.203/test.ajax");
-            $encoded_params = "do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone."&agentname=".$username;
+            $encoded_params = "do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone;
             
             /*curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);
