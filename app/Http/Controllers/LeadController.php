@@ -256,15 +256,15 @@ class LeadController extends Controller
                     $q->where('name','=',Auth::user()->employee->name);
                     $q->whereBetween('created_at', Array(date('Y-m-d 0:0:0'), date('Y-m-d 23:59:59')));
                 }])
-                ->leftjoin(DB::raw('(SELECT * FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE  A.lead_id=B.lead_id)) AS cd'), function($join) {
+               /* ->leftjoin(DB::raw('(SELECT * FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE  A.lead_id=B.lead_id)) AS cd'), function($join) {
                 $join->on('marketing_details.id', '=', 'cd.lead_id');
                  })
-                ->select('marketing_details.*', 'cd.disposition_id as last_dispo', 'cd.callback as callback')
+                ->select('marketing_details.*', 'cd.disposition_id as last_dispo', 'cd.callback as callback')*/
 
                 ->find($id);
                 //$lead->last_dispo = 1;
-        if($lead->dialer && array_search($lead->last_dispo, [8, 9, 10, 11, 15]))
-            $lead->hideDisposition = true;
+     /*   if($lead->dialer && array_search($lead->last_dispo, [8, 9, 10, 11, 15]))
+            $lead->hideDisposition = true;*/
 
         //dd($lead->hideDisposition);
 

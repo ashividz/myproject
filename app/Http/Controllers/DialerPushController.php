@@ -163,11 +163,11 @@ public function getLeadsConsecutive(Request $request)
 
             $leads_qry->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id');
            
-            //$leads_qry->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id');
+            $leads_qry->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id');
             $leads_qry->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))
                         ->whereNull('p.id')
                         ->whereNull('d.id')
-                        //->whereNull('dp.id')
+                        ->whereNull('dp.id')
                        
                         ->where(function($q)  {
                                 $q->where('marketing_details.country','=','IN')
