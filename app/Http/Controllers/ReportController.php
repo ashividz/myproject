@@ -463,7 +463,7 @@ class ReportController extends Controller
      {
         $users = User::getUsersByRole('cre');
         
-        if(isset($request->user) && $request->user!="Select User")
+        if(isset($request->user) && $request->user!="Select User" && $request->user!="")
         {
             $cre_name = $request->user;
             $cres = User::join(DB::raw("(SELECT * FROM employees where name='$cre_name') AS e"), function($join) {
