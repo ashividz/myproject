@@ -11,7 +11,7 @@
                 <table class="table table-condensed table-bordered">
                     <thead>
                         <tr>
-                            <th>Date</th>
+                            <th>Payment Date</th>
                             <th>Status</th>
                             <th>Lead Details</th>
                             <th width="10%">CRE</th>
@@ -23,7 +23,7 @@
                     <tbody>
                         <tr v-for="cart in carts">
                             <td>
-                                @{{ cart.created_at | format_date }}
+                                @{{ cart.payments[0].date | format_date2 }}
                             </td>
                             <td>
                                 <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
@@ -44,6 +44,7 @@
                             <td>
                                 @{{ cart.cre.employee.name }}
                                 <div>
+                                    <b>TL : </b> 
                                     @{{ cart.cre.employee.supervisor.employee.name }}
                                 </div>
                             </td>

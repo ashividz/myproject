@@ -208,7 +208,7 @@ class CartController extends Controller
                     }])
                     ->with('cre.employee.supervisor.employee')
                     ->whereHas('payments', function($q) use ($start_date, $end_date) {
-                        $q->whereBetween('created_at', [$start_date, $end_date]);
+                        $q->whereBetween('date', [$start_date, $end_date]);
                     })
                     //->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->orderBy('id', 'desc')

@@ -83,7 +83,7 @@ class Cart extends Model
 
     public function payments()
     {
-        return $this->hasMany(CartPayment::class);
+        return $this->hasMany(CartPayment::class)->orderBy('id', 'desc');
     }
 
     public function shippings()
