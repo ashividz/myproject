@@ -15,7 +15,7 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="/admin/user/{{$employee->id}}">
+					<form class="form-horizontal" role="form" method="POST" action="/admin/employee/{{$employee->id}}/user/add">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<input type="hidden" name="emp_id" value="{{ $employee->id }}">
 

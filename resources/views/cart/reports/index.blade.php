@@ -1,8 +1,8 @@
-    <div class="row">
+    <div class="container-fluid" id="carts">
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Payment Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
+                <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
                 <span class="pull-right">
                     <a href='/sales/report/performance/download?start_date=@{{ start_date }}&end_date=@{{ end_date }}' class="btn btn-primary" v-on:click="download">Download</a>
                 </span>                
@@ -11,38 +11,59 @@
                 <table class="table table-condensed table-bordered">
                     <thead>
                         <tr>
-                            <th>Payment Date</th>
-                            <th>Status</th>
+                            <th>Cart Details</th>
                             <th>Lead Details</th>
-                            <th width="10%">CRE</th>
                             <th width="30%">Payment Details</th>
-                            <th width="25%">Product Details</th>
-                            <th>Amount</th>
+                            <th width="30%">Product Details</th>
+                            <th>Invoice</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="cart in carts">
                             <td>
-                                @{{ cart.payments[0].date | format_date2 }}
-                            </td>
-                            <td>
-                                <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
-                            </td>
-                            <td>
-                                <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
-                                    @{{ cart.lead.name }}
-                                </a>
-                                <div v-if="cart.lead.patient">
-                                    Patient Id : <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
-                                        @{{ cart.lead.patient.id }}
+                                <div>
+                                    <b>Cart Id : </b> 
+                                    <a href="/cart/@{{ cart.id }}" target="_blank">
+                                        @{{ cart.id }}
                                     </a>
                                 </div>
                                 <div>
-                                    @{{ cart.source.name }}
+                                    <b>Date : </b>@{{ cart.created_at | format_date }}
                                 </div>
+                                <div>
+                                    <b>Creator : </b>@{{ cart.creator.employee.name }}
+                                </div>
+                                <div>
+                                    <b>Amount : </b> @{{ cart.amount | currency cart.currency.symbol }}
+                                </div> 
+                                <div>
+                                    <b>Payment : </b> @{{ cart.payment | currency cart.currency.symbol }}
+                                </div>
+
+                                <div v-if="cart.amount - cart.payment > 0" style="color:red">
+                                    <b>Balance : </b> @{{ cart.amount - cart.payment | currency cart.currency.symbol }}
+                                </div>
+                                <div>
+                                    <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
+                                </div>                                
                             </td>
                             <td>
-                                @{{ cart.cre.employee.name }}
+                                <div>
+                                    <b>Name : </b>
+                                    <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
+                                        @{{ cart.lead.name }}
+                                    </a>
+                                </div>                                    
+                                <div v-if="cart.lead.patient">
+                                    Patient Id : <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">@{{ cart.lead.patient.id }}
+                                    </a>
+                                </div>
+                                <div>
+                                    <b>Source : </b>@{{ cart.source.name }}
+                                </div>
+                                <div>
+                                    <b>CRE :</b> @{{ cart.cre.employee.name }}
+                                </div>
                                 <div>
                                     <b>TL : </b> 
                                     @{{ cart.cre.employee.supervisor.employee.name }}
@@ -70,7 +91,19 @@
                                 </table>
                             </td>
                             <td>
-                                @{{ cart.amount | currency cart.currency.symbol }}
+                                <li v-for="invoice in cart.invoices">
+                                    <a href="/invoice/@{{ invoice. id }}" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
+                                        @{{ invoice.number }}
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </a>
+                                </li>
+                             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
+                                <div style="text-align:center">
+                                    <a href="/cart/@{{ cart.id }}/invoice" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+                            @endif
                             </td>
                         </tr>
                     </tbody>
@@ -88,7 +121,7 @@
 </style>
 <script>
     var vm = new Vue({
-        el: 'body',
+        el: '#carts',
 
         data: {
             loading: false,

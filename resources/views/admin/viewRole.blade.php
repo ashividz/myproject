@@ -6,7 +6,7 @@
 		<div class="panel-body">
 			<div class="container">
 				<div class="col-md-4">
-					<form id="form" class="form-horizontal"	action="/admin/user/{{$user->id}}/addRole" method="post">
+					<form id="form" class="form-horizontal"	action="/admin/user/{{$user->id}}/role" method="post">
 						<div class="form-group">
 							<select name="role" class="form-control col-md-2">
 								<option value="">Select Role</option>

@@ -33,7 +33,17 @@ class CartReportController extends Controller
         $this->end_date = isset($this->daterange[1]) ? date('Y-m-d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');
     }
 
-    public function cartStatusReport()
+    public function index()
+    {
+        $data = array(
+            'menu'          =>  'cart',
+            'section'       =>  'reports.index'
+        );    
+
+        return view('home')->with($data);
+    }
+
+    /*public function cartStatusReport()
     {
         $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step', 'shippings')          
                     ->whereBetween('created_at', array($this->start_date, $this->end_date))
@@ -54,6 +64,7 @@ class CartReportController extends Controller
 
         return view('home')->with($data);
     }
+    */
 
     public function goods()
     {

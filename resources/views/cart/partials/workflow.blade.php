@@ -14,7 +14,11 @@
             $content = "";
             $step = Step::getCartStepByStatus($cart->id, $status->id, $updated_at);
             if ($step) {
-                $content = " <span class='".$step->state->css_class."'>".$step->state->name."</span></b> <small>by</small> ".$step->user->employee->name." <small>on <em>".$step->updated_at->format('jS M, Y, h:i:A')."</em></small>";
+                
+                $content = " <span class='".$step->state->css_class."'>".$step->state->name."</span></b>";
+
+                $content .= " <small>by</small> ".$step->user->employee->name." <small>on <em>".$step->updated_at->format('jS M, Y, h:i:A')."</em></small>";
+                
                 $content .= $step->remark <> '' ? " <small>(".$step->remark.")</small>" : "";
                 $created_at = $step->created_at;
                 $updated_at = $step->updated_at;

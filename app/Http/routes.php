@@ -20,8 +20,11 @@ setlocale(LC_MONETARY, "en_IN");
     Route::get('shipping/fedex','FedExController@index');
     Route::get('shipping/track/{id}','FedExController@modal');
 
-    Route::get('cart/{id}/invoice','CartInvoiceController@modal');
-    Route::post('cart/{id}/invoice','CartInvoiceController@store');
+    Route::get('invoice/{id}','InvoiceController@show');
+    Route::patch('invoice/{id}','InvoiceController@update');
+    
+    Route::get('cart/{id}/invoice','InvoiceController@modal');
+    Route::post('cart/{id}/invoice','InvoiceController@store');
 
     Route::get('api/getTrackings','FedExController@getTrackings');
     Route::get('api/sync','FedExController@sync');
@@ -36,12 +39,17 @@ Route::group([
     'roles' => ['admin']], 
     function() {
         Route::get('admin', 'AdminController@index');
-        Route::get('admin/viewUsers', 'UserController@viewUsers');
-        Route::get('admin/user/{id}', 'UserController@showUserRegistrationForm');
-        Route::post('admin/user/{id}', 'UserController@store');
+        //Route::get('admin/viewUsers', 'UserController@viewUsers');
+        Route::get('admin/employees', 'EmployeeController@index');
+        Route::get('api/getEmployees', 'EmployeeController@get');
 
-        Route::get('admin/user/{id}/viewRole', 'UserController@viewRole');
-        Route::post('admin/user/{id}/addRole', 'UserController@addRole');
+        Route::post('api/toggleDeleteUser', 'UserController@toggleDelete');
+
+        Route::get('admin/employee/{id}', 'EmployeeController@showUserRegistrationForm');
+        Route::post('admin/employee/{id}/user/add', 'UserController@store');
+
+        Route::get('admin/user/{id}/role', 'UserController@viewRole');
+        Route::post('admin/user/{id}/role', 'UserController@addRole');
 
         Route::get('admin/viewUserRoles', 'RoleController@viewUserRoles');
         Route::get('admin/addUserRole', 'RoleController@viewAddUserRole');
@@ -81,8 +89,8 @@ Route::group([
     'middleware' => ['auth', 'roles'], 
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality','service_tl']], 
     function() {
-    Route::get('carts', 'CartReportController@cartStatusReport');
-    Route::post('carts', 'CartReportController@cartStatusReport');
+    Route::get('carts', 'CartReportController@index');
+    Route::post('carts', 'CartReportController@index');
 
 });
 
@@ -833,7 +841,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('report/patients/occupation', 'ReportController@occupation');
 
     Route::get('sales/report/performance', 'SalesReportController@performance');
-    Route::get('sales/report/getCarts', 'CartController@getCarts');
+    Route::get('api/getCarts', 'CartController@get');
     Route::get('sales/report/performance/download', 'CartController@download');
 
 

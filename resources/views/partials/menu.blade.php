@@ -41,7 +41,7 @@
                     <a href="#" id="menu_admin_UserManagement" class="arrow">User Management</a>
                     <ul>
                         <li>
-                            <a href="/admin/viewUsers" id="menu_admin_users">Users</a>
+                            <a href="/admin/employees" id="menu_admin_users">Employees</a>
                         </li>
                         <li>
                             <a href="/admin/viewUserRoles" id="menu_admin_roles">Roles</a>

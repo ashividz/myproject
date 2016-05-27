@@ -91,6 +91,11 @@ class Cart extends Model
         return $this->hasMany(Shipping::class, 'cart_id', 'id')->select('id', 'cart_id');
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     public static function updateAmount($id)
     {
         $cart = Cart::find($id);

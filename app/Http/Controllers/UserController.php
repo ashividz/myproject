@@ -14,6 +14,7 @@ use App\Models\Role;
 use App\Models\RoleUser;
 use Auth;
 use DB;
+use Carbon;
 
 class UserController extends Controller
 {
@@ -67,7 +68,7 @@ class UserController extends Controller
         );
 
         return view('home')->with($data);*/
-        return redirect('/admin/viewUsers');
+        return redirect('/admin/employees');
     }
 
     public function showPasswordForm()
@@ -109,21 +110,7 @@ class UserController extends Controller
         return view('home')->with($data);
     }
 
-    public function showUserRegistrationForm($id)
-    {
-        $employee = Employee::find($id);
-
-        $user = User::where('emp_id', $id)->first();
-
-        $data = array(
-            'menu'      => 'admin',
-            'section'   => 'addUser',
-            'employee'    => $employee,
-            'user'      => $user
-        );
-
-        return view('home')->with($data);
-    }
+    
 
     public function showEditForm($id)
     {
@@ -226,5 +213,21 @@ class UserController extends Controller
         }
 
         return $this->viewRole($id);
+    }
+
+    public function toggledelete(Request $request)
+    {
+        $user = User::withTrashed()->find($request->id);
+
+        if ($user && $user->deleted_at) {
+
+            $user->deleted_at = null;
+            $user->save();
+
+        } else {
+            $user->delete();
+        }
+
+        return $user->deleted_at;
     }
 }

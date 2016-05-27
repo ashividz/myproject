@@ -6,7 +6,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
   		<div class="pull-right">
-    		@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl'))
+    		@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('marketing'))
 				@include('../partials/users')
 			@endif
 		</div>

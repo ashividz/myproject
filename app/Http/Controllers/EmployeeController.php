@@ -19,12 +19,25 @@ use DB;
 class EmployeeController extends Controller
 {
     
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
+    public function index()
+    {
+        $data = array(
+            "menu"      => "admin",
+            "section"   => 'employee.index'
+        );
+
+        return view('home')->with($data);
+    }
+
+    public function get()
+    {
+        return Employee::with(['user' => function($q) {
+                    $q->withTrashed()->with('roles');
+                }])
+                ->orderBy('name')
+                ->get();
+    }
+
     public function show()
     {
         /**/
@@ -203,5 +216,21 @@ class EmployeeController extends Controller
         $supervisor->save();
 
         return "Supervisor saved";
+    }
+
+    public function showUserRegistrationForm($id)
+    {
+        $employee = Employee::find($id);
+
+        $user = User::where('emp_id', $id)->first();
+
+        $data = array(
+            'menu'      => 'admin',
+            'section'   => 'addUser',
+            'employee'    => $employee,
+            'user'      => $user
+        );
+
+        return view('home')->with($data);
     }
 }

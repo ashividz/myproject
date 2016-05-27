@@ -34,7 +34,10 @@ class CartStep extends Model
     {
         $query =  CartStep::where('cart_id', $id)
                         ->where('status_id', $status)
-                        ->with('state');
+                        ->with('state')
+                        ->with(['user' => function($q) {
+                            $q->withTrashed();
+                        }]);
         if ($updated_at) {
             //dd($updated_at);
             $query->where('updated_at', '>=', $updated_at);

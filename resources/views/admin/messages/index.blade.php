@@ -60,7 +60,7 @@
     Vue.http.headers.common['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
 
     var vm1 = new Vue({
-        el: 'messages',
+        el: '#messages',
 
         data: {
             messages: [],
