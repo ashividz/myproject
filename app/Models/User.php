@@ -119,6 +119,14 @@ class User extends Model implements AuthenticatableContract,
                 ->get();
     }
 
+    public static function getUsersWithEmployee()
+    {
+        return User::join('employees AS e', 'e.id', '=', 'emp_id')                
+                ->orderBy('e.name')
+                ->select('users.id', 'e.name')
+                ->get();   
+    }
+
     public static function getUsersByRole($role, $user_id = null)
     {
         $users =  User::join('employees AS e', 'e.id', '=', 'emp_id')
