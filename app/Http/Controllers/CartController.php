@@ -21,7 +21,6 @@ use App\Models\Carrier;
 use Auth;
 use Redirect;
 use DB;
-use Excel;
 use Carbon;
 
 class CartController extends Controller
@@ -194,12 +193,11 @@ class CartController extends Controller
         return view('shipping.modal.add')->with($data);
     }
 
-    public function get()
+    public function get(Request $request)
     {
-        $start_date = $this->start_date;
-        $end_date = $this->end_date;
+        $category = $request->category ? : null;
 
-        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method')
+        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
@@ -210,80 +208,28 @@ class CartController extends Controller
                         $q->select('id', 'cart_id', 'number');
                     }])
                     ->with('creator.employee')
-                    ->with('cre.employee.supervisor.employee')
-                    ->whereHas('payments', function($q) use ($start_date, $end_date) {
-                        $q->whereBetween('created_at', [$start_date, $end_date]);
-                    })
-                    //->whereBetween('created_at', [$this->start_date, $this->end_date])
+                    ->with('cre.employee.supervisor.employee');
+
+        if ($category) {
+            $carts = $carts->whereHas('products.category', function($q){
+                        $q->whereIn('id', [2,4]);
+                    }); 
+        }
+
+        $carts = $carts->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->orderBy('id', 'desc')
                     ->get();
 
         return $carts;
     }
-    
-    public function download()
+
+    public function goods()
     {
-        $carts = $this->getCarts();
+        $data = array(
+            'menu'          =>  'cart',
+            'section'       =>  'reports.goods',
+        );    
 
-        if (!$carts->isEmpty()) {
-            Excel::create('SalesPerformanceReport', function($excel) use($carts) {
-
-                $excel->sheet('Sheetname', function($sheet) use($carts) {
-                    //$sheet->fromArray($carts);
-                        
-
-                    $sheet->appendRow(array(
-                           'Date', 
-                           'Cart Status',
-                           'Cart Id', 
-                           'Lead Id',
-                           'Lead Source',
-                           'CRE',
-                           'TL',
-                           'Name',
-                           'Patient Id',
-                           'Amount',
-                           'Payment Date',
-                           'Payment Method',
-                           'Payment Amount',
-                           'Payment Remark',
-                        ));
-                    foreach ($carts as $cart) {
-                        $date       = $cart->created_at;
-                        $status     = $cart->status->name." - ".$cart->state->name;
-                        $id         = $cart->id;
-                        $lead_id    = $cart->lead_id;
-                        $source     = $cart->source['name'];
-                        $cre        = $cart->cre->employee->name;
-                        $tl         = isset($cart->cre->employee->supervisor) ? $cart->cre->employee->supervisor->employee->name: '' ;
-                        $name       = $cart->lead->name;
-                        $patient_id = isset($cart->lead->patient) ? $cart->lead->patient->id : '' ;
-                        $amount     = $cart->amount; 
-                        $payment_date   = !$cart->payments->isEmpty() ? $cart->payments->last()->date : null;
-                        $payment_method = !$cart->payments->isEmpty() ? $cart->payments->last()->method->name : null;
-                        $payment_amount = !$cart->payments->isEmpty() ? $cart->payments->last()->amount : null;
-                        $payment_remark = !$cart->payments->isEmpty() ? $cart->payments->last()->remark : null;
-                        
-
-                        $sheet->appendRow(array(
-                            $date,
-                            $status,
-                            $id,
-                            $lead_id,
-                            $source,
-                            $cre,
-                            $tl,
-                            $name,
-                            $patient_id,
-                            $amount,
-                            $payment_date,
-                            $payment_method,
-                            $payment_amount,
-                            $payment_remark
-                        ));
-                    }
-                });
-            })->download('xls');;
-        }
+        return view('home')->with($data);
     }
 }

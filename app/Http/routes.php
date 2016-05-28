@@ -22,7 +22,7 @@ setlocale(LC_MONETARY, "en_IN");
 
     Route::get('invoice/{id}','InvoiceController@show');
     Route::patch('invoice/{id}','InvoiceController@update');
-    
+
     Route::get('cart/{id}/invoice','InvoiceController@modal');
     Route::post('cart/{id}/invoice','InvoiceController@store');
 
@@ -30,8 +30,8 @@ setlocale(LC_MONETARY, "en_IN");
     Route::get('api/sync','FedExController@sync');
 
     /**Cart Goods Tracking for Ashish**/
-    Route::get('carts/goods', 'CartReportController@goods');
-    Route::post('carts/goods', 'CartReportController@goods');
+    Route::get('carts/goods', 'CartController@goods');
+    Route::post('carts/goods', 'CartController@goods');
 
 
 Route::group([
@@ -82,6 +82,8 @@ Route::group([
 
         Route::get('sales/report/balancepayments', 'CartReportController@showBalancePayments');
         Route::get('api/getBalancePayments', 'CartReportController@getBalancePayments');
+
+        Route::get('api/getPayments', 'CartPaymentController@get');
 
 });
 
@@ -842,7 +844,10 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('sales/report/performance', 'SalesReportController@performance');
     Route::get('api/getCarts', 'CartController@get');
-    Route::get('sales/report/performance/download', 'CartController@download');
+
+    Route::get('api/getGoods', 'CartController@get');
+
+    Route::get('sales/report/performance/download', 'CartPaymentController@download');
 
 
     Route::get('testimonial/videos', 'TestimonialController@show');
@@ -916,3 +921,6 @@ Route::controllers([
 
     Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
     Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
+
+    Route::get('marketing/reports/package', 'MarketingController@package');
+    Route::get('api/getPackageExtensions', 'MarketingController@getPackageExtensions');

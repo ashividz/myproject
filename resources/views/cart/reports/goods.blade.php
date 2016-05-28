@@ -1,100 +1,209 @@
-<div class="container1">
-    <div class="panel panel-default">       
-        <div class="panel-heading">         
-            <div class="pull-left">
-            <h4>Cart Status Report</h4>
+    <div class="container-fluid" id="carts">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/> 
             </div>
-            <div class="pull-right">
-                @include('partials/daterange')
-            </div>
-        </div>
-        <div class="panel-body">
-            <form id="form" method="post" class="form-inline" action="">
-                <table class="table table-bordered">
+            <div class="panel-body">
+                <table class="table table-condensed table-bordered">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th style="width:12%;">Cart Details</th>
-                            <th style="width:12%;">Lead Details</th>
-                            <th style="width:12%;">Products</th>
-                            <th style="width:12%;">Payments</th>                           
-                            <th style="width:45%;">Status</th>                           
-                            <th style="width:5%;">Track</th>
+                            <th>Cart Details</th>
+                            <th>Lead Details</th>
+                            <th width="25%">Payment Details</th>
+                            <th width="25%">Product Details</th>
+                            <th>Invoice</th>
+                            <th>Shipping</th>
                         </tr>
                     </thead>
                     <tbody>
-                @foreach($carts as $cart)
-                        <tr>
-                            <td>
-                                <a href="/cart/{{$cart->id}}" target="_blank"> {{$cart->id}}</a>
-                            </td>
-                            <td>                                
-                                <div>
-                                    <label>Creator : </label> {{ $cart->creator->employee->name or "" }} 
-                                </div><div>
-                                    <label>Date : </label> {{ $cart->created_at->format('j-M-y, h:i A') }}</span>
-                                </div>
-                                <div>
-                                    <label>CRE : </label> {{ $cart->cre->employee->name or "" }} 
-                                </div>
-                                <div>
-                                    <label>TL : </label> {!! $cart->cre && !$cart->cre->employee->sup->isEmpty() ? $cart->cre->employee->sup->last()->name : "XNX" !!}
-                                </div>
-                            </td>
+                        <tr v-for="cart in carts">
                             <td>
                                 <div>
-                                    <label>Name : </label>
-                                    {{$cart->lead->name}}
+                                    <b>Cart Id : </b> 
+                                    <a href="/cart/@{{ cart.id }}" target="_blank">
+                                        @{{ cart.id }}
+                                    </a>
                                 </div>
                                 <div>
-                                    <label>Lead Id : </label>
-                                    <a href="/lead/{{ $cart->lead_id or ""}}/viewDetails" target="_blank">{{ $cart->lead_id or ""}}</a>
+                                    <b>Date : </b>@{{ cart.created_at | format_date }}
                                 </div>
                                 <div>
-                                    <label>Patient Id : </label>
-                                    <a href="/patient/{{ $cart->lead->patient->id or ""}}/diets" target="_blank">{{ $cart->lead->patient->id or ""}}</a>
+                                    <b>Creator : </b>@{{ cart.creator.employee.name }}
+                                </div>
+                                <div>
+                                    <b>Amount : </b> @{{ cart.amount | currency cart.currency.symbol }}
+                                </div> 
+                                <div>
+                                    <b>Payment : </b> @{{ cart.payment | currency cart.currency.symbol }}
+                                </div>
+
+                                <div v-if="cart.amount - cart.payment > 0" style="color:red">
+                                    <b>Balance : </b> @{{ cart.amount - cart.payment | currency cart.currency.symbol }}
+                                </div>
+                                <div>
+                                    <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
+                                </div>                                
+                            </td>
+                            <td>
+                                <div>
+                                    <b>Name : </b> @{{ cart.lead.name }}
+                                </div> 
+                                <div>
+                                    <b>Lead Id : </b>
+                                    <a href="/lead/@{{ cart.lead_id }}/cart" target="_blank">
+                                        @{{ cart.lead_id }}
+                                    </a>
+                                </div>                                   
+                                <div v-if="cart.lead.patient">
+                                    <b>Patient Id :</b> <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">@{{ cart.lead.patient.id }}
+                                    </a>
+                                </div>
+                                <div>
+                                    <b>Source : </b>@{{ cart.source.name }}
+                                </div>
+                                <div>
+                                    <b>CRE :</b> @{{ cart.cre.employee.name }}
+                                </div>
+                                <div>
+                                    <b>TL : </b> 
+                                    @{{ cart.cre.employee.supervisor.employee.name }}
                                 </div>
                             </td>
                             <td>
-                                @foreach($cart->products as $product)
-                                    <li>
-                                        {{ $product->name }}
-                                        {!! $product->pivot->discount > 0 ? "<small><em>(" . $product->pivot->discount."%)</em><small>" : "" !!}
-                                    </li>
-                                @endforeach
+                                <table class="table table-bordered">
+                                    <tr v-for='payment in cart.payments'>
+                                        <td>@{{ payment.amount | currency cart.currency.symbol }}</td>
+                                        <td>@{{ payment.method.name }}</td>
+                                        <td>@{{ payment.date }}</td>
+                                        <td>@{{ payment.remark }}</td>
+                                    </tr>
+                                </table>
                             </td>
                             <td>
-                                @foreach($cart->payments as $payment)
-                                    <li>
-                                        {{ $payment->amount }} - {{ $payment->method->name or "" }}
-                                        <small>
-                                            <em>{!! $payment->remark <> '' ? '<br>( '.$payment->remark.' )' : '' !!}</em>
-                                        </small>
-                                    </li>
-                                @endforeach
+                                <table class="table table-bordered">
+                                    <tr v-for='product in cart.products'>
+                                        <td>@{{ product.name }}</td>
+                                        <td>@{{ product.pivot.quantity }}</td>
+                                        <td>@{{ product.pivot.price | currency cart.currency.symbol }}</td>
+                                        <td>@{{ product.pivot.discount | discount }}%</td>
+                                        <td>@{{ product.pivot.amount | currency cart.currency.symbol }}</td>
+                                    </tr>
+                                </table>
                             </td>
-                            <td><div>@include('cart.partials.workflow')</div></td>                             
+                            <td>
+                                <li v-for="invoice in cart.invoices">
+                                    <a href="/invoice/@{{ invoice. id }}" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
+                                        @{{ invoice.number }}
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </a>
+                                </li>
+                            </td>
                             <td style="text-align:center">
 
-                                @foreach($cart->shippings as $shipping)
-                                    <a href="/track/{{ $shipping->id or "" }}" data-toggle="modal" data-target="#modal">
-                                    {{ $shipping->id }}
+                                <div v-for="shipping in cart.shippings">
+                                    <a href="/track/@{{ shipping.id }}" data-toggle="modal" data-target="#modal">
+                                        <b>@{{ shipping.carrier.name }} : </b>@{{ shipping.tracking_id }}
                                     </a>
-                                @endforeach
-                            
-                                <a href="/cart/{{ $cart->id }}/shipping" data-toggle="modal" data-target="#modal" class="btn btn-primary">
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                            <td>
+                                    <p>
+                                    <div class="statusbar @{{ shipping.status | lowercase }}"></div>
+                                </div>
 
+                                <div>
+                                    <a href="/cart/@{{ cart.id }}/shipping" data-toggle="modal" data-target="#modal" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i>
+                                    </a>                                    
+                                </div>
+                            <td>
                         </tr>
-                        
-                @endforeach     
-                    </tbody>                    
+                    </tbody>
                 </table>
-            </form>
+            </div>
         </div>
     </div>
-</div>
-<script type="text/javascript" src="/js/workflow.js"></script>
 @include('partials.modal')
+<style type="text/css">
+    
+    table.table {
+        font-size: 12px;
+    }
+    
+</style>
+<script>
+    var vm = new Vue({
+        el: '#carts',
+
+        data: {
+            loading: false,
+            carts: [],
+            daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            start_date: '',
+            end_date: '',
+        },
+
+        ready: function(){
+            this.getCarts();
+        },
+
+        methods: {
+
+            getCarts() {
+                this.loading = true;
+                this.$http.get("/api/getCarts?category=2", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
+                    this.carts = data;
+                    this.loading = false;
+                }).bind(this);
+            },
+        },
+        computed: {
+            start_date() {
+                var range = this.daterange.split(" - ");
+                return moment(range[0]).format('YYYY-MM-DD') + ' 0:0:0';
+            },
+
+            end_date() {
+                var range = this.daterange.split(" - ");
+                return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
+            }
+        }
+    })
+    Vue.filter('format_date', function (value) {
+        if (value == null) {
+            return null;
+        }
+      return moment(value).format('D MMM hh:mm A');
+    })
+    Vue.filter('format_date2', function (value) {
+        if (value == null) {
+            return null;
+        }
+      return moment(value).format('D MMM');
+    })
+    vm.$watch('daterange', function (newval, oldval) {
+        this.getCarts();
+    })
+</script>
+<script type="text/javascript">
+$(document).ready(function() 
+{
+    $('#daterange').daterangepicker(
+    { 
+        ranges: 
+        {
+            'Today': [new Date(), new Date()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
+            'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }, 
+        format: 'YYYY-MM-DD' 
+        }
+    );   
+    $('#daterange').on('apply.daterangepicker', function(ev, picker) 
+    {   
+        $('#daterange').trigger('change'); 
+    });
+
+});
+</script>

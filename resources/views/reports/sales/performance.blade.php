@@ -21,37 +21,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="cart in carts">
+                        <tr v-for="payment in payments">
                             <td>
-                                @{{ cart.payments[0].date | format_date2 }}
+                                @{{ payment.date | format_date2 }}
                             </td>
                             <td>
-                                <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
+                                <span class="statusbar status@{{ payment.cart.status.id + payment.cart.state_id }}" title="@{{ payment.cart.status.name + ' : ' + payment.cart.state.name }}"></span>
                             </td>
                             <td>
-                                <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
-                                    @{{ cart.lead.name }}
+                                <a href="/lead/@{{ payment.lead.id }}/payment" target="_blank">
+                                    @{{ payment.cart.lead.name }}
                                 </a>
-                                <div v-if="cart.lead.patient">
-                                    Patient Id : <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
-                                        @{{ cart.lead.patient.id }}
+                                <div v-if="payment.cart.lead.patient">
+                                    Patient Id : <a href="/lead/@{{ payment.cart.lead.id }}/payment" target="_blank">
+                                        @{{ payment.cart.lead.patient.id }}
                                     </a>
                                 </div>
                                 <div>
-                                    @{{ cart.source.name }}
+                                    @{{ payment.cart.source.name }}
                                 </div>
                             </td>
                             <td>
-                                @{{ cart.cre.employee.name }}
+                                @{{ payment.cart.cre.employee.name }}
                                 <div>
                                     <b>TL : </b> 
-                                    @{{ cart.cre.employee.supervisor.employee.name }}
+                                    @{{ payment.cart.cre.employee.supervisor.employee.name }}
                                 </div>
                             </td>
                             <td>
                                 <table class="table table-bordered">
-                                    <tr v-for='payment in cart.payments'>
-                                        <td>@{{ payment.amount | currency cart.currency.symbol }}</td>
+                                    <tr>
+                                        <td>@{{ payment.amount | currency payment.cart.currency.symbol }}</td>
                                         <td>@{{ payment.method.name }}</td>
                                         <td>@{{ payment.date }}</td>
                                         <td>@{{ payment.remark }}</td>
@@ -60,17 +60,17 @@
                             </td>
                             <td>
                                 <table class="table table-bordered">
-                                    <tr v-for='product in cart.products'>
+                                    <tr v-for='product in payment.cart.products'>
                                         <td>@{{ product.name }}</td>
                                         <td>@{{ product.pivot.quantity }}</td>
-                                        <td>@{{ product.pivot.price | currency cart.currency.symbol }}</td>
+                                        <td>@{{ product.pivot.price | currency payment.currency.symbol }}</td>
                                         <td>@{{ product.pivot.discount | discount }}%</td>
-                                        <td>@{{ product.pivot.amount | currency cart.currency.symbol }}</td>
+                                        <td>@{{ product.pivot.amount | currency payment.cart.currency.symbol }}</td>
                                     </tr>
                                 </table>
                             </td>
                             <td>
-                                @{{ cart.amount | currency cart.currency.symbol }}
+                                @{{ payment.cart.amount | currency payment.cart.currency.symbol }}
                             </td>
                         </tr>
                     </tbody>
@@ -92,22 +92,22 @@
 
         data: {
             loading: false,
-            carts: [],
+            payments: [],
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
         },
 
         ready: function(){
-            this.getCarts();
+            this.getPayments();
         },
 
         methods: {
 
-            getCarts() {
+            getPayments() {
                 this.loading = true;
-                this.$http.get("/api/getCarts", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
-                    this.carts = data;
+                this.$http.get("/api/getPayments", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
+                    this.payments = data;
                     this.loading = false;
                 }).bind(this);
             },
@@ -137,7 +137,7 @@
       return moment(value).format('D MMM');
     })
     vm.$watch('daterange', function (newval, oldval) {
-        this.getCarts();
+        this.getPayments();
     })
 </script>
 <script type="text/javascript">

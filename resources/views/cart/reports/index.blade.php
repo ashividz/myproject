@@ -2,10 +2,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>  
-                <span class="pull-right">
-                    <a href='/sales/report/performance/download?start_date=@{{ start_date }}&end_date=@{{ end_date }}' class="btn btn-primary" v-on:click="download">Download</a>
-                </span>                
+                <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/> 
             </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
@@ -49,13 +46,16 @@
                             </td>
                             <td>
                                 <div>
-                                    <b>Name : </b>
-                                    <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
-                                        @{{ cart.lead.name }}
+                                    <b>Name : </b> @{{ cart.lead.name }}
+                                </div> 
+                                <div>
+                                    <b>Lead Id : </b>
+                                    <a href="/lead/@{{ cart.lead_id }}/cart" target="_blank">
+                                        @{{ cart.lead_id }}
                                     </a>
-                                </div>                                    
+                                </div>                                   
                                 <div v-if="cart.lead.patient">
-                                    Patient Id : <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">@{{ cart.lead.patient.id }}
+                                    <b>Patient Id :</b> <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">@{{ cart.lead.patient.id }}
                                     </a>
                                 </div>
                                 <div>

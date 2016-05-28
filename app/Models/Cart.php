@@ -88,7 +88,7 @@ class Cart extends Model
 
     public function shippings()
     {
-        return $this->hasMany(Shipping::class, 'cart_id', 'id')->select('id', 'cart_id');
+        return $this->hasMany(Shipping::class, 'cart_id', 'id');
     }
 
     public function invoices()

@@ -66,7 +66,7 @@ class CartReportController extends Controller
     }
     */
 
-    public function goods()
+    /*public function goods()
     {
         $carts = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step', 'shippings', 'products') 
                     ->whereHas('products.category', function($query){
@@ -90,6 +90,7 @@ class CartReportController extends Controller
 
         return view('home')->with($data);
     }
+    */
 
     public function showBalancePayments()
     {

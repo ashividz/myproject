@@ -20,6 +20,7 @@ use App\Models\Patient;
 use App\Models\DialerPush;
 use App\Models\Status;
 use App\Models\LeadProgram;
+use App\Models\Cart;
 
 use DB;
 use Auth;
@@ -766,5 +767,52 @@ class MarketingController extends Controller
         }
 
         return "Error : No Leads or CRE Selected";   
+    }
+
+    public function package()
+    {
+        $data = [
+            'menu'      =>  'marketing',
+            'section'   =>  'reports.package'
+        ];
+
+        return view('home')->with($data);
+    }
+
+    public function getPackageExtensions(Request $request)
+    {
+        $start_date = $request->start_date;
+
+        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier')
+                    ->with(['lead.carts.products' => function($q) use($start_date) {
+                        $q->where('products.created_at', '>=', $start_date);
+                    }])
+                    ->with(['lead.patient.fees' => function($q) use($start_date) {
+                        $q->where('created_at', '>=', $start_date)
+                            ->select('fees_details.id', 'patient_id', 'start_date', 'end_date');
+                    }])
+                    ->with('lead.carts.payments')
+                    ->with(['source' => function($q) {
+                        $q->select('id', 'source_name as name');
+                    }])
+                    ->with(['lead.patient' => function($q) {
+                        $q->select('id', 'lead_id');
+                    }])
+                    ->with(['invoices' => function($q) {
+                        $q->select('id', 'cart_id', 'number');
+                    }])
+                    ->with('creator.employee')
+                    ->with('cre.employee.supervisor.employee')
+                    ->whereHas('products', function($q) {
+                        $q->whereIn('products.id', [4, 5]);
+                    })
+                    ->whereHas('lead.patient', function($q) {
+                        $q->whereNotNull('id');
+                    })
+                    ->whereBetween('created_at', [$request->start_date, $request->end_date])
+                    ->orderBy('id', 'desc')
+                    ->get();
+
+        return $carts;
     }
 }

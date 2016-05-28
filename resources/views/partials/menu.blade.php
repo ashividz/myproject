@@ -323,6 +323,9 @@
                             <a href="/marketing/leads" id="menu_leads">Leads</a>
                         </li>
                         <li>
+                            <a href="/marketing/reports/package">Package Extension</a>
+                        </li>
+                        <li>
                             <a href="/marketing/noCre" id="menu_noCre">No CRE Assigned</a>
                         </li>
                         <li>
