@@ -403,6 +403,8 @@ Route::group([
         Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
         Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
 
+        /** APIs **/
+        Route::get('api/getPatient', 'PatientController@get');
 
 });
 

@@ -787,10 +787,7 @@ class MarketingController extends Controller
                     ->with(['lead.carts.products' => function($q) use($start_date) {
                         $q->where('products.created_at', '>=', $start_date);
                     }])
-                    ->with(['lead.patient.fees' => function($q) use($start_date) {
-                        $q->where('created_at', '>=', $start_date)
-                            ->select('fees_details.id', 'patient_id', 'start_date', 'end_date');
-                    }])
+                    ->with('lead.patient.fees')
                     ->with('lead.carts.payments')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');

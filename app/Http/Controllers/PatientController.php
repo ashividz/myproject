@@ -290,4 +290,10 @@ class PatientController extends Controller
 
         return "Patient not found";
     }
+
+    public function get(Request $request)
+    {
+        return Patient::with('suit')
+                ->find($request->id);
+    }
 }
