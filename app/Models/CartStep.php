@@ -27,7 +27,7 @@ class CartStep extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')->withTrashed();
     }
 
     public static function getCartStepByStatus($id, $status, $updated_at = null)
