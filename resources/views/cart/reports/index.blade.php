@@ -91,8 +91,9 @@
                                     </tr>
                                 </table>
                             </td>
-                            
+
                             <td style="text-align:center">
+                                <!--
                                 <div v-for="payment in cart.payments">
                                     <div v-if="payment.payment_method_id == 2">
                                         <div vi-if="cart.performa">
@@ -104,6 +105,12 @@
                                             </a> 
                                         </div>
                                     </div>
+                                </div>-->
+
+                                <div v-if="cart.payments.indexOf(payment_method_id) == 2">
+                                    <a href="/cart/@{{ cart.id }}/proforma/download" class="btn btn-danger">
+                                        aa<i class="fa fa-download"></i>
+                                    </a> 
                                 </div>
                             </td>
                             <td>
@@ -115,9 +122,18 @@
                                 </li>
                              @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
                                 <div style="text-align:center">
-                                    <a href="/cart/@{{ cart.id }}/invoice" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
-                                        <i class="fa fa-plus"></i>
-                                    </a>
+                                    <!--<div v-for="payment in cart.payments" v-if="payment.payment_method_id == 4 || cart.status_id == 4"> 
+                                            <a href="/cart/@{{ cart.id }}/invoice" data-toggle="modal" data-target="#modal" class="btn btn-primary">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                    </div>  -->   
+
+                                    <div v-if="JSON.stringify(cart.payments).indexOf('"payment_method_id":"4"') == -1
+"> 
+                                            <a href="/cart/@{{ cart.id }}/invoice" data-toggle="modal" data-target="#modal" class="btn btn-primary">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                    </div>                                    
                                 </div>
                             @endif
                             </td>
