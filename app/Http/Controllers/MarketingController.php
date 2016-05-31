@@ -81,7 +81,11 @@ class MarketingController extends Controller
         $nlp = $this->fetchQueries(2);
 
     	$queries = Query::whereBetween('date', array($this->start_date, $this->end_date))
-                    ->whereNull('shs')
+                    
+                    ->where(function($r) {
+                              $r->where("shs", "")
+                              ->orWhereNull('shs');
+                            })
                     //->where('status', 0)
                     ->with('lead' ,'lead.source', 'lead.cre')
     				->get();
@@ -153,8 +157,9 @@ class MarketingController extends Controller
             $response = $client->request('GET','/query/' . $vendor . '/' . $query_id);
             //dd($response);
             $queries = $response->getBody()->getContents();
+
             $queries = json_decode($queries);
-            
+
             foreach ($queries as $query) {
                 if(Query::saveQuery($vendor, $query))
                 {
