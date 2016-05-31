@@ -38,6 +38,11 @@ class Cart extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function proforma()
+    {
+        return $this->hasOne(Proforma::class, 'cart_id');
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class)

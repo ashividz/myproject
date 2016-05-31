@@ -25,6 +25,16 @@ class SMSController extends Controller
         return view('home')->with($data);
     }
 
+    public function leads()
+    {
+        $data = [
+            'menu'      =>  'marketing',
+            'section'   =>  'sms.leads'
+        ];
+
+        return view('home')->with($data);
+    }
+
     /** For Bulk SMS**/
     public function getLeads(Request $request)
     {
@@ -32,11 +42,14 @@ class SMSController extends Controller
 
         $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
 
-        $query = Lead::with('patient.fees')
+        $query = Lead::with('status')
                     ->whereBetween('created_at', [$start_date, $end_date])
-                    ->where('country', 'IN');
-        $leads = $query->get();
+                    ->where('country', 'IN')
+                    ->whereIn('status_id', $request->status_id)
+                    ->has('dnc', '<', 1)
+                    ->has('patient', '<', 1);
 
+        $leads = $query->get();
         return $leads;
     }
 
@@ -47,7 +60,8 @@ class SMSController extends Controller
                     ->leftJoin(DB::raw('(SELECT id, patient_id, start_date, end_date FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                         $join->on('p.id', '=', 'f.patient_id');
                     })
-                    ->where('country', 'IN');
+                    ->where('country', 'IN')
+                    ->has('dnc', '<', 1);
 
         if ($request->patient == 'active') {     
 

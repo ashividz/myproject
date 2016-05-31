@@ -136,8 +136,16 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+
+        /*
+         * Others...
+         */
+
         Arkitecht\FedEx\Laravel\Providers\FedExServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
+
+
 
         /*
          * Application Service Providers...
@@ -213,6 +221,8 @@ return [
         'Discount'          => App\Models\Discount::class,
 
         'Excel'             => Maatwebsite\Excel\Facades\Excel::class,
+        'PDF'               => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'Image'             => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

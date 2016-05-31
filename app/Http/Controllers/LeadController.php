@@ -444,26 +444,13 @@ class LeadController extends Controller
 
     public function showReferences($id)
     {
-        $lead = Lead::find($id);
-
-        $references = Lead::with('patient')
-                        ->join('lead_sources AS s', function($join)
-                        {
-                            $join->on('marketing_details.clinic', '=', 's.clinic');
-                            $join->on('marketing_details.enquiry_no', '=', 's.enquiry_no');
-                        })
-                        ->leftJoin('voices as v', 'v.id', '=', 's.voice_id')
-                        ->where("referrer_clinic", $lead->clinic)
-                        ->where("referrer_enquiry_no", $lead->enquiry_no)
-                        ->select("marketing_details.*", "s.created_at AS date", "sourced_by", "v.name as voice")
-                        ->orderBy('marketing_details.id', 'DESC')
-                        ->get();
+        $lead = Lead::with('patient', 'references')
+                ->find($id);
         
         $data = array(
             'menu'          =>  'lead',
             'section'       =>  'partials.references',
-            'lead'          =>  $lead,
-            'references'    =>  $references
+            'lead'          =>  $lead
         );
 
         return view('home')->with($data);  

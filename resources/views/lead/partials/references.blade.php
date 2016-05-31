@@ -113,7 +113,7 @@
 					</tr>
 				</thead>
 				<tbody>
-			@foreach($references AS $reference)
+			@foreach($lead->references AS $reference)
 					<tr>
 						<td><a href="/lead/{{$reference->id}}/viewDispositions" target="_blank">{{$reference->id}}</a></td>
 						<td>

@@ -12,6 +12,7 @@
                             <th>Lead Details</th>
                             <th width="30%">Payment Details</th>
                             <th width="30%">Product Details</th>
+                            <th>Proforma Invoice</th>
                             <th>Invoice</th>
                         </tr>
                     </thead>
@@ -89,6 +90,21 @@
                                         <td>@{{ product.pivot.amount | currency cart.currency.symbol }}</td>
                                     </tr>
                                 </table>
+                            </td>
+                            
+                            <td style="text-align:center">
+                                <div v-for="payment in cart.payments">
+                                    <div v-if="payment.payment_method_id == 2">
+                                        <div vi-if="cart.performa">
+                                            @{{ cart.performa }}
+                                        </div>
+                                        <div else>
+                                            <a href="/cart/@{{ cart.id }}/proforma/download" class="btn btn-danger">
+                                                <i class="fa fa-download"></i>
+                                            </a> 
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <li v-for="invoice in cart.invoices">

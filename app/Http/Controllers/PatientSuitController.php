@@ -16,6 +16,13 @@ class PatientSuitController extends Controller
 {
 	public function store(Request $request, $id)
 	{
+        if ($request->has('suit')) {
+            echo "string";
+        } else {
+            echo "string1";
+        }
+        $data = $request->getContent();
+        return json_decode($data);
 		$suit = Suit::where('patient_id', $id)->first();
 
 		if (!$suit) {
@@ -24,11 +31,11 @@ class PatientSuitController extends Controller
 
 		$suit->patient_id = $id;
 		$suit->date = date('Y-m-d');
-		$suit->suit = $request->suit;
-		$suit->not_suit = $request->not_suit;
-		$suit->trial_plan = $request->trial_plan;
-		$suit->remark = $request->remark;
-		$suit->deviation = $request->deviation;
+		$suit->suit = $request->suit ? : $suit->suit;
+		$suit->not_suit = $request->not_suit ? : $suit->not_suit;
+		$suit->trial_plan = $request->trial_plan ? : $suit->trial_plan;
+		$suit->remark = $request->remark ? : $suit->remark;
+		$suit->deviation = $request->deviation ? : $suit->deviation;
 		$suit->created_by = Auth::id();
 		$suit->save();
 

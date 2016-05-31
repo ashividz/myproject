@@ -43,7 +43,7 @@
                                 <td>{{ $patient->nutritionist}}</td>
                                 <td>{{ !$patient->doctors->isEmpty() ? $patient->doctor : "" }}</td>
 
-                                <td>{{$patient->lead->country or ""}}{{$patient->lead->region? '-'.$patient->lead->region->region_name : ''}}{{$patient->lead->city?'-'.$patient->lead->city:''}}</td>
+                                <td>{{ $patient->lead->country or "" }} - {{ $patient->lead->region->region_name or "" }} - {{ $patient->lead->city or "" }}</td>
 
                                 <td>{{ $fee->source->source_name or "" }} </td>
                                 <td>{{ $fee->created_at->format('d-M-Y h:i A')}} </td>

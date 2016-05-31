@@ -33,6 +33,13 @@ setlocale(LC_MONETARY, "en_IN");
     Route::get('carts/goods', 'CartController@goods');
     Route::post('carts/goods', 'CartController@goods');
 
+Route::group([
+    'middleware' => ['auth','roles'], 
+    'roles' => ['admin']], 
+    function() {
+        Route::get('cart/{id}/proforma', 'ProformaController@show');
+        Route::get('cart/{id}/proforma/download', 'ProformaController@download');
+});
 
 Route::group([
     'middleware' => ['auth','roles'], 
@@ -279,7 +286,8 @@ Route::group([
 
         /** Bulk SMS **/
         Route::get('marketing/sms/patients', 'SMSController@patients');
-        Route::get('api/getLeads', 'SMSController@getLeads');
+        Route::get('marketing/sms/leads', 'SMSController@leads');
+        Route::post('api/getLeads', 'SMSController@getLeads');
         Route::post('api/getPatients', 'SMSController@getPatients');
         Route::post('api/sendSMS', 'SMSController@send');
 
@@ -674,7 +682,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::POST('lead/{id}/savePersonalDetails', 'LeadController@savePersonalDetails');
     Route::get('lead/{id}/viewContactDetails', 'LeadController@showContactDetails');
     Route::POST('lead/{id}/saveContactDetails', 'LeadController@saveContactDetails');
+
     Route::get('lead/{id}/viewReferences', 'LeadController@showReferences');
+    Route::get('lead/{id}/references', 'LeadController@showReferences');
+
     Route::POST('lead/{id}/saveReference', 'LeadController@saveReference');
     Route::get('lead/{id}/viewDetails', 'LeadController@viewDetails');
     Route::get('lead/{id}/saveDetails', 'LeadController@saveDetails');

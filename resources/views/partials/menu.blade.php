@@ -363,6 +363,9 @@
                         <li>
                             <a href="/marketing/sms/patients">Patients</a>
                         </li>
+                        <li>
+                            <a href="/marketing/sms/leads">Leads</a>
+                        </li>
                     </ul>
                 </li>
                             

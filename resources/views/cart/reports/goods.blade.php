@@ -12,6 +12,7 @@
                             <th>Lead Details</th>
                             <th width="25%">Payment Details</th>
                             <th width="25%">Product Details</th>
+                            <th>Performa Invoice</th>
                             <th>Invoice</th>
                             <th>Shipping</th>
                         </tr>
@@ -91,6 +92,20 @@
                                     </tr>
                                 </table>
                             </td>
+                            <td style="text-align:center">
+                                <div v-for="payment in cart.payments">
+                                    <div v-if="payment.payment_method_id == 2">
+                                        <div vi-if="cart.performa">
+                                            @{{ cart.performa }}
+                                        </div>
+                                        <div else>
+                                            <a href="/cart/@{{ cart.id }}/proforma/download" class="btn btn-danger">
+                                                <i class="fa fa-download"></i>
+                                            </a> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                             <td>
                                 <li v-for="invoice in cart.invoices">
                                     <a href="/invoice/@{{ invoice. id }}" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
@@ -108,8 +123,8 @@
                                     <p>
                                     <div class="statusbar @{{ shipping.status | lowercase }}"></div>
                                 </div>
-
-                                <div>
+                            
+                                <div v-if="cart.invoices.length > 0">
                                     <a href="/cart/@{{ cart.id }}/shipping" data-toggle="modal" data-target="#modal" class="btn btn-primary">
                                         <i class="fa fa-plus"></i>
                                     </a>                                    

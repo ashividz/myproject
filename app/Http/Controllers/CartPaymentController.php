@@ -139,7 +139,7 @@ class CartPaymentController extends Controller
                         $id         = $payment->cart_id;
                         $lead_id    = $payment->cart->lead_id;
                         $source     = $payment->cart->source['name'];
-                        $cre        = $payment->cart->cre->employee->name;
+                        $cre        = isset($payment->cart->cre->employee) ? $payment->cart->cre->employee->name : '';
                         $tl         = isset($payment->cart->cre->employee->supervisor) ? $payment->cart->cre->employee->supervisor->employee->name: '' ;
                         $name       = $payment->cart->lead->name;
                         $patient_id = isset($payment->cart->lead->patient) ? $payment->cart->lead->patient->id : '' ;

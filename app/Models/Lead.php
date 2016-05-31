@@ -121,6 +121,12 @@ class Lead extends Model
     {
         return $this->hasOne(DialerPush::class, 'lead_id')->latest();
     }
+
+    public function references()
+    {
+        return $this->belongsToMany(Lead::class, 'lead_sources', 'referrer_id', 'lead_id')
+                    ->orderBy('id', 'desc');
+    }
     
     public function getEmailAttribute($value)
     {

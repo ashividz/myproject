@@ -29,7 +29,7 @@
                                 <span class="statusbar status@{{ payment.cart.status.id + payment.cart.state_id }}" title="@{{ payment.cart.status.name + ' : ' + payment.cart.state.name }}"></span>
                             </td>
                             <td>
-                                <a href="/lead/@{{ payment.lead.id }}/payment" target="_blank">
+                                <a href="/lead/@{{ payment.cart.lead.id }}/cart" target="_blank">
                                     @{{ payment.cart.lead.name }}
                                 </a>
                                 <div v-if="payment.cart.lead.patient">
