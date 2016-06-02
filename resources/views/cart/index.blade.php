@@ -62,6 +62,22 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-default">
+    <div class="panel-body">
+    <b><i>Shipping Address</i></b><br>
+    <?php
+    $address = $cart->shippingAddress;
+    if($address)
+        $shippingAddress = '<b>name</b>:'.$address->name.', <b>address</b>:'.$address->address.', '.$address->city.', '.$regions->where('region_code',$address->state)->first()->region_name.', '.$countries->where('country_code',$address->country)->first()->country_name.' - '.$address->zip;
+    ?>
+    @if($address)
+    <div class="col-sm-3">{!!$shippingAddress!!}</div>
+    <div class="col-sm-3" style="border:solid 1px #e4c94b;background-color:#fff4c5;">{!!$address->cod!!}</div>
+    @else
+        same as billing address
+    @endif
+    </div>
+    </div>
     @include('cart.partials.workflow')
     <div class="panel panel-default">
         <div class="panel-heading">

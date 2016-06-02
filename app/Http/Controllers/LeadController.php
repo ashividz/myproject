@@ -23,6 +23,9 @@ use App\Models\Cod;
 use App\Models\LeadDnc;
 use App\Models\City;
 use App\Models\User;
+use App\Models\LeadAddress;
+use App\Models\Country;
+use App\Models\Region;
 
 use DB;
 use Auth;
@@ -404,7 +407,15 @@ class LeadController extends Controller
 
     public function showContactDetails($id)
     {
-        $lead = Lead::find($id);
+        $lead    = Lead::with('addresses')
+                ->find($id);
+        $regions = Region::whereIn('region_code',array_pluck($lead->addresses,'state'))->get();
+
+        $countries = Country::all();        
+        
+        foreach ($lead->addresses as $key => $value) {
+            $lead->addresses[$key]->cod = Cod::checkAvailability($value->zip);
+        }        
 
         $cod = Cod::checkAvailability($lead->zip);
         
@@ -412,7 +423,10 @@ class LeadController extends Controller
             'menu'          =>  'lead',
             'section'       =>  'partials.contact',
             'lead'          =>  $lead,
-            'cod'           =>  $cod
+            'cod'           =>  $cod,
+            'countries'     =>  $countries,
+            'regions'       =>  $regions,
+            'x'             =>  1,
         );
 
         return view('home')->with($data);  
@@ -1083,6 +1097,59 @@ class LeadController extends Controller
             'i'             => 1
         ); 
         return view('home')->with($data);
+    }
+   
+    public function addAddress($id)
+    {
+        $lead = Lead::findOrFail($id);
+        $data = array(
+            'menu'          =>'lead',
+            'section'       =>'partials.addAddress',
+            'lead'=>$lead,            
+        ); 
+        return view('lead.partials.addAddress')->with($data);
+    }
+
+    public function storeAddress($id,Request $request)
+    {
+        $lead = Lead::findOrFail($id);
+        $request->merge([
+            'lead_id'        => $lead->id, 
+            'created_by'     => Auth::id(),
+                ]);
+        LeadAddress::create($request->all());
+        return redirect('lead/'.$id.'/viewContactDetails');        
+    }
+
+    public function editAddress($id)
+    {
+        $address = LeadAddress::findOrFail($id);
+        $lead = Lead::with('addresses')
+                ->findOrFail($address->lead_id);
+        
+        $data = array(
+            'menu'          =>'lead',
+            'section'       =>'partials.editAddress',
+            'address'       => $address,
+            'lead'          => $lead,
+        ); 
+        return view('lead.partials.editAddress')->with($data);
+    }
+
+    public function updateAddress($id,Request $request)
+    {
+        $address = LeadAddress::findOrFail($id);        
+        LeadAddress::where('id', $address->id)          
+          ->update([
+                'name'          => $request->name,
+                'address'       => $request->address,
+                'city'          => $request->city,
+                'state'         => $request->state,
+                'country'       => $request->country,                
+                'zip'           => $request->zip,
+                'address_type'  => $request->address_type,
+            ]);
+        return redirect('lead/'.$address->lead_id.'/viewContactDetails');
     }
     
 }
