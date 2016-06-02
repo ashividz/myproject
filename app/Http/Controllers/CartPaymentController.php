@@ -87,7 +87,7 @@ class CartPaymentController extends Controller
 
     public function get()
     {
-        $payments = CartPayment::with('cart.status', 'cart.state', 'cart.products', 'method')
+        $payments = CartPayment::with('cart.currency', 'cart.status', 'cart.state', 'cart.products', 'method')
                     ->with(['cart.source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
@@ -130,6 +130,7 @@ class CartPaymentController extends Controller
                            'Patient Id',
                            'Payment Date',
                            'Payment Method',
+                           'Currency',
                            'Payment Amount',
                            'Payment Remark',
                         ));
@@ -145,6 +146,7 @@ class CartPaymentController extends Controller
                         $patient_id = isset($payment->cart->lead->patient) ? $payment->cart->lead->patient->id : '' ;
                         $payment_date   = $payment->date;
                         $payment_method = $payment->method->name;
+                        $currency       = $payment->cart->currency->symbol;
                         $payment_amount = $payment->amount;
                         $payment_remark = $payment->remark;
                         
@@ -161,6 +163,7 @@ class CartPaymentController extends Controller
                             $patient_id,
                             $payment_date,
                             $payment_method,
+                            $currency,
                             $payment_amount,
                             $payment_remark
                         ));

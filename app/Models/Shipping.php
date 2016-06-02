@@ -28,7 +28,7 @@ class Shipping extends Model
 
     public function invoices()
     {
-        return $this->hasMany(CartInvoice::class, 'cart_id', 'cart_id');
+        return $this->hasMany(Invoice::class, 'cart_id', 'cart_id');
     }
 
     public static function updateStatus($id, $status, $estimated_delivery_timestamp, $actual_delivery_timestamp)

@@ -25,7 +25,7 @@ class CartStep extends Model
         return $this->belongsTo(CartState::class, 'state_id');
     }
 
-    public function user()
+    public function creator()
     {
         return $this->belongsTo(User::class, 'created_by')->withTrashed();
     }
@@ -35,7 +35,7 @@ class CartStep extends Model
         $query =  CartStep::where('cart_id', $id)
                         ->where('status_id', $status)
                         ->with('state')
-                        ->with(['user' => function($q) {
+                        ->with(['creator' => function($q) {
                             $q->withTrashed();
                         }]);
         if ($updated_at) {

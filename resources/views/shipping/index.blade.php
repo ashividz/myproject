@@ -125,3 +125,4 @@
         this.getshippings();
     })
 </script>
+<script type="text/javascript" src="/js/daterange.js"></script>

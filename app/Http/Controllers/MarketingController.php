@@ -788,32 +788,27 @@ class MarketingController extends Controller
     {
         $start_date = $request->start_date;
 
-        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier')
-                    ->with(['lead.carts.products' => function($q) use($start_date) {
-                        $q->where('products.created_at', '>=', $start_date);
+        $carts = Cart::with('status', 'state', 'fee')
+                    ->with(['lead.carts' => function($q) {
+                        $q->where('carts.status_id', 4)
+                            ->load('products');
                     }])
-                    ->with('lead.patient.fees')
-                    ->with('lead.carts.payments')
+                    ->with('creator.employee')
+                    ->with('lead.carts.currency', 'lead.carts.fee', 'lead.carts.payments', 'lead.carts.products')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
                     ->with(['lead.patient' => function($q) {
-                        $q->select('id', 'lead_id');
+                        $q->select('id', 'lead_id', 'nutritionist');
                     }])
-                    ->with(['invoices' => function($q) {
-                        $q->select('id', 'cart_id', 'number');
-                    }])
-                    ->with('creator.employee')
-                    ->with('cre.employee.supervisor.employee')
                     ->whereHas('products', function($q) {
-                        $q->whereIn('products.id', [4, 5]);
+                        $q->where('products.id', 4);
                     })
-                    ->whereHas('lead.patient', function($q) {
-                        $q->whereNotNull('id');
-                    })
+                    ->has('lead.patient')
                     ->whereBetween('created_at', [$request->start_date, $request->end_date])
                     ->orderBy('id', 'desc')
                     ->get();
+                    //dd($carts);
 
         return $carts;
     }

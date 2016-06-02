@@ -16,14 +16,7 @@ class PatientSuitController extends Controller
 {
 	public function store(Request $request, $id)
 	{
-        if ($request->has('suit')) {
-            echo "string";
-        } else {
-            echo "string1";
-        }
-        $data = $request->getContent();
-        return json_decode($data);
-		$suit = Suit::where('patient_id', $id)->first();
+        $suit = Suit::where('patient_id', $id)->first();
 
 		if (!$suit) {
 			$suit =  new Suit;

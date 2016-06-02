@@ -79,6 +79,26 @@
                                         <td>@{{ payment.remark }}</td>
                                     </tr>
                                 </table>
+                                <hr>
+                                <div style="background:#f9f9f9; padding:10px;">
+                                    <span>
+                                        <i class="fa fa-sticky-note-o"></i>
+                                        <b>Comments</b>
+                                    </span>
+                                    <span class="pull-right">
+                                        <a href="/cart/@{{ cart.id }}/comment" data-toggle="modal" data-target="#modal">
+                                            <i class="fa fa-plus-square-o"></i>
+                                        </a>
+                                    </span>
+                                    <li v-for="comment in cart.comments">
+                                        <b>@{{ comment.text }}</b> 
+                                        <small>by</small>
+                                        <b>@{{ comment.creator.employee.name }}</b>
+                                        <small class="pull-right">
+                                            [@{{ comment.created_at | format_date }}]
+                                        </small>
+                                    </li>
+                                </div>
                             </td>
                             <td>
                                 <table class="table table-bordered">
@@ -93,7 +113,6 @@
                             </td>
 
                             <td style="text-align:center">
-                                <!--
                                 <div v-for="payment in cart.payments">
                                     <div v-if="payment.payment_method_id == 2">
                                         <div vi-if="cart.performa">
@@ -105,35 +124,21 @@
                                             </a> 
                                         </div>
                                     </div>
-                                </div>-->
-
-                                <div v-if="cart.payments.indexOf(payment_method_id) == 2">
-                                    <a href="/cart/@{{ cart.id }}/proforma/download" class="btn btn-danger">
-                                        aa<i class="fa fa-download"></i>
-                                    </a> 
                                 </div>
                             </td>
                             <td>
                                 <li v-for="invoice in cart.invoices">
                                     <a href="/invoice/@{{ invoice. id }}" v-bind:class="{ 'red': !tracking.invoice }" data-toggle="modal" data-target="#modal" >
                                         @{{ invoice.number }}
-                                        <i class="fa fa-file-pdf-o"></i>
                                     </a>
                                 </li>
                              @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
-                                <div style="text-align:center">
-                                    <!--<div v-for="payment in cart.payments" v-if="payment.payment_method_id == 4 || cart.status_id == 4"> 
+                                <div v-show="!same(cart.invoices, cart.amount)">
+                                    <div v-for="payment in cart.payments" v-if="payment.payment_method_id == 4 || cart.status_id == 4"> 
                                             <a href="/cart/@{{ cart.id }}/invoice" data-toggle="modal" data-target="#modal" class="btn btn-primary">
                                                 <i class="fa fa-plus"></i>
                                             </a>
-                                    </div>  -->   
-
-                                    <div v-if="JSON.stringify(cart.payments).indexOf('"payment_method_id":"4"') == -1
-"> 
-                                            <a href="/cart/@{{ cart.id }}/invoice" data-toggle="modal" data-target="#modal" class="btn btn-primary">
-                                                <i class="fa fa-plus"></i>
-                                            </a>
-                                    </div>                                    
+                                    </div>                                 
                                 </div>
                             @endif
                             </td>
@@ -176,6 +181,16 @@
                     this.loading = false;
                 }).bind(this);
             },
+            same(list, amount) {
+                var payment = list.reduce(function(total, item) {
+                    return total + parseInt(item['amount'])
+                }, 0)
+
+                if(payment == amount) {
+                    return true;
+                }
+                return false;
+            }
         },
         computed: {
             start_date() {
@@ -200,6 +215,11 @@
             return null;
         }
       return moment(value).format('D MMM');
+    })
+    Vue.filter('total', function (list, key1) {
+        return list.reduce(function(total, item) {
+            return total + parseInt(item[key1])
+        }, 0)
     })
     vm.$watch('daterange', function (newval, oldval) {
         this.getCarts();

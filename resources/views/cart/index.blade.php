@@ -179,9 +179,8 @@
     </div>
     @endif
     <!-- Payment Details End -->
-
     
-        
+    <div class="row" style="text-align:center; margin:30px;">    
 @if(!$cart->products->isEmpty() && ($cart->amount == 0 || ($cart->amount - $cart->payment) <> 0))
     <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment/add" class="btn btn-primary">Add Payment</a>
 @endif
@@ -207,6 +206,68 @@
         </form>
     @endif
 @endif
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Cart Steps -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">Steps</div>
+                </div>
+                <div class="panel-body">
+                    <ul>
+
+                    @foreach($cart->steps as $step)
+                        <li>
+                            <b>Cart {{ $step->status->name }}
+                                <span class='".$step->state->css_class."'>{{ $step->state->name }}</span>
+                            </b> 
+                            <small>by</small> 
+                            <b>{{ $step->creator->employee->name or "" }}</b>
+                            <small>on <em> {{ $step->created_at->format('jS M, Y, h:i:A') }}</em></small>
+
+                        @if($step->remark)
+                            <small>( {{ $step->remark }} )</small>
+                        @endif
+                        </li>
+                    @endforeach
+
+                    </ul>
+                </div>
+            </div>        
+        </div>
+        <div class="col-md-6">
+             <!-- Cart Comments -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">Comments</span>
+                    <span class="pull-right">
+                        <a href="/cart/{{ $cart->id }}/comment" data-toggle="modal" data-target="#sModal">
+                            <i class="fa fa-plus fa-2x"></i>
+                        </a>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <ul>
+
+                    @foreach($cart->comments as $comment)
+                        <li>
+                            <b>{{ $comment->text }}</b> 
+                            <small>by</small> 
+                            <b>{{ $comment->creator->employee->name or "" }}</b>
+                            <small class="pull-right"><em> [{{ $comment->created_at->format('jS M, Y, h:i:A') }}</em> ]</small>
+
+                        @if($step->remark)
+                            <small>( {{ $step->remark }} )</small>
+                        @endif
+                        </li>
+                    @endforeach
+
+                    </ul>
+                </div>
+            </div>   
+        </div>
+    </div>
 </div>
 <!-- Modal Template-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

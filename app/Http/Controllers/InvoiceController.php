@@ -28,20 +28,21 @@ class InvoiceController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
+    {        
+        $invoice = Invoice::find($id);
+        $invoice->number = $request->number;
+        $invoice->amount = $request->amount;
         if ($request->hasFile('invoice')) {
-            $file = $request->file('invoice');
-            $invoice = Invoice::find($id);
-            $invoice->number = $request->number;
+            $file = $request->file('invoice'); 
             $invoice->file = base64_encode(file_get_contents($file->getRealPath()));;
             $invoice->mime = $file->getMimeType(); //application/pdf
             $invoice->size = $file->getSize(); //20,00,000 B
-            
-            $invoice->save();
-
-            Session::flash('message', 'Invoice Updated');
-            Session::flash('status', 'success');
         }
+        $invoice->save();
+
+        Session::flash('message', 'Invoice Updated');
+        Session::flash('status', 'success');
+
         return back();
     }
 
@@ -65,6 +66,7 @@ class InvoiceController extends Controller
                 $invoice = new Invoice;
                 $invoice->cart_id = $id;
                 $invoice->number = $request->number;
+                $invoice->amount = $request->amount;
                 $invoice->created_by = Auth::id();
                 
                 $invoice->file = base64_encode(file_get_contents($file->getRealPath()));;

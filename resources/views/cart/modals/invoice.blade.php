@@ -16,10 +16,14 @@
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label class="col-md-5">Invoice Number</label>
-                    <input type="text" name="number" required>
+                    <input type="text" name="number" value="{{ $invoice->number or '' }}" required>
                 </div>
                 <div class="form-group">
-                    <input type="file" name="invoice" required>
+                    <label class="col-md-5">Amount</label>
+                    <input type="text" name="amount" value="{{ $invoice->amount or '' }}" required>
+                </div>
+                <div class="form-group">
+                    <input type="file" name="invoice">
                 </div>
                 <div>
                     <button class="btn btn-primary">{{ $invoice ? 'Update' : 'Save' }}</button>

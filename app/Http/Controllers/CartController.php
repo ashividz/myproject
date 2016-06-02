@@ -18,6 +18,7 @@ use App\Models\CartStatus;
 use App\Models\Currency;
 use App\Models\ProductCategory;
 use App\Models\Carrier;
+use App\Models\User;
 use Auth;
 use Redirect;
 use DB;
@@ -49,13 +50,26 @@ class CartController extends Controller
 
         $categories = ProductCategory::get();
 
+        if (Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('sales')) {
+            $users = User::getUsersByRole('cre');
+        } elseif (Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service')) {
+            $users = User::getUsersByRole('nutritionist');
+        } else {
+            $users = User::select('users.id', 'e.name')
+                        ->join('employees as e', 'e.id', '=', 'users.emp_id')
+                        ->orderBy('e.name')
+                        ->get();
+        }
+        
+
         $data = array(
             'menu'          => 'lead',
             'section'       => 'partials.cart',
             'lead'          =>  $lead,
             'statuses'      =>  $statuses,
             'currencies'    =>  $currencies,
-            'categories'    =>  $categories
+            'categories'    =>  $categories,
+            'users'         =>  $users
         );
 
         return view('home')->with($data);
@@ -169,7 +183,10 @@ class CartController extends Controller
         Cart::updateAmount($id);
         
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
-            ->find($id); 
+                ->with(['creator' => function($q) {
+                    $q->withTrashed();
+                }])
+                ->find($id); 
 
         $statuses = CartStatus::get();
 
@@ -197,7 +214,7 @@ class CartController extends Controller
     {
         $category = $request->category ? : null;
 
-        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier')
+        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
@@ -205,7 +222,7 @@ class CartController extends Controller
                         $q->select('id', 'lead_id');
                     }])
                     ->with(['invoices' => function($q) {
-                        $q->select('id', 'cart_id', 'number');
+                        $q->select('id', 'cart_id', 'number', 'amount');
                     }])
                     ->with('creator.employee')
                     ->with('cre.employee.supervisor.employee');

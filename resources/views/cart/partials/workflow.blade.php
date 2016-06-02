@@ -17,7 +17,7 @@
                 
                 $content = " <span class='".$step->state->css_class."'>".$step->state->name."</span></b>";
 
-                $content .= " <small>by</small> ".$step->user->employee->name." <small>on <em>".$step->updated_at->format('jS M, Y, h:i:A')."</em></small>";
+                $content .= " <small>by</small> ".$step->creator->employee->name." <small>on <em>".$step->updated_at->format('jS M, Y, h:i:A')."</em></small>";
                 
                 $content .= $step->remark <> '' ? " <small>(".$step->remark.")</small>" : "";
                 $created_at = $step->created_at;

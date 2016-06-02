@@ -63,7 +63,7 @@
                                     <tr v-for='product in payment.cart.products'>
                                         <td>@{{ product.name }}</td>
                                         <td>@{{ product.pivot.quantity }}</td>
-                                        <td>@{{ product.pivot.price | currency payment.currency.symbol }}</td>
+                                        <td>@{{ product.pivot.price | currency payment.cart.currency.symbol }}</td>
                                         <td>@{{ product.pivot.discount | discount }}%</td>
                                         <td>@{{ product.pivot.amount | currency payment.cart.currency.symbol }}</td>
                                     </tr>

@@ -35,6 +35,7 @@ class ProformaController extends Controller
                 'created_by'    => Auth::id()
             ]));
         }
+        $cart->load('proforma');
 
         $data = [
             'cart'  =>  $cart

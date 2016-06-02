@@ -35,7 +35,7 @@ setlocale(LC_MONETARY, "en_IN");
 
 Route::group([
     'middleware' => ['auth','roles'], 
-    'roles' => ['admin']], 
+    'roles' => ['admin', 'logistics']], 
     function() {
         Route::get('cart/{id}/proforma', 'ProformaController@show');
         Route::get('cart/{id}/proforma/download', 'ProformaController@download');
@@ -934,6 +934,9 @@ Route::controllers([
 
     Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
     Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
+
+    Route::get('cart/{id}/comment', 'CartCommentController@show');
+    Route::post('cart/{id}/comment', 'CartCommentController@store');
 
     Route::get('marketing/reports/package', 'MarketingController@package');
     Route::get('api/getPackageExtensions', 'MarketingController@getPackageExtensions');

@@ -101,6 +101,17 @@ class Cart extends Model
         return $this->hasMany(Invoice::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(CartComment::class, 'cart_id')
+                    ->orderBy('id', 'desc');
+    }
+
+    public function fee()
+    {
+        return $this->hasOne(Fee::class, 'cart_id');
+    }
+
     public static function updateAmount($id)
     {
         $cart = Cart::find($id);

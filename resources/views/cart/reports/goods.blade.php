@@ -80,6 +80,26 @@
                                         <td>@{{ payment.remark }}</td>
                                     </tr>
                                 </table>
+                                <hr>
+                                <div style="background:#f9f9f9; padding:10px;">
+                                    <span>
+                                        <i class="fa fa-sticky-note-o"></i>
+                                        <b>Comments</b>
+                                    </span>
+                                    <span class="pull-right">
+                                        <a href="/cart/@{{ cart.id }}/comment" data-toggle="modal" data-target="#modal">
+                                            <i class="fa fa-plus-square-o"></i>
+                                        </a>
+                                    </span>
+                                    <li v-for="comment in cart.comments">
+                                        <b>@{{ comment.text }}</b> 
+                                        <small>by</small>
+                                        <b>@{{ comment.creator.employee.name }}</b>
+                                        <small class="pull-right">
+                                            [@{{ comment.created_at | format_date }}]
+                                        </small>
+                                    </li>
+                                </div>
                             </td>
                             <td>
                                 <table class="table table-bordered">

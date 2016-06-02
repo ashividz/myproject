@@ -10,7 +10,7 @@
             <tr>
                 <td>
                     <div style="text-align:center">
-                        <img src="https://amikus/images/logo.jpg" width="300px">
+                        <img src="{{ url('/')}}/images/logo.jpg" width="300px">
                         <div>
                             <h3>Nutriwel Health (India) Private Limited</h3>
                             232 B, 2nd Floor, Okhla Industrial Area, Phase III, New Delhi - 110020

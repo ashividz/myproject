@@ -13,7 +13,7 @@
                     continue;
                 } else if ($category->id == 2 && $cart->lead->country <> 'IN'){
                     continue;
-                } else if ($category->id == 3 && $cart->lead->state <> 'IN.07' && $cart->lead->city <> 'Bangalore' && $cart->lead->city <> 'Mumbai'){
+                } else if ($category->id == 3 && $cart->lead->state <> 'IN.07' && $cart->lead->city <> 'Bangalore' && $cart->lead->city <> 'Mumbai' && $cart->lead->city <> 'Panipat'){
                     continue;
                 }else if ($category->id == 4 && $cart->lead->country <> 'IN'){
                     continue;
