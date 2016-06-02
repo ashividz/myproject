@@ -128,6 +128,11 @@ class Lead extends Model
                     ->orderBy('id', 'desc');
     }
     
+    public function addresses()
+    {
+        return $this->hasMany(LeadAddress::class);
+    }
+
     public function getEmailAttribute($value)
     {
         return trim(strtolower(ucfirst($value)));

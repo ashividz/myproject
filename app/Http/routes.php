@@ -691,7 +691,12 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('lead/{id}/saveDetails', 'LeadController@saveDetails');
     Route::get('lead/{id}/email', 'EmailController@show');
     Route::post('lead/{id}/email', 'EmailController@send');
+    Route::get('address/{id}/edit','LeadController@editAddress')    ;
+    Route::post('address/{id}/save','LeadController@updateAddress');
+    Route::get('lead/{id}/address/add','LeadController@addAddress');
+    Route::post('lead/{id}/address/save','LeadController@storeAddress');
 
+    
     
     /** Hot Pipeline**/
     Route::get('lead/{id}/pipeline', 'PipelineController@modal'); 

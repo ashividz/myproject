@@ -19,6 +19,10 @@ use App\Models\Currency;
 use App\Models\ProductCategory;
 use App\Models\Carrier;
 use App\Models\User;
+use App\Models\Region;
+use App\Models\Country;
+use App\Models\Cod;
+
 use Auth;
 use Redirect;
 use DB;
@@ -38,7 +42,17 @@ class CartController extends Controller
 
     public function index($id)
     {
-        $lead = Lead::find($id);
+        $lead    = Lead::with('addresses')
+                ->find($id);
+        
+        $regions = Region::whereIn('region_code',array_pluck($lead->addresses,'state'))->get();
+
+        $countries = Country::all();        
+        
+        foreach ($lead->addresses as $key => $value) {
+            $lead->addresses[$key]->cod = Cod::checkAvailability($value->zip);
+        }
+
 
         $statuses = CartStatus::get();
 
@@ -69,7 +83,9 @@ class CartController extends Controller
             'statuses'      =>  $statuses,
             'currencies'    =>  $currencies,
             'categories'    =>  $categories,
-            'users'         =>  $users
+            'users'         =>  $users,
+            'regions'       =>  $regions,
+            'countries'     =>  $countries,
         );
 
         return view('home')->with($data);
@@ -123,11 +139,13 @@ class CartController extends Controller
 
                 $cart = new Cart;
                 $cart->lead_id = $request->id;
-                $cart->cre_id = $lead->cres->first()->user_id;//$request->cre;
+                $cart->cre_id = $request->cre;
                 $cart->source_id = $lead->source_id;//$request->source;
                 $cart->currency_id = $request->currency;
+                if($request->shipping_address_id !=''){
+                    $cart->shipping_address_id = $request->shipping_address_id;
+                }
                 $cart->created_by = Auth::id();
-
                 $cart->save();
 
                 //Save the Programs
@@ -182,17 +200,28 @@ class CartController extends Controller
         //Update the Order Amount
         Cart::updateAmount($id);
         
-        $cart = Cart::with('currency', 'products.category','status', 'state', 'steps')
+
+        $cart = Cart::with('currency', 'products.category','status', 'state', 'steps', 'shippingAddress')
                 ->with(['creator' => function($q) {
                     $q->withTrashed();
                 }])
                 ->find($id); 
+        
+        $regions   = '';
+        $countries = '';
+        if($cart->shippingAddress){
+            $cart->shippingAddress->cod = Cod::checkAvailability($cart->shippingAddress->zip);
+            $regions   = Region::where('region_code',$cart->shippingAddress->state)->get();
+            $countries = Country::where('country_code',$cart->shippingAddress->country)->get();
+        }
 
         $statuses = CartStatus::get();
 
         $data = array(
-            'cart'     =>  $cart, 
-            'statuses'  =>  $statuses
+            'cart'      =>  $cart, 
+            'statuses'  =>  $statuses,
+            'regions'   =>  $regions,
+            'countries' =>  $countries,
         );
 
         return view('cart.index')->with($data);

@@ -1,4 +1,4 @@
-@extends('lead.index')
+    @extends('lead.index')
 
 @section('top')
 
@@ -94,12 +94,24 @@
                                     
                                 </td>
                                 <td>
-                                    <label>CRE <div class='asterix'>*</div> :</label> 
+                                    <label>CRE <div class='asterix'>*</div> :</label>
+                            @if(Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing')) 
+
+                                    <select name="cre">                  
+                                @foreach($users as $user)
+                                        <option value="{{ $user->id }}" {{ $lead->cre_name == $user->name ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
+                                @endforeach
+                                    </select>
+                            @else
+                                    <input type="hidden" name="cre" value="{{ $lead->cres->first()->user_id }}">
                                     {!! $lead->cres->isEmpty() ? '<a href="/lead/'.$lead->id.'/viewDetails" target="_blank" class="required"></a>' : $lead->cres->first()->cre !!}
+                            @endif
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="1">
                                     <label>Currency :</label>
                                     <select class="form-control" name="currency" required>
                                         <option value="">Select Currency</option>
@@ -115,6 +127,22 @@
                                         @endif
                                     @endforeach
                                     </select>
+                                </td>
+                                <td colspan="2">
+                                    <div class="col-sm-6">
+                                    <label>Shipping Address :</label>
+                                    <select class="form-control" name="shipping_address_id" id="shipping_address">
+                                        <option value="">same as billing address</option>
+                                        @foreach($lead->addresses as $address)
+                                            <option value="{{$address->id}}">{{$address->address_type}}</option>
+                                        @endforeach                                    
+                                    </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <b><i>Shipping Address</i></b><br/>
+                                    <span id="shipping_address_string">Same as billing address</span>
+                                    </div>
+                                    
                                 </td>
                             </tr>
                         </tbody>
@@ -277,5 +305,23 @@ $(function() {
     $('body').on('hidden.bs.modal', '.modal', function () {
       $(this).removeData('bs.modal');
     });
+</script>
+<script>
+var shipping_addresses ={}; 
+<?php
+    foreach($lead->addresses as $address){
+        $shippingAddress = '<b>Name</b> : '.$address->name.', <br><b>Address</b> : '.$address->address.', '.$address->city.', '.$regions->where('region_code',$address->state)->first()->region_name.', '.$countries->where('country_code',$address->country)->first()->country_name.' - '.$address->zip;
+        $cod_status = '<div class=\"col-sm-12\" style=\"border:solid 1px #e4c94b;background-color:#fff4c5;\">'.$address->cod.'</div>';
+        echo 'shipping_addresses['.$address->id.'] = "'.$shippingAddress.$cod_status.'";'  ;        
+    }
+    
+?>
+$("#shipping_address").change(function() {
+    address_value = this.value;
+    if( address_value==''){
+        $("#shipping_address_string").html('same as billing address');    
+    }
+    $("#shipping_address_string").html(shipping_addresses[address_value]);
+});
 </script>
 @endsection 

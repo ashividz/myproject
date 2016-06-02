@@ -13,6 +13,17 @@
 		<h2 class="panel-title">ADDRESS</h2>
 	</div>
 	<div class="panel-body">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#address" aria-controls="address" role="tab" data-toggle="tab">Address</a></li>
+        <li role="presentation" ><a href="#addresses" aria-controls="addresses" role="tab" data-toggle="tab">Addresses</a></li>        
+    </ul>
+
+
+    <div class="tab-content">
+    <!-- Primary address -->
+    <div role="tabpanel" class="tab-pane active" id="address">
+
     @if($lead->patient && $lead->patient->hasTag('VIP') && !(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service')))
   		<h3>VIP Client</h3>
   	@else
@@ -80,14 +91,85 @@
 				</div>
 
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">			
-			</form>
-		@else
+			</form>		
+	</div>
+	<!--end of primary address-->
+
+	<!--start of  addresses tab-->
+	<div role="tabpanel" class="tab-pane" id="addresses">
+		<div class="container" style="margin-top:5px;">
+		<a data-toggle="modal" data-target="#addressAdd" href="/lead/{{$lead->id}}/address/add" class="btn btn-primary btn-xs pull-right">Add New</a>
+		</div>
+		<ul class="list-group">
+		@foreach($lead->addresses as $address)					  	
+		  		<b style="display:block">{{$address->address_type}}</b>
+		  		<li class="list-group-item col-sm-12">
+		  			<a data-toggle="modal" data-target="#addressEdit" href="/address/{{$address->id}}/edit"><i class="fa fa-edit pull-right"></i></a>
+		    		<ul class="col-sm-6">
+  						<li><b>Name</b>:{{$address->name}}</li>
+		    			<li><b>address</b>:{{$address->address}}, 
+		    			{{$address->city}}, {{$regions->where('region_code',$address->state)->first()->region_name or ''}}, {{$countries->where('country_code',$address->country)->first()->country_name or ''}} - {{$address->zip}}</li>
+					</ul>
+					<ul class="col-sm-4">
+					<div class="col-sm-12" style="height:2em;"></div>
+					<div class="col-sm-12" style="border:solid 1px #e4c94b;background-color:#fff4c5;">
+					{!!$address->cod!!}
+					</div>
+					</ul>					
+		    	</li>
+		@endforeach
+		</ul>
+
+	</div>
+	
+	</div>
+	</div>
+
+	@else
 			<div class="blacklisted"></div>
 		@endif
-	@endif
-	</div>	
+	@endif	
 </div>
 
+<!-- Modal Template-->
+<div class="modal fade" id="addressAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">Add Address</h4>
+
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+<!-- Modal Template-->
+<div class="modal fade" id="addressEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">Edit Address</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 
 <script type="text/javascript">
 $(document).ready(function() 
@@ -186,5 +268,10 @@ function getCityCode(state_id) {
 </script>
 
 <script type="text/javascript" src="/js/form.js"></script>
+<script>
+$('body').on('hidden.bs.modal', '.modal', function () {
+  $(this).removeData('bs.modal');
+}); 
+</script>
 
 @endsection
