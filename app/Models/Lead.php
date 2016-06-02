@@ -122,6 +122,11 @@ class Lead extends Model
         return $this->hasOne(DialerPush::class, 'lead_id')->latest();
     }
     
+    public function addresses()
+    {
+        return $this->hasMany(LeadAddress::class);
+    }
+
     public function getEmailAttribute($value)
     {
         return trim(strtolower(ucfirst($value)));
