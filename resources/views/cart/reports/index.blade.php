@@ -114,7 +114,7 @@
 
                             <td style="text-align:center">
                                 <div v-for="payment in cart.payments">
-                                    <div v-if="payment.payment_method_id == 2">
+                                    <div v-if="payment.payment_method_id == 2 && cart.status_id > 1">
                                         <div vi-if="cart.performa">
                                             @{{ cart.performa }}
                                         </div>
@@ -132,9 +132,9 @@
                                         @{{ invoice.number }}
                                     </a>
                                 </li>
-                             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
+                             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration'))
                                 <div v-show="!same(cart.invoices, cart.amount)">
-                                    <div v-for="payment in cart.payments" v-if="payment.payment_method_id == 4 || cart.status_id == 4"> 
+                                    <div v-for="payment in cart.payments" v-if="(payment.payment_method_id == 4 && cart.status_id > 1) || cart.status_id == 4"> 
                                             <a href="/cart/@{{ cart.id }}/invoice" data-toggle="modal" data-target="#modal" class="btn btn-primary">
                                                 <i class="fa fa-plus"></i>
                                             </a>

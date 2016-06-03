@@ -8,7 +8,7 @@
             <object width='100%' height='450px' data='data:{{ $invoice->mime }};base64,{{ $invoice->file }}'></object>
             <hr>
         @endif
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance'))
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration'))
             <form class="form" action="{{ $invoice ? '/invoice/'.$invoice->id : '/cart/'.$cart->id.'/invoice' }}" method="post"  enctype="multipart/form-data">
             @if($invoice)
                 {{ method_field('PATCH') }}

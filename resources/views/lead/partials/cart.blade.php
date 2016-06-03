@@ -105,8 +105,14 @@
                                 @endforeach
                                     </select>
                             @else
-                                    <input type="hidden" name="cre" value="{{ $lead->cres->first()->user_id }}">
-                                    {!! $lead->cres->isEmpty() ? '<a href="/lead/'.$lead->id.'/viewDetails" target="_blank" class="required"></a>' : $lead->cres->first()->cre !!}
+                                    <input type="hidden" name="cre" value="{{ Auth::id() }}">
+                                    {{ Auth::user()->employee->name }}
+
+                                    @if(Auth::user()->employee->name <> $lead->cre_name)
+                                        <span class="pull-right red">
+                                            <b>This lead belongs to {{ $lead->cre_name }}</b>
+                                        </span>
+                                    @endif
                             @endif
                                 </td>
                             </tr>

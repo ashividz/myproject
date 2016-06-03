@@ -1,8 +1,3 @@
-<?php
-	$today = date('Y-m-d');
-	//echo $today;
-?>
-
 <link href='/css/fullcalendar.css' rel='stylesheet' />
 <link href='/css/fullcalendar.print.css' rel='stylesheet' media='print' />
 <script src='/js/fullcalendar.min.js'></script>
@@ -17,7 +12,7 @@
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
-			defaultDate: '{{$today}}',
+			defaultDate: '{{ Carbon::today() }}',
 			//editable: true,
 			eventLimit: true, // allow "more" link when too many events
 			events: {

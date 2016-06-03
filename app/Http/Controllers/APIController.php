@@ -108,20 +108,27 @@ class APIController extends Controller
 
         $events = array();
 
-        $callbacks = DB::SELECT("SELECT DISTINCT m.id, m.clinic, m.enquiry_no, m.name, m.phone,d.callback FROM marketing_details m
+        $callbacks =  CallDisposition::with(['lead' => function($q){
+                            $q->select('id', 'name');
+                        }])
+                        ->where('name', $cre)
+                        ->whereBetween('callback', [$start_date, $end_date])
+                        ->get();
+
+        /*$callbacks = DB::SELECT("SELECT DISTINCT m.id, m.clinic, m.enquiry_no, m.name, m.phone,d.callback FROM marketing_details m
                     LEFT JOIN call_dispositions d
                     ON d.clinic = m.clinic AND d.enquiry_no = m.enquiry_no
                     WHERE d.callback BETWEEN :start_date AND :end_date
                     AND d.name = :cre",
                     [$start_date, $end_date, $cre]);
-        //dd($callbacks);
+        //dd($callbacks);*/
 
         foreach ($callbacks as $callback) {
             $output = array();
-            $output['title'] = $callback->name;
+            $output['title'] = $callback->lead->name;
             $output['start'] = date('Y-m-d H:i:s', strtotime($callback->callback));
             $output['end'] = date('Y-m-d H:i:s', strtotime("+20 minutes", strtotime($callback->callback)));
-            $output['url'] = "/lead/" . $callback->id . "/viewDispositions";
+            $output['url'] = "/lead/" . $callback->lead_id . "/viewDispositions";
             array_push($events, $output);
         }
         return json_encode($events);
