@@ -18,7 +18,7 @@
     }
 
     foreach ($cart->steps as $step) {
-        $steps .= "<li><b>Cart ".$step->status->name." <span class='".$step->state->css_class."'>".$step->state->name."</span></b> <small>by</small> ".$step->user->employee->name." <small>on <em>".$step->created_at->format('jS M, Y, h:i:A')."</em></small>";
+        $steps .= "<li><b>Cart ".$step->status->name." <span class='".$step->state->css_class."'>".$step->state->name."</span></b> <small>by</small> ".$step->creator->employee->name." <small>on <em>".$step->created_at->format('jS M, Y, h:i:A')."</em></small>";
         $steps .= $step->remark <> '' ? " <small>(".$step->remark.")</small>" : "";
         $steps .= "</li>";
     }
