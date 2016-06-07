@@ -198,12 +198,20 @@ class Fee extends Model
         if ($duration) {
             $start_date = Carbon::now()->addDay(1);
             $end_date = Carbon::now()->addDay($duration+1);
+            $today    = Carbon::now();
 
             $lastFee = Fee::where('cart_id', $payment->cart_id)->first();
+            $existingFee = Fee::where('patient_id',$patient->id)
+                        ->havingRaw('max(end_date)')
+                        ->first();
 
             if ($lastFee) {
                 $start_date = $lastFee->start_date;
                 $end_date = $lastFee->end_date;
+            }
+            else if($existingFee &&  $existingFee->end_date >= $today){
+                $start_date = $existingFee->end_date->addDay(1);
+                $end_date   = $existingFee->end_date->addDay($duration+1);
             }
 
             $cre = User::find($payment->cart->cre_id);
