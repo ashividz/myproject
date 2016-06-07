@@ -125,6 +125,7 @@ class Lead extends Model
     public function references()
     {
         return $this->belongsToMany(Lead::class, 'lead_sources', 'referrer_id', 'lead_id')
+            ->withPivot('voice_id','created_by','created_at','sourced_by')
                     ->orderBy('id', 'desc');
     }
     

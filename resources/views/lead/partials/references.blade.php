@@ -117,19 +117,18 @@
 					<tr>
 						<td><a href="/lead/{{$reference->id}}/viewDispositions" target="_blank">{{$reference->id}}</a></td>
 						<td>
-						@if(isset($reference->patient))
+						@if($reference->patient)
 							<a href="/patient/{{$reference->patient->id}}/diet" target="_blank"> 
 								{{ $reference->patient->id}}
 							</a>
 						@endif
 						</td>
-						
 						<td>{{$reference->name}}</td>
 						<td>{{$reference->phone}}</td>
 						<td>{{$reference->email}}</td>
-						<td>{{$reference->voice or ""}}</td>
-						<td>{{$reference->date ? date("dS M, Y h:i A", strtotime($reference->date)) : ""}}</td>
-						<td>{{$reference->sourced_by}}</td>
+						<td>{{$voices->where('id',$reference->pivot->voice_id)->first()->name or ""}}</td>
+						<td>{{$reference->pivot->created_at ? date("dS M, Y h:i A", strtotime($reference->pivot->created_at)) : ""}}</td>
+						<td>{{$reference->pivot->sourced_by}}</td>
 					</tr>
 			@endforeach
 				</tbody>

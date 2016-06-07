@@ -458,13 +458,14 @@ class LeadController extends Controller
 
     public function showReferences($id)
     {
-        $lead = Lead::with('patient', 'references')
+        $lead   = Lead::with('patient', 'references')
                 ->find($id);
-        
+        $voices = Voice::whereIn('id',array_pluck($lead->references,'pivot.voice_id'))->get();
         $data = array(
             'menu'          =>  'lead',
             'section'       =>  'partials.references',
-            'lead'          =>  $lead
+            'voices'        =>  $voices,
+            'lead'          =>  $lead,
         );
 
         return view('home')->with($data);  
