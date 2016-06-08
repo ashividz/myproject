@@ -458,7 +458,7 @@ class LeadController extends Controller
 
     public function showReferences($id)
     {
-        $lead = Lead::with('patient', 'references')
+        $lead = Lead::with('patient', 'references.patient')
                 ->find($id);
         
         $data = array(

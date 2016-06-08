@@ -173,4 +173,13 @@ class User extends Model implements AuthenticatableContract,
                 ->select('e.name')
                 ->get();
     }
+
+    public function canGeneratePI()
+    {
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('logistics')) {
+            return true;
+        }
+
+        return false;
+    }
 }

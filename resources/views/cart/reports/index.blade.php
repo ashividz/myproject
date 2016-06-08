@@ -119,10 +119,12 @@
                                             @{{ cart.performa }}
                                         </div>
                                         <div else>
+                                    @if(Auth::user()->canGeneratePI())
                                             <a href="/cart/@{{ cart.id }}/proforma/download" class="btn btn-danger">
                                                 <i class="fa fa-download"></i>
                                             </a> 
                                         </div>
+                                    @endif
                                     </div>
                                 </div>
                             </td>
