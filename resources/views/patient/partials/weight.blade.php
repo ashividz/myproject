@@ -1,7 +1,7 @@
 <?php
 /*Block authored by Sunil*/
     $measurementsWithinDate = $measurements->filter(function ($item) use ($patient) {
-        return ($item->date > $patient->fee->start_date) || ($item->date = $patient->fee->start_date);
+        return ($item->date >= $patient->fee->start_date);
     });
     $initialWeight   = $measurementsWithinDate->sortBy('id')->first();
     $latestWeight  = $measurementsWithinDate->sortByDesc('id')->first();
