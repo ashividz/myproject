@@ -42,21 +42,12 @@ class CartPaymentController extends Controller
 
     public function store(CreateCartPaymentRequest $request, $id)
     {
-        if(CartPayment::store($request, $id)) {
-
-            $data = array(
-                'message'   => 'Payment added',
-                'status'    =>  'success'
-            );
-
-        } else {
-            $data = array(
-                'message'   => 'Error',
-                'status'    =>  'fail'
-            );
-        }       
-
-        return redirect('/cart/'.$id)->with($data);
+        try {
+               CartPayment::create($request->all());
+               
+           } catch (Exception $e) {
+               
+           } 
     }
 
     public function destroy(Request $request, $id)

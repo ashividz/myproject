@@ -27,6 +27,11 @@ class PaymentMethodController extends Controller
         return view('home')->with($data);
     }
 
+    public function get()
+    {
+        return PaymentMethod::get();
+    }
+
     public function update(Request $request)
     {
        if (trim($request->value) == '') {

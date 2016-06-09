@@ -24,8 +24,9 @@ class CreateCartPaymentRequest extends Request
     public function rules()
     {
         return [
-            'amount'                    =>  'required',
-            'payment_method'            =>  'required'
+            'cart_id'               => 'requird',
+            'amount'                =>  'required',
+            'payment_method_id'     =>  'required'
         ];
     }
 }

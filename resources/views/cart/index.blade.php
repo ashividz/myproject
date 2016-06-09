@@ -198,7 +198,7 @@
     
     <div class="row" style="text-align:center; margin:30px;">    
 @if(!$cart->products->isEmpty() && ($cart->amount == 0 || ($cart->amount - $cart->payment) <> 0))
-    <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment/add" class="btn btn-primary">Add Payment</a>
+    <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment" class="btn btn-primary">Add Payment</a>
 @endif
 
 @if($cart->status_id == 1 || $cart->state_id == 2)

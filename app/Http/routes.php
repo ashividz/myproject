@@ -33,6 +33,8 @@ setlocale(LC_MONETARY, "en_IN");
     Route::get('carts/goods', 'CartController@goods');
     Route::post('carts/goods', 'CartController@goods');
 
+    Route::get('getPaymentMethods', 'PaymentMethodController@get');
+
 Route::group([
     'middleware' => ['auth','roles'], 
     'roles' => ['admin', 'logistics', 'quality', 'registration']], 
@@ -926,8 +928,8 @@ Route::controllers([
 
     Route::post('api/coupon/validate', 'CouponController@validateCoupon');
 
-    Route::get('cart/{id}/payment/add', 'CartPaymentController@show');
-    Route::post('cart/{id}/payment/add', 'CartPaymentController@store');
+    Route::get('cart/{id}/payment', 'CartPaymentController@show');
+    Route::post('cart/{id}/payment', 'CartPaymentController@store');
 
     Route::post('cart/{id}/process', 'CartController@process');
 

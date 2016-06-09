@@ -5,6 +5,7 @@
         <title>Nutrihealth</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf_token" content="{{ csrf_token() }}">
         
         <!-- CSS -->
         <link rel="stylesheet" href="/plugins/font-awesome/font-awesome.min.css">
@@ -93,6 +94,14 @@
         <!-- VueJS -->
         <script src="/plugins/vue/vue.min.js"></script>
         <script src="/plugins/vue/vue-resource.min.js"></script>
+
+        <!-- Toastr -->
+        <script src="/plugins/toastr/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/plugins/toastr/toastr.min.css">
+
+        <!-- Custom -->
+        <script src="/js/mixin.js"></script>
+        <script src="/js/app.js"></script>
 
         <!-- Sparkline -->
         <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  -->      

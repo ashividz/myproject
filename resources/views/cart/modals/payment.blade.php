@@ -1,41 +1,40 @@
-<div id="product-edit">
+<div id="payment-edit">
     <div class="panel panel-default">
         <div class="panel-heading">
             Add Payment Details
         </div>
-        <div class="panel-body">
-            <form class="form-inline" action="/cart/{{$cart->id}}/payment/add" method="POST">
+        <div class="panel-body form-inline">
+            <div class="form-group">
+                <label for="date">Payment Date :</label>
+                <input id="date" name="date" class="form-control" size="10" value="{{date('d-m-Y')}}" readonly></input>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount :</label>
+                <div class="input-group">
+                    <label class="input-group-addon">{{ $cart->currency->symbol or ""}}</label>
+                    <input id="amount" v-model="amount" class="form-control" size="7" value="{{$cart->amount - $cart->payment}}"></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="payment_method">Payment Mode :</label>
+                <select id="payment_method" v-model="payment_method_id" class="form-control" required>
+                    <option value="">Select Mode</option>
+                    <option v-for="method in methods" v-bind:value="method.id">@{{method.name }}</option>
 
-                <div class="form-group">
-                    <label for="date">Payment Date :</label>
-                    <input id="date" name="date" class="form-control" size="10" value="{{date('d-m-Y')}}" readonly></input>
-                </div>
-                <div class="form-group">
-                    <label for="amount">Amount :</label>
-                    <div class="input-group">
-                        <label class="input-group-addon">{{ $cart->currency->symbol or ""}}</label>
-                        <input id="amount" name="amount" class="form-control" size="7" value="{{$cart->amount - $cart->payment}}"></input>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="payment_method">Payment Mode :</label>
-                    <select id="payment_method" name="payment_method" class="form-control" required>
-                        <option value="">Select Mode</option>
-                    @foreach($methods as $method)
-                        <option value="{{$method->id}}">{{$method->name}}</option>
-                    @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="remark">Remark :</label>
-                    <textarea id="remark" name="remark" class="form-control"></textarea>
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button> 
-                {{ csrf_field() }}  
-                </div>                              
-            </form>
+                </select>
+            </div>
+            <div class="form-group" v-show="payment_method_id == 2 || payment_method_id == 4">
+                <label for="remark">Delivery Time :</label>
+                <input type="text" id="timepicker" v-model="time" class="form-control input-small">
+            </div>
+            <div class="form-group">
+                <label for="remark">Remark :</label>
+                <textarea id="remark" name="remark" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" @click="store">Save</button> 
+            </div>
         </div>
     </div>
 </div>
@@ -44,11 +43,65 @@
         padding: 10px;
     }
 </style>
+<script src="/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+<link href="/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" />
 <script>
-  $(function() {
+    new Vue({
+        el: 'body',
+        mixins: [mixin],
+        data: {
+            cart_id: '{{ $cart->id }}',
+            methods: [],
+        },
+
+        ready: function(){
+            this.getPaymentMethods();
+        },
+
+        methods: {
+
+            getPaymentMethods() {
+                this.$http.get("/getPaymentMethods")
+                .success(function(data){
+                    this.methods = data;
+                }).bind(this);
+            },
+
+            store() {
+                this.$http.post("/cart/"+ this.cart_id +"/payment", {
+                    cart_id: this.cart_id, 
+                    amount : this.amount, 
+                    payment_method_id : this.payment_method_id,
+                    date: this.date,
+                    remark: this.remark,
+                })
+                .success(function(data){
+                    //this.leads = data;
+                    toastr.success("Payment saved", "Success!");
+                    $("#modal").modal().hide()
+                })
+                .error(function(data){
+                    this.toastErrors(data);
+                })
+                .bind(this);
+            }
+        }
+    })
+</script>
+<script>
+$(function() {
     $( "#date" ).datepicker({
-            dateFormat: 'dd-mm-yy',
-            maxDate: 0
-        });
-  });
-  </script>
+        dateFormat: 'dd-mm-yy',
+        maxDate: 0
+    });
+
+    $('#timepicker').timepicker({
+        template: false,
+        showInputs: false,
+        minuteStep: 30,
+        showMeridian: true,
+        minHours: 8,
+        maxHours: 20,
+    });
+});
+</script>
