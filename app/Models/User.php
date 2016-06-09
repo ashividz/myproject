@@ -176,8 +176,17 @@ class User extends Model implements AuthenticatableContract,
 
     public function canGeneratePI()
     {
-        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('logistics')) {
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('quality')) {
             return true;
+        }
+
+        return false;
+    }
+
+    public function canUploadInvoice()
+    {
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('logistics')) {
+            return true; 
         }
 
         return false;

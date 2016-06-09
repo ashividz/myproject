@@ -38,6 +38,12 @@
                             {{ $cart->lead->city or '' }}{{ $cart->lead->region ? ', '.$cart->lead->region->region_name : "" }}{{ $cart->lead->m_country ? ', '.$cart->lead->m_country->country_name : "" }}
                         </div>
                         <div>
+                            <b>Mobile : </b> {{ $cart->lead->phone or $cart->lead->mobile }}
+                        </div>
+                        <div>
+                            <b>Cart Id : </b> {{ $cart->id or "" }}
+                        </div>
+                        <div>
                             <b>CRE : </b> {{ $cart->cre->employee->name or "" }}
                         </div>
                     </div>

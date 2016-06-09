@@ -262,6 +262,43 @@ class CartController extends Controller
                     }); 
         }
 
+        switch($request->role) {
+            case 'nutritionist':
+                $roles = User::getUsersByRole('nutritionist');
+                break;
+
+            case 'cre':
+                $roles = User::getUsersByRole('cre');
+                break; 
+
+            default:
+                $roles = null;
+                break;
+        }
+
+        if ($roles) {
+            $carts = $carts->whereIn("cre_id", $roles->pluck('id'));
+        }
+
+        switch($request->filter) {
+            case 'pi':
+                $carts = $carts->whereHas('payments', function($q){
+                    $q->where('payment_method_id', 2);
+                 });
+                break;
+
+            case 'fedex':
+                $carts = $carts->whereHas('payments', function($q){
+                    $q->where('payment_method_id', 4)
+                        ->where('status_id', '>=', 2);
+                 });
+                break; 
+
+            case 'paid':
+                $carts = $carts->where('status_id', '>=', 4);
+                break; 
+        }
+
         $carts = $carts->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->orderBy('id', 'desc')
                     ->get();

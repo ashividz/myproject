@@ -2,7 +2,30 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/> 
+                <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+                <div class="roles" style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                    All : <input type="radio" name="role" value="all" v-model="role" checked>
+                    <span style="margin-left:30px">
+                        Nutritionist : <input type="radio" name="role" value="nutritionist" v-model="role">   
+                    </span>
+                    <span style="margin-left:30px">
+                        CRE : <input type="radio" name="role" value="cre" v-model="role"> 
+                    </span>
+                </div> 
+                <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                    <span>
+                        All : <input type="radio" v-model="filter" value="all" checked>
+                    </span> 
+                    <span style="margin-left:30px">
+                        PI : <input type="radio" v-model="filter" value="pi">
+                    </span>    
+                    <span style="margin-left:30px">
+                        FedEx : <input type="radio" v-model="filter" value="fedex">
+                    </span>    
+                    <span style="margin-left:30px">
+                        Paid : <input type="radio" v-model="filter" value="paid">
+                    </span> 
+                </div>  
             </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
@@ -134,9 +157,9 @@
                                         @{{ invoice.number }}
                                     </a>
                                 </li>
-                             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration'))
+                             @if(Auth::user()->canUploadInvoice())
                                 <div v-show="!same(cart.invoices, cart.amount)">
-                                    <div v-for="payment in cart.payments" v-if="(payment.payment_method_id == 4 && cart.status_id > 1) || cart.status_id == 4"> 
+                                    <div v-for="payment in cart.payments" v-if="(payment.payment_method_id == 4 && cart.status_id >= 2) || cart.status_id == 4"> 
                                             <a href="/cart/@{{ cart.id }}/invoice" data-toggle="modal" data-target="#modal" class="btn btn-primary">
                                                 <i class="fa fa-plus"></i>
                                             </a>
@@ -165,22 +188,37 @@
         data: {
             loading: false,
             carts: [],
-            daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
+            role: '',
+            filter: '',
         },
 
         ready: function(){
             this.getCarts();
+            this.$watch('role', function (newval, oldval) {
+                this.getCarts();
+            });
+            this.$watch('pi', function (newval, oldval) {
+                this.getCarts();
+            });
+            this.$watch('filter', function (newval, oldval) {
+                this.getCarts();
+            })
         },
 
         methods: {
 
             getCarts() {
-                this.loading = true;
-                this.$http.get("/api/getCarts", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
+                this.$http.get("/api/getCarts", {
+                    start_date: this.start_date, 
+                    end_date: this.end_date,
+                    role: this.role,
+                    pi: this.pi,
+                    filter: this.filter
+                }).success(function(data){
                     this.carts = data;
-                    this.loading = false;
                 }).bind(this);
             },
             same(list, amount) {

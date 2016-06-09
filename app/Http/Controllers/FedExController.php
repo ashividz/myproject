@@ -79,7 +79,7 @@ class FedExController extends Controller
     {       
         
         try {
-            $trackings = FedExTracking::get();
+            $trackings = FedExTracking::with('shipping.cart.lead')->get();
             foreach ($trackings as $tracking) {
 
                 $tracking = $this->updateTracking($tracking);
@@ -151,9 +151,8 @@ class FedExController extends Controller
             }
 
             $tracking = new Tracking;
-            $tracking->id = $id;
             $tracking->parent_id = $track->id;
-            $tracking->cart_id = $track->cart_id;
+            $tracking->shipping_id = $track->shipping_id;
             $tracking->save();
             $tracking = $this->updateTracking($tracking);
             return $tracking;
@@ -259,7 +258,7 @@ class FedExController extends Controller
         if (!isset($tracking->estimated_delivery_timestamp)) {
             return;
         } 
-        $mobile = $tracking->shipping->cart->lead->mobile ? $tracking->shipping->cart->lead->mobile : $tracking->shipping->cart->lead->phone;   
+        $mobile = $tracking->shipping->cart->lead ? $tracking->shipping->cart->lead->mobile : $tracking->shipping->cart->lead->phone;   
 
         $message = $this->getShippedMessage($tracking, $event);
         $sms = new SMS;
@@ -274,7 +273,7 @@ class FedExController extends Controller
         if ($intimation) {
             return;
         }
-        $mobile = $tracking->cart->lead->mobile ? $tracking->cart->lead->mobile : $tracking->cart->lead->phone; 
+        $mobile = $tracking->shipping->cart->lead ? $tracking->shipping->cart->lead->mobile : $tracking->shipping->cart->lead->phone; 
         $message = $this->getDeliveredMessage($tracking, $event);
         $sms = new SMS;
         $sms_response = $sms->send($mobile, $message);
@@ -288,7 +287,7 @@ class FedExController extends Controller
         if ($intimation) {
             return;
         }
-        $mobile = $tracking->cart->lead->mobile ? $tracking->cart->lead->mobile : $tracking->cart->lead->phone; 
+        $mobile = $tracking->shipping->cart->lead ? $tracking->shipping->cart->lead->mobile : $tracking->shipping->cart->lead->phone; 
         $message = $this->getOutForDeliveryMessage($tracking, $event);
         $sms = new SMS;
         $sms_response = $sms->send($mobile, $message);
@@ -319,7 +318,7 @@ class FedExController extends Controller
         $message = '';
 
         if (isset($tracking->cart->lead)) {
-            $message .= 'Namaste '.$tracking->cart->lead->name.'! ';
+            $message .= 'Namaste '.$tracking->shipping->cart->lead->name.'! ';
         }
         
         $message .= 'Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' has been shipped';
@@ -335,14 +334,14 @@ class FedExController extends Controller
     
     private function getOutForDeliveryMessage($tracking, $event)
     {
-        $message = 'Namaste '.$tracking->cart->lead->name.'! Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' is out for delivery.';
+        $message = 'Namaste '.$tracking->shipping->cart->lead->name.'! Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' is out for delivery.';
 
         return $message;
     }
 
     private function getDeliveredMessage ($tracking, $event)
     {
-        $message = 'Namaste '.$tracking->cart->lead->name.'! Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' was delivered on '. Carbon::parse($event->Timestamp)->format('jS M, Y h:i A');
+        $message = 'Namaste '.$tracking->shipping->cart->lead->name.'! Your Order from Dr Shikhas Nutri-health with FedEx Tracking Id '. $tracking->id.' was delivered on '. Carbon::parse($event->Timestamp)->format('jS M, Y h:i A');
         return $message;
     }
 
