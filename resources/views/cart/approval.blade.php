@@ -5,6 +5,9 @@
     <div>
         @include('partials.daterange')
     </div>
+    <div>
+    {{$carts->count()}} carts
+    </div>
     <form id="form" action="/cart/approval/save" method="post" class="form">
 
 @foreach($carts as $cart)
