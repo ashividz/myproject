@@ -44,13 +44,13 @@ class CartApprovalController extends Controller
         if (Auth::user()->hasRole('service_tl') || 
             Auth::user()->hasRole('service')) {
             
-            $users = User::getUsersByRole('nutritionist');
+            $users = User::getUsersByRole('nutritionist',Auth::id(),false);
             $users = $users->pluck('id');
 
         } elseif (Auth::user()->hasRole('sales_tl') || 
             Auth::user()->hasRole('sales')) {
             
-            $users = User::getUsersByRole('cre');
+            $users = User::getUsersByRole('cre',Auth::id(),false);
             $users = $users->pluck('id');
         }; 
 
