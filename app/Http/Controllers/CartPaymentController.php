@@ -45,9 +45,12 @@ class CartPaymentController extends Controller
         try {
                CartPayment::create($request->all());
                
-           } catch (Exception $e) {
-               
-           } 
+           } catch (\Illuminate\Database\QueryException $e) {
+            
+            if ($request->ajax()){
+                return response()->json(['error' => $e->getMessage()], 404);
+            }
+        }       
     }
 
     public function destroy(Request $request, $id)

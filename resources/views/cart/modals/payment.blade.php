@@ -6,7 +6,7 @@
         <div class="panel-body form-inline">
             <div class="form-group">
                 <label for="date">Payment Date :</label>
-                <input id="date" name="date" class="form-control" size="10" value="{{date('d-m-Y')}}" readonly></input>
+                <input id="date" v-model="date" class="form-control" size="10" value="{{date('d-m-Y')}}" readonly></input>
             </div>
             <div class="form-group">
                 <label for="amount">Amount :</label>
@@ -25,14 +25,14 @@
             </div>
             <div class="form-group" v-show="payment_method_id == 2 || payment_method_id == 4">
                 <label for="remark">Delivery Time :</label>
-                <input type="text" id="timepicker" v-model="time" class="form-control input-small">
+                <input type="text" id="timepicker" v-model="delivery_time" class="form-control input-small">
             </div>
             <div class="form-group">
                 <label for="remark">Remark :</label>
-                <textarea id="remark" name="remark" class="form-control"></textarea>
+                <textarea id="remark" v-model="remark" class="form-control"></textarea>
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" id="close" class="btn btn-danger" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" @click="store">Save</button> 
             </div>
         </div>
@@ -73,12 +73,15 @@
                     amount : this.amount, 
                     payment_method_id : this.payment_method_id,
                     date: this.date,
+                    delivery_time: this.delivery_time,
                     remark: this.remark,
+                    created_by: {{ Auth::id() }},
                 })
                 .success(function(data){
                     //this.leads = data;
                     toastr.success("Payment saved", "Success!");
-                    $("#modal").modal().hide()
+                    location.reload(true);
+                    //$("#close").click()
                 })
                 .error(function(data){
                     this.toastErrors(data);
@@ -100,8 +103,8 @@ $(function() {
         showInputs: false,
         minuteStep: 30,
         showMeridian: true,
-        minHours: 8,
         maxHours: 20,
+        defaultTime: false,
     });
 });
 </script>

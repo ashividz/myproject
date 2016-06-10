@@ -10,6 +10,26 @@ use App\Models\CartStep;
 
 class CartPayment extends Model
 {
+    protected $fillable = [
+        'cart_id',
+        'payment_method_id',
+        'date',
+        'amount',
+        'delivery_time',
+        'remark',
+        'created_by'
+    ];
+
+    public function setDateAttribute($value)
+    {
+        $this->attributes['date']   = $value ? Carbon::parse($value) : null;
+    }
+
+    public function setDeliveryTimeAttribute($value)
+    {
+        $this->attributes['delivery_time']   = $value ? Carbon::parse($value)->format('H:i') : null;
+    }
+
     public function cart()
     {
         return $this->belongsTo(Cart::class, 'cart_id');
