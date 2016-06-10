@@ -2,12 +2,17 @@
     <div class="panel">
         <div class="panel-heading">
             <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+            <span class="pull-right">
+                    <a href='/marketing/reports/package/download?start_date=@{{ start_date }}&end_date=@{{ end_date }}' class="btn btn-primary" v-on:click="download">Download</a>
+                </span> 
         </div>
         <div class="panel-body">
             <div class="tab-content">
+            <form  v-on:submit.prevent="churn">
                 <table class="table table-bordered lead_status" id="table">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" @click="selectAll"></th>
                             <th>Lead Id</th>
                             <th>Cart Id</th>
                             <th>Name</th>
@@ -21,6 +26,10 @@
                     </thead>
                     <tbody>
                         <tr v-for="cart in carts">
+
+                            <td>
+                                <input type="checkbox" name="check[]" v-model="selected" value="@{{ cart.lead_id }}">
+                            </td>
                             <td>
                                 <a href="/lead/@{{ cart.lead_id }}/cart" target="_blank">
                                     @{{ cart.lead_id }}
@@ -35,7 +44,7 @@
                                 @{{ cart.lead.name }}
                             </td>
                             <td>
-                                @{{ cart.creator.employee.name }}
+                                @{{ cart.lead.cre.cre }}
                             </td>
                             <td>
                                 @{{ cart.lead.patient.nutritionist }}
@@ -83,12 +92,36 @@
                         </tr>
                     </tbody>
                 </table>
+
+
+                 <div class="form-group" style='display: inline-block; float: left;margin-right: 10px'>
+                   <select name='cre' id="cre" v-model="cre" class="form-control" required>
+                        <option value="">Select CRE</option>
+                        <option v-for="cre in cres" v-bind:value="cre">@{{cre }}</option>
+
+                    </select>
+                 </div>
+                  <div v-show='carts.length'>
+                    <button type="submit" class="btn btn-primary" disabled='@{{ loading || carts.length == 0 || selected.length == 0 }}'>Churn</button>
+                </div>
+                 </form>
+                 
+
             </div>
         </div>
     </div>
+
+    <div class="alert alert-success" v-show='responses' style="width:500px">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <li v-for='response in responses'>
+            @{{ response.status }}
+          
+        </li>
+    </div> 
 </div>
 <script>
     //var tab = require('vue-strap').tab;
+    Vue.http.headers.common['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
     var vm1 = new Vue({
         el: '#package',
 
@@ -97,12 +130,17 @@
             loading: false,
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
+            selected: [],
+            cres: [],
+            cre: '',
+            responses: [],
             end_date: '',
             today: '{{ Carbon::now()->format('Y-m-d') }}'
         },
 
         ready: function(){
             this.getCarts();
+            this.getCres();
         },
 
         methods: {
@@ -114,8 +152,42 @@
                 .success(function(data){
                     this.carts = data;
                 }).bind(this);
-            }
+            },
+
+             selectAll() {
+                if(this.selected.length > 0) {
+                    this.selected = [];
+                } else {                    
+                    for (cart in this.carts) {
+                        this.selected.push(this.carts[cart].lead_id);
+                    }
+                };
+                
+            },
+
+             getCres() {
+                this.$http.get("/api/getCres")
+                .success(function(data){
+                    this.cres = data;
+                }).bind(this);
+            },
+
+            churn() {
+               this.loading = true;
+                this.$http.post("/api/churnLeads", {
+                    'ids': this.selected,
+                    'cre' : this.cre
+                })
+                .success(function(data){
+                    this.responses = data;
+                    console.log(data);
+                    this.loading = false;
+                }).bind(this);
+            },
         },
+
+         
+
         computed: {
             start_date() {
                 var range = this.daterange.split(" - ");

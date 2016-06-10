@@ -293,10 +293,13 @@ Route::group([
         Route::post('api/getPatients', 'SMSController@getPatients');
         Route::post('api/sendSMS', 'SMSController@send');
 
+        
+
         Route::get('lead/interested', 'LeadController@interested');
         Route::post('lead/interested', 'LeadController@interested');
         Route::get('lead/converted', 'LeadController@converted');
         Route::post('lead/converted', 'LeadController@converted');
+        Route::post('api/churnLeads', 'MarketingController@churn');
         
 });
 
@@ -946,4 +949,5 @@ Route::controllers([
     Route::post('cart/{id}/comment', 'CartCommentController@store');
 
     Route::get('marketing/reports/package', 'MarketingController@package');
+    Route::get('marketing/reports/package/download', 'MarketingController@downloadPackage');
     Route::get('api/getPackageExtensions', 'MarketingController@getPackageExtensions');

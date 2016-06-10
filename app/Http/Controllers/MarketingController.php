@@ -25,6 +25,8 @@ use App\Models\Cart;
 use DB;
 use Auth;
 use App\DND;
+use Excel;
+use Carbon;
 
 class MarketingController extends Controller
 {
@@ -413,6 +415,34 @@ class MarketingController extends Controller
         }
     }
 
+     public function churn(Request $request)
+    {
+        $cre = $request->cre;
+        $data = [];
+        $i = 0;
+       
+        
+        foreach ($request->ids as $id) {
+            $i++;
+            $lead = Lead::find($id);
+            
+            if(!LeadCre::ifSameCre($lead, $cre))
+            {
+                LeadCre::saveCre($lead, $cre);
+                LeadStatus::saveStatus($lead, 1);
+                $data[$i]['status'] = $lead->name . ": CRE Added " . $cre;
+                
+            }
+            else {
+                $data[$i]['status'] = $lead->name . ": CRE already exists " . $cre;
+                
+            }
+
+        }
+        return json_encode($data);
+    }
+
+
     public function viewProgramEnd()
     {
         $users = User::getUsersByRole('cre');
@@ -788,7 +818,7 @@ class MarketingController extends Controller
     {
         $start_date = $request->start_date;
 
-        $carts = Cart::with('status', 'state', 'fee')
+        $carts = Cart::with('status', 'state', 'fee', 'lead.cre')
                     ->with(['lead.carts' => function($q) {
                         $q->where('carts.status_id', 4)
                             ->load('products');
@@ -811,5 +841,57 @@ class MarketingController extends Controller
                     //dd($carts);
 
         return $carts;
+    }
+
+    public function downloadPackage(Request $request)
+    {
+
+         $carts = $this->getPackageExtensions($request);
+
+        if (!$carts->isEmpty()) {
+            Excel::create('CartPackageList', function($excel) use($carts) {
+
+                $excel->sheet('Package', function($sheet) use($carts) {
+                    //$sheet->fromArray($carts);
+                        
+
+                    $sheet->appendRow(array(
+                           'Lead Id',
+                           'Cart Id',
+                           'Name',
+                           'CRE',
+                           'Nutritionist',
+                           'Location',
+                           'Start Date',
+                           'End Date',
+                           'Upgrade',
+                         ));
+                    foreach ($carts as $cart) {
+                        $id         = $cart->id;
+                        $lead_id    = $cart->lead_id;
+                        $name       = $cart->lead->name;
+                        $cre        = $cart->creator->employee->name;
+                        $nutritionist = $cart->lead->patient->nutritionist;
+                        $location = $cart->lead->city.", ".$cart->lead->state.", ".$cart->lead->country;
+                        $start_date       = $cart->fee->start_date->format('d-m-Y');
+                        $end_date       = $cart->fee->end_date->format('d-m-Y');
+
+                       
+                        
+
+                        $sheet->appendRow(array(
+                            $id,
+                            $lead_id,
+                            $name,
+                            $cre,
+                            $nutritionist,
+                            $location,
+                            $start_date,
+                            $end_date
+                        ));
+                    }
+                });
+            })->download('xls');;
+        }
     }
 }
