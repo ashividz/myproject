@@ -82,8 +82,7 @@ Route::group([
     function() {
 
         /* Cart Approval */
-        Route::get('cart/approval', 'CartApprovalController@show');
-        Route::post('cart/approval', 'CartApprovalController@show');
+        Route::get('cart/approval/{pending?}', 'CartApprovalController@show');
         Route::post('cart/approval/save', 'CartApprovalController@store');
 
         Route::get('orders', 'OrderController@index');
