@@ -1,4 +1,7 @@
 <div class="container" id="package">
+    <div id="loader" v-show="loading" style="text-align:center" >
+        <img src="/images/loading.gif">
+    </div>
     <div class="panel">
         <div class="panel-heading">
             <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
@@ -127,7 +130,7 @@
 
         data: {
             carts: [],
-            loading: false,
+            loading: true,
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             selected: [],
@@ -145,12 +148,14 @@
 
         methods: {
             getCarts() {
+                this.loading = true;
                 this.$http.get("/api/getPackageExtensions", {
                     'start_date': this.start_date, 
                     'end_date' : this.end_date
                 })
                 .success(function(data){
                     this.carts = data;
+                    this.loading = false;
                 }).bind(this);
             },
 
@@ -179,6 +184,7 @@
                     'cre' : this.cre
                 })
                 .success(function(data){
+                    this.getCarts();
                     this.responses = data;
                     console.log(data);
                     this.loading = false;

@@ -870,7 +870,7 @@ class MarketingController extends Controller
                         $id         = $cart->id;
                         $lead_id    = $cart->lead_id;
                         $name       = $cart->lead->name;
-                        $cre        = $cart->creator->employee->name;
+                        $cre        = $cart->lead->cre->cre;
                         $nutritionist = $cart->lead->patient->nutritionist;
                         $location = $cart->lead->city.", ".$cart->lead->state.", ".$cart->lead->country;
                         $start_date       = $cart->fee->start_date->format('d-m-Y');
