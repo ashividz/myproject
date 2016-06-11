@@ -94,7 +94,7 @@
                 </table>
 
 
-                 <div class="form-group" style='display: inline-block; float: left;margin-right: 10px'>
+                 <div v-show='carts.length' class="form-group" style='display: inline-block; float: left;margin-right: 10px'>
                    <select name='cre' id="cre" v-model="cre" class="form-control" required>
                         <option value="">Select CRE</option>
                         <option v-for="cre in cres" v-bind:value="cre">@{{cre }}</option>
