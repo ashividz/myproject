@@ -18,7 +18,10 @@
             <div class="row">
                 <div class="col-md-2">
                     <div>
-                        <label>Cart Id :</label> @{{ cart.id }}
+                        <label>Cart Id :</label>
+                        <a href="/cart/@{{ cart.id }}/" target="_blank">
+                            @{{ cart.id }}
+                        </a>
                     </div>
                     <div>
                         <span class="statusbar status@{{ cart.status_id + cart.state_id }}"></span>
@@ -89,7 +92,9 @@
                         </tr>
                         <tr>
                             <td><label>Cart Id :</label></td>
-                            <td>@{{ cart.id }}</td>
+                            <td>
+                                <a href="/cart/@{{ cart.id }}/" target="_blank">@{{ cart.id }}</a>
+                            </td>
                         </tr>
                         <tr>
                             <td><label>Created By :</label></td>

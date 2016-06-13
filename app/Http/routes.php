@@ -326,6 +326,7 @@ Route::group([
         Route::post('finance/saveAudit', 'FinanceController@saveAudit');
 
         Route::post('finance/updatePayment', 'FeeController@update');
+        Route::patch('cart/payment/{id}', 'CartPaymentController@update');
 });
 
 Route::group([

@@ -166,4 +166,13 @@ class CartPaymentController extends Controller
             })->download('xls');;
         }
     }
+
+    public function update(Request $request, $id)
+    {
+        $payment = CartPayment::find($id);
+
+        $payment->update($request->all());
+
+        return $payment->load('method');
+    }
 }
