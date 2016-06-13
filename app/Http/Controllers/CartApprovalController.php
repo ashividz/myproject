@@ -125,7 +125,7 @@ class CartApprovalController extends Controller
 
         $data = array(
             'menu'          =>  'cart',
-            'section'       =>  'approval',
+            'section'       =>  'approval1',
             'start_date'    =>  $this->start_date,
             'end_date'      =>  $this->end_date,
             'carts'         =>  $carts,
