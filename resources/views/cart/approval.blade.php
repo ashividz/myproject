@@ -7,6 +7,50 @@
             Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+    <div>
+    {{$carts->count()}} carts
+    </div>
+    <form id="form" action="/cart/approval/save" method="post" class="form">
+
+@foreach($carts as $cart)
+<?php
+    $payments = '';
+    $steps = '';
+    foreach ($cart->payments as $payment) {
+        $payments .= "<li>".$cart->currency->symbol.$payment->amount." <small>via</small> <span class='primary'><b>".$payment->method->name."</b></span> <small>on <em>".date('jS M, Y',strtotime($payment->date))."</em></small>";
+        $payments .= $payment->remark <> '' ? " <small>(".$payment->remark.")</small>" : "";
+        $payments .= "</li>";
+    }
+
+    foreach ($cart->steps as $step) {
+        $steps .= "<li><b>Cart ".$step->status->name." <span class='".$step->state->css_class."'>".$step->state->name."</span></b> <small>by</small> ".$step->creator->employee->name." <small>on <em>".$step->created_at->format('jS M, Y, h:i:A')."</em></small>";
+        $steps .= $step->remark <> '' ? " <small>(".$step->remark.")</small>" : "";
+        $steps .= "</li>";
+    }
+
+    /* Check Payment Approver */
+
+    $disabled = 'disabled';
+    $maxDiscount = null;
+    $discount = null;
+    if($cart->status_id == 2) {
+        $maxDiscount = $cart->products && $cart->products->isEmpty() ? 0 : max(array_pluck($cart->products, 'pivot.discount'));
+        //echo $maxDiscount;
+        if ($maxDiscount > 0) {
+            $discount_id = $cart->step->discount_id + 1;
+            //var_dump($cart->step->discount_id); 
+            $discount = Discount::where('id', $discount_id)->first();
+
+            if(Helper::approveCartDiscount($maxDiscount, $discount_id)) {
+                $disabled = '';
+            }
+        }
+        
+    } else if ($cart->status_id == 3) {
+        $cart_payments = array_pluck($cart->payments, 'payment_method_id');
+>>>>>>> 72914c1d9ac9e7b402c42ddc08d4757561efe809
 
     <div v-for="cart in carts">
         <cart-approval :cart.sync="cart" :methods="methods" v-if="! (cart.status_id == 4 && cart.state_id == 3)"></cart-approval>

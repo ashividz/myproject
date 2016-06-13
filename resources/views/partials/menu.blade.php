@@ -87,6 +87,19 @@
                             <a href="/cart/approval" id="menu_cart_approval">Cart Approval</a>
                         </li>
                         <li>
+                            <a href="/cart/approval/pending" id="menu_cart_approval_pending">Pending Carts</a>
+                        </li>
+                        @if(Auth::user()->hasRole('admin') ||Auth::user()->hasRole('finance'))
+                            <li>
+                                <a href="/cart/approval/cod" id="menu_cart_approval_cod">Pending Carts(COD)</a>
+                            </li>
+                        @endif
+                        @if(Auth::user()->hasRole('admin') ||Auth::user()->hasRole('registration'))
+                            <li>
+                                <a href="/cart/approval/pending_registration" id="menu_cart_approval_registration">Pending Registration</a>
+                            </li>
+                        @endif                        
+                        <li>
                             <a href="/orders" id="menu_orders">Orders</a>
                         </li>
                     </ul>

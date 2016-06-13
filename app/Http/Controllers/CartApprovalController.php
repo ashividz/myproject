@@ -42,7 +42,7 @@ class CartApprovalController extends Controller
         return view('cart.approval');
     }
 
-    public function show()
+    public function show($pending = null)
     {
         $roles = Helper::roles(); //dd($roles);
 
@@ -51,13 +51,13 @@ class CartApprovalController extends Controller
         if (Auth::user()->hasRole('service_tl') || 
             Auth::user()->hasRole('service')) {
             
-            $users = User::getUsersByRole('nutritionist');
+            $users = User::getUsersByRole('nutritionist',Auth::id(),false);
             $users = $users->pluck('id');
 
         } elseif (Auth::user()->hasRole('sales_tl') || 
             Auth::user()->hasRole('sales')) {
             
-            $users = User::getUsersByRole('cre');
+            $users = User::getUsersByRole('cre',Auth::id(),false);
             $users = $users->pluck('id');
         }; 
 
@@ -66,8 +66,54 @@ class CartApprovalController extends Controller
         $query = Cart::with('payments.method', 'steps', 'cre.employee.sup', 'step')
                     ->whereHas('approvers', function($q) use ($roles) {
                         $q->whereIn('approver_role_id', $roles);
-                    })
-                    ->whereBetween('updated_at', array($this->start_date, $this->end_date));
+                    });
+                                        
+        if ($pending == 'pending') {
+            $query->where('state_id','<>','3');
+            if (Auth::user()->hasRole('finance')) {
+                $query->where('state_id','=','1');
+                $query->whereHas('payments', function($q) use ($roles) {
+                    $q->where(function($q1){
+                        $q1->where('payment_method_id','<>',2)
+                        ->where('payment_method_id','<>',4)
+                        ->where('payment_method_id','<>',5);                    
+                    });
+                });
+            }
+            if ( !isset($_POST['daterange']) ){
+                $this->start_date = date('2016-04-01 00:00:00');
+                $this->end_date   = date('Y-m-d 23:59:59');
+            }                              
+        } 
+        if ($pending == 'cod') {
+            $query->where('state_id','<>','3');
+            if (Auth::user()->hasRole('finance')) {
+                $query->where('state_id','=','1');
+                $query->whereHas('payments', function($q) use ($roles) {
+                    $q->where(function($q1){
+                        $q1->where('payment_method_id','=',2)
+                        ->orWhere('payment_method_id','=',4)
+                        ->orWhere('payment_method_id','=',5);                    
+                    });
+                 });
+            }
+            if ( !isset($_POST['daterange']) ){
+                $this->start_date = date('2016-04-01 00:00:00');
+                $this->end_date   = date('Y-m-d 23:59:59');
+            }                                                            
+        }
+
+        if ($pending == 'pending_registration') {
+            $query->where('status_id','=','4');
+            $query->where('state_id','<>','3');
+            
+            if ( !isset($_POST['daterange']) ){
+                $this->start_date = date('2016-04-01 00:00:00');
+                $this->end_date   = date('Y-m-d 23:59:59');
+            }                                                            
+        }                              
+        
+        $query->whereBetween('updated_at', array($this->start_date, $this->end_date));
 
         if($users) {
             $query = $query->whereIn('created_by', $users);
@@ -182,7 +228,7 @@ class CartApprovalController extends Controller
 
            
 
-        return redirect('/cart/approval')->with($data);
+        return back()->with($data);
 
     }
 
