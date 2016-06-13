@@ -82,6 +82,14 @@ Route::group([
     function() {
 
         /* Cart Approval */
+        Route::get('getCartApproverStatuses', 'CartApproverController@getStatuses');
+        Route::get('carts/approval', 'CartApprovalController@index');
+        Route::get('canApprovePayment', 'CartApprovalController@canApprovePayment');
+        Route::get('canApproveDiscount', 'CartApprovalController@canApproveDiscount');
+        Route::post('cart/{id}/approve', 'CartApprovalController@approve');
+        Route::get('findCart', 'CartController@find');
+
+        /** Old **/
         Route::get('cart/approval', 'CartApprovalController@show');
         Route::post('cart/approval', 'CartApprovalController@show');
         Route::post('cart/approval/save', 'CartApprovalController@store');

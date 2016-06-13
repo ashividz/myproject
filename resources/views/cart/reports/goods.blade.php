@@ -174,6 +174,7 @@
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
+            categories: [2,4]
         },
 
         ready: function(){
@@ -184,7 +185,12 @@
 
             getCarts() {
                 this.loading = true;
-                this.$http.get("/api/getCarts?category=2", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
+                this.$http.get("/api/getCarts", {
+                    start_date: this.start_date, 
+                    end_date : this.end_date,
+                    categories: this.categories,
+                })
+                .success(function(data){
                     this.carts = data;
                     this.loading = false;
                 }).bind(this);

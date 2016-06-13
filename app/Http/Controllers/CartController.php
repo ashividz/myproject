@@ -241,7 +241,7 @@ class CartController extends Controller
 
     public function get(Request $request)
     {
-        $category = $request->category ? : null;
+        $categories = $request->categories ? : null;
 
         $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee')
                     ->with(['source' => function($q) {
@@ -256,9 +256,9 @@ class CartController extends Controller
                     ->with('creator.employee')
                     ->with('cre.employee.supervisor.employee');
 
-        if ($category) {
-            $carts = $carts->whereHas('products.category', function($q){
-                        $q->whereIn('id', [2,4]);
+        if ($categories) {
+            $carts = $carts->whereHas('products.category', function($q) use($categories) {
+                        $q->whereIn('id', $categories);
                     }); 
         }
 
@@ -304,6 +304,29 @@ class CartController extends Controller
                     ->get();
 
         return $carts;
+    }
+
+    public function find(Request $request)
+    {
+        return Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma')
+                    ->with(['source' => function($q) {
+                        $q->select('id', 'source_name as name');
+                    }])
+                    ->with(['lead.patient' => function($q) {
+                        $q->select('id', 'lead_id');
+                    }])
+                    ->with(['invoices' => function($q) {
+                        $q->select('id', 'cart_id', 'number', 'amount');
+                    }])
+
+                    ->with(['shippings.carrier' => function($q) {
+                        //$q->select('id', 'cart_id', 'number', 'amount');
+                    }])
+                    ->with('steps.status', 'steps.state', 'steps.creator.employee')
+                    ->with('creator.employee')
+                    ->with('cre.employee.supervisor.employee')
+                    ->whereIn('status_id', $request->statuses)
+                    ->find($request->cart_id);
     }
 
     public function goods()

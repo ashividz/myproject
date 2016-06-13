@@ -94,6 +94,7 @@
         <!-- VueJS -->
         <script src="/plugins/vue/vue.min.js"></script>
         <script src="/plugins/vue/vue-resource.min.js"></script>
+        <script src="/plugins/vue/vue-focus.js"></script>
 
         <!-- Toastr -->
         <script src="/plugins/toastr/toastr.min.js"></script>

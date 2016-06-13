@@ -14,6 +14,8 @@ use App\Models\CartStatus;
 use App\Models\Role;
 use App\Models\CartApprover;
 
+use Auth;
+
 class CartApproverController extends Controller
 {
     public function modal($id)
@@ -55,5 +57,12 @@ class CartApproverController extends Controller
         $method = CartApprover::destroy($id);
 
         return "Payment Method deleted";
+    }
+
+    public function getStatuses()
+    {
+        $approvers = CartApprover::where('approver_role_id', Auth::id())->get();
+
+        return $approvers->pluck('status_id')->toJson();
     }
 }

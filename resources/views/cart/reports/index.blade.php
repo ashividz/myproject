@@ -4,28 +4,42 @@
             <div class="panel-heading">
                 <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
                 <div class="roles" style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
-                    All : <input type="radio" name="role" value="all" v-model="role" checked>
+                    All : <input type="radio" name="role" value="all" v-model="role" debounce="5000" checked>
                     <span style="margin-left:30px">
-                        Nutritionist : <input type="radio" name="role" value="nutritionist" v-model="role">   
+                        Nutritionist : <input type="radio" name="role" value="nutritionist" v-model="role" debounce="5000" >   
                     </span>
                     <span style="margin-left:30px">
-                        CRE : <input type="radio" name="role" value="cre" v-model="role"> 
+                        CRE : <input type="radio" name="role" value="cre" v-model="role" debounce="5000" > 
                     </span>
                 </div> 
                 <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
                     <span>
-                        All : <input type="radio" v-model="filter" value="all" checked>
+                        All : <input type="radio" v-model="filter" debounce="5000" value="all" checked>
                     </span> 
                     <span style="margin-left:30px">
-                        PI : <input type="radio" v-model="filter" value="pi">
+                        PI : <input type="radio" v-model="filter" debounce="5000" value="pi">
                     </span>    
                     <span style="margin-left:30px">
-                        FedEx : <input type="radio" v-model="filter" value="fedex">
+                        FedEx : <input type="radio" v-model="filter" debounce="5000" value="fedex">
                     </span>    
                     <span style="margin-left:30px">
-                        Paid : <input type="radio" v-model="filter" value="paid">
+                        Paid : <input type="radio" v-model="filter" debounce="5000" value="paid">
                     </span> 
                 </div>  
+                <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                    <span>
+                        Diets : <input type="checkbox" v-model="categories" value="1" debounce="5000" checked>
+                    </span> 
+                    <span>
+                        Goods : <input type="checkbox" v-model="categories" value="2" debounce="5000" checked>
+                    </span>
+                    <span>
+                        BT : <input type="checkbox" v-model="categories" value="3" debounce="5000" checked>
+                    </span> 
+                    <span>
+                        Books : <input type="checkbox" v-model="categories" value="4" debounce="5000" checked>
+                    </span>  
+                </div>
             </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
@@ -188,11 +202,12 @@
         data: {
             loading: false,
             carts: [],
-            daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
             role: '',
             filter: '',
+            categories: []
         },
 
         ready: function(){
@@ -206,6 +221,9 @@
             this.$watch('filter', function (newval, oldval) {
                 this.getCarts();
             })
+            this.$watch('categories', function (newval, oldval) {
+                this.getCarts();
+            })
         },
 
         methods: {
@@ -216,7 +234,8 @@
                     end_date: this.end_date,
                     role: this.role,
                     pi: this.pi,
-                    filter: this.filter
+                    filter: this.filter,
+                    categories: this.categories,
                 }).success(function(data){
                     this.carts = data;
                 }).bind(this);
@@ -243,18 +262,6 @@
                 return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
             }
         }
-    })
-    Vue.filter('format_date', function (value) {
-        if (value == null) {
-            return null;
-        }
-      return moment(value).format('D MMM hh:mm A');
-    })
-    Vue.filter('format_date2', function (value) {
-        if (value == null) {
-            return null;
-        }
-      return moment(value).format('D MMM');
     })
     Vue.filter('total', function (list, key1) {
         return list.reduce(function(total, item) {
