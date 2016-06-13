@@ -243,7 +243,7 @@ class CartController extends Controller
     {
         $categories = $request->categories ? : null;
 
-        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee')
+        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
@@ -253,6 +253,8 @@ class CartController extends Controller
                     ->with(['invoices' => function($q) {
                         $q->select('id', 'cart_id', 'number', 'amount');
                     }])
+                    ->with('shippings.carrier')
+                    ->with('steps.status', 'steps.state', 'steps.creator.employee')
                     ->with('creator.employee')
                     ->with('cre.employee.supervisor.employee');
 
