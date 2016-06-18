@@ -10,8 +10,13 @@
              
             <?php    
                 if($category->id == 1 && $cart->lead->programs->isEmpty()) {
+                    echo "<h3>Has incomplete Program details</h3>";
                     continue;
-                } else if ($category->id == 2 && $cart->lead->country <> 'IN'){
+                } /*else if($category->id == 1 && $cart->lead->hasIncompleteDietCart()) {
+                    echo "<h3>Has incomplete Diet Cart</h3>";
+                    continue;
+                }*/
+                else if ($category->id == 2 && $cart->lead->country <> 'IN'){
                     continue;
                 } else if ($category->id == 3 && $cart->lead->state <> 'IN.07' && $cart->lead->city <> 'Bangalore' && $cart->lead->city <> 'Mumbai' && $cart->lead->city <> 'Panipat'){
                     continue;
@@ -20,7 +25,7 @@
                 }
 
             ?>
-                <div>{{$category->name}}</div>
+                <div><h4>{{$category->name}}</h4></div>
                 <table id="products-table" class="table table-bordered">
                     <thead>
                         <tr>

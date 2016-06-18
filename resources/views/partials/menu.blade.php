@@ -84,7 +84,7 @@
                     <a href="#" id="menu_cart" class="firstLevelMenu"><b>Cart Order</b></a>
                     <ul>
                         <li>
-                            <a href="/cart/approval" id="menu_cart_approval">Cart Approval</a>
+                            <a href="/carts/approval" id="menu_cart_approval">Cart Approval</a>
                         </li>
                         <li>
                             <a href="/cart/approval/pending" id="menu_cart_approval_pending">Pending Carts</a>

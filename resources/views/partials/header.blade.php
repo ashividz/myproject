@@ -173,7 +173,7 @@
 		 
 					<!-- Unread notification count -->
 					<span class="mws-dropdown-notif">
-                        @{{ unreadNotificationCount }}               
+                        @{{ notifications.length }}               
                     </span>
 		 
 					<!-- Notifications dropdown -->
@@ -183,27 +183,30 @@
 								<!-- Here goes all the messages -->
 							</ul>
 							<div class="mws-dropdown-viewall">
-                                <div v-for="notification in notifications" style="background-color: #f9f9f9; border: 1px solid #ddd">                                    
-                                    
-                                    <span v-if="notification.lead_id">
-                                        <a href="/lead/@{{ notification.lead_id}}" target="_blank">
-                                            @{{ notification.subject }}
-                                            (@{{ notification.lead_id}})
-                                            <em class="pull-right">
+                                <div style="background-color: #f9f9f9; border: 1px solid #ddd"> 
+                                    <table class="table table-condensed table-hover">
+                                        <tr v-for="notification in notifications">
+                                            <td>
+                                                @{{ notification.type.message }} 
+                                                <small>by</small>
+                                                <em>@{{ notification.creator.employee.name }} </em>
+                                            </td>
+                                            <td>
                                                 @{{ notification.created_at }}
-                                            </em>
-
-                                        </a>
-                                    </span>
-                                    <span v-else>
-                                        @{{ notification.subject }}
-                                        <em class="pull-right">
-                                            @{{ 
-                                            notification.created_at }}
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" checked="@{{ notification.action_at }}" v-on:click='setReadNotification(notification.id)'/>
+                                            </td>
+                                        </tr>
+                                    </table>   
+                                    <div class="col-md-12">
+                                        @{{ notification.type.object.message }}
+                                        <em>
+                                            
                                         </em>                                    
-                                    </span>
+                                    </div>
                                 </div>
-								<a href="notifications">View All Notifications</a>
+								<a href="/notifications">View All Notifications</a>
 							</div>
 						</div>
 					</div>
@@ -214,7 +217,7 @@
 					<a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-envelope"></i></a>
 		 
 					<!-- Unred messages count -->
-					<span class="mws-dropdown-notif">@{{ unreadMessageCount }}</span>
+					<span class="mws-dropdown-notif">@{{ messages.length }}</span>
 		 
 					<!-- Messages dropdown -->
 					<div class="mws-dropdown-box">

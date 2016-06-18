@@ -64,7 +64,7 @@ new Vue({
 
     methods: {
         getCurrencies() {
-            $.getJSON("/api/getCurrencies", function(currencies){
+            $.getJSON("/getCurrencies", function(currencies){
                 this.currencies = currencies;
                 console.log(currencies);
             }.bind(this));

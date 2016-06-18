@@ -27,7 +27,7 @@ class Lead extends Model
 
     public function patient()
     {
-        return $this->hasOne(Patient::class, 'lead_id');
+        return $this->hasOne(Patient::class);
     }
 
     public function cre()
@@ -491,6 +491,17 @@ class Lead extends Model
     public static function dialerUrl($phone)
     {
         return env('DIALER_URL').'exeAgentName='.Auth::user()->username.'&phoneNumber='.$phone;
+    }
+
+    public function hasIncompleteDietCart()
+    {
+        return $this->carts()
+                    ->whereHas('products', function($q) {
+                        $q->where('product_category_id', 1);
+                    })
+                    ->where('status_id', '<=', 4)
+                    ->whereNotIn('state_id', [2,3])
+                    ->first();
     }
     
 }

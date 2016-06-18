@@ -11,6 +11,7 @@ use App\Http\Requests\CreateCartPaymentRequest;
 use App\Models\Cart;
 use App\Models\CartPayment;
 use App\Models\PaymentMethod;
+use App\Models\ProductCategory;
 use Redirect;
 use Excel;
 use Carbon;
@@ -43,7 +44,9 @@ class CartPaymentController extends Controller
     public function store(CreateCartPaymentRequest $request, $id)
     {
         try {
-               CartPayment::create($request->all());
+                $cart = Cart::find($id);
+                $cart->payments()->create($request->all());
+                $cart->updateAmount();
                
            } catch (\Illuminate\Database\QueryException $e) {
             
@@ -59,10 +62,10 @@ class CartPaymentController extends Controller
 
         if ($payment) {                  
             
-            CartPayment::destroy($request->id);
+            $payment->destroy($request->id);
 
             //Update Order Payment
-            Cart::updatePayment($id);
+            $payment->cart->updateAmount($id);
 
             $data = array(
                 'message' => 'Successfully deleted', 
@@ -127,7 +130,13 @@ class CartPaymentController extends Controller
                            'Currency',
                            'Payment Amount',
                            'Payment Remark',
-                        ));
+                           'Diet Amount',
+                           'Goods Amount',
+                           'BT Amount',
+                           'Book Amount',
+                           'Cart Amount',
+                           'Cart Balance'                        
+                    ));
                     foreach ($payments as $payment) {
                         $date       = $payment->created_at;
                         $status     = $payment->cart->status->name." - ".$payment->cart->state->name;
@@ -143,7 +152,13 @@ class CartPaymentController extends Controller
                         $currency       = $payment->cart->currency->symbol;
                         $payment_amount = $payment->amount;
                         $payment_remark = $payment->remark;
-                        
+                        $diet_amount    = $payment->cart->products()->where('product_category_id', 1)->sum('amount');
+                        $goods_amount    = $payment->cart->products()->where('product_category_id', 2)->sum('amount');
+                        $bt_amount      = $payment->cart->products()->where('product_category_id', 3)->sum('amount');
+                        $book_amount    = $payment->cart->products()->where('product_category_id', 4)->sum('amount');
+                        $cart_amount    = $payment->cart->amount;
+                        $cart_balance   = $payment->cart->balance;
+
 
                         $sheet->appendRow(array(
                             $date,
@@ -159,7 +174,13 @@ class CartPaymentController extends Controller
                             $payment_method,
                             $currency,
                             $payment_amount,
-                            $payment_remark
+                            $payment_remark,
+                            $diet_amount,
+                            $goods_amount,
+                            $bt_amount,
+                            $book_amount,
+                            $cart_amount,
+                            $cart_balance
                         ));
                     }
                 });

@@ -272,10 +272,6 @@
                             <small>by</small> 
                             <b>{{ $comment->creator->employee->name or "" }}</b>
                             <small class="pull-right"><em> [{{ $comment->created_at->format('jS M, Y, h:i:A') }}</em> ]</small>
-
-                        @if($step->remark)
-                            <small>( {{ $step->remark }} )</small>
-                        @endif
                         </li>
                     @endforeach
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Notification;
 
 use Auth;
+use Carbon;
 
 class NotificationController extends Controller
 {
@@ -20,16 +21,31 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        //
+        return view('notification.index');
     }
 
-    public function getUnreadNotifications()
+    public function get()
     {
-        return Notification::getUnreadNotifications()
+        return Notification::with('type.object', 'creator.employee')
+                    ->whereHas('recipients', function($q) {
+                        $q->where('recipient_id', Auth::id())
+                            ->whereNull('read_at');
+                    })
+                    ->orderBy('id', 'desc')
+                    ->get();
+
     }
 
-    public function getUnreadNotificationCount()
+    public function read($id)
     {
-        return Notification::getUnreadNotificationCount();
+        $notification = Notification::find($id);
+
+        $notification->recipients()
+                    ->where('recipient_id', Auth::id())
+                    ->update(['read_at' => Carbon::now()]);
+        /*NotificationRecipient::where('notification_id', $id)
+                        update(['read_at' => Carbon::now()]);*/
+
+        return $this->get();
     }
 }

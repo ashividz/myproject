@@ -13,6 +13,11 @@ class Fee extends Model
     
     protected $table = "fees_details";
 
+    protected $fillable = [
+        'patient_id',
+        'cart_id'
+    ];
+
     public function getDates()
     {
        return ['entry_date', 'start_date', 'end_date','created_at', 'updated_at'];
@@ -190,8 +195,30 @@ class Fee extends Model
     }
 
     
+    public static function store($cart, $patient)
+    {
+        $fee = Fee::firstOrNew(['cart_id' => $cart->id]);
+        //$fee = new Fee;
 
-    public static function store($patient, $payment)
+        $fee->patient_id = $fee->patient_id ? : $patient->id;
+        $fee->cart_id = $fee->cart_id ? : $cart->id;
+        $fee->entry_date = Carbon::now();
+        $fee->name = $cart->lead->name;
+        $fee->start_date = $fee->start_date ? $fee->start_date : Carbon::now()->addDays(1);
+        $fee->end_date = Carbon::parse($fee->start_date)->addDays($cart->duration);
+        $fee->cre = $cart->cre->employee->name;
+        $fee->cre_id = $cart->cre_id;
+        $fee->source_id = $cart->source_id;
+        $fee->total_amount = $cart->getDietPaidAmount();
+        //$fee->valid_months = 
+        $fee->duration = $cart->duration;
+        $fee->created_by = Auth::id();
+        $fee->save();
+
+        return $fee;
+
+    }
+    /*public static function store($patient, $payment)
     {
         $duration = CartProduct::getDietDuration($payment->cart_id, 1);         
 
@@ -234,5 +261,5 @@ class Fee extends Model
             LeadStatus::saveStatus($patient->lead, 5);            
         }
         
-    }
+    }*/
 }

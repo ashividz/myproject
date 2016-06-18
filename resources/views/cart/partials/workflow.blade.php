@@ -13,6 +13,7 @@
         <?php  
             $content = "";
             $step = Step::getCartStepByStatus($cart->id, $status->id, $updated_at);
+            //dd($step);
             if ($step) {
                 
                 $content = " <span class='".$step->state->css_class."'>".$step->state->name."</span></b>";

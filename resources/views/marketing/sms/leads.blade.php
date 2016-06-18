@@ -30,7 +30,7 @@
                                 @{{ key + 1 }}
                             </td>
                             <td>
-                                <input type="checkbox" name="check[]" v-model="selected" value="@{{ lead.id }}">
+                                <input type="checkbox" name="check[]" v-model="ids" value="@{{ lead.id }}">
                             </td>
                             <td>
                                 <a href="/lead/@{{ lead.id }}/viewDetails" target="_blank">
@@ -115,7 +115,7 @@
             },
 
             selectAll() {
-                if(this.selected.length > 0) {
+                if(this.ids.length > 0) {
                     this.ids = [];
                 } else {                    
                     for (lead in this.leads) {

@@ -11,6 +11,10 @@ use App\Models\Fee;
 
 class Order extends Model
 {
+    protected $fillable = [
+        'cart_id'
+    ];
+
     public function cart()
     {
         return $this->belongsTo(Cart::class);
@@ -33,7 +37,24 @@ class Order extends Model
 
     public static function store($cart, $patient = null)
     {
-        $categories = ProductCategory::get();
+        /*if (!$cart->orders->isEmpty()) {
+            return $cart;
+        }*/
+
+        //$duration = CartProduct::getDietDuration($cart, 1);
+        $cart = Cart::setDietDuration($cart);
+
+        if ($cart->duration > 0) {
+            $order = Order::firstOrNew(['cart_id' => $cart->id]);
+
+            $order->patient_id              = $order->patient_id ? : $patient->id;
+            $order->cart_id                 = $order->cart_id ? : $cart->id;
+            $order->product_category_id     = $order->product_category_id ? : 1;
+            $order->duration                = $cart->duration;
+            $order->created_by              = Auth::id();
+            $order->save();
+        }
+        /*$categories = ProductCategory::get();
 
         foreach ($categories as $category) {
             
@@ -49,14 +70,15 @@ class Order extends Model
                 $order->created_by              = Auth::id();
                 $order->save();
             }
-        }
+        }*/
 
 
         //Update old Fee tables for now
         if ($patient) {
-            foreach ($cart->payments as $payment) {
-                Fee::store($patient, $payment);
-            }    
+            Fee::store($cart, $patient);
+            /*foreach ($cart->payments as $payment) {
+                Fee::store($payment);
+            } */   
         } 
     }
 }

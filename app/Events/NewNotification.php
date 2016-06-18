@@ -14,17 +14,22 @@ class NewNotification extends Event implements ShouldBroadcast
     use SerializesModels;
 
     public $notifications; 
-    public $unreadNotificationCount;
+    public $recipient;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($recipient)
     {
-        $this->notifications = Notification::getUnreadNotifications();
-        $this->unreadNotificationCount = Notification::getUnreadNotificationCount();
+        $this->recipient = $recipient;
+
+        $this->notifications = Notification::
+                                whereHas('recipients', function($q) use($recipient) {
+                                    $q->where('recipient_id', $recipient);
+                                })
+                                ->get();
     }
 
     /**
@@ -34,6 +39,6 @@ class NewNotification extends Event implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['user'. Auth::id()];
+        return ['user'. $this->recipient];
     }
 }

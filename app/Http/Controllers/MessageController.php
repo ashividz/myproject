@@ -61,7 +61,7 @@ class MessageController extends Controller
 	{
 		$messages =  Message::with('recipients')
 					->orderBy('id', 'desc')
-					->limit('100')
+					->limit('500')
 					->get();
 		
 		$data = array(
@@ -73,15 +73,20 @@ class MessageController extends Controller
         return view('home')->with($data);
 	}
 
-	public function getMessages()
+	public function get(Request $request)
 	{
 		$user = $this->user;
 
-		return  Message::select('messages.*', 'mr.read_at', 'mr.action_at')
+		$messages =   Message::select('messages.*', 'mr.read_at', 'mr.action_at')
 					->with('lead')
 					->join('message_recipient as mr', 'mr.message_id', '=', 'messages.id')
-					->where('mr.name', $user)
-					->orderBy('id', 'desc')
+					->where('mr.name', $user);
+        
+        if ($request->read == 1) {
+            $messages->whereNull('read_at');
+        }
+        
+		return $messages->orderBy('id', 'desc')
 					->limit('100')
 					->get();
 	}

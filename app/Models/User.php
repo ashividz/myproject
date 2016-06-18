@@ -13,6 +13,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Amikus\Permission;
+
 use Auth;
 use DB;
 
@@ -20,9 +22,11 @@ class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword; 
 
     use SoftDeletes;
+
+    use Permission;
 
     /**
      * The database table used by the model.
@@ -174,21 +178,5 @@ class User extends Model implements AuthenticatableContract,
                 ->get();
     }
 
-    public function canGeneratePI()
-    {
-        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('quality')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function canUploadInvoice()
-    {
-        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('logistics')) {
-            return true; 
-        }
-
-        return false;
-    }
+    
 }

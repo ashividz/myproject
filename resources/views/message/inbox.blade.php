@@ -59,30 +59,30 @@ table thead tr {
 } 
 </style>
 <script>
-    Vue.http.headers.common['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
-
-    var vm1 = new Vue({
+    new Vue({
         el: 'body',
 
         data: {
             messages: [],
+            notifications: [],
             daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
             timer: '',
-            unreadMessageCount: 0,
-            unreadNotificationCount: 0,
         },
 
         ready: function(){
             this.getMessages();
+            this.getNotifications();
             this.timer = setInterval(this.getMessages, 100000);
-            this.getUnreadMessageCount();
+            this.$watch('action', function(val) {
+                alert(val);
+            })
         },
         methods: {
 
             getMessages() {
-                this.$http.get("/api/getMessages", {'start_date': this.start_date, 'end_date' : this.end_date})
+                this.$http.get("/getMessages", {'start_date': this.start_date, 'end_date' : this.end_date})
                 .success(function(data){
                     this.messages = data;
                 }).bind(this);
@@ -111,35 +111,27 @@ table thead tr {
                 });
             },
 
-            getUnreadMessageCount() {
-                var url = "/api/getUnreadMessageCount";
-
-                $.getJSON(url)
-                .done(function( data ) {
-                    this.unreadMessageCount = data;
+            getNotifications() {
+                this.$http.get("/getNotifications", {
+                    read: 1
+                })
+                .success(function( data ) {
+                    this.notifications = data;
                 }.bind(this));
-            }
+            },
+
+            setReadNotification(id) {
+                this.$http.patch("/notification/" + id + "/read")
+                .success(function(data){
+                    toastr.success("Notification read", "Success");
+                    this.notifications = data;
+                }).bind(this);
+            },
+
         },
         beforeDestroy() {
             clearIntervall(this.timer)
         },
     })    
-
-    vm1.$watch('action', function(val) {
-        alert(val);
-    })
-
-    Vue.filter('format_date', function (value) {
-        if (value == null) {
-            return null;
-        }
-      return moment(value).format('D MMM hh:mm A');
-    })
-    Vue.filter('format_date2', function (value) {
-        if (value == null) {
-            return null;
-        }
-      return moment(value).format('D MMM');
-    })
 </script>
 @endsection

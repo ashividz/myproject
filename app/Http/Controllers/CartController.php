@@ -12,6 +12,7 @@ use App\Http\Requests\CreateCartRequest;
 use App\Models\Lead;
 use App\Models\Cart;
 use App\Models\CartStep;
+use App\Models\CartProduct;
 use App\Models\LeadProgram;
 use App\Models\OrderProduct;
 use App\Models\CartStatus;
@@ -112,10 +113,25 @@ class CartController extends Controller
     	return view('cart.modal.create')->with($data);
     }
 
-    public function store(CreateCartRequest $request)
+    public function store(Request $request, $id)
     {
-        //dd($request->programs);
-        $lead = Lead::find($request->id);
+        $this->validate($request, [
+            'currency_id'           => 'required',
+            'shipping_address_id'   => 'required',
+            'cre_id'                =>  'required',
+            'source_id'             =>  'required',
+        ]);
+
+        $lead = Lead::find($id);
+
+        $cart = $lead->carts()->create($request->all());
+
+        CartStep::store($cart->id, 1, 1);
+
+        return $cart;
+
+
+        /*
 
         if ($lead) {
 
@@ -176,7 +192,7 @@ class CartController extends Controller
 
             return Redirect::to('/lead/'.$lead->id.'/order')->with($data);
         }           
-            
+    */        
     }
 
     public function process($id)
@@ -198,14 +214,42 @@ class CartController extends Controller
     public function show($id)
     {
         //Update the Order Amount
-        Cart::updateAmount($id);
+        //Cart::updateAmount($id);
         
+
 
         $cart = Cart::with('currency', 'products.category','status', 'state', 'steps', 'shippingAddress')
                 ->with(['creator' => function($q) {
                     $q->withTrashed();
                 }])
-                ->find($id); 
+                ->find($id);
+
+        $cart = $cart->updateAmount();
+
+        //dd(Cart::setDietDuration($cart));
+
+        //return $cart->getDietDiscount();
+
+        //return Cart::setDietDuration($cart)->duration;
+
+         
+        /*dd($cart->products()
+            ->whereIn('product_category_id', [3,4,5])
+            ->sum('amount')
+            //->first()
+            );
+            dd($cart->payments()
+            ->sum('amount')
+            //->first()
+            );*/
+                
+        //dd($cart->products->sum('pivot.quantity'));
+                    /*->join('cart_product as cp', 'cp.product_id', '=', 'products.id')
+                    ->where('product_category_id', 1)
+                    ->get());*/
+                    
+                    //->sum(DB::RAW('cp.quantity')));
+            //->get());
         
         $regions   = '';
         $countries = '';
@@ -262,6 +306,10 @@ class CartController extends Controller
             $carts = $carts->whereHas('products.category', function($q) use($categories) {
                         $q->whereIn('id', $categories);
                     }); 
+        }
+
+        if ($request->statuses) {
+            $carts = $carts->whereIn('status_id', $request->statuses); 
         }
 
         switch($request->role) {
@@ -340,4 +388,65 @@ class CartController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function canCreateCart(Request $request)
+    {
+        $lead = Lead::find($request->id);
+
+        if (!$lead) {
+            return ['status' => 'false', 'message'  => 'Lead not available'];
+        }
+
+        /*$cart = $lead->hasIncompleteDietCart();
+        if ($cart) {
+            return [
+                'status'    =>  'false', 
+                'message'   =>  'Incomplete Diet cart exists', 
+                'cart'      =>  $cart
+            ];
+        }*/
+
+        if (!Auth::user()->canCreateCartForOthers()) {
+
+            $cart = Cart::isIncompleteCart($lead);
+                            //dd($cart);
+            if ($cart) {
+                return [
+                    'status'    =>  'false', 
+                    'message'   =>  'Incomplete cart exists', 
+                    'cart'      =>  $cart
+                ];
+            }
+        }
+
+            
+        if (!Auth::user()->canCreateCartForOthers()) {
+            $cart = $lead->carts()->where('balance', '>', 0)
+                            ->first();
+
+            if ($cart) {
+                return [
+                    'status'    =>  'false', 
+                    'message'   =>  'Balance Payment remaining', 
+                    'cart'      =>  $cart
+                ];
+            }
+        }
+
+         if($lead->country == 'IN' && (trim($lead->address) == '' || $lead->zip == 0 || trim($lead->zip) == '' )) {
+
+            return ['status' => 'false', 'message'  => 'Lead details not complete'];
+        }
+
+        if($lead->dob <> '' && $lead->gender <> '' && $lead->email <> '' && $lead->phone <> '' && $lead->country <> '' && $lead->state <> '' && $lead->city <> '' && $lead->source_id <> '') {
+
+            return ['status' => 'true'];
+
+        } else {
+            return ['status' => 'false', 'message'  => 'Lead details not complete'];
+        }
+
+
+    }
+
 }

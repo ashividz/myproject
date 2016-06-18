@@ -61,7 +61,7 @@ class CartApproverController extends Controller
 
     public function getStatuses()
     {
-        $approvers = CartApprover::where('approver_role_id', Auth::id())->get();
+        $approvers = CartApprover::whereIn('approver_role_id', Auth::user()->roles->pluck('id'))->get();
 
         return $approvers->pluck('status_id')->toJson();
     }

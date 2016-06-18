@@ -211,7 +211,11 @@ class CartApprovalController extends Controller
             $patient = Patient::register($cart);
 
             //if ($patient) {
-            Order::store($cart, $patient);
+            if ($cart->hasProductCategories([1])) {
+                $cart->orders->store($patient);
+            }
+            
+            //Order::store($cart, $patient);
             //}
 
             //Create Order
@@ -290,8 +294,8 @@ class CartApprovalController extends Controller
         else if ($cart->payments->isEmpty()) {
             return ['message' => 'No payment details in Cart', 'status' => 'Error!'];
         }
-
-        $discount = $this->isDiscountSteps($cart, 1);
+        //dd(Auth::user()->roles->pluck('id'));
+        $discount = $cart->discountSteps();
 
         if (!$discount) {
             return 'true';
@@ -300,14 +304,15 @@ class CartApprovalController extends Controller
         //dd($discount);
 
         $approver = ApproverDiscount::where('discount_id', $discount->id)
-                        ->where('approver_role_id', Auth::id())
+                        ->whereIn('approver_role_id', Auth::user()->roles->pluck('id'))
                         ->first();
+                        //dd($approver);
 
         if($approver) {
             return ['discount' => $discount->value, 'discount_id' => $discount->id ];
         }
-
-        return ['message' => 'Cannot approve discount', 'status' => 'Error!'];
+        return 'false';
+        //return ['message' => 'Cannot approve discount', 'status' => 'Error!'];
     }
 
     public function approve(Request $request)
@@ -322,67 +327,39 @@ class CartApprovalController extends Controller
 
         if ($request->state == 1) {
 
-            $discount = $this->isDiscountSteps($cart);
+            if ($cart->status_id == 2) {
+                $discount = $cart->discountSteps();
 
-            if ($discount) { //Set State = Progress
-                CartStep::store($request->cart_id, $cart->status_id, 4, $request->remark, $discount_id);
-                Cart::updateState($cart->id, 4); 
+                if ($discount) { //Set State = Progress
+                    CartStep::store($request->cart_id, $cart->status_id, 4, $request->remark, $discount_id);
+                    //Cart::updateState($cart->id, 4); 
 
-                $discount = $this->isDiscountSteps($cart);
-            } 
-
-            
-
-            if (!$discount) {
-                CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
-                Cart::updateState($cart->id, 3); 
-
-                if ($cart->status_id == 4) {
+                    $discount = $cart->discountSteps();
+                    if (!$discount) {
+                        CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
+                        CartStep::nextStatus($cart->id);
+                    }
+                } 
+            } elseif ($cart->status_id == 4) {
                     //Patient Registration
                     $patient = Patient::register($cart);
 
                     //Place order
                     Order::store($cart, $patient);
-
-                } else { //If not Last Status, Set Next Step
-                    CartStep::nextStatus($cart->id);
-                }
+                    CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
+ 
+            } else { //If not Last Status, Set Next Step
+                CartStep::nextStatus($cart->id);
             }
 
             return ['message' => 'Cart Approved', 'status' => 'Success!'];
             
         } 
-
+        //Request State = 2 ie. Cart Rejected
         CartStep::store($request->cart_id, $cart->status_id, 2, $request->remark);
-        Cart::updateState($cart->id, 2);         
 
         return ['message' => 'Cart Rejected', 'status' => 'Success!'];
     }
 
-    private function isDiscountSteps($cart, $add = 1)
-    {
-        if ($cart->status_id <> 2 || $cart->products->isEmpty()) {
-            return false;
-        }
-
-        $maxDiscount = !$cart->products->isEmpty() ? max(array_pluck($cart->products, 'pivot.discount')) : 0;
-
-        if ($maxDiscount == 0) {
-            return false;
-        }
-
-        $step = CartStep::where('cart_id', $cart->id)->orderBy('discount_id', 'desc')->first();
-
-        $discount_id = $step->discount_id + $add;
-
-        $discount = Discount::where('value', '<=', $maxDiscount + 5)
-                                ->where('id', $discount_id)->first(); 
-        //dd($discount);
-
-        if ($discount) {
-            return $discount;
-        }
-
-        return false;
-    }
+    
 }

@@ -18,13 +18,7 @@ class CartProductController extends Controller
 {
     public function show($id)
     {        
-        /*$categories = ProductCategory::with('products.offers.product')
-                    ->with(['products' => function($q){
-                        $q->orderBy('duration');
-                    }])
-                    ->get(); */
-
-        $cart = Cart::find($id);
+        $cart = Cart::with('lead')->find($id);
 
         $categories = ProductCategory::with('products.offers.product')
                     ->with(['products' => function($q){
@@ -43,6 +37,7 @@ class CartProductController extends Controller
 
     public function store(Request $request, $id)
     {
+        $cart = Cart::find($id);
         if ($request->get('product_ids')) {
             foreach($request->get('product_ids') as $key => $value)
             {
@@ -70,7 +65,7 @@ class CartProductController extends Controller
                 CartProduct::getOffer($cartProduct);
             }
             //Update the Order Amount
-            Cart::updateAmount($id);
+            $cart->updateAmount();
         }
         
         $data = array(
@@ -111,7 +106,7 @@ class CartProductController extends Controller
         $cartProduct->prevQuantity = $quantity;
 
         //Update the Order Amount
-        Cart::updateAmount($cartProduct->cart_id);
+        $cartProduct->cart->updateAmount();
 
         //Update Offer
         CartProduct::updateOffer($cartProduct);

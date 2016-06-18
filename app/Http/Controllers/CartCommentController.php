@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Cart;
+use App\Models\Notification;
 use Session;
 
 class CartCommentController extends Controller
@@ -21,7 +22,10 @@ class CartCommentController extends Controller
 
     public function store(Request $request, $id)
     {
-        Cart::find($id)->comments()->create($request->all());
+        $cart = Cart::find($id);
+        $cart->comments()->create($request->all());
+
+        Notification::store(6, $id, $cart->cre_id);
 
         Session::flash('message', 'Comment added');
         Session::flash('status', 'Success');

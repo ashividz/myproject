@@ -98,17 +98,19 @@ class CartProduct extends Model
                     ->delete();
     }
 
-    public static function getDietDuration($cart_id, $product_category_id) 
+    public static function getDietDuration($cart) 
     {
         return DB::table('cart_product as op')
                     ->join('products as p', 'op.product_id', '=', 'p.id')
-                    ->where('cart_id', $cart_id)
-                    ->where('product_category_id', $product_category_id)
+                    ->where('cart_id', $cart->id)
+                    ->where('product_category_id', 1)
                     ->sum(DB::RAW('duration * quantity'));
                     //->first();
     }
 
-    public static function hasProductCategory($cart, $product_category_id)
+    
+
+    /*public static function hasProductCategory($cart, $product_category_id)
     {
         //$cart = Cart::with('products')->find($id);
 
@@ -118,5 +120,31 @@ class CartProduct extends Model
             }
         }
         return false;
-    }  
+    }  */
+
+    public static function checkProduct($cart)
+    {
+        $amount = ($cart->getDietPaidAmount() *100) / (100 - $cart->getDietDiscount());
+        //echo "Non discounted Amount : ". $amount ."<p>";
+        //return $amount;
+        $product = Product::where('product_category_id', 1)                            
+                    ->whereNull('extension');
+
+        if ($cart->currency_id == 2) {
+            $product->where('international_price_usd', '<=' , $amount)
+                ->orderBy('international_price_usd', 'desc');
+
+        } elseif ($cart->lead->country == "IN") {
+            $product->where('domestic_price_inr', '<=' , $amount)
+                ->orderBy('domestic_price_inr', 'desc');
+
+        } else {
+            $product->where('international_price_inr', '<=' , $amount)
+                ->orderBy('international_price_inr', 'desc');
+        }                
+
+        return $product
+            ->select('duration')
+            ->first();
+    }
 }

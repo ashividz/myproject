@@ -515,22 +515,20 @@ class Patient extends Model
     {
         if($cart->lead->patient) {            
             return $patient = $cart->lead->patient;
-
-        }
-        if (CartProduct::hasProductCategory($cart, 1)) {
-            $patient = Patient::store($cart->lead);
-            return $patient;
         }
 
-        return null;       
+        if ($cart->hasProductCategories([1])) {
+            return Patient::store($cart->lead_id);
+        }
 
+        return null; 
     }
 
-    public static function store($lead)
+    public static function store($lead_id)
     {
         $patient = new Patient;
 
-        $patient->lead_id = $lead->id;
+        $patient->lead_id = $lead_id;
         $patient->created_by = Auth::id();
         $patient->save();
 

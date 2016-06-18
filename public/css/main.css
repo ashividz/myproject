@@ -339,7 +339,7 @@ strong.warning {
     display: inline-block;
     overflow: hidden;
 }
-.statusbar.in_progress, .statusbar.status11, .statusbar.status13, .statusbar.status14, .statusbar.oc {
+.statusbar.in_progress, .statusbar.status11, .statusbar.status13, .statusbar.status14, .statusbar.oc, .statusbar.fd {
     width: 99px;
     height: 17px;
     background-position: -143px -35px;
@@ -417,19 +417,19 @@ strong.warning {
     background-color: #f4f4f4;
     font-weight: 300;
 }
-#messages .view {
+#messages .view, #notifications .view {
     border: solid #ddd 1px;
     border-radius: 4px;
     padding: 2px 15px 2px 10px;
     background-color: #dedede;
 }
-#messages .view a {        
+#messages .view a, #notifications .view a {        
     color: #333;
 }
 #messages .view a, a:visited {
     text-decoration: none;
 }
-#messages .view .aTn {
+#messages .view .aTn, #notifications .view .aTn {
     background: no-repeat url(/images/smartmail.png) -67px -100px;
     width: 7px;
     height: 7px;

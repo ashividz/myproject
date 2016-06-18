@@ -84,7 +84,9 @@ class FedExController extends Controller
 
                 $tracking = $this->updateTracking($tracking);
 
-                $shipping = Shipping::updateStatus($tracking->shipping_id, $tracking->status_detail->Code, $tracking->estimated_delivery_timestamp, $tracking->actual_delivery_timestamp);
+                $code = $tracking->status_detail ? $tracking->status_detail->Code : 'FD';
+
+                $shipping = Shipping::updateStatus($tracking->shipping_id, $code, $tracking->estimated_delivery_timestamp, $tracking->actual_delivery_timestamp);
                 //dd($tracking->other_identifiers);
                 if ($tracking->other_identifiers) {
                     if (isset($tracking->other_identifiers->PackageIdentifier)) {

@@ -1,176 +1,187 @@
-    @extends('lead.index')
+@extends('lead.index')
 
 @section('top')
 
-<div class="" id="order">
+<div class="" id="cart">
     <div class="panel panel-default">
         <div class="panel-heading">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <div class="panel-title">Add Cart</div>
         </div>
         <div class="panel-body">
-            <validator name="validation">
-                <form id="form-order" class="form-inline" method="post">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                
-                                <td width="25%">
-                                    <label>DOB <div class='asterix'>*</div> :</label>   
-                                    {!!$lead->dob == '' ? '<a href="/lead/'.$lead->id.'/viewPersonalDetails" target="_blank" class="required"></a>' : $lead->dob->format('jS M, Y') !!}
-                                    </div>
-                                </td>
-                                <td>
-                                    <label>Gender <div class='asterix'>*</div> : </label>   
-                                    {!!$lead->gender == '' ? '<a href="/lead/'.$lead->id.'/viewPersonalDetails" target="_blank" class="required"></a>' : $lead->gender!!}
-                                </td>
-                                <td>
-                                    <label>Email <div class='asterix'>*</div> : </label>  
-                                    {!!$lead->email == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->email!!}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Phone <div class='asterix'>*</div> :</label>
-                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->phone == '' ? 'required' : 'available' }}"> {{ $lead->phone }} </a>
-                                </td>
-                                <td>
-                                    <label>Mobile : </label> 
-                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->mobile == '' ? 'warning' : 'available' }}"> {{ $lead->mobile }} </a> 
-                                </td>
-                                <td>
-                                    <label>Address :</label>  
-                                @if($lead->country == "IN") 
-                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->address == '' ? "required" : "" }}"> 
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>                        
+                        <td width="25%">
+                            <label>DOB <div class='asterix'>*</div> :</label> 
+                            <a href="/lead/@{{ lead.id }}/viewPersonalDetails" target="_blank">
+                                @{{ lead.dob | format_date1 }}  
+                            </a>
+                        </td>
+                        <td>
+                            <label>Gender <div class='asterix'>*</div> : </label>   
+                            <a href="/lead/@{{ lead.id }}/viewPersonalDetails" target="_blank">
+                                @{{ lead.gender }}  
+                            </a>
+                        </td>
+                        <td>
+                            <label>Email <div class='asterix'>*</div> : </label>  
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank" :class="{'required': !lead.email}">
+                                @{{ lead.email }}  
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Phone <div class='asterix'>*</div> :</label>
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank" :class="{'required': !lead.phone}">
+                                @{{ lead.phone }}  
+                            </a>
+                        </td>
+                        <td>
+                            <label>Mobile : </label> 
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank" :class="{'required': !lead.mobile}">
+                                @{{ lead.mobile }}  
+                            </a>
+                        </td>
+                        <td>
+                            <label>Address :</label>  
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank">
+                                <span v-if="!lead.address" class="@{{ lead.country == 'IN' ? 'required' : 'warning'}}">
+                                    @{{ lead.address }}  
+                                </span>
+                                <span v-else>
+                                    @{{ lead.address }}  
+                                </span>                                
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Country <div class='asterix'>*</div> :</label> 
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank" :class="{'required': !lead.country}">
+                                @{{ lead.country }}  
+                            </a>
+                        </td>
+                        <td>
+                            <label>Region/State <div class='asterix'>*</div> :</label>  
+                             
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank" :class="{'required': !lead.state}">
+                                @{{ lead.state }}  
+                            </a>                                  
+                        </td>
+                        <td>
+                            <label>City <div class='asterix'>*</div> :</label>   
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank" :class="{'required': !lead.city}">
+                                @{{ lead.city }}  
+                            </a>   
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>PIN/ZIP :</label> 
+                            <a href="/lead/@{{ lead.id }}/viewContactDetails" target="_blank">
+                                <span v-if="!lead.zip || lead.zip == 0" class="@{{ lead.country == 'IN' ? 'required' : 'warning'}}">
+                                    @{{ lead.zip }}  
+                                </span>
+                                <span v-else>
+                                    @{{ lead.zip }}  
+                                </span>                                
+                            </a>
+                        </td>
+                        <td>
+                            <label>Source <div class='asterix'>*</div> :</label> 
 
-                                @else
-                                     <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->address == '' ? "warning" : "" }}"> 
-                                @endif
-                                        {{ $lead->address }} 
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>Country <div class='asterix'>*</div> :</label>   
-                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->country ? '' : 'required' }}">
-                                        {!! $lead->m_country->country_name or "" !!}
-                                    </a>
-                                </td>
-                                <td>
-                                    <label>Region/State <div class='asterix'>*</div> :</label>  
-                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->state ? '' : 'required' }}">
-                                        {!! $lead->region->region_name or $lead->state !!}
-                                    </a>                                    
-                                </td>
-                                <td>
-                                    <label>City <div class='asterix'>*</div> :</label>   
-                                    {!! $lead->city == '' ? '<a href="/lead/'.$lead->id.'/viewContactDetails" target="_blank" class="required"></a>' : $lead->city !!}
-                                </td>
-                            </tr>
-                            <tr>
+                            <a href="/lead/{{ $lead->id }}/viewDetails" target="_blank" :class="{'required': !lead.source_id}">
+                        @if(Auth::user()->canViewLeadSource())
+                                @{{ lead.lsource.source_name }}
+                        @else
+                                @{{ lead.lsource.channel.name }}
+                        @endif 
+                            </a>
+                            
+                        </td>
+                        <td>
+                            <label>Seller <div class='asterix'>*</div> :</label>
+                    @if(Auth::user()->canCreateCartForOthers()) 
 
-                                <td>
-                                    <label>PIN/ZIP :</label> 
-                                @if($lead->country == "IN") 
-                                    <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->zip == '' ? "required" : "" }}"> 
+                            <select v-model="cre_id">                  
+                        
+                                <option v-for="user in users" :value="user.id" :selected="lead.cre_name == user.name">
+                                    @{{ user.name }}
+                                </option>
+                            </select>
+                    @else
+                            <input type="hidden" v-model="cre_id" value="{{ Auth::id() }}">
+                            {{ Auth::user()->employee->name }}
+                            
+                            
+                    @endif
+                            <span class="pull-right red">
+                                <b>This lead belongs to @{{ lead.cre_name }}</b>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1">
+                            <label>Currency :</label>
+                            <select class="form-control" v-model="currency_id" required>
+                                <option value="">Select Currency</option>
+                                <option v-for="currency in currencies" :value="currency.id">
+                                    @{{ currency.name }} (@{{ currency.symbol }})
+                                </option>
+                            </select>
+                        </td>
+                        <td colspan="2">
+                            <div class="col-sm-6">
+                            <label>Shipping Address :</label>
+                            <select class="form-control" v-model="shipping_address_id" id="shipping_address">
+                                <option value="">Same as Billing Address</option>
+                                <option v-for="address in lead.addresses" :value="address.id">@{{ address.address_type }}</option>                  
+                            </select>
+                            </div>
+                            <div class="col-sm-6">
+                            <b><i>Shipping Address</i></b>
+                            <div v-show="address.id == shipping_address_id" v-for="address in lead.addresses">
+                                <div>
+                                    <label>@{{ address.address_type }}</label>
+                                </div>
+                                <div>
+                                    <label>Name : </label>@{{ address.name }}
+                                </div>
+                                <div>
+                                    <label>Address : </label>
+                                    @{{ address.address }}
+                                    @{{ address.city }}
 
-                                @else
-                                     <a href="/lead/{{ $lead->id }}/viewContactDetails" target="_blank" class="{{ $lead->zip == '' ? "warning" : "" }}"> 
-                                @endif 
-                                        {{$lead->zip}} 
-                                    </a>
-                                </td>
-                                <td>
-                                    <label>Source <div class='asterix'>*</div> :</label> 
-
-                                    <a href="/lead/{{ $lead->id }}/viewDetails" target="_blank" class="{{ $lead->sources->isEmpty() ?'required' : '' }}">
-                                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
-                                        {!!  $lead->source->master->source_name or ""!!}
-                                @else
-                                        {{ $lead->source->master->channel->name or "" }}
-                                @endif 
-                                    </a>
-                                    
-                                </td>
-                                <td>
-                                    <label>CRE <div class='asterix'>*</div> :</label>
-                            @if(Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing')) 
-
-                                    <select name="cre">                  
-                                @foreach($users as $user)
-                                        <option value="{{ $user->id }}" {{ $lead->cre_name == $user->name ? 'selected' : '' }}>
-                                            {{ $user->name }}
-                                        </option>
-                                @endforeach
-                                    </select>
-                            @else
-                                    <input type="hidden" name="cre" value="{{ Auth::id() }}">
-                                    {{ Auth::user()->employee->name }}
-
-                                    @if(Auth::user()->employee->name <> $lead->cre_name)
-                                        <span class="pull-right red">
-                                            <b>This lead belongs to {{ $lead->cre_name }}</b>
-                                        </span>
-                                    @endif
-                            @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="1">
-                                    <label>Currency :</label>
-                                    <select class="form-control" name="currency" required>
-                                        <option value="">Select Currency</option>
-                                    @foreach($currencies as $currency)
-                                        @if($currency->id == 1 && $lead->country == 'IN')
-                                            <option value="{{$currency->id}}" selected>
-                                            {{ $currency->name }} ({{ $currency->symbol }})
-                                        </option>
-                                        @else
-                                        <option value="{{$currency->id}}">
-                                            {{ $currency->name }} ({{ $currency->symbol }})
-                                        </option>
-                                        @endif
-                                    @endforeach
-                                    </select>
-                                </td>
-                                <td colspan="2">
-                                    <div class="col-sm-6">
-                                    <label>Shipping Address :</label>
-                                    <select class="form-control" name="shipping_address_id" id="shipping_address">
-                                        <option value="">same as billing address</option>
-                                        @foreach($lead->addresses as $address)
-                                            <option value="{{$address->id}}">{{$address->address_type}}</option>
-                                        @endforeach                                    
-                                    </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                    <b><i>Shipping Address</i></b><br/>
-                                    <span id="shipping_address_string">Same as billing address</span>
-                                    </div>
-                                    
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            @if($lead->dob <> '' && $lead->gender <> '' && $lead->email <> '' && $lead->phone <> '' && $lead->country <> '' && $lead->state <> '' && $lead->city <> '' && $lead->source_id <> '')
-                    <button type="submit" class="btn btn-primary">Add Cart</button>
-            @endif
-                    {{ csrf_field() }}
-                </form>
-            </validator>
+                                    @{{ address.state }}
+                                    @{{ address.zip }}
+                                    @{{ address.country }}
+                                </div>
+                            </div>                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" v-if="status" :disabled="!currency_id || !shipping_address_id || !cre_id" @click="store">Add Cart</button>
+            </div>
+            <div class="col-md-8">
+                <div class="alert alert-danger" v-show="message">
+                    <h4>@{{ message }}</h4>
+                    <div v-if="cart">
+                        <label>Cart Id :</label>
+                        <a href="/cart/@{{ cart.id }}" target="_blank"> @{{ cart.id }}</a>
+                    </div>
+                    
+                </div>
+            </div>
+                
+                
         </div>
     </div>
 </div>
-<script type="text/javascript">
-$(function() {
-    $( "#datepicker" ).datepicker({  
-        maxDate: 0,
-        dateFormat: 'dd-mm-yy' 
-    });
-});
-</script>
 <style type="text/css">
     .available {
         display: inline;
@@ -291,6 +302,7 @@ $(function() {
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
+                
             </div>
         </div>
         <!-- /.modal-content -->
@@ -329,5 +341,84 @@ $("#shipping_address").change(function() {
     }
     $("#shipping_address_string").html(shipping_addresses[address_value]);
 });
+</script>
+<script>
+new Vue({
+    el: '#cart',
+    mixins: [mixin],
+    data: {
+        loading: false,
+        id: {{ $lead->id }},
+        lead: '',
+        currencies: [],
+        users: [],
+        status: false,
+        message: '',
+        cart: ''
+    },
+
+    ready: function(){
+        this.findLead();
+        this.getCurrencies();
+    },
+
+    methods: {
+
+        findLead() {
+            this.$http.get("/findLead", {
+                id: this.id
+            }).success(function(data){
+                this.lead = data;
+                this.getUsers();
+                this.canCreateCart();
+            }).bind(this);
+        },
+
+        getUsers() {
+            this.$http.get("/api/getUsers").success(function(data){
+                this.users = data;
+            }).bind(this);
+        },
+
+        getCurrencies() {
+            this.$http.get("/getCurrencies").success(function(data){
+                this.currencies = data;
+            }).bind(this);
+        },
+
+        canCreateCart() {
+            this.$http.get("/canCreateCart", {
+                id: this.lead.id
+            })
+            .success(function(data){
+                if (data.status == 'true') {
+                    this.status = true;
+                } else {
+                    this.status = false;
+                }                
+                this.message = data.message;
+                this.cart = data.cart;
+            }).bind(this);
+        },
+
+        store() {
+            this.$http.post("/lead/" + this.lead.id + "/cart", {
+                currency_id:            this.currency_id,
+                cre_id:                 this.cre_id,
+                source_id:              this.lead.source_id,
+                shipping_address_id:    this.shipping_address_id,
+                created_by:             {{ Auth::id() }}
+            })
+            .success(function(cart){
+                toastr.success("Cart created", "Success!");
+                window.location.href = "/cart/" + cart.id;
+            })
+            .error(function(errors){
+                this.toastErrors(errors);
+            })
+            .bind(this);
+        }
+    }
+})
 </script>
 @endsection 

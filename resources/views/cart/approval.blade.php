@@ -45,7 +45,7 @@
                 </div>
                 <div class="col-md-2">
                     <div v-if="cart.status_id == 2">
-                        Max Discount : 
+                        <label>Max Discount :</label> @{{ cart.products | max 'discount' }}%
                     </div>
                     <div v-for="shipping in cart.shippings" v-else>
                         <div>
@@ -135,9 +135,10 @@
                         <thead>
                             <tr>
                                 <th>Product Name</th>
-                                <th>Quantity</th>
+                                <th>Qty</th>
                                 <th>Price</th>
                                 <th>Discount</th>
+                                <th>Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -161,6 +162,9 @@
                                     <span v-if="product.pivot.discount > 0">
                                         <small>( @{{ product.pivot.discount }}%)</small>
                                     </span>
+                                </td>
+                                <td>
+                                    @{{ product.pivot.amount | currency cart.currency.symbol }}
                                 </td>
                             </tr>
                         </tbody>
@@ -204,6 +208,11 @@
                     </table> -->
                 </div>                
                 <div class="col-md-2">
+
+                    <div>
+                        <label>Max Discount :</label> @{{ cart.products | max 'discount' }}%
+                    </div>
+                    <hr>
                     <div v-for="shipping in cart.shippings">
                         <table class="table table-bordered">
                             <tr>
@@ -410,9 +419,7 @@ Vue.component('cartApproval', {
                 this.$http.get("/canApproveDiscount", {
                     cart_id: this.cart.id
                 }).success(function(data){
-                    alert(data.status);
                     if (data.status == 'Error!') {
-                        alert('error');
                         toastr.error(data.message, data.status);
                     } else if (data == false) {
                         this.approveDiscount = data;
@@ -452,7 +459,11 @@ Vue.component('cartApproval', {
                 }                    
                 
                 this.findCart();
-            }).bind(this);
+            })
+            .error(function(data){
+                toastr.error(data.message, data.status);
+            })
+            .bind(this);
         },
 
         findCart() {
@@ -547,6 +558,13 @@ new Vue({
             return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
         }
     }
+})
+
+Vue.filter('max', function (list, key) {
+    if (list.length == 0) {
+        return 0;
+    }
+    return Math.max.apply(Math,list.map(function(o){return o.pivot.discount;}))
 })
 </script>
 <script type="text/javascript">

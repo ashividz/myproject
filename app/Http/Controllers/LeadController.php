@@ -56,6 +56,12 @@ class LeadController extends Controller
         return view('home')->with($data);
     }
 
+    public function find(Request $request)
+    {
+        return Lead::with('lsource.channel', 'addresses')
+                ->find($request->id);
+    }
+
     public function dialerCall(Request $request)
     {
         

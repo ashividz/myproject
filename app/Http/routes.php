@@ -111,6 +111,7 @@ Route::group([
     function() {
     Route::get('carts', 'CartReportController@index');
     Route::post('carts', 'CartReportController@index');
+    Route::get('api/getCarts', 'CartController@get');
 
 });
 
@@ -133,15 +134,7 @@ Route::group([
     'middleware' => ['auth','roles'], 
     'roles' => ['admin', 'marketing']], 
     function() {
-        Route::get('notifications', function() {
-            //$employee = App\Models\Employee::find(1);
-            //\Redis::publish('unread', $user);
-            event(new App\Events\NewNotification());
-            //\Cache::put('foo', 'bar', 10);
-            //return \Cache::get('foo');
-            //\Redis::set('name', 'Saaz Rai');
-            //return \Redis::get('name');
-        });
+        
         Route::get('marketing', 'MarketingController@index');
 
         Route::get('marketing/leads', 'MarketingController@viewLeads');
@@ -326,6 +319,12 @@ Route::group([
         Route::post('finance/saveAudit', 'FinanceController@saveAudit');
 
         Route::post('finance/updatePayment', 'FeeController@update');
+});
+Route::group([
+    'middleware' => ['auth','roles'], 
+    'roles' => ['admin', 'finance', 'registration']], 
+    function() {
+
         Route::patch('cart/payment/{id}', 'CartPaymentController@update');
 });
 
@@ -720,7 +719,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('lead/{id}', 'LeadController@showLead');
 
-    Route::get('api/getCurrencies', function() {
+    Route::get('getCurrencies', function() {
         return App\Models\Currency::get();
     });
 
@@ -742,13 +741,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('api/getVoices', 'APIController@getVoices');
 
     Route::get('api/getUnreadMessageCount', 'MessageController@getUnreadMessageCount');
-    Route::get('api/getMessages', 'MessageController@getMessages');
+    Route::get('getMessages', 'MessageController@get');
     Route::get('api/getAllMessages', 'MessageController@getAllMessages');
     Route::post('api/message/setRead', 'MessageController@setRead');
     Route::post('api/Message/setAction', 'MessageController@setAction');
 
-    Route::get('api/getUnreadNotificationCount', 'NotificationController@getUnreadNotificationCount');
-    Route::get('api/getUnreadNotifications', 'NotificationController@getUnreadNotifications');
+    //Route::get('api/getUnreadNotificationCount', 'NotificationController@getUnreadNotificationCount');
+    //Route::get('api/getUnreadNotifications', 'NotificationController@getUnreadNotifications');
 
     Route::get('api/onlinePayments', 'WebsiteController@onlinePayments');
     Route::get('api/onlinePaymentsNew', 'WebsiteController@onlinePaymentsNew');
@@ -873,7 +872,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('report/patients/occupation', 'ReportController@occupation');
 
     Route::get('sales/report/performance', 'SalesReportController@performance');
-    Route::get('api/getCarts', 'CartController@get');
+    
 
     Route::get('api/getGoods', 'CartController@get');
 
@@ -921,9 +920,10 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
-
+    Route::get('findLead', 'LeadController@find');
 
     /* Cart */
+    Route::get('canCreateCart', 'CartController@canCreateCart');
     Route::get('lead/{id}/cart', 'CartController@index');
     Route::post('lead/{id}/cart', 'CartController@store');
 
@@ -947,7 +947,7 @@ Route::controllers([
     Route::post('cart/{id}/shipping', 'ShippingController@store');
 
 
-    Route::get('cart/{id}/', 'CartController@show');
+    Route::get('cart/{id}', 'CartController@show');
 
     Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
     Route::post('cart/{id}/approval/update', 'CartApprovalController@update');
@@ -957,3 +957,7 @@ Route::controllers([
 
     Route::get('marketing/reports/package', 'MarketingController@package');
     Route::get('api/getPackageExtensions', 'MarketingController@getPackageExtensions');
+
+    Route::get('getNotifications', 'NotificationController@get');
+    Route::get('notifications', 'NotificationController@index');
+    Route::patch('notification/{id}/read', 'NotificationController@read');
