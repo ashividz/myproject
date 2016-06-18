@@ -79,6 +79,19 @@ class Helper {
 	    return $paragraphs;
 	}
 
+	public static function mask($string, $maskCharacter='*',$leftVisible=2,$rightVisible = 2)
+	{
+		$length = strlen($string);
+		if($length > ($leftVisible + $rightVisible) ){
+			$replacement = str_repeat( $maskCharacter,($length - $leftVisible - $rightVisible));
+			return substr_replace($string, $replacement, $leftVisible, ($length - $leftVisible - $rightVisible));
+
+		} else {
+			return $string;
+		}
+
+	}
+
 	/* Multi Array Sort by Column*/
 
 	public static function array_sort_by_column(&$arr, $col, $dir = SORT_ASC) {
