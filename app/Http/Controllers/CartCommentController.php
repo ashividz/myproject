@@ -27,9 +27,6 @@ class CartCommentController extends Controller
 
         Notification::store(6, $id, $cart->cre_id);
 
-        Session::flash('message', 'Comment added');
-        Session::flash('status', 'Success');
-
-        return back();
+        return $cart->comments()->with('creator.employee')->get();
     }
 }

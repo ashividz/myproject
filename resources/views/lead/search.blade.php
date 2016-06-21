@@ -1,11 +1,3 @@
-<?php
-    $readonly = "";
-    $title = "";
-    if (Auth::user()->hasRole('cre') && !Auth::user()->hasRole('goods_sale')) {
-        $readonly = "readonly";
-        $title = "You do not have the permissions use this field. Please contact the Marketing Department.";
-    }
-?>
 <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-default">
         <div class="panel-heading">Search</div>
@@ -14,23 +6,28 @@
                 {{ csrf_field() }}
                 <div class="row"> 
                     <div class="col-md-2">
-                        Name
-                        <input name="name" class="form-input" {{ $readonly }}>
-                    </div>
-                    <div class="col-md-2 col-md-offset-1">
                         Lead Id / Patient Id 
                         <input name="enquiry_no" class="form-input">
                     </div>
 
+            @if(Auth::user()->canSearchLead())
+
+                    <div class="col-md-2 col-md-offset-1">
+                        Name
+                        <input name="name" class="form-input">
+                    </div>
+
                     <div class="col-md-2 col-md-offset-1">
                         Phone / Mobile
-                        <input name="mobile" class="form-input" {{ $readonly }}>
+                        <input name="mobile" class="form-input">
                     </div>
 
                     <div class="col-md-2 col-md-offset-1">
                         Email
-                        <input name="email" class="form-input" {{ $readonly }}>
+                        <input name="email" class="form-input">
                     </div>
+            @endif
+
                 </div>
                 <hr>
                 <div class="row">
@@ -146,9 +143,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $('input[readonly]').click(function () {
-        alert('{{$title}}');
-    })  
-</script>

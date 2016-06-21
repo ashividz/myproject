@@ -443,11 +443,11 @@ class LeadController extends Controller
     {
         try 
         {
-            if (Lead::isDuplicateMobile($id, Helper::properMobile($request->phone))) {
+            if ($request->phone && Lead::isDuplicateMobile($id, Helper::properMobile($request->phone))) {
                return "Duplicate Phone no!!!";
             }
 
-            if (trim($request->email) <> "" && Lead::isDuplicateEmail($id, $request->email)) {
+            if ($request->email && trim($request->email) <> "" && Lead::isDuplicateEmail($id, $request->email)) {
                return "Duplicate Email address!!!";
             }
 

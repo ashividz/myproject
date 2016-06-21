@@ -287,15 +287,12 @@ class CartController extends Controller
     {
         $categories = $request->categories ? : null;
 
-        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma')
+        $carts = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma', 'invoices')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
                     ->with(['lead.patient' => function($q) {
                         $q->select('id', 'lead_id');
-                    }])
-                    ->with(['invoices' => function($q) {
-                        $q->select('id', 'cart_id', 'number', 'amount');
                     }])
                     ->with('shippings.carrier')
                     ->with('steps.status', 'steps.state', 'steps.creator.employee')
@@ -346,6 +343,15 @@ class CartController extends Controller
 
             case 'paid':
                 $carts = $carts->where('status_id', '>=', 4);
+                break; 
+
+            case 'shipping':
+                $carts = $carts->whereHas('invoices', function($q) {
+                    $q->whereNotNull('id');
+                });/*
+                ->whereHas('payments', function($q) {
+                    $q->whereIn('payment_method_id', [4, 5]);
+                });*/
                 break; 
         }
 
@@ -408,7 +414,7 @@ class CartController extends Controller
 
         if (!Auth::user()->canCreateCartForOthers()) {
 
-            $cart = Cart::isIncompleteCart($lead);
+            $cart = Cart::hasIncompleteCart($lead);
                             //dd($cart);
             if ($cart) {
                 return [

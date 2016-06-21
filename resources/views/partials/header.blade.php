@@ -93,12 +93,15 @@
 
         <!-- VueJS -->
         <script src="/plugins/vue/vue.min.js"></script>
-        <script src="/plugins/vue/vue-resource.min.js"></script>
+        <script src="/plugins/vue/vue-resource.js"></script>
         <script src="/plugins/vue/vue-focus.js"></script>
 
         <!-- Toastr -->
         <script src="/plugins/toastr/toastr.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/plugins/toastr/toastr.min.css">
+
+        <!-- Is Loading -->
+        <script src="/plugins/is-loading/jquery.isloading.min.js"></script>
 
         <!-- Custom -->
         <script src="/js/mixin.js"></script>
@@ -109,11 +112,6 @@
 
     </head>
     <body>
-        <!-- Loader -->
-        <div id="loader" v-show="loading" style="text-align:center" >
-            <img src="/images/loading.gif">
-        </div>
-        <!-- Loader ends -->
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
 
             <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>

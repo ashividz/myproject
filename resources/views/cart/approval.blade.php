@@ -4,7 +4,44 @@
 <div class="container-fluid" id="carts">
     <div class="panel panel-default">
         <div class="panel-heading">
-            Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+            <b>Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+            <div class="roles" style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                All : <input type="radio" name="role" value="all" v-model="role" debounce="5000" checked>
+                <span style="margin-left:30px">
+                    Nutritionist : <input type="radio" name="role" value="nutritionist" v-model="role" debounce="5000" >   
+                </span>
+                <span style="margin-left:30px">
+                    CRE : <input type="radio" name="role" value="cre" v-model="role" debounce="5000" > 
+                </span>
+            </div> 
+            <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                <span>
+                    All : <input type="radio" v-model="filter" debounce="5000" value="all" checked>
+                </span> 
+                <span style="margin-left:30px">
+                    PI : <input type="radio" v-model="filter" debounce="5000" value="pi">
+                </span>    
+                <span style="margin-left:30px">
+                    FedEx : <input type="radio" v-model="filter" debounce="5000" value="fedex">
+                </span>    
+                <span style="margin-left:30px">
+                    Paid : <input type="radio" v-model="filter" debounce="5000" value="paid">
+                </span> 
+            </div>  
+            <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                <span>
+                    Diets : <input type="checkbox" v-model="categories" value="1" debounce="5000" checked>
+                </span> 
+                <span>
+                    Goods : <input type="checkbox" v-model="categories" value="2" debounce="5000" checked>
+                </span>
+                <span>
+                    BT : <input type="checkbox" v-model="categories" value="3" debounce="5000" checked>
+                </span> 
+                <span>
+                    Books : <input type="checkbox" v-model="categories" value="4" debounce="5000" checked>
+                </span>  
+            </div>
         </div>
     </div>
 

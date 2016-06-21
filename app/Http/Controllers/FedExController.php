@@ -152,7 +152,8 @@ class FedExController extends Controller
                 return $tracking;
             }
 
-            $tracking = new Tracking;
+            $tracking = new FedExTracking;
+            $tracking->id = $id;
             $tracking->parent_id = $track->id;
             $tracking->shipping_id = $track->shipping_id;
             $tracking->save();

@@ -1,109 +1,128 @@
-    <div class="container-fluid" id="payments">
-
+<div class="container-fluid" id="payments">
+    <div v-for="cart in carts">
         <div class="panel panel-default">
-            <div class="panel-heading"> 
-                <span class="pull-right">
-                    <a href='/sales/report/performance/download?start_date=@{{ start_date }}&end_date=@{{ end_date }}' class="btn btn-primary" v-on:click="download">Download</a>
-                </span>                
+        <div class="panel-heading">
+            <div class="col-md-1">
+                <strong>Cart Id @{{ cart.id }}</strong>
             </div>
-            <div class="panel-body">
-                <table class="table table-condensed table-bordered table-striped">
-                    <thead>
+            <div class="col-md-3">
+                @{{ cart.created_at | format_date }}
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    <div>
+                        <label>CRE : </label>@{{ cart.cre.employee.name }}
+                    </div>
+                    <div>
+                        <label>TL </label>: </b>
+                        @{{ cart.cre.employee.supervisor.employee.name }}
+                    </div>
+
+                    <div>
+                        <label>Source : </label> @{{ cart.source.source_name }}
+                    </div>
+                    <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
+                </div>
+                <div class="col-md-2">
+                    <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
+                        @{{ cart.lead.name }}
+                    </a>
+                    <div>
+                        <label>Lead Id : </label>
+                        <span>
+                            @{{ cart.lead.id }}
+                        </span>
+                    </div>
+                        
+                    <div>
+                        <label>Patient Id</label> : <a href="/patient/@{{ cart.lead.patient.id }}/diet" target="_blank">
+                            @{{ cart.lead.patient.id }}
+                        </a>
+                    </div>
+                    <div>
+                        <label>Start Date : </label>
+                        <span>
+                            @{{ cart.lead.patient.fees[0].start_date | format_date1 }}
+                        </span>
+                    </div>
+                    <div>
+                        <label>End Date : </label>
+                        <span>
+                             @{{ cart.lead.patient.fees[0].end_date | format_date1 }}
+                        </span>
+                    </div>
+                    <div>
+                        <label>Duration : </label>
+                        <span>
+                             @{{ cart.lead.patient.fees[0].duration }}
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Name</th>
+                            <th>Qty</th>
+                            <th>Amount</th>
+                            <th>Discount</th>
+                        </tr>
+                        <tr v-for="product in cart.products">
+                            <td>
+                                @{{ product.name }}
+                            </td>
+                            <td>
+                                @{{ product.pivot.quantity }}
+                            </td>
+                            <td>
+                                @{{ product.pivot.amount | currency cart.currency.symbol }}
+                            </td>
+                            <td>
+                                <span v-if="product.pivot.discount > 0">
+                                    @{{ product.pivot.discount + "%" }}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-3">
+                    <table class="table table-bordered table-striped">
                         <tr>
                             <th>Date</th>
-                            <th>Status</th>
-                            <th>Lead Details</th>
-                            <th>CRE</th>
-                            <th>Product Details</th>
-                            <th>Payment Details</th>
-                            <th>Program</th>
-                            <th></th>
+                            <th>Amount</th>
+                            <th>Method</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="cart in carts">
+                        <tr v-for="payment in cart.payments">
                             <td>
-                                @{{ cart.created_at | format_date }}
+                                @{{ payment.date | format_date2 }}
                             </td>
                             <td>
-                                <span class="statusbar status@{{ cart.status.id + cart.state_id }}" title="@{{ cart.status.name + ' : ' + cart.state.name }}"></span>
+                                @{{ payment.amount | currency cart.currency.symbol }}
                             </td>
                             <td>
-                                <a href="/lead/@{{ cart.lead.id }}/cart" target="_blank">
-                                    @{{ cart.lead.name }}
-                                </a>
-                                <div v-if="cart.lead.patient">
-                                    <b>Patient Id</b> : <a href="/patient/@{{ cart.lead.patient.id }}/diet" target="_blank">
-                                        @{{ cart.lead.patient.id }}
-                                    </a>
-                                </div>
-                                <div>
-                                    @{{ cart.source.name }}
-                                </div>
-                            </td>
-                            <td>
-                                @{{ cart.cre.employee.name }}
-                                <div>
-                                    <b>TL : </b>@{{ cart.cre.employee.supervisor.employee.name }}
-                                </div>
-                            </td>
-                            <td>
-                                <li v-for='product in cart.products'>
-                                    @{{ product.name }} (@{{ product.pivot.quantity }})
-                                </li>
-                            </td>
-                            <td>
-                                <div>
-                                    <b>Amount : </b>@{{ cart.amount | currency cart.currency.symbol }}
-                                </div>
-                                <div>
-                                    <b>Payment : </b>@{{ cart.payment | currency cart.currency.symbol }}
-                                </div>
-                                <hr>
-                                <div>
-                                    <b>Balance : </b>@{{ cart.amount - cart.payment | currency cart.currency.symbol }}
-                                </div>
-                            </td>
-                            <td>
-                                <div>
-                                    <b>Start Date</b> : @{{ cart.lead.patient.fees[0].start_date | format_date2 }}
-                                </div>
-                                <div>
-                                    <b>End Date</b> : @{{ cart.lead.patient.fees[0].end_date | format_date2 }}
-                                </div>  
-                                <hr>
-                                <b>Duration : </b> @{{ cart.lead.patient.fees[0].duration }} days                              
-                            </td>
-                            <td>
-                                Button
+                                @{{ payment.method.name }}
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                    </table>
+                </div>
+                <div class="col-md-2">
+                    
+                    Button
+                </div>
             </div>
         </div>
     </div>
-@include('partials.modal')
-<style type="text/css">
+    </div>
     
-    table.table {
-        font-size: 12px;
-    }
-    hr {
-        margin: 5px;
-    }
-    
-</style>
+</div>
+
 <script>
-    var vm = new Vue({
+    new Vue({
         el: '#payments',
 
         data: {
-            loading: false,
-            carts: [],
-            daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
-            start_date: '',
-            end_date: '',
+            carts: []
         },
 
         ready: function(){
@@ -113,49 +132,13 @@
         methods: {
 
             getCarts() {
-                this.loading = true;
-                this.$http.get("/api/getBalancePayments", {'start_date': this.start_date, 'end_date' : this.end_date})
+                $.isLoading({ text: "Loading" });
+                this.$http.get("/getBalancePayments")
                 .success(function(data){
                     this.carts = data;
-                    this.loading = false;
+                    $.isLoading( "hide" );
                 }).bind(this);
             },
         }
     })
-    Vue.filter('format_date', function (value) {
-        if (value == null) {
-            return null;
-        }
-      return moment(value).format('D MMM hh:mm A');
-    })
-    Vue.filter('format_date2', function (value) {
-        if (value == null) {
-            return null;
-        }
-      return moment(value).format('D MMM');
-    })
-</script>
-<script type="text/javascript">
-$(document).ready(function() 
-{
-    $('#daterange').daterangepicker(
-    { 
-        ranges: 
-        {
-            'Today': [new Date(), new Date()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
-            'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        }, 
-        format: 'YYYY-MM-DD' 
-        }
-    );   
-    $('#daterange').on('apply.daterangepicker', function(ev, picker) 
-    {   
-        $('#daterange').trigger('change'); 
-    });
-
-});
 </script>

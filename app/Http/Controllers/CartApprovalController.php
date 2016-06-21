@@ -339,7 +339,10 @@ class CartApprovalController extends Controller
                         CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
                         CartStep::nextStatus($cart->id);
                     }
-                } 
+                } else {
+                    CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
+                    CartStep::nextStatus($cart->id);
+                }
             } elseif ($cart->status_id == 4) {
                     //Patient Registration
                     $patient = Patient::register($cart);

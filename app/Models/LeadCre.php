@@ -49,7 +49,7 @@ class LeadCre extends Model
             if($lastStatus && ($lastStatus->master->id == 5 || $lastStatus->master->id == 6))
                 LeadStatus::saveStatus($lead, 1);
 
-            Notification::store(1, 'New Lead assigned', '/lead/'. $lead->id, $leadCre->user_id);
+            Notification::store(1, $lead->id, $leadCre->user_id);
 
             return $leadCre;
     	} 

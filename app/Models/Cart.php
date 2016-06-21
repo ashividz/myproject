@@ -115,7 +115,7 @@ class Cart extends Model
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->hasMany(Invoice::class)->select('id', 'cart_id', 'number', 'amount', 'created_by', 'created_at');
     }
 
     public function comments()
@@ -206,12 +206,12 @@ class Cart extends Model
         return false;*/
     }
 
-    /*public static function isIncompleteCart($lead)
+    public static function hasIncompleteCart($lead)
     {
-        return $lead->carts()->where('status_id', '<=', 4)
-                        ->where('state_id', '<>', 3)
+        /** Cart incomplete if not complete(3) or cancelled (2) **/
+        return $lead->carts()->whereNotIn('state_id', [2, 3]) 
                         ->first();
-    }*/
+    }
 
     public static function setDietDuration($cart)
     {

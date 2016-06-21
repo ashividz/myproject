@@ -99,7 +99,7 @@ Route::group([
         Route::post('orders', 'OrderController@index');
 
         Route::get('sales/report/balancepayments', 'CartReportController@showBalancePayments');
-        Route::get('api/getBalancePayments', 'CartReportController@getBalancePayments');
+        Route::get('getBalancePayments', 'CartReportController@getBalancePayments');
 
         Route::get('api/getPayments', 'CartPaymentController@get');
 
@@ -962,6 +962,11 @@ Route::controllers([
     Route::get('marketing/reports/package/download', 'MarketingController@downloadPackage');
     Route::get('api/getPackageExtensions', 'MarketingController@getPackageExtensions');
 
+
     Route::get('getNotifications', 'NotificationController@get');
     Route::get('notifications', 'NotificationController@index');
     Route::patch('notification/{id}/read', 'NotificationController@read');
+
+    Route::get('getCarriers', function(){
+        return \App\Models\Carrier::get();
+    });

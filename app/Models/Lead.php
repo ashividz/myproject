@@ -20,6 +20,38 @@ class Lead extends Model
        return ['dob', 'created_at', 'updated_at'];
     }
 
+    public function getMobileAttribute($value)
+    {
+        if (!Auth::user()->canViewContactDetails()) {
+            return Helper::mask($value);
+        }
+        return $value;
+    }
+
+    public function getPhoneAttribute($value)
+    {
+        if (!Auth::user()->canViewContactDetails()) {
+            return Helper::mask($value);
+        }
+        return $value;
+    }
+
+    public function getEmailAttribute($value)
+    {
+        if (!Auth::user()->canViewContactDetails()) {
+            return Helper::mask(trim(strtolower(ucfirst($value))));
+        }
+        return trim(strtolower(ucfirst($value)));
+    }
+
+    public function getEmailAltAttribute($value)
+    {
+        if (!Auth::user()->canViewContactDetails()) {
+            return Helper::mask(trim(strtolower(ucfirst($value))));
+        }
+        return trim(strtolower(ucfirst($value)));
+    }
+
     public function query1()
     {
         return $this->belongsTo(Query::class, 'query_id');
@@ -132,11 +164,6 @@ class Lead extends Model
     public function addresses()
     {
         return $this->hasMany(LeadAddress::class);
-    }
-
-    public function getEmailAttribute($value)
-    {
-        return trim(strtolower(ucfirst($value)));
     }
 
     public static function isDuplicateMobile($id, $mobile)

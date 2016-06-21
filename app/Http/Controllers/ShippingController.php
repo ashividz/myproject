@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use FedEx;
 use Carbon;
 
+use App\Models\Cart;
 use App\Models\Shipping;
 use App\Models\FedExTracking;
 use App\Models\ShippingIntimation as Intimation;
@@ -89,17 +90,17 @@ class ShippingController extends Controller
         return $shipping;
     }
 
-    public function store(Request $request) 
+    public function store(Request $request, $id) 
     {
-        $shipping = Shipping::create($request->all());
+        $cart = Cart::find($id);
+
+        $shipping = $cart->shippings()->create($request->all());
         //$shipping = $this->updateTracking($shipping);
 
         if ($request->carrier_id == 1) {
             $tracking = FedExTracking::store($shipping);
         }
 
-        Session::flash('message', 'Tracking Created');
-        Session::flash('status', 'success');
-        return back();
+        return $cart->shippings()->with('carrier')->get();
     }
 }

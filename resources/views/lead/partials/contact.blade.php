@@ -1,13 +1,5 @@
 @extends('lead.index')
 @section('top')
-<?php
-	$readonly = "readonly";
-	$title = "You do not have the permissions to edit this field. Please contact the Marketing Department.";
-	if (Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing')) {
-		$readonly = "";
-		$title = "";
-	}
-?>
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h2 class="panel-title">ADDRESS</h2>
@@ -33,19 +25,40 @@
 					<ol>
 						<li>
 							<label>Mobile</label>
-							<input type="text" id="mobile" name="mobile" value="{{ $lead->mobile }}" title='{{$title}}' {{trim($lead->mobile) == '' ? '' : $readonly}}>
+                        @if(Auth::user()->canEditLeadContact() || $lead->mobile == '')
+							<input type="text" id="mobile" name="mobile" value="{{ $lead->mobile }}">
+                        @else
+                            {{ $lead->mobile }}
+                        @endif
 						</li>
 						<li>
 							<label>Phone *</label>
-							<input type="text" id="phone" name="phone" value="{{ $lead->phone }}" {{trim($lead->phone) == '' ? '' : $readonly}}>
+                        @if(Auth::user()->canEditLeadContact() || $lead->phone == '')
+							<input type="text" id="phone" name="phone" value="{{ $lead->phone }}">
+                        @else
+                            {{ $lead->phone }}
+                        @endif
 						</li>
 						<li>
 							<label>Email *</label>
-							<input type="email" id="email" name="email" value="{{ $lead->email }}" {{trim($lead->email) == '' ? '' : $readonly}}>
+
+                        @if(Auth::user()->canEditLeadContact() || $lead->email == '')
+							<input type="email" id="email" name="email" value="{{ $lead->email }}">
+                        @else
+                            {{ $lead->email }}
+
+                        @endif
+
 						</li>
 						<li>
 							<label>Alternate Email</label>
-							<input type="email" id="email_alt" name="email_alt" value="{{ $lead->email_alt }}" {{trim($lead->email_alt) == '' ? '' : $readonly}}>
+
+                        @if(Auth::user()->canEditLeadContact() || $lead->email_alt == '')
+							<input type="email" id="email_alt" name="email_alt" value="{{ $lead->email_alt }}">
+                        @else
+                            {{ $lead->email_alt }}
+                        @endif
+
 						</li>
 						<li>
 							<label>Skype</label>
@@ -261,11 +274,6 @@ function getCityCode(state_id) {
     
 }
 </script>
-<script type="text/javascript">
-	$('input[readonly]').click(function () {
-	    alert('{{$title}}');
-	})	
-</script>
 
 <script type="text/javascript" src="/js/form.js"></script>
 <script>
@@ -273,5 +281,10 @@ $('body').on('hidden.bs.modal', '.modal', function () {
   $(this).removeData('bs.modal');
 }); 
 </script>
-
+<style type="text/css">
+    #form li {
+        margin: 15px;
+        height: 25px;
+    }
+</style>
 @endsection

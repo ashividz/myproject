@@ -36,4 +36,10 @@ $( document ).ready(function() {
         }
         return moment(value).format('D MMM');
     })
+    
+    Vue.filter('total', function (list, key1) {
+        return list.reduce(function(total, item) {
+            return total + parseInt(item[key1])
+        }, 0)
+    })
 });

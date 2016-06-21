@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 
 use App\Models\Cart;
 use App\Models\Shipping;
@@ -58,7 +59,7 @@ class InvoiceController extends Controller
     }
 
     public function store($id, Request $request)
-    {
+    {//dd($request);
         if ($request->hasFile('invoice')) {
             try {
                 $file = $request->file('invoice');
@@ -75,16 +76,23 @@ class InvoiceController extends Controller
                 
                 $invoice->save();
 
-                Session::flash('message', 'Invoice saved');
-                Session::flash('status', 'success');
+                return Cart::find($id)->invoices;
 
-            } catch (\Exception $e) {
-                
-                Session::flash('message', 'Error : '. $e);
-                Session::flash('status', 'error');
+            } catch (QueryException $e) {
+                if ($request->ajax() || $request->wantsJson()) {
+
+                    return response([
+                        'status'        => false,
+                        'message'       => $e->getMessage()
+                    ], 500);
+                }
             }
             
+        } else {
+            return response([
+                'status'        => false,
+                'message'       => 'No file'
+            ], 404);
         }
-        return back();
-    }
+    } 
 }
