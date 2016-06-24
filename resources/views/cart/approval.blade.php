@@ -106,7 +106,7 @@
                                 <input type="radio" v-model="state" value="2" @click="canApproveCart"> Reject 
                             </div>   
                             <div class="col-md-3">
-                                <button class="btn btn-primary" v-bind:disabled="!state || !approvePayment || !approveDiscount" @click="approve">Save</button>
+                                <button class="btn btn-primary" v-bind:disabled="!state || !approvePayment || !approveDiscount || loading" @click="approve">Save</button>
                             </div>                           
                         </div> 
                         <div class="col-md-8">
@@ -425,6 +425,7 @@ Vue.component('cartApproval', {
     props: ['cart', 'methods'],
     data : function() {
         return {
+            loading: false,
             expand : false,
             approvePayment : true,
             approveDiscount : true,
@@ -443,14 +444,14 @@ Vue.component('cartApproval', {
         },
 
         canApproveCart() {
-            if (this.state == 1) {
+            /*if (this.state == 1) {
 
                 this.remark = this.cart.status_id == 4 ? "Order Approved" : "Cart Approved";
 
             } else if (this.state == 2) {
 
                 this.remark = this.cart.status_id == 4 ? "Order Rejected" : "Cart Rejected";
-            }
+            }*/
 
             if (this.cart.status_id == 2) {
                 this.$http.get("/canApproveDiscount", {
@@ -458,6 +459,7 @@ Vue.component('cartApproval', {
                 }).success(function(data){
                     if (data.status == 'Error!') {
                         toastr.error(data.message, data.status);
+                        this.approveDiscount = false;
                     } else if (data == false) {
                         this.approveDiscount = data;
                     }else if (data == true) {
@@ -480,6 +482,7 @@ Vue.component('cartApproval', {
         },
 
         approve() {
+            this.loading = true;
             this.$http.post("/cart/" + this.cart.id + "/approve", {
                 cart_id: this.cart.id,
                 state: this.state,
@@ -488,17 +491,17 @@ Vue.component('cartApproval', {
             }).success(function(data){
                 if (data.status == 'Success!') {
                     toastr.success(data.message, data.status);
-                    this.state = null;
                     this.remark = '';
                     
                 } else {
                     toastr.error(data.message, data.status);
                 }                    
-                
+                this.loading = false;
                 this.findCart();
             })
             .error(function(data){
                 toastr.error(data.message, data.status);
+                this.loading = false;
             })
             .bind(this);
         },
@@ -537,7 +540,7 @@ new Vue({
     el: '#carts',
 
     data: {
-        loading: false,
+        //loading: false,
         carts: [],
         daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
         start_date: '',
@@ -557,12 +560,14 @@ new Vue({
     methods: {
 
         getCarts() {
+            $.isLoading({ text: "Loading" });
             this.$http.get("/api/getCarts", {
                 start_date: this.start_date, 
                 end_date: this.end_date,
                 statuses: this.statuses
             }).success(function(data){
                 this.carts = data;
+                $.isLoading( "hide" );
             }).bind(this);
         },
 

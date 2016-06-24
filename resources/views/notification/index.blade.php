@@ -59,7 +59,7 @@ table thead tr {
 </style>
 <script>
     new Vue({
-        el: 'body',
+        el: '#notification',
 
         data: {
             notifications: [],

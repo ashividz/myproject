@@ -139,7 +139,7 @@
 
                         @if(Auth::user()->canGeneratePI())
                             <td>
-                                <div v-if="payment.payment_method_id == 2 && cart.status_id > 1">
+                                <div v-if="(payment.payment_method_id == 2 || payment.payment_method_id == 3) && cart.status_id > 1">
                                     <a href="/cart/@{{ cart.id }}/proforma/download" class="btn btn-danger">
                                         <i class="fa fa-download"></i>
                                     </a> 

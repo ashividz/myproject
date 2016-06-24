@@ -60,11 +60,10 @@ table thead tr {
 </style>
 <script>
     new Vue({
-        el: 'body',
+        el: '#inbox',
 
         data: {
             messages: [],
-            notifications: [],
             daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
@@ -73,7 +72,6 @@ table thead tr {
 
         ready: function(){
             this.getMessages();
-            this.getNotifications();
             this.timer = setInterval(this.getMessages, 100000);
             this.$watch('action', function(val) {
                 alert(val);
@@ -109,23 +107,6 @@ table thead tr {
                 .error(function (data, status, request) {
                    
                 });
-            },
-
-            getNotifications() {
-                this.$http.get("/getNotifications", {
-                    read: 1
-                })
-                .success(function( data ) {
-                    this.notifications = data;
-                }.bind(this));
-            },
-
-            setReadNotification(id) {
-                this.$http.patch("/notification/" + id + "/read")
-                .success(function(data){
-                    toastr.success("Notification read", "Success");
-                    this.notifications = data;
-                }).bind(this);
             },
 
         },

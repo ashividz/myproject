@@ -3,7 +3,7 @@
     var socket = io('//amikus:3001');
 
     new Vue({
-        el: 'body',
+        el: '#mws-user-tools',
 
         data: {
             messages: [],

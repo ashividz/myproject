@@ -80,6 +80,8 @@ Route::group([
     'middleware' => ['auth', 'roles'], 
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service']], 
     function() {
+        /** Cart Activate for Extension or Balance Payment **/
+        Route::post('cart/{id}/activate', 'CartController@activate');
 
         /* Cart Approval */
         Route::get('getCartApproverStatuses', 'CartApproverController@getStatuses');
@@ -87,7 +89,6 @@ Route::group([
         Route::get('canApprovePayment', 'CartApprovalController@canApprovePayment');
         Route::get('canApproveDiscount', 'CartApprovalController@canApproveDiscount');
         Route::post('cart/{id}/approve', 'CartApprovalController@approve');
-        Route::get('findCart', 'CartController@find');
 
         /** Old **/
         Route::get('cart/approval', 'CartApprovalController@show');
@@ -926,6 +927,10 @@ Route::controllers([
     Route::get('findLead', 'LeadController@find');
 
     /* Cart */
+
+    Route::get('findCart', 'CartController@find');
+    Route::delete('cart/{cart_id}/payment/{payment_id}', 'CartPaymentController@delete');
+
     Route::get('canCreateCart', 'CartController@canCreateCart');
     Route::get('lead/{id}/cart', 'CartController@index');
     Route::post('lead/{id}/cart', 'CartController@store');

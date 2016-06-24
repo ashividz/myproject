@@ -97,6 +97,10 @@
         <script src="/plugins/vue/vue-focus.js"></script>
 
         <!-- Toastr -->
+        <script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/plugins/sweetalert2/sweetalert2.min.css">
+
+        <!-- Toastr -->
         <script src="/plugins/toastr/toastr.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/plugins/toastr/toastr.min.css">
 

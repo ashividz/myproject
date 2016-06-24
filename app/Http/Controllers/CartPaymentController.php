@@ -196,4 +196,10 @@ class CartPaymentController extends Controller
 
         return $payment->load('method');
     }
+
+    public function delete($cart_id, $payment_id)
+    {
+        CartPayment::destroy($payment_id);
+        Cart::find($cart_id)->updateAmount();
+    }
 }

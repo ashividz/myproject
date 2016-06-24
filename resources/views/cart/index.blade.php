@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('content')
-<div class="container" id="app">
+<div class="container" id="cart">
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="col-md-3">
@@ -169,23 +169,26 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                @foreach($cart->payments as $payment)
-                        <tr>
-                            <td>{{$cart->currency->symbol}} {{$payment->amount}}</td>
-                            <td>{{$payment->method->name or ""}}</td>
-                            <td>{{$payment->remark}}</td>
+                        <tr v-for="payment in cart.payments">
                             <td>
-                                {{$payment->user or ""}}
-                                {{date('jS M, Y',strtotime($payment->date))}}
+                                @{{ payment.amount | currency cart.currency.symbol}}
                             </td>
                             <td>
-                        @if($cart->status_id == 1 || $cart->state_id == 2)
-                                <a href="#" onclick="deletePayment({{$payment->id}})" class="red"><i class="fa fa-close"></i></a>
-                        @endif
+                                @{{ payment.method.name }}
+                            </td>
+                            <td>
+                                @{{ payment.remark}}
+                            </td>
+                            <td>
+                                @{{ payment.user }}
+                                @{{ payment.date | format_date1 }}
+                            </td>
+                            <td>
+                                <div v-if="cart.status_id == 1 || cart.state_id == 2">
+                                    <i class="fa fa-close red" @click="deletePayment(payment)"></i>
+                                </div>
                             </td>
                         </tr>
-                @endforeach
 
                     </tbody>
                 </table>
@@ -197,30 +200,32 @@
     <!-- Payment Details End -->
     
     <div class="row" style="text-align:center; margin:30px;">    
-@if(!$cart->products->isEmpty() && ($cart->amount == 0 || ($cart->amount - $cart->payment) <> 0))
-    <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment" class="btn btn-primary">Add Payment</a>
-@endif
+        <span v-show="cart.products.length > 0 && (cart.amount == 0 || cart.balance > 0)">
+            <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment" class="btn btn-primary">Add Payment</a>
+        </span>
 
-@if($cart->status_id == 1 || $cart->state_id == 2)
+<div v-if="cart.status_id == 1 || cart.state_id == 2">
     
-    @if($cart->product_category_id == 1 && $cart->programs->isEmpty())
+    <span v-if="cart.product_category_id == 1 && cart.programs.length > 0">
         <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/program/add" class="btn btn-success">Add Program</a>
-    @else
+
+    </span>
+    <span v-else>
         <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/product/add" class="btn btn-success">Add Product</a>
 
-    @endif
+    </span>
     
-    @if(!$cart->payments->isEmpty() && $cart->state_id == 2) 
+    <span v-if="cart.payments.length > 0 && cart.state_id == 2"> 
         <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/approval/update" class="btn btn-danger">Update Order</a>
-    @endif
+    </span>
 
-        
-    @if(!$cart->payments->isEmpty() && $cart->status_id == 1) 
-        <form method="post" action="/cart/{{$cart->id}}/process" class="form-inline" style="display: inline;">       
-            {{ csrf_field() }}
-            <button type="submit" class="btn btn-danger">Process Order</button> 
-        </form>
-    @endif
+     <span v-if="cart.payments.length > 0 && cart.status_id ==1">
+         <button type="submit" class="btn btn-danger" @click="processOrder">Process Order</button>
+     </span>
+</div>
+
+@if(Auth::user()->canActivateCart($cart))
+    <button class="btn btn-primary" @click="activateCart" v-if="!loading">Activate Cart for Extension or Balance Payment</button>
 @endif
     </div>
     <div class="row">
@@ -232,21 +237,18 @@
                 </div>
                 <div class="panel-body">
                     <ul>
-
-                    @foreach($cart->steps as $step)
-                        <li>
-                            <b>Cart {{ $step->status->name }}
-                                <span class='".$step->state->css_class."'>{{ $step->state->name }}</span>
-                            </b> 
+                        <li v-for="step in cart.steps">
+                            <span class='@{{ step.state.css_class }}'>
+                                <b>
+                                    Cart @{{ step.status.name }}
+                                    @{{ step.state.name }}
+                                </b>
+                            </span>
                             <small>by</small> 
-                            <b>{{ $step->creator->employee->name or "" }}</b>
-                            <small>on <em> {{ $step->created_at->format('jS M, Y, h:i:A') }}</em></small>
-
-                        @if($step->remark)
-                            <small>( {{ $step->remark }} )</small>
-                        @endif
+                            <b>@{{ step.creator.employee.name }}</b>
+                            <small v-if="step.remark">(@{{ step.remark }} )</small>
+                            <small class="pull-right"><em> @{{ step.created_at | format_date }}</em></small>
                         </li>
-                    @endforeach
 
                     </ul>
                 </div>
@@ -266,14 +268,12 @@
                 <div class="panel-body">
                     <ul>
 
-                    @foreach($cart->comments as $comment)
-                        <li>
-                            <b>{{ $comment->text }}</b> 
+                        <li v-for="comment in cart.comments">
+                            <b>@{{ comment.text }}</b> 
                             <small>by</small> 
-                            <b>{{ $comment->creator->employee->name or "" }}</b>
-                            <small class="pull-right"><em> [{{ $comment->created_at->format('jS M, Y, h:i:A') }}</em> ]</small>
+                            <b>@{{ $comment->creator->employee->name or "" }}</b>
+                            <small class="pull-right"><em> [@{{ $comment->created_at->format('jS M, Y, h:i:A') }}</em> ]</small>
                         </li>
-                    @endforeach
 
                     </ul>
                 </div>
@@ -366,5 +366,108 @@
         };
     };
 </script>
+<script>
+new Vue({
+    el: '#cart',
 
+    data: {
+        loading: false,
+        id: {{ $cart->id }},
+        cart: '',
+    },
+
+    ready() {
+        this.findCart();
+    },
+
+    methods: {
+        findCart() {
+            $.isLoading({ text: "Loading cart" });
+            this.$http.get("/findCart", {
+                cart_id: this.id
+            })
+            .success(function(data){
+                this.cart = data;
+                $.isLoading( "hide" );
+            }).bind(this);
+        },
+
+        deletePayment(payment) {
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    this.$http.delete('/cart/'+ this.id +'/payment/'+ payment.id)
+                    .success(function(data) {
+                        swal(
+                          'Deleted!',
+                          'Payment deleted.',
+                          'success'
+                        );
+                        this.findCart();
+                    });                        
+                }
+            }.bind(this))
+        },
+
+        processOrder() {
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to make changes to the Cart!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, process cart!'
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    this.$http.post('/cart/'+ this.id +'/process')
+                    .success(function(data) {
+                        swal(
+                          'Processed!',
+                          'Cart Processed.',
+                          'success'
+                        );
+                        this.findCart();
+                    });                        
+                }
+            }.bind(this))
+        },
+
+        activateCart() {
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to undo this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Activate Cart!'
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    $.isLoading({ text: "Activating Cart" });
+                    this.$http.post("/cart/" + this.id + "/activate/")
+                    .then(function(data){
+                        swal(
+                          'Activated!',
+                          'Cart Activated.',
+                          'success'
+                        );
+                        $.isLoading( "hide" );
+                        this.loading = true;
+                        this.findCart();
+                    });                        
+                }
+            }.bind(this))
+        },
+
+    }
+})
+</script>
 @endsection

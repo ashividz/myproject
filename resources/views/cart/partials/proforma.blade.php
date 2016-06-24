@@ -109,6 +109,38 @@
 
             <tr>
                 <td>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Delivery Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($cart->payments as $payment)
+                            <tr>
+                                <td>
+                                    {{ $payment->date }}                            
+                                </td>
+                                <td>
+                                    {{ $cart->currency->name or "" }} {{ $payment->amount }}                            
+                                </td>
+                                <td>
+                                    {{ $payment->method->name }}
+                                </td>
+                                <td>
+                                    {{ Carbon::parse($payment->delivery_time)->format('h:i A') }}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>                    
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <?php 
                         $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                     ?>

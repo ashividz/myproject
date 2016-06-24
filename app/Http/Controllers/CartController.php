@@ -203,12 +203,12 @@ class CartController extends Controller
         //Create next OrderStep
         CartStep::nextStatus($id);
 
-        $data = array(
+        /*$data = array(
             'message' => 'Order Processed', 
             'status' => 'success'
         );  
         
-        return redirect('/cart/'.$id)->with($data);
+        return redirect('/cart/'.$id)->with($data);*/
     }
 
     public function show($id)
@@ -330,7 +330,7 @@ class CartController extends Controller
         switch($request->filter) {
             case 'pi':
                 $carts = $carts->whereHas('payments', function($q){
-                    $q->where('payment_method_id', 2);
+                    $q->whereIn('payment_method_id', [2, 3]);
                  });
                 break;
 
@@ -364,7 +364,7 @@ class CartController extends Controller
 
     public function find(Request $request)
     {
-        return Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma')
+        $cart = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
@@ -380,9 +380,13 @@ class CartController extends Controller
                     }])
                     ->with('steps.status', 'steps.state', 'steps.creator.employee')
                     ->with('creator.employee')
-                    ->with('cre.employee.supervisor.employee')
-                    ->whereIn('status_id', $request->statuses)
-                    ->find($request->cart_id);
+                    ->with('cre.employee.supervisor.employee');
+
+        if ($request->statuses) {
+            $cart->whereIn('status_id', $request->statuses);
+        }
+                    
+        return $cart->find($request->cart_id);
     }
 
     public function goods()
@@ -453,6 +457,22 @@ class CartController extends Controller
         }
 
 
+    }
+
+    public function activate($id)
+    {
+        $cart = Cart::find($id);
+
+        if (!$cart) {
+            return false;
+        }
+        if (!Auth::user()->canActivateCart($cart)) {
+            return false;
+        }
+
+        CartStep::store($id, 1, 1, "Cart Activated for Extension or Balance Payment");
+
+        return $cart;
     }
 
 }

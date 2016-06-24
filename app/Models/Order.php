@@ -74,7 +74,7 @@ class Order extends Model
 
 
         //Update old Fee tables for now
-        if ($patient) {
+        if ($cart->duration > 0) {
             Fee::store($cart, $patient);
             /*foreach ($cart->payments as $payment) {
                 Fee::store($payment);

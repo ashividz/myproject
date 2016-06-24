@@ -7,7 +7,7 @@ Trait Permission {
 
     public function canSearchLead()
     {
-        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service')|| Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('service_tl')) {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service')|| Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('yuwow_support') || Auth::user()->hasRole('quality') || Auth::user()->hasRole('shs_sale')) {
             return true;
         }
         return false;
@@ -15,7 +15,7 @@ Trait Permission {
 
     public function canEditLeadContact()
     {
-        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration')) {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration')) {
             return true;
         }
         return false;
@@ -65,6 +65,18 @@ Trait Permission {
     public function canCreateCartForOthers()
     {
         if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('service_tl')) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Activate Cart for Extension or Balance Payment **/
+    public function canActivateCart($cart)
+    {
+        if (!($cart->state_id == 3 && $cart->status_id == 4)) {
+            return false;
+        }
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl')) {
             return true;
         }
         return false;
