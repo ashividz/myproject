@@ -344,22 +344,22 @@ strong.warning {
     height: 17px;
     background-position: -143px -35px;
 }
-.statusbar.picked_up, .statusbar.status21, .statusbar.status23, .statusbar.status24 {
+.statusbar.picked_up, .statusbar.status21, .statusbar.status23, .statusbar.status24, .statusbar.dp {
     width: 99px;
     height: 16px;
     background-position: -345px -38px;
 }
-.statusbar.in_transit, .statusbar.status31, .statusbar.status33, .statusbar.status34 {
+.statusbar.in_transit, .statusbar.status31, .statusbar.status33, .statusbar.status34, .statusbar.it, .statusbar.od {
     width: 99px;
     height: 17px;
     background-position: -42px -35px;
 }
-.statusbar.exception, .statusbar.status12, .statusbar.status22, .statusbar.status32, .statusbar.status42 {
+.statusbar.exception, .statusbar.status12, .statusbar.status22, .statusbar.status32, .statusbar.status42, .statusbar.de {
     width: 98px;
     height: 16px;
     background-position: -398px -20px;
 }
-.statusbar.delivered, .statusbar.status43, .statusbar.status44 {
+.statusbar.delivered, .statusbar.status43, .statusbar.status44, .statusbar.dl {
     width: 99px;
     height: 17px;
     background-position: -244px -21px;

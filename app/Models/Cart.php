@@ -131,7 +131,7 @@ class Cart extends Model
 
     public function shippingAddress()
     {
-        return $this->belongsTo(LeadAddress::class);
+        return $this->belongsTo(LeadAddress::class, 'shipping_address_id', 'id');
     }
 
     public function orders()

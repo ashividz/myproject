@@ -55,6 +55,12 @@
 <template id="cart-field">
     <div class="panel panel-info">
         <div class="panel-heading">
+            <div class="col-md-12">                
+                <div class="pull-right" @click="toggleExpand">
+                    <i class="fa @{{ !expand ? 'fa-plus-circle' : 'fa-minus-circle' }} fa-2x"></i>
+                </div>
+                <hr>
+            </div>
             <div class="row">
                 <div class="col-md-2">
                      <div>
@@ -104,7 +110,13 @@
                     </div>
                     <div class="col-md-12">
                         <label>Address : </label>
-                        @{{ cart.lead.city }}, @{{ cart.lead.country }}
+                        <span v-if="cart.shipping_address">
+                            @{{ cart.shipping_address.city }}, @{{ cart.shipping_address.country }}
+                        </span>
+                        <span v-else>
+                            @{{ cart.lead.city }}, @{{ cart.lead.country }}    
+                        </span>
+                        
                     </div>
                     <div class="col-md-12">
                         <label>Source : </label>
@@ -135,7 +147,13 @@
                             <td>@{{ payment.date | format_date2 }}</td>
                             <td>@{{ payment.amount | currency cart.currency.symbol }}</td>
                             <td>@{{ payment.method.name }}</td>
-                            <td>@{{ payment.remark }}</td>
+                            <td>
+                                @{{ payment.remark }}
+                                <div v-if="payment.delivery_time">
+                                    <label>Delivery Time: </label>
+                                    @{{ payment.delivery_time | format_date3 }}
+                                </div>
+                            </td>
 
                         @if(Auth::user()->canGeneratePI())
                             <td>
@@ -150,8 +168,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="col-md-3">
-
+                <div class="col-md-4">
                     <table class="table table-bordered">
                         <tr>
                             <th>Name</th>
@@ -168,13 +185,7 @@
                             <td>@{{ product.pivot.amount | currency cart.currency.symbol }}</td>
                         </tr>
                     </table>
-                </div>
-                    
-                <div class="col-md-1">
-                    <div class="pull-right" @click="toggleExpand">
-                        <i class="fa @{{ !expand ? 'fa-plus-circle' : 'fa-minus-circle' }} fa-2x"></i>
-                    </div>
-                </div>       
+                </div>      
             </div>
         </div>
         <div class="panel-body" v-show="expand">
@@ -338,6 +349,38 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="panel-title">Shipping Address</span>
+                    </div>
+                    <div class="panel-body">
+                        <span v-if="cart.shipping_address">
+                            <div>
+                                <label>Address Type : </label>
+                                @{{ cart.shipping_address.address_type }},
+                            </div>
+                            <div>
+                                <label>@{{ cart.shipping_address.name }},</label>
+                                @{{ cart.shipping_address.address }},
+                                @{{ cart.shipping_address.city }},
+                                @{{ cart.shipping_address.state }},
+                                @{{ cart.shipping_address.country }},
+                                @{{ cart.shipping_address.zip }}
+                            </div>
+                        </span>
+                        <span v-else>
+                            <div>
+                                <label>@{{ cart.lead.name }},</label>
+                                @{{ cart.lead.address }},
+                                @{{ cart.lead.city }},
+                                @{{ cart.lead.state }},
+                                @{{ cart.lead.country }},
+                                @{{ cart.lead.zip }}
+                            </div>   
+                        </span>
+                    </div>
+                </div>
             </div>               
         </div>
     </div>
@@ -366,8 +409,6 @@
         </div>
     </div>
 </template>
-@{{methods}}
-@include('partials.modal')
 <script>
 Vue.component('cartField', {
     mixins: [ VueFocus.mixin ],

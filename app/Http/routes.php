@@ -14,8 +14,8 @@
 setlocale(LC_MONETARY, "en_IN");
 
     /** Tracking**/
-    Route::get('shipping','ShippingController@index');
-    Route::get('api/getShippings','ShippingController@getShippings');
+    Route::get('shippings','ShippingController@index');
+    Route::get('api/getShippings','ShippingController@get');
 
     Route::get('shipping/fedex','FedExController@index');
     Route::get('shipping/track/{id}','FedExController@modal');
@@ -34,6 +34,13 @@ setlocale(LC_MONETARY, "en_IN");
     Route::post('carts/goods', 'CartController@goods');
 
     Route::get('getPaymentMethods', 'PaymentMethodController@get');
+
+Route::group([
+    'middleware' => ['auth','roles'], 
+    'roles' => ['admin', 'logistics']], 
+    function() {
+        Route::patch('shipping/{id}', 'ShippingController@update');
+});
 
 Route::group([
     'middleware' => ['auth','roles'], 

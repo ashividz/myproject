@@ -36,6 +36,13 @@ $( document ).ready(function() {
         }
         return moment(value).format('D MMM');
     })
+
+    Vue.filter('format_date3', function (value) {
+        if (value == null) {
+            return null;
+        }
+        return moment(value, 'HH:mm').format('hh:mm A');
+    })
     
     Vue.filter('total', function (list, key1) {
         return list.reduce(function(total, item) {

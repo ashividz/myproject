@@ -18,7 +18,7 @@
                 }*/
                 else if ($category->id == 2 && $cart->lead->country <> 'IN'){
                     continue;
-                } else if ($category->id == 3 && $cart->lead->state <> 'IN.07' && $cart->lead->city <> 'Bangalore' && $cart->lead->city <> 'Mumbai' && $cart->lead->city <> 'Panipat'){
+                } else if ($category->id == 3 && $cart->lead->state <> 'IN.07' && $cart->lead->city <> 'Bangalore' && $cart->lead->city <> 'Mumbai' && $cart->lead->city <> 'Kolkata' && $cart->lead->city <> 'Chennai' && $cart->lead->city <> 'Hyderabad' && $cart->lead->city <> 'Pune' && $cart->lead->city <> 'Ludhiana'){
                     continue;
                 }else if ($category->id == 4 && $cart->lead->country <> 'IN'){
                     continue;

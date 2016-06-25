@@ -8,14 +8,14 @@
                     <div class="col-md-2">
                         Lead Id / Patient Id 
                         <input name="enquiry_no" class="form-input">
-                    </div>
-
-            @if(Auth::user()->canSearchLead())
+                    </div>            
 
                     <div class="col-md-2 col-md-offset-1">
                         Name
                         <input name="name" class="form-input">
                     </div>
+                    
+            @if(Auth::user()->canSearchLead())
 
                     <div class="col-md-2 col-md-offset-1">
                         Phone / Mobile

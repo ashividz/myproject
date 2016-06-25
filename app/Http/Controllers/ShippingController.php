@@ -29,14 +29,15 @@ class ShippingController extends Controller
         return view('home')->with($data);
     }
 
-    public function getShippings(Request $request = null)
+    public function get(Request $request = null)
     {   
         $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
 
         $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
 
-        $shippings =  Shipping::with('cart.lead', 'invoices', 'carrier')
+        $shippings =  Shipping::with('cart.lead', 'carrier')
                         ->whereBetween('created_at', [$start_date, $end_date])
+                        ->orderBy('id', 'desc')
                         ->get(); //dd($shippings);
         foreach ($shippings as $shipping) {
             
@@ -102,5 +103,13 @@ class ShippingController extends Controller
         }
 
         return $cart->shippings()->with('carrier')->get();
+    }
+
+    public function update(Request $request, $id)
+    {
+        $shipping = Shipping::find($id);
+        $shipping->update($request->all());
+
+        //return $shipping;
     }
 }

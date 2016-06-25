@@ -101,16 +101,19 @@
         methods: {
 
             getTrackings() {
+                $.isLoading({ text: "Loading" });
                 this.$http.get("/api/getTrackings", {'start_date': this.start_date, 'end_date' : this.end_date}).success(function(data){
                     this.trackings = data;
+                    $.isLoading( "hide" );
                 }).bind(this);
             },
 
             sync() {
+                $.isLoading({ text: "Syncing with Fedex Server" });
                 this.loading = true;
                 this.$http.get("/api/sync").success(function(data){
                     this.trackings = data;
-                    this.loading = false;
+                    $.isLoading( "hide" );
                 }).bind(this);
             }
         },

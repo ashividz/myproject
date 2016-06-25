@@ -11,9 +11,11 @@ class Shipping extends Model
 {
     protected $fillable = [
         'cart_id',
+        'status',
         'carrier_id',
         'tracking_id',
-        'created_by'
+        'created_by',
+        'actual_delivery_timestamp'
     ];
 
     public function cart()
@@ -24,11 +26,6 @@ class Shipping extends Model
     public function carrier()
     {
         return $this->belongsTo(Carrier::class);
-    }
-
-    public function invoices()
-    {
-        return $this->hasMany(Invoice::class, 'cart_id', 'cart_id');
     }
 
     public static function updateStatus($id, $status, $estimated_delivery_timestamp, $actual_delivery_timestamp)
