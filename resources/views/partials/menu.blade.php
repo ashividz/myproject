@@ -60,6 +60,16 @@
                                                                 
                     </ul> <!-- third level -->   
                 </li>
+
+                 <li>
+                    <a href="#" id="menu_admin_ip" class="arrow">IP</a>
+                    <ul>
+                        <li>
+                            <a href="/admin/ip/roles" id="menu_email_ip_roles">IP Roles</a>
+                        </li>                                
+                                                                
+                    </ul> <!-- third level -->   
+                </li>
                                                 
             </ul> <!-- second level -->    
         </li>

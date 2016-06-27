@@ -13,6 +13,9 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
+Route::group([
+    'middleware' => ['auth', 'roles','checkip']],
+    function() { 
     /** Tracking**/
     Route::get('shippings','ShippingController@index');
     Route::get('api/getShippings','ShippingController@get');
@@ -35,15 +38,18 @@ setlocale(LC_MONETARY, "en_IN");
 
     Route::get('getPaymentMethods', 'PaymentMethodController@get');
 
+});
+
+
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'], 
     'roles' => ['admin', 'logistics']], 
     function() {
         Route::patch('shipping/{id}', 'ShippingController@update');
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'logistics', 'quality', 'registration']], 
     function() {
         Route::get('cart/{id}/proforma', 'ProformaController@show');
@@ -51,7 +57,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin']], 
     function() {
         Route::get('admin', 'AdminController@index');
@@ -79,12 +85,16 @@ Route::group([
 
         Route::get('admin/messages', 'MessageController@index');
         Route::post('message/recipient/delete', 'MessageRecipientController@destroy');
+
+        Route::get('admin/ip/roles', 'IPController@viewIPRoles');
+        Route::post('admin/ip/roles/save', 'IPController@saveIPRole');
+        Route::get('admin/ip/role/delete', 'IPController@deleteIPRole');
         
 });
 
 
 Route::group([
-    'middleware' => ['auth', 'roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service']], 
     function() {
         /** Cart Activate for Extension or Balance Payment **/
@@ -114,7 +124,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth', 'roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality','service_tl', 'logistics']], 
     function() {
     Route::get('carts', 'CartReportController@index');
@@ -125,7 +135,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => ['auth', 'roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'sales', 'finance', 'marketing', 'service', 'service_tl']], 
     function() {
 
@@ -139,7 +149,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'marketing']], 
     function() {
         
@@ -314,7 +324,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'finance']], 
     function() {
         Route::get('finance', 'FinanceController@index');
@@ -332,7 +342,7 @@ Route::group([
         Route::post('finance/updatePayment', 'FeeController@update');
 });
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'finance', 'registration']], 
     function() {
 
@@ -340,7 +350,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'sales', 'sales_tl', 'marketing']], 
     function() {
         Route::get('sales', 'SalesController@index');
@@ -358,7 +368,7 @@ Route::group([
 
 });
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'sales', 'sales_tl', 'marketing']], 
     function() {
         
@@ -369,7 +379,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'cre', 'marketing', 'sales', 'sales_tl']], 
     function() {
         Route::get('cre', 'CREController@index');
@@ -403,7 +413,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'doctor', 'service', 'service_tl']], 
     function() {
         Route::get('doctor', 'DoctorController@index');
@@ -439,7 +449,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'doctor', 'service', 'service_tl','yuwow_support']], function() {
 
         Route::get('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
@@ -451,7 +461,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'nutritionist', 'service', 'service_tl']], 
     function() {
         Route::get('nutritionist', 'NutritionistController@index');
@@ -505,7 +515,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'nutritionist', 'service', 'doctor', 'service_tl']], 
     function() {
         Route::get('patient/{id}/notes', 'PatientController@notes');
@@ -544,7 +554,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'hr']], 
     function() {
         Route::get('hr','HRController@index');
@@ -572,7 +582,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'service', 'service_tl']], 
     function() {
         Route::get('service', 'ServiceController@index');
@@ -606,7 +616,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin']], 
     function() {
 
@@ -615,7 +625,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'registration']], 
     function() {
 
@@ -627,7 +637,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth','roles'], 
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin','sales', 'sales_tl', 'registration','marketing']], 
     function() {
             
@@ -638,7 +648,8 @@ Route::group([
         Route::POST('sales/paymentsNew', 'SalesController@viewPaymentsNew');
 });
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => ['auth', 'roles','checkip']], 
+    function() {
 
     
     
@@ -931,6 +942,9 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
+Route::group([
+    'middleware' => ['auth', 'roles','checkip']],
+    function() { 
     Route::get('findLead', 'LeadController@find');
 
     /* Cart */
@@ -982,3 +996,4 @@ Route::controllers([
     Route::get('getCarriers', function(){
         return \App\Models\Carrier::get();
     });
+});
