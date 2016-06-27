@@ -144,6 +144,7 @@ return [
         Arkitecht\FedEx\Laravel\Providers\FedExServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        OwenIt\Auditing\AuditingServiceProvider::class, //added by Sunil for audit trail
 
 
 

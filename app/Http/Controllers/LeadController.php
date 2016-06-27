@@ -1133,7 +1133,7 @@ class LeadController extends Controller
     public function updateAddress($id,Request $request)
     {
         $address = LeadAddress::findOrFail($id);        
-        LeadAddress::where('id', $address->id)          
+        LeadAddress::find($address->id)
           ->update([
                 'name'          => $request->name,
                 'address'       => $request->address,

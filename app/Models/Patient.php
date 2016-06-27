@@ -9,8 +9,12 @@ use App\Models\Fee;
 use DB;
 use Auth;
 
+use OwenIt\Auditing\AuditingTrait;
+
 class Patient extends Model
 {
+    use AuditingTrait;
+    
     protected $table = "patient_details";
 
     protected $fillable = ['blood_group_id', 'rh_factor_id', 'constipation', 'gas', 'water_retention', 'digestion_type', 'allergic', 'wheezing', 'acidity', 'diseases_history', 'energy_level', 'menstural_history', 'bp_high', 'bp_low', 'diagnosis', 'medical_problem', 'previous_weight_loss', 'medical_history', 'sweet_tooth', 'routine_diet', 'special_food_remark'];
