@@ -10,8 +10,12 @@ use Auth;
 use Carbon\Carbon;
 use App\DND;
 
+use OwenIt\Auditing\AuditingTrait;
+
 class Lead extends Model
 {
+    use AuditingTrait;
+
     protected $table = 'marketing_details';
     protected $fillable = ['clinic', 'enquiry_no', 'entry_date', 'name', 'dob', 'gender', 'email', 'email_alt', 'phone', 'mobile', 'weight'];
 

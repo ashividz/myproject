@@ -166,6 +166,7 @@ class PatientBTController extends Controller
             'clinic'           => $patient->clinic,
             'registration_no'  => $patient->registration_no,
             'date'             => Carbon::now()->toDateTimeString(),
+            'created_by'       => Auth::id(),
             ]);        
         $medical                   = Medical::create($request->all());        
         return back();
