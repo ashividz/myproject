@@ -22,6 +22,16 @@ class LeadAddress extends Model
     {
         return $this->belongsTo(Lead::class);
     }
+
+    public function region()
+    {
+        return $this->hasOne(Region::class, 'region_code', 'state');
+    }
+
+    public function m_country()
+    {
+        return $this->hasOne(Country::class, 'country_code', 'country');
+    }
 }
 
     /*

@@ -452,7 +452,7 @@ new Vue({
             }).then(function(isConfirm) {
                 if (isConfirm) {
                     $.isLoading({ text: "Activating Cart" });
-                    this.$http.post("/cart/" + this.id + "/activate/")
+                    this.$http.post("/cart/" + this.id + "/activate")
                     .then(function(data){
                         swal(
                           'Activated!',

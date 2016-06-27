@@ -40,8 +40,16 @@
                             <b>Name : </b> {{ $cart->lead->name or "" }}
                         </div>
                         <div>
-                            <b>Address : </b> {{ $cart->lead->address }}<br>
+                            <b>Address : </b> 
+                        @if($cart->shipping_address_id)
+                            {{ $cart->shippingAddress->address }}<br>
+                            {{ $cart->shippingAddress->city or '' }}{{ $cart->shippingAddress->region ? ', '.$cart->shippingAddress->region->region_name : "" }}{{ $cart->shippingAddress->m_country ? ', '.$cart->shippingAddress->m_country->country_name : "" }}
+                            - {{ $cart->shippingAddress->zip }}
+                        @else
+                            {{ $cart->lead->address }}<br>
                             {{ $cart->lead->city or '' }}{{ $cart->lead->region ? ', '.$cart->lead->region->region_name : "" }}{{ $cart->lead->m_country ? ', '.$cart->lead->m_country->country_name : "" }}
+                            - {{ $cart->lead->zip }} 
+                        @endif
                         </div>
                         <div>
                             <b>Mobile : </b> {{ $cart->lead->phone or $cart->lead->mobile }}
@@ -199,7 +207,7 @@
                                     </tr>
                                     <tr>
                                         <td><label>Amount: </label></td>
-                                        <td>{{ $cart->currency->name or "" }} {{ $cart->amount or "" }}</td>
+                                        <td>{{ $cart->currency->name or "" }} {{ $cart->payments->last()->amount or "" }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
