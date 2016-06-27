@@ -5,6 +5,8 @@ ALTER TABLE medical ADD created_at datetime default '2016-03-19 00:00:00';
 ALTER TABLE medical ADD updated_at datetime default '2016-03-19 00:00:00';
 
 update medical m  set patient_id = (select id from patient_details p where p.clinic=m.clinic  and p.registration_no= m.registration_no limit 1);*/
+
+/*alter table medical add column (created_by int(4) unsigned not null);*/
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -75,6 +77,7 @@ class Medical extends Model
 		'insulin_p_status',
 		'date',
 		'patient_id',
+		'created_by',
 	];
 
 }

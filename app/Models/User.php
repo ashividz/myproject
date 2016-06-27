@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\AuditingTrait;
 
 use App\Amikus\Permission;
 
@@ -22,7 +23,7 @@ class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword; 
+    use Authenticatable, Authorizable, CanResetPassword, AuditingTrait; 
 
     use SoftDeletes;
 

@@ -87,7 +87,7 @@ class UserController extends Controller
 
         try {
             
-            User::where('username', Auth::user()->username)
+            User::find(Auth::id())
                 ->update(['password' => bcrypt($password)]);
             
             $message = 'Password Successfully Changed!';
