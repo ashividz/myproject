@@ -8,7 +8,7 @@
   new_value longtext not null,
   type varchar(255) not null,
   route varchar(255) not null,
-  ip varchar(64) not null,
+  ip varchar(16) not null,
   created_at timestamp not null default '2016-06-16 00:00:00',
   updated_at timestamp not null default '2016-06-16 00:00:00',
   primary key (id)

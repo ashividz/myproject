@@ -185,7 +185,6 @@
 
 					<label class="form-control">Age : {{trim($lead->dob)<>''?$lead->dob->diff(Carbon::now())->format('%y years, %m months and %d days') : ''}}  					 
 					</label>
-		  		<label class="form-control">Enq No : <?php echo $lead->clinic;?> - <?php echo $lead->enquiry_no;?></label>
 		  	@if($lead->patient && $lead->patient->hasTag('VIP'))
 		  		<label class="form-control">VIP Client
 				</label>

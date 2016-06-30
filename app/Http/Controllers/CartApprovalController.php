@@ -270,14 +270,13 @@ class CartApprovalController extends Controller
         if (!$cart || $cart->products->isEmpty() || $cart->payments->isEmpty()) {
             return 'false';
         }
-        $methods = $cart->payments->pluck('payment_method_id');
-        $approver = ApproverPayment::whereIn('payment_method_id', $methods)
-                        ->where('approver_role_id', Auth::id())
-                        ->first();
-
-        if($approver) {
+        if (Auth::user()->canApprovePayment($cart)) {
             return 'true';
         }
+
+        /*if($approver) {
+            return 'true';
+        }*/
 
         return ['message' => 'Cannot approve payment method', 'status' => 'Error!'];;
     }
@@ -303,12 +302,12 @@ class CartApprovalController extends Controller
 
         //dd($discount);
 
-        $approver = ApproverDiscount::where('discount_id', $discount->id)
+        /*$approver = ApproverDiscount::where('discount_id', $discount->id)
                         ->whereIn('approver_role_id', Auth::user()->roles->pluck('id'))
                         ->first();
-                        //dd($approver);
+                        //dd($approver);*/
 
-        if($approver) {
+        if(Auth::user()->canApproveDiscount($cart)) {
             return ['discount' => $discount->value, 'discount_id' => $discount->id ];
         }
         return 'false';
@@ -328,6 +327,9 @@ class CartApprovalController extends Controller
         if ($request->state == 1) {
 
             if ($cart->status_id == 2) {
+                if (!Auth::user()->canApproveDiscount($cart)) {
+                    abort('500', 'Cannot Approve Discount');
+                }
                 $discount = $cart->discountSteps();
 
                 if ($discount) { //Set State = Progress
@@ -343,17 +345,24 @@ class CartApprovalController extends Controller
                     CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
                     CartStep::nextStatus($cart->id);
                 }
+            } else if ($cart->status_id == 3) {                 
+                
+                if (!Auth::user()->canApprovePayment($cart)) {
+                    abort('500', 'Cannot Approve Payment');
+                }
+                
+                CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
+
+                CartStep::nextStatus($cart->id);
+
             } elseif ($cart->status_id == 4) {
                     //Patient Registration
                     $patient = Patient::register($cart);
 
                     //Place order
                     Order::store($cart, $patient);
-                    CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
- 
-            } else { //If not Last Status, Set Next Step
-                CartStep::nextStatus($cart->id);
-            }
+                    CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id); 
+            } 
 
             return ['message' => 'Cart Approved', 'status' => 'Success!'];
             

@@ -61,7 +61,7 @@
                         </a>
                     </div>
                     <div>
-                        <span class="statusbar status@{{ cart.status_id + cart.state_id }}"></span>
+                        <span class="statusbar status@{{ cart.status_id }}@{{ cart.state_id }}"></span>
                     </div>
                 </div>
                 <div class="col-md-2">

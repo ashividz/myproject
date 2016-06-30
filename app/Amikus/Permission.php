@@ -3,6 +3,9 @@ namespace App\Amikus;
 
 use Auth;
 
+use App\Models\ApproverPayment;
+use App\Models\ApproverDiscount;
+
 Trait Permission {
 
     public function canSearchLead()
@@ -80,6 +83,27 @@ Trait Permission {
             return true;
         }
         return false;
+    }
+
+    public function canApprovePayment($cart)
+    {
+        $methods = $cart->payments->pluck('payment_method_id');
+        return ApproverPayment::whereIn('payment_method_id', $methods)
+                        ->whereIn('approver_role_id', Auth::user()->roles->pluck('id'))
+                        ->first();
+    }
+
+    public function canApproveDiscount($cart)
+    {
+        $discount = $cart->discountSteps();
+
+        if (!$discount) {
+            return true;
+        }
+
+        return ApproverDiscount::where('discount_id', $discount->id)
+                        ->whereIn('approver_role_id', Auth::user()->roles->pluck('id'))
+                        ->first();
     }
 
 }
