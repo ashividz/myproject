@@ -28,7 +28,7 @@ class Patient extends Model
 
     public function cfee()
     {
-        return $this->hasOne(Fee::class)->where('start_date', '<=', date('Y-m-d'))->latest();
+        return $this->hasOne(Fee::class)->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->latest();
     }
 
     public function fee()
