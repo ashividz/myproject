@@ -11,15 +11,14 @@
     $fees = $fees->sortByDesc('end_date');
     $startFee = $cfee;
     foreach($fees as $f){            
-        $diffInDays = floor(strtotime($startFee->start_date) - strtotime($f->end_date)) ;
+        $diffInDays = floor((strtotime($startFee->start_date) - strtotime($f->end_date))/(24*60*60)) ;
         $isUpgrade  = $f->source_id == $upgradeSourceId ? true :false;
-        $isRejoin   = $f->source_id == $rejoinSourceId ? true :false;
+        $isRejoin   = $f->source_id == $rejoinSourceId ? true :false;        
         if ( ($diffInDays <= $upgradeDuration || $isUpgrade) && !$isRejoin )
             $startFee = $f;
         else
             break;                
-    }
-    //dd($startFee);
+    }    
         
     $measurementsAfterStartDate = $measurements->filter(function ($item) use ($startFee){
             if ( $item->weight && (strtotime($item->date) >= strtotime($startFee->start_date)) )
