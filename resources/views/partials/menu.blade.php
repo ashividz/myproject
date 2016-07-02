@@ -27,6 +27,14 @@
                 </li>
                 <li>
                     <a href="/quiz" id="menu_quiz">Quiz</a>
+                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('quality'))
+                    <ul>
+                        <li>
+                            <a href="/quiz/admin" id="menu_message_compose"><b>Admin</b></a>
+                            
+                        </li>
+                    </ul>
+                    @endif
                 </li>
                             
             </ul> <!-- second level -->                        

@@ -9,14 +9,18 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
+            <div class="panel panel-default" id='panelbody'>
                 <div class="panel-heading timer_bar">
                     Question #<span class='questionNumber_span'>{{ ($questionIndex+1) }}</span> <div class="pull-right"><span class='questionNumber_span'>{{ ($questionIndex+1) }}</span> of {{ $total_questions }}</div>
                 <div class='timer_div form-control'></div>
                 </div>
                 <div class="panel-body">
+@if($alreadyAppear || $noQuiz)
 @if($alreadyAppear)
 <h1 style='text-align: center'>Already Appearded in Test!</h1>
+@else
+<h1 style='text-align: center'>No Quiz active Right Now!</h1>
+@endif
 @else
                     <p class="lead question_title">{!! $question->renderDescription() !!}</p>
 
@@ -82,4 +86,5 @@
             
         })();
     </script>
+    
 <script src="/js/quiz_main.js"></script>

@@ -32,8 +32,8 @@ e.preventDefault();
 $('.panel-heading').find('span.glyphicon').remove();
 if($('.next-question-button').html()=='Finish')
 {
-
- alert('Your response has been submitted! Result will publish soon.');
+$('#panelbody').html("<h4>Your response has been submitted! Result will publish soon.</h4>");
+ //alert('Your response has been submitted! Result will publish soon.');
  return false;
 }
 var url = "/getQuestion";
@@ -60,6 +60,7 @@ var form = $('#quiz_form');
                 $('.next-question-button').html('Finish');
                 $('.next-question-button').hide();
                 $('.next-question-button').css('display','none');
+                $('input[type=submit]').prop("disabled",false);
                 $('input[type=submit]').show();
                      }
             });
@@ -68,11 +69,12 @@ var form = $('#quiz_form');
 $('form.ajax').on('submit', function(e){
 
       $('form.ajax').validate();
-
+            $('input[type=submit]').prop("disabled",true);
             var form = $(this);
             var url = form.attr('action');
             var type = form.find('input[name="_method"]').val() || "POST";
             $('#quiz_time').val($('.timer_div').html());
+
             $.ajax({
                 url: url,
                 type: type,
