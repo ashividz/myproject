@@ -1,16 +1,39 @@
 <?php
 /*Block authored by Sunil*/
-    $measurementsWithinDate = $measurements->filter(function ($item) use ($patient) {
-        return ($item->date >= $patient->fee->start_date);
+//updated on 2016-07-01 to handle upgrade cases
+    $upgradeDuration = 30;
+    $upgradeSourceId = 22;
+    $rejoinSourceId  = 23;
+    $cfee = $patient->cfee;
+    $fees = $patient->fees->filter(function ($item) use ($cfee) {
+        return ($item->end_date <= $cfee->end_date);
     });
-    $initialWeight   = $measurementsWithinDate->sortBy('id')->first();
-    $latestWeight  = $measurementsWithinDate->sortByDesc('id')->first();
+    $fees = $fees->sortByDesc('end_date');
+    $startFee = $cfee;
+    foreach($fees as $f){            
+        $diffInDays = floor((strtotime($startFee->start_date) - strtotime($f->end_date))/(24*60*60)) ;
+        $isUpgrade  = $f->source_id == $upgradeSourceId ? true :false;
+        $isRejoin   = $f->source_id == $rejoinSourceId ? true :false;        
+        if ( ($diffInDays <= $upgradeDuration || $isUpgrade) && !$isRejoin )
+            $startFee = $f;
+        else
+            break;                
+    }    
+        
+    $measurementsAfterStartDate = $measurements->filter(function ($item) use ($startFee){
+            if ( $item->weight && (strtotime($item->date) >= strtotime($startFee->start_date)) )
+                return true;
+        });
+
+    $initialWeight   = $measurementsAfterStartDate->sortBy('date')->first();
+    $latestWeight    = $measurementsAfterStartDate->sortByDesc('date')->first();
     $initialBMI = null;
     $latestBMI = null;
     if($patient->lead->height && $patient->lead->height>0){  
         $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
         $latestBMI= $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
     }
+        
 /*end of the Block authored by Sunil*/
 ?>
 @extends('patient.index')
