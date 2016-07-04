@@ -449,7 +449,7 @@ $newId++;
         ]);
     }
 
-    public function admin()
+    public function admin($messageData=NULL)
     {
 
         $settings = QuizSetting::with('questions')->orderBy('created_at', 'desc')->limit(20)->get();
@@ -460,7 +460,8 @@ $newId++;
             'section'           =>  'upload',
             'settings'          =>  $settings
         );
-
+        if(isset($messageData) && !is_null($messageData))
+          $data = array_merge($data, $messageData);
         return view('home')->with($data);
     }
 
@@ -495,7 +496,7 @@ $newId++;
             if(is_null($question->id))
                 break;
 
-            $quiz_question = new Question();
+            $quiz_question = new QuizQuestion();
             $quiz_question->description = $question->title;
             $quiz_question->group = $question->group;
             $quiz_question->quiz_id = $quiz_setting->id;
@@ -512,7 +513,7 @@ $newId++;
                 if(is_null($option->id))
                     break;
 
-                $quiz_answer = new Answer();
+                $quiz_answer = new QuizAnswer();
                 $quiz_answer->description = $option->title;
                 $quiz_answer->is_correct = (is_null($option->correct))?'0':$option->correct;
                 $quiz_answer->quiz_question_id = $question_id;
@@ -522,9 +523,12 @@ $newId++;
             $i++;
           
         }
-       
-        Session::flash('status', 'Questions Uploaded Successfully!');
-        return $this->admin();
+         $data = array(
+            'status'              =>  'success',
+            'message'           =>  'Questions Uploaded Successfully!',
+            );
+        Session::flash('status', '');
+        return $this->admin()->with($data);
     }
 
 }
