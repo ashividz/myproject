@@ -49,6 +49,7 @@ class SalesReportController extends Controller
                         $q->where('name', 'like', $cre->name);
                     }])
                     ->where('cre_name', $cre->name)
+                    ->whereNotIn('status_id', [6])
                     ->whereBetween('created_at', array($start_date, $end_date))
                     ->get(); 
 

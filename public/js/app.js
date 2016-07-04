@@ -45,6 +45,9 @@ $( document ).ready(function() {
     })
     
     Vue.filter('total', function (list, key1) {
+        if (!list) {
+            return 0
+        }
         return list.reduce(function(total, item) {
             return total + parseInt(item[key1])
         }, 0)
