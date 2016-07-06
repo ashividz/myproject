@@ -15,12 +15,16 @@
                 <div class='timer_div form-control'></div>
                 </div>
                 <div class="panel-body">
-@if($alreadyAppear || $noQuiz)
-@if($alreadyAppear)
-<h1 style='text-align: center'>Already Appearded in Test!</h1>
-@else
-<h1 style='text-align: center'>No Quiz active Right Now!</h1>
-@endif
+@if($alreadyAppear || $noQuiz || $noGroup)
+    @if($alreadyAppear)
+        <h1 style='text-align: center'>Already Appearded in Test!</h1>
+    @else
+        @if($noGroup)
+            <h1 style='text-align: center'>Question Group Not Set!</h1>
+        @else
+            <h1 style='text-align: center'>No Quiz active Right Now!</h1>
+        @endif
+    @endif
 @else
                     <p class="lead question_title">{!! $question->renderDescription() !!}</p>
 

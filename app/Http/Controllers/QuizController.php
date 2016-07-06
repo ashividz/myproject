@@ -12,6 +12,7 @@ use App\Models\QuizReply;
 use App\Models\User;
 use App\Models\QuizSetting;
 use App\Models\QuizReattempt;
+use App\Models\QuizUser;
 use Session;
 use DB;
 use Auth;
@@ -123,6 +124,7 @@ $newId++;
         $alreadyAppear = null;
         $nextQuestionLink = null;
         $first_question_id = null;
+        $noGroup = null;
         
         if($setting)
         {
@@ -138,6 +140,17 @@ $newId++;
         {
         $quizid = $setting->id;
 
+        $quizUser = QuizUser::where('user_id', \Auth::user()->id)
+                            ->where('quiz_id', $quizid)
+                            ->orderBy('id', 'desc')
+                            ->get()->first();
+                            //dd($quizUser);
+        if(!$quizUser)
+            $noGroup = true;
+        else
+        {
+            $noGroup = false;
+        
         $reply = QuizReply::with('question.quiz')
                         ->where('user_id', \Auth::user()->id)
                          ->whereHas('question.quiz', function($q) use($quizid) {
@@ -178,7 +191,13 @@ $newId++;
         }
         else
         {
-            $questions = QuizQuestion::orderByRaw("RAND()")->where('quiz_id', $setting->id)->get();
+            $questions = QuizQuestion::orderByRaw("RAND()")
+                                    ->where('quiz_id', $setting->id)
+                                    ->where(function($r) use($quizUser){
+                                              $r->where('q_group', $quizUser->q_group)
+                                              ->orWhere('q_group', 'common');
+                                            })
+                                    ->get();
             $quiz_duration = $setting->quiz_duration;
         }
 
@@ -190,6 +209,7 @@ $newId++;
 
         $nextQuestionLink = $question->nextQuestionLink(0);
          $total_questions = $questions->count();
+        }
 
      }
         $data = array(
@@ -203,7 +223,8 @@ $newId++;
             'answers'        => $answers,
             'alreadyAppear' => $alreadyAppear,
             'next'           => $nextQuestionLink,
-            'noQuiz'        => $noQuiz
+            'noQuiz'        => $noQuiz,
+            'noGroup'       => $noGroup,
         );
         return view('home')->with($data);
     }
@@ -223,6 +244,20 @@ $newId++;
         ->select('user_id', DB::raw('sum(is_correct) as is_correct, count(user_id) as total_attempted'))
         ->groupBy('user_id')
         ->get();
+
+        foreach($replies as $reply)
+        {
+            $quizUser = QuizUser::where('user_id', $reply->user->id)->where('quiz_id', $id)->orderBy('id', 'desc')->get()->first();
+            $totalQuestions = QuizQuestion::where('quiz_id', $id)
+                                            ->where(function($r) use($quizUser){
+                                                  $r->where('q_group', $quizUser->q_group)
+                                                  ->orWhere('q_group', 'common');
+                                                })
+                                            ->count();
+            $reply->totalQuestions = $totalQuestions;
+            $reply->group = $quizUser->q_group;
+        }
+
         //dd($users_appeared);
         $data = array(
             'menu'      => 'quiz',
@@ -234,9 +269,89 @@ $newId++;
                 //dd( $users);
     }
 
+      public function downloadReport($id)
+    {
+
+         $replies = QuizReply::with('user.employee')
+        ->whereHas('question.quiz', function($q) use($id) {
+            // Query the department_id field in status table
+             $q->where('quiz_setting.id', '=', $id); // '=' is optional
+            })
+        ->select('user_id', DB::raw('sum(is_correct) as is_correct, count(user_id) as total_attempted'))
+        ->groupBy('user_id')
+        ->get();
+
+        foreach($replies as $reply)
+        {
+            $quizUser = QuizUser::where('user_id', $reply->user->id)->where('quiz_id', $id)->orderBy('id', 'desc')->get()->first();
+            $totalQuestions = QuizQuestion::where('quiz_id', $id)->where('q_group', $quizUser->q_group)->count();
+            $reply->totalQuestions = $totalQuestions;
+            $reply->group = $quizUser->q_group;
+        }
+
+        if (!$replies->isEmpty()) {
+            Excel::create('QuizReport', function($excel) use($replies) {
+
+                $excel->sheet('Report', function($sheet) use($replies) {
+                    //$sheet->fromArray($carts);
+                        
+
+                    $sheet->appendRow(array(
+                           'User',
+                           'Group',
+                           'Total Questions',
+                           'Attempted',
+                           'Correct',
+                           'Percent',
+                         ));
+                    foreach ($replies as $reply) {
+
+
+                        $user     = $reply->user->employee->name;
+                        $group    = $reply->group;
+                        $totalQuestions   = $reply->totalQuestions;
+                        $total_attempted  = $reply->total_attempted;
+                        $is_correct = $reply->is_correct;
+                        $percent = round(($reply->is_correct*100)/$reply->totalQuestions,2);
+                        
+                        $sheet->appendRow(array(
+                            $user,
+                            $group,
+                            $totalQuestions,
+                            $total_attempted,
+                            $is_correct,
+                            $percent
+                        ));
+                    }
+                });
+            })->download('xls');;
+        }
+    }
+
      public function editQuiz(Request $request) {
         $replies = null;
-        $setting = QuizSetting::where('id', $request->quiz_id)->get()->first();
+        $setting = QuizSetting::where('id', $request->quiz_id)->with('questions')->get()->first();
+        $users = User::getUsersByRole('cre');
+
+        foreach ($users as $user) {
+            $quizUser = QuizUser::where('user_id', $user->id)
+                                ->where('quiz_id', $request->quiz_id)
+                                ->orderBy('id', 'desc')
+                                ->get()->first();
+            
+            
+            if($quizUser)
+                $user->group =  $quizUser->q_group;
+        }
+
+
+        $questions = $setting->questions;
+        foreach ($questions as $question) {
+            $uniques[$question->q_group] = $question; // Get unique country by code.
+        }
+
+       //dd($questions->unique('q_group'));
+
         $qid = $request->quiz_id;
         $reattempt = $request->reattempt;
         $replies = QuizReply::with('user.employee')
@@ -252,10 +367,27 @@ $newId++;
             'section'   => "quiz_edit",
             'setting' => $setting,
             'replies' => $replies,
-            'reattempt' => $reattempt
+            'reattempt' => $reattempt,
+            'users'    => $users
         );
         return view('home')->with($data);
                 //dd( $users);
+    }
+
+   public function addToGroup(Request $request)
+    {
+        foreach($request->users as $user)
+        {
+            $quizUser = new QuizUser();
+            $quizUser->quiz_id = $request->quiz_id;
+            $quizUser->user_id = $user;
+            $quizUser->q_group =  $request->group;
+            $quizUser->save();
+
+        }
+         Session::flash('status', "User Added to Group!");
+         return redirect("/quiz/edit/$request->quiz_id");
+
     }
 
     public function reattempt(Request $request)
@@ -264,8 +396,14 @@ $newId++;
         if(isset($request->user_id) && !empty($request->user_id))
         {
         $quiz_id = $request->quiz_id;
-        $replies = QuizReply::with('question')
 
+
+        $quizUser = QuizUser::where('user_id', $request->user_id)
+                            ->where('quiz_id', $quiz_id)
+                            ->orderBy('id', 'desc')
+                            ->get()->first();
+
+        $replies = QuizReply::with('question')
         ->where('user_id',$request->user_id)
         ->whereHas('question.quiz', function($q) use($quiz_id) {
                                 // Query the department_id field in status table
@@ -273,17 +411,28 @@ $newId++;
                                 })
         ->orderBy('is_correct','desc')
         ->get();
+
         foreach($replies as $reply)
         {
             $appeared[] = $reply->quiz_question_id;
         }
+
         $quiz_questions = array();
-        $quiz_questions = QuizQuestion::where('quiz_id', $quiz_id)->select('id')->get();
+        $quiz_questions = QuizQuestion::where('quiz_id', $quiz_id)
+                                        ->where(function($r) use($quizUser){
+                                              $r->where('q_group', $quizUser->q_group)
+                                              ->orWhere('q_group', 'common');
+                                            })
+                                        ->select('id')
+                                        ->get();
         foreach($quiz_questions as $question)
             $replied[] = $question->id;
 
          //dd($replied);
-        $set_reattempt = QuizReattempt::where('quiz_id', $quiz_id)->where('user_id', $request->user_id)->get()->first();
+        $set_reattempt = QuizReattempt::where('quiz_id', $quiz_id)
+                                        ->where('user_id', $request->user_id)
+                                        ->get()
+                                        ->first();
         if($set_reattempt)
         {
             Session::flash('status', "Re-attempt Set!");
@@ -301,7 +450,7 @@ $newId++;
             $quiz_reattempt->questions = implode(", ",$diffarr);
             $quiz_reattempt->user_id = $request->user_id;
             $quiz_reattempt->quiz_id = $request->quiz_id;
-            $quiz_reattempt->duration = $duration;
+            $quiz_reattempt->duration = $duration."m";
             //dd($quiz_reattempt);
             $quiz_reattempt->save();
             $request->reattempt = $quiz_reattempt;
@@ -314,8 +463,8 @@ $newId++;
                 //echo "All Questions Attempted!";
             }
         }
+            //return redirect("/quiz/edit/$quiz_id");
             return $this->editQuiz($request);
-
        
 
     }
@@ -326,10 +475,13 @@ $newId++;
         $setting->start_time = $request->start_time;
         $setting->end_time = $request->end_time;
         $setting->quiz_duration = $request->quiz_duration;
-        $setting->active = $request->active;
+        
         if($request->active ==1)
-            $affected = DB::table('quiz_setting')->where('active', '=', 1)->update(array('active' => 0));
+            $affected = DB::table('quiz_setting')
+                            //->where('active', '=', 1)
+                            ->update(array('active' => 0));
 
+        $setting->active = $request->active;
         $setting->update();
         Session::flash('status', "Settings Updated Successfully!");
         $request->quiz_id = $request->id;
@@ -370,6 +522,7 @@ $newId++;
                                 })
         ->orderBy('is_correct','desc')
         ->get();
+       // dd($replies);
         //$reply = $replies->first();
        // dd($reply->question->rightAnswer()->description);
         $user_name = User::find($id)->employee->name;
@@ -430,7 +583,9 @@ $newId++;
             }
             $proposedSolutionWithDetailedResult[$answerId] = $is_correct;
         }
-        $reply = QuizReply::where('quiz_question_id', $questionId)->where('user_id', \Auth::user()->id)->first();
+        $reply = QuizReply::where('quiz_question_id', $questionId)
+                            ->where('user_id', \Auth::user()->id)
+                            ->first();
         if($reply)
             $alreadyAnswered = true;
         else
@@ -438,7 +593,11 @@ $newId++;
         if($autosubmit == 0)
         if (\Auth::user() && !$reply) {
      
-            \Auth::user()->replies()->create(['quiz_question_id' => $questionId, 'is_correct' => $proposedSolutionResult, 'duration' => $quiz_time, 'user_answer' => $user_answer]);
+            \Auth::user()->replies()->create(['quiz_question_id' => $questionId, 
+                                                'is_correct' => $proposedSolutionResult, 
+                                                'duration' => $quiz_time, 
+                                                'user_answer' => $user_answer
+                                            ]);
         }
 
         return response()->json([
@@ -452,7 +611,10 @@ $newId++;
     public function admin($messageData=NULL)
     {
 
-        $settings = QuizSetting::with('questions')->orderBy('created_at', 'desc')->limit(20)->get();
+        $settings = QuizSetting::with('questions')
+                                ->orderBy('created_at', 'desc')
+                                ->limit(20)
+                                ->get();
 
 
         $data = array(
@@ -498,7 +660,7 @@ $newId++;
 
             $quiz_question = new QuizQuestion();
             $quiz_question->description = $question->title;
-            $quiz_question->group = $question->group;
+            $quiz_question->q_group = $question->group;
             $quiz_question->quiz_id = $quiz_setting->id;
             $quiz_question->save();
             $question_id = $quiz_question->id;
@@ -523,6 +685,18 @@ $newId++;
             $i++;
           
         }
+        $users = User::getUsersByRole('cre');
+        //$setting = QuizSetting::with('questions')->orderBy('id', 'desc')->get()->first();
+        foreach($users as $user)
+        {
+            $quizUser = new QuizUser();
+            $quizUser->quiz_id = $quiz_setting->id;
+            $quizUser->user_id = $user->id;
+            $quizUser->q_group = 'GROUP 1';
+            $quizUser->save();
+
+        }
+
          $data = array(
             'status'              =>  'success',
             'message'           =>  'Questions Uploaded Successfully!',

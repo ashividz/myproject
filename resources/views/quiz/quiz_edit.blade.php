@@ -2,7 +2,7 @@
     <div class="row" style='width: 95%;margin: 0px auto'>
 
             <div class="panel panel-default">
-                <div class="panel-heading"><h4 style='display: inline-block;width: 70%'>Quiz Setting</h4> <a href='/quiz/admin' style='color: #eee;display: inline-block;font-size: 16px'>Admin</a></div>
+                <div class="panel-heading"><h4 style='display: inline-block;width: 70%'>Quiz Setting</h4> <a href='/quiz/admin' style='color: #eee;display: inline-block;font-size: 16px;padding: 3px 10px;background: #2487a8;border-radius: 7px'>Quiz Admin</a></div>
                 <div class="panel-body">
                     @if (count($errors) > 0)
                         <div class="alert alert-danger">
@@ -17,15 +17,71 @@
 
                     <div class='row'>
                          <div class="col-md-6">
+           <form class="form-horizontal" role="form" method="POST" action='/quiz/edit/addToGroup'>
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
              <ul class='list-group'>
+               <li class='list-group-item' style='background: #ccc; color: #222;border: 1px solid #bbb' >
                  @if($setting->questions)
-                    @foreach($setting->questions AS $question)
-
-                        <li class='list-group-item'>{{$question->description}}</li>
-
+                    @foreach($setting->questions->unique('q_group') AS $question)
+                      @if($question->q_group != "common")
+                       &nbsp; <input type='radio' name='group' value='{{$question->q_group}}' /> {{$question->q_group}}
+                       @endif
                     @endforeach
                 @endif
+                </li>
             </ul>
+            <div class='row' style='margin-bottom: 20px;margin-top: 10px'>
+            <div class='col-md-6'>
+            <p style='font-weight: bold'><input type='checkbox' id='checkAll' name='checkAll' value='all' />  &nbsp;Select All</p>
+            </div><div class='col-md-6'><label>Filter:</label> 
+            <select id='filter_group' style='width: 120px'>
+              <option value='allgroup'>Show All</option>
+              @foreach($setting->questions->unique('q_group') AS $question)
+              <?php
+              $qgp = strtolower($question->q_group);
+              $group_class = preg_replace('/\s+/', '_', $qgp);
+              ?>
+                  <option value='{{$group_class}}'>{{$question->q_group}}</option>
+               @endforeach
+
+            </select>
+            </div>
+            </div>
+            <?php
+                  $i=1;
+                       
+                       ?>
+            <ul class='list-group'>
+            
+                 @if($users)
+                 <div class='col-md-4'>
+                    @foreach($users->sortBy('name') AS $user)
+                       <?php
+                        
+                          $qgp = strtolower($user->group);
+                          $group_class = preg_replace('/\s+/', '_', $qgp);
+                        ?>
+                       <p class='usersp {{$group_class}}' style='border-bottom: 1px solid #ddd;padding-bottom: 3px' ><input type='checkbox' name='users[]' value='{{$user->id}}' /> {{$user->name}}<br>
+                       <em style='font-size: 9px;font-weight: bold' > {{$user->group}}</em>
+                       </p>
+                       <?php
+                       if($i%40==0)
+                       {
+
+                        echo "</div><div class='col-md-4'>";
+                       }
+                       $i++;
+                       ?>
+                    @endforeach
+                    </div>
+                @endif
+              
+            </ul>
+            <input type='hidden'  name='quiz_id'  value='{{$setting->id}}' />
+             <button class="btn btn-primary" type="submit">
+                            Add Group
+            </button>
+            </form>
  </div>
  <div class="col-md-6">
  
@@ -96,7 +152,7 @@
                       </form>
                       @if($reattempt)
                       <p style='margin-top: 10px;padding-left: 10px'><b>Questions left:</b> {{substr_count($reattempt->questions, ", ")+1}}</p>
-                      <p style='margin-top: 10px;padding-left: 10px'><b>Duration left:</b> {{$reattempt->duration}}m</p>
+                      <p style='margin-top: 10px;padding-left: 10px'><b>Duration left:</b> {{$reattempt->duration}}</p>
                       @endif
                       </div>
                     @endif
@@ -139,6 +195,21 @@ $(function() {
         });
         return false; // avoid to execute the actual submit of the form.
     }); 
+
+      $("#checkAll").change(function () {
+        $("input:checkbox").prop('checked', $(this).prop("checked"));
+    });
+
+      $("#filter_group").change(function () {
+        var group_class = $(this).val();
+        if(group_class=='allgroup')
+          $('.usersp').fadeIn();
+        else
+        {
+          $('.usersp').fadeOut();
+          $('.'+group_class).fadeIn();
+        }
+    });
     
 });
 </script>

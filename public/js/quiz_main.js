@@ -32,7 +32,7 @@ e.preventDefault();
 $('.panel-heading').find('span.glyphicon').remove();
 if($('.next-question-button').html()=='Finish')
 {
-$('#panelbody').html("<h4>Your response has been submitted! Result will publish soon.</h4>");
+$('#panelbody').html("<h2 style='text-align: center'> &nbsp;Your response has been submitted! Result will publish soon.</h2>");
  //alert('Your response has been submitted! Result will publish soon.');
  return false;
 }
@@ -62,7 +62,7 @@ var form = $('#quiz_form');
                 $('.next-question-button').css('display','none');
                 $('input[type=submit]').prop("disabled",false);
                 $('input[type=submit]').show();
-                     }
+               }
             });
 });
 

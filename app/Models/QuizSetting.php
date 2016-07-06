@@ -11,7 +11,7 @@ class QuizSetting extends Model {
 	protected $fillable = ['question_group', 'start_time', 'end_time', 'quiz_duration', 'created_at', 'active'];
 
     public function questions() {
-        return $this->hasMany(QuizQuestion::class, 'id', 'quiz_id');
+        return $this->hasMany(QuizQuestion::class, 'quiz_id', 'id');
     }
     
 }

@@ -6,7 +6,11 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading timer_bar">
-               <h4> Quiz Report</h4>
+               <h4 style='display: inline-block'> Quiz Report</h4>
+
+               <span class="pull-right">
+                    <a class="btn btn-primary" style='color: #fff' href="/quiz/report/{{$quiz_id}}/download">Download</a>
+                </span>
                    </div>
                
                
@@ -16,6 +20,7 @@
                         <thead>
                                 
                                 <th>User</th>
+                                <th>Group</th>
                                 <th>Total Questions</th>
                                 <th>Attempted</th>
                                 
@@ -29,8 +34,13 @@
                                         <td>
                                         <a href='/quiz/user/{{$reply->user->id}}/{{$quiz_id}}/report'>{{$reply->user->employee->name}}</a>
                                         </td>
+                                        <td>
+                                         {{$reply->group}}
+                                         
+                                        </td>
                                          <td>
-                                         15
+                                         {{$reply->totalQuestions}}
+                                         
                                         </td>
                                          <td>
                                         {{$reply->total_attempted}}
@@ -51,14 +61,14 @@
                                         </td>
                                          <td>
                                          <?php
-                                         if(round(($reply->is_correct*100)/15,2) >= 80)
+                                         if(round(($reply->is_correct*100)/$reply->totalQuestions,2) >= 80)
                                             $class = 'pass';
                                         else
                                             $class = 'fail';
 
                                       
                                          ?>
-                                        <div class='report_percent {{$class}}' style='width: {{round(($reply->is_correct*100)/15,2)}}%'>{{round(($reply->is_correct*100)/15,2)}} %</div>
+                                        <div class='report_percent {{$class}}' style='width: {{round(($reply->is_correct*100)/$reply->totalQuestions,2)}}%'>{{round(($reply->is_correct*100)/$reply->totalQuestions,2)}} %</div>
                                         </td>
                                   </tr>
 
