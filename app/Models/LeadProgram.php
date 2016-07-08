@@ -8,6 +8,9 @@ class LeadProgram extends Model
 {
     protected $table = "lead_program";
 
+    protected $fillable = [
+        'program_id'
+    ];
 
     public static function store($id, $programs)
     {

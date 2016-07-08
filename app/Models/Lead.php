@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\LeadStatus;
+use App\Models\Employee;
 use DB;
 use App\Support\Helper;
 use Auth;
@@ -138,7 +139,7 @@ class Lead extends Model
 
     public function programs()
     {
-        return $this->belongsToMany(Program::class);
+        return $this->belongsToMany(Program::class)->withTimestamps();
     }
 
     private function bmi($weight, $height)
@@ -367,10 +368,14 @@ class Lead extends Model
         $lead->save();
     }
 
-    public static function updateCre($id, $cre){
-
+    public static function updateCre($id, $cre, $cre_id = null){
+        
+        $employee = Employee::where('name', $cre)->first();
+        
         $lead = Lead::find($id);
         $lead->cre_name = $cre;
+        $lead->cre_id = $employee ? $employee->user->id : null;
+        $lead->cre_assigned_at = $employee ? Carbon::now() : null;
         $lead->save();
     }
 

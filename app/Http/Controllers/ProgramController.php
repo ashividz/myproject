@@ -63,4 +63,9 @@ class ProgramController extends Controller
 
         return back()->with($data);
     }
+
+    public function get()
+    {
+        return Program::get();
+    }
 }

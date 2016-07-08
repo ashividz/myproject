@@ -36,22 +36,7 @@ class SMSController extends Controller
     }
 
     /** For Bulk SMS**/
-    public function getLeads(Request $request)
-    {
-        $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
-
-        $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
-
-        $query = Lead::with('status')
-                    ->whereBetween('created_at', [$start_date, $end_date])
-                    ->where('country', 'IN')
-                    ->whereIn('status_id', $request->status_id)
-                    ->has('dnc', '<', 1)
-                    ->has('patient', '<', 1);
-
-        $leads = $query->get();
-        return $leads;
-    }
+    
 
     public function getPatients(Request $request)
     {

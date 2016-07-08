@@ -11,7 +11,7 @@
             <div class="panel-heading"><span class="panel-title">Add Disposition</span></div>
             <div class="panel-body">
              @if(!$lead->dnc)   
-                <form method="POST" action="/lead/{{ $lead->id }}/saveDisposition" role="form" class="form-inline" id="form">
+                <form method="POST" action="/lead/{{ $lead->id }}/disposition" role="form" class="form-inline" id="form">
                     <div class="row" style="padding-top:20px;">
                         <div class="col-md-6 col-sm-6">
                             <div class="form-group col-md-12">

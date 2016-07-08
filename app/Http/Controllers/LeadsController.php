@@ -14,6 +14,8 @@ use App\Models\Fees;
 use App\Models\LeadSource;
 use App\Models\LeadCre;
 use App\Models\LeadStatus;
+use App\Models\User;
+use App\Models\Notification;
 use DB;
 use Auth;
 use App\Support\Helper;
@@ -22,6 +24,27 @@ use Carbon;
 
 class LeadsController extends Controller
 {
+    public function update()
+    {
+        $leads = Lead::with('cre')
+                /*->whereHas('cre', function($q) {
+                    $q->whereNotNull('created_at');
+                })*/
+                ->has('cre', '>=', 1)
+                //->where('cre_id', '>', 500)
+                ->whereNull('cre_assigned_at')
+                ->limit(20000)
+                ->orderBy('id', 'desc')
+                ->get();
+
+        foreach ($leads as $lead) {
+            $lead->cre_id = $lead->cre ? $lead->cre->user_id : null;
+            $lead->cre_assigned_at = $lead->cre?$lead->cre->created_at:null;
+            $lead->save();
+            echo $lead->id . " - " . $lead->name . " - " . $lead->cre_assigned_at . "<p>";
+        }
+    }
+
     public function dialerCall(Request $request)
     {
         
@@ -527,5 +550,75 @@ class LeadsController extends Controller
 
     }
 
-    
+    public function get(Request $request)
+    {
+        $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+
+        $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
+
+        $query = Lead::with('status')
+                    ->whereBetween('created_at', [$start_date, $end_date])
+                    ->where('country', 'IN')
+                    ->whereIn('status_id', $request->status_id)
+                    ->has('dnc', '<', 1)
+                    ->has('patient', '<', 1);
+
+        return $query->get();
+    }
+
+    public function getLeadsByAssignedDate(Request $request)
+    {
+        $start_date = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+
+        $end_date = isset($request->end_date) ? Carbon::parse($request->end_date)->format('Y-m-d 23:59:59') : Carbon::now(); 
+
+        $limit = $request->limit ? : 100;
+
+        $query = Lead::with('status', 'disposition.master', 'cre', 'patient', 'lsource')
+                    ->whereHas('dispositions', function($q) {
+                        $q->whereNull('callback')
+                            ->orWhere('callback', '<=', Carbon::now()->format('Y-m-d'));
+                    })
+                    ->whereBetween('cre_assigned_at', [$start_date, $end_date])
+                    ->whereIn('status_id', $request->status_id)
+                    ->has('dnc', '<', 1)
+                    ->limit($limit);
+
+        return $query->get();
+    }
+
+    public function viewChurn()
+    {
+        return view('leads.churn');
+    }
+
+    public function churn(Request $request)
+    {
+        $this->validate($request, [
+            'ids'                   => 'required',
+            'cre_id'                => 'required'
+        ]);
+
+        $user = User::find($request->cre_id);
+
+        $leads = Lead::whereIn('id', $request->ids)->get();
+
+        foreach ($leads as $lead) {
+
+            if ($lead->cre_id == $user->id) {
+                continue;
+            }
+
+            $lead->cres()->create([  
+                'user_id'       => $request->cre_id,
+                'cre'           => $user->employee->name,
+                'start_date'    => Carbon::now(),
+                'created_by'    => Auth::user()->employee->name
+            ]);
+
+            Notification::store(1, $lead->id, $user->id);
+            Lead::updateCre($lead->id, $user->employee->name, $user->id);
+        }
+        //return $request->all();
+    }
 }

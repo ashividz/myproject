@@ -16,27 +16,17 @@ use App\Models\ProgramOrder;
 use App\Models\Lead;
 use Auth;
 use Redirect;
-
+use Carbon;
 class LeadProgramController extends Controller
 {
     public function show($id)
     {
-        $lead = Lead::with('programs')->find($id);
-        $array = array();
-
-        $programs = Program::get();
-
-        foreach ($lead->programs as $program) {
-            array_push($array, $program->pivot->program_id);
-        }
-        //dd($array);
+        $lead = Lead::find($id);
         
         $data = array(
             'menu'      =>  'lead',
             'section'   =>  'partials.program',
             'lead'      =>  $lead,
-            'programs'  =>  $programs,
-            'array'     =>  $array
         );
 
         return view('home')->with($data);
@@ -50,14 +40,22 @@ class LeadProgramController extends Controller
             return "Lead Not found";
         }
 
+        $lead->programs()->detach();
+        foreach ($request->programs as $program) {
+            echo $program;
+            $lead->programs()->attach($program);
+        }
+        //$lead->programs()->create($request->programs);
+
         //Save the Programs
-        LeadProgram::store($id, $request->programs);
+        //LeadProgram::store($id, $request->programs);
 
-        $data = array(
-            'message'           =>  'Program updated',
-            'status'            =>  'success'
-        );
-
-        return Redirect::back()->with($data);
+        //return Redirect::back()->with($data);
     }   
+
+    public function get(Request $request)
+    {
+        $lead = Lead::find($request->id);
+        return $lead->programs->pluck('pivot.program_id');
+    }
 }

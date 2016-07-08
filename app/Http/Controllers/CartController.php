@@ -224,8 +224,10 @@ class CartController extends Controller
                 }])
                 ->find($id);
 
+        if (!$cart) {
+            abort('400', 'Cart not found');
+        }
         $cart = $cart->updateAmount();
-
         //dd(Cart::setDietDuration($cart));
 
         //return $cart->getDietDiscount();
@@ -299,6 +301,10 @@ class CartController extends Controller
                     ->with('creator.employee')
                     ->with('cre.employee.supervisor.employee');
 
+        if (Auth::user()->hasRole('cre') || (Auth::user()->hasRole('nutritionist') && !Auth::user()->hasRole('service_tl'))) {
+            $carts = $carts->where('cre_id', Auth::id());
+        }
+
         if ($categories) {
             $carts = $carts->whereHas('products.category', function($q) use($categories) {
                         $q->whereIn('id', $categories);
@@ -346,12 +352,7 @@ class CartController extends Controller
                 break; 
 
             case 'shipping':
-                $carts = $carts->whereHas('invoices', function($q) {
-                    $q->whereNotNull('id');
-                });/*
-                ->whereHas('payments', function($q) {
-                    $q->whereIn('payment_method_id', [4, 5]);
-                });*/
+                $carts = $carts->has('invoices', '>', 0);
                 break; 
         }
 

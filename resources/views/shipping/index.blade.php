@@ -5,8 +5,9 @@
             </div>
             <div class="panel-body">
                 <div class="col-md-12">
-                    <div class="col-md-2"><h5>Date</h5></div>
+                    <div class="col-md-1"><h5>Date</h5></div>
                     <div class="col-md-2"><h5>Name</h5></div>
+                    <div class="col-md-1"><h5>Cart Created At</h5></div>
                     <div class="col-md-1"><h5>Carrier</h5></div>
                     <div class="col-md-1"><h5>Tracking Id</h5></div>
                     <div class="col-md-2"><h5>Status</h5></div>
@@ -32,13 +33,16 @@
     
 </style>
 <template id="shipping-field">    
-    <div class="col-md-2"> 
+    <div class="col-md-1"> 
         @{{ shipping.created_at | format_date }}
     </div>
     <div class="col-md-2">
         <a href="/lead/@{{ shipping.cart.lead.id }}/cart" target="_blank">
             @{{ shipping.cart.lead.name }}
         </a>
+    </div>
+    <div class="col-md-1">
+        @{{ shipping.cart.created_at | format_date2 }}
     </div>
     <div class="col-md-1">
         @{{ shipping.carrier.name }}

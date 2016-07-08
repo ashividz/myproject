@@ -37,6 +37,7 @@ class ProformaController extends Controller
         }
         $cart->load('proforma');
 
+
         $data = [
             'cart'  =>  $cart
         ];

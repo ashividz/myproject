@@ -15,36 +15,36 @@ Vue.component('chart', {
             opts: {
                 chart: {
                     renderTo: 'container',
-                    type: 'line',
-                    height: 600
+                    type: 'bar',
+                    height: 450
                 },
                 title: {
-                    text: 'Sales'
+                    text: 'Carts Funnel'
                 },
+
                 xAxis: {
-                    categories: [{}]
+                    categories: [],
                 },
                 yAxis: {
-                    title: {
-                        text: 'Amount'
-                    },
                     min: 0,
-                    tickInterval: 25000,
-                    labels: {
-                        formatter: function () {
-                            return '₹ ' + this.axis.defaultLabelFormatter.call(this);
-                        }            
+                    title: {
+                        text: 'Carts Count'
                     }
                 },
+                legend: {
+                    reversed: true
+                },
                 plotOptions: {
-                    line: {
+                    series: {
+                        stacking: 'normal'
+                    },
+                    bar: {
                         dataLabels: {
                             enabled: true
                         },
-                        enableMouseTracking: true
                     }
                 },
-                series: [{}, {}]
+                series: [{}]
             }
         }
     },
@@ -52,27 +52,26 @@ Vue.component('chart', {
         
     },
     ready: function() {
-        this.getSales();
+        this.getFunnels();
         this.$watch('start_date', function (oldval, newval) {
-            this.getSales();
+            this.getFunnels();
         })
         this.$watch('end_date', function (oldval, newval) {
-            this.getSales();
+            this.getFunnels();
         })
     },
     methods: {
-        getSales() {
+        getFunnels() {
             $.isLoading({ text: "Loading" });
-            this.$http.get("/getSales", {
-                'start_date': this.start_date, 
-                'end_date' : this.end_date, 
+            this.$http.get("/getCartsFunnel", {
+                'start_date': this.start_date,
+                'end_date': this.end_date
             })
             .then( (response) => {
-                this.opts.xAxis.categories = response.data.date;
-                this.opts.series[0].name = "INR";
-                this.opts.series[0].data = response.data.inr;
-                this.opts.series[1].name = "USD";
-                this.opts.series[1].data = response.data.usd;
+                this.opts.xAxis.categories = response.data.name;
+                this.opts.series[0].name = "Stages";
+                this.opts.series[0].data = response.data.count;
+
                 this.chart = new Highcharts.Chart(this.opts);
                 $.isLoading( "hide" );
             }).bind(this);

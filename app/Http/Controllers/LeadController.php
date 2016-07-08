@@ -26,6 +26,7 @@ use App\Models\User;
 use App\Models\LeadAddress;
 use App\Models\Country;
 use App\Models\Region;
+use App\Models\Cart;
 
 use DB;
 use Auth;
@@ -1144,6 +1145,16 @@ class LeadController extends Controller
                 'address_type'  => $request->address_type,
             ]);
         return redirect('lead/'.$address->lead_id.'/viewContactDetails');
+    }
+
+    public function getCarts(Request $request)
+    {
+        return Cart::with('products', 'payments.method', 'currency')
+                ->where('lead_id', $request->id)
+                ->where('status_id', 4)
+                ->where('state_id', 3)
+                ->orderby('id', 'desc')
+                ->get();
     }
     
 }

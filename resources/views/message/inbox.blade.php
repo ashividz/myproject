@@ -27,7 +27,7 @@
                         </td>
                         <td v-on:click='setReadMessage(message.id)'>@{{ message.from }}</td>
                         <td v-on:click='setReadMessage(message.id)'>@{{ message.subject }}</td>
-                        <td v-on:click='setReadMessage(message.id)'>
+                        <td>
                             @{{ message.body }}
                             <span v-if='message.lead' class='view pull-right'>
                                 <a href='/lead/@{{ message.lead.id }}/viewDispositions' target='_blank'> @{{ message.lead.name }}

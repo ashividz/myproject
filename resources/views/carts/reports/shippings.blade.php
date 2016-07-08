@@ -2,77 +2,73 @@
 
 @section('content')
 <div id="app">
-    <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
-    <chart :start_date.sync="start_date" :end_date.sync="end_date"></chart>
+    <div class="col-md-12">
+        <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+    </div>
+    <div class="col-md-6">
+        <chart :start_date.sync="start_date" :end_date.sync="end_date"></chart>
+    </div>
 </div>
 <script>
+
 Vue.component('chart', {
-    template: '<div id="container" style="height: 300px"></div>',
+    template: '<div id="shipping" style="height: 450px"></div>',
     props : ['start_date', 'end_date'],
     data: function() {
         return {
 
             opts: {
                 chart: {
-                    renderTo: 'container',
-                    type: 'line',
-                    height: 600
+                    renderTo: 'shipping',
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
                 },
                 title: {
-                    text: 'Sales'
-                },
-                xAxis: {
-                    categories: [{}]
-                },
-                yAxis: {
-                    title: {
-                        text: 'Amount'
-                    },
-                    min: 0,
-                    tickInterval: 25000,
-                    labels: {
-                        formatter: function () {
-                            return '₹ ' + this.axis.defaultLabelFormatter.call(this);
-                        }            
-                    }
+                    text: 'Shippings'
                 },
                 plotOptions: {
-                    line: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
                         dataLabels: {
-                            enabled: true
-                        },
-                        enableMouseTracking: true
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
                     }
                 },
-                series: [{}, {}]
+                series: [{
+                    name: 'Shippings',
+                    data: [{}]
+                }]
             }
         }
     },
-    created: function() {
-        
-    },
     ready: function() {
-        this.getSales();
+        this.getCartShippings();
         this.$watch('start_date', function (oldval, newval) {
-            this.getSales();
+            this.getCartShippings();
         })
         this.$watch('end_date', function (oldval, newval) {
-            this.getSales();
+            this.getCartShippings();
         })
     },
     methods: {
-        getSales() {
+        getCartShippings() {
             $.isLoading({ text: "Loading" });
-            this.$http.get("/getSales", {
+            this.$http.get("/getCartShippings", {
                 'start_date': this.start_date, 
                 'end_date' : this.end_date, 
             })
             .then( (response) => {
-                this.opts.xAxis.categories = response.data.date;
-                this.opts.series[0].name = "INR";
-                this.opts.series[0].data = response.data.inr;
-                this.opts.series[1].name = "USD";
-                this.opts.series[1].data = response.data.usd;
+                //this.opts.xAxis.categories = response.data.date;
+                //this.opts.series[0] = "Invoices";
+                this.opts.series[0].data = response.data;
+
                 this.chart = new Highcharts.Chart(this.opts);
                 $.isLoading( "hide" );
             }).bind(this);
@@ -84,8 +80,6 @@ new Vue({
     el: '#app',
     data: {
         chart: null,
-
-
         daterange: '{{ Carbon::now()->subDay(30)->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
         start_date: '',
         end_date: '',

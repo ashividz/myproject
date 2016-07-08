@@ -47,7 +47,7 @@ class Cart extends Model
 
     public function cre()
     {
-        return $this->belongsTo(User::class, 'cre_id');
+        return $this->belongsTo(User::class, 'cre_id')->withTrashed();
     }
 
     public function creator()
@@ -191,19 +191,6 @@ class Cart extends Model
     public function hasProductCategories($id)
     {
         return $this->products()->whereIn('product_category_id', $id)->first();
-        //dd($this->whereHas('products', function($q) use ($id){
-           // $q->where('product_category_id', $id);
-        //})->get());//->where('product_category_id', 2));
-                    //->first();
-        /*foreach ($cart->products as $product) {
-            if ($product->product_category_id == $product_category_id) {
-                return true;
-            }
-        }*/
-        /*if ($products) {
-            return 
-        }
-        return false;*/
     }
 
     public static function hasIncompleteCart($lead)

@@ -15,6 +15,7 @@ use App\Models\LeadStatus;
 use Auth;
 use DB;
 use Mail;
+use Carbon;
 
 class CallDispositionController extends Controller
 {
@@ -70,7 +71,7 @@ class CallDispositionController extends Controller
         return view('home')->with($data);
     }
 
-    public function saveDisposition(Request $request, $id)
+    public function store(Request $request, $id)
     {
         try {
             $lead = Lead::find($id);
@@ -95,7 +96,7 @@ class CallDispositionController extends Controller
 
             //Send SMS & Email if Call Not Connected
             
-            if ($request->status == 2) {
+            if ($request->status == 2 && !$lead->dispositions()->where('created_at', '>=', Carbon::now()->format('Y-m-d'))->whereNotNull('email')->first()) {
                 $disposition->sms = $this->sendSMS($lead->phone);
                 $disposition->email = $this->sendEmail($lead);
                 $disposition->save();

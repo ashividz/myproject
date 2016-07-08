@@ -39,12 +39,7 @@ class SalesController extends Controller
      */
     public function index()
     {
-        $data = array(
-            'menu'      => 'sales',
-            'section'   => 'index'
-        );
-
-        return view('home')->with($data);
+        return view('sales.dashboard');
     }
 
     public function viewHotPipelines()

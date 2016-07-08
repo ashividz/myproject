@@ -197,6 +197,8 @@ class Fee extends Model
     
     public static function store($cart, $patient)
     {
+        $lfee = Fee::where('patient_id', $patient->id)->orderBy('end_date', 'desc')->first();
+
         $fee = Fee::firstOrNew(['cart_id' => $cart->id]);
         //$fee = new Fee;
 
@@ -204,7 +206,19 @@ class Fee extends Model
         $fee->cart_id = $fee->cart_id ? : $cart->id;
         $fee->entry_date = Carbon::now();
         $fee->name = $cart->lead->name;
-        $fee->start_date = $fee->start_date ? $fee->start_date : Carbon::now()->addDays(1);
+
+        if ($fee->start_date) {
+
+            $fee->start_date = $fee->start_date;
+
+        } elseif ($lfee && $lfee->end_date >= Carbon::now()->format('Y-m-d')) {
+
+            $fee->start_date = Carbon::parse($lfee->end_date)->addDays(1);
+
+        } else {
+            $fee->start_date = Carbon::now()->addDays(1);
+        }
+       
         $fee->end_date = Carbon::parse($fee->start_date)->addDays($cart->duration);
         $fee->cre = $cart->cre->employee->name;
         $fee->cre_id = $cart->cre_id;
@@ -214,7 +228,7 @@ class Fee extends Model
         $fee->duration = $cart->duration;
         $fee->created_by = Auth::id();
         $fee->save();
-
+        LeadStatus::saveStatus($patient->lead, 5);
         return $fee;
 
     }

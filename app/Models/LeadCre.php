@@ -23,8 +23,12 @@ class LeadCre extends Model
 
     protected $dates = ['deleted_at'];
     
-    protected $fillable = ['cre', 'start_date'];
-
+    protected $fillable = [
+        'cre', 
+        'cre_id',
+        'start_date',
+        'created_by'
+    ];
 
     public static function saveCre($lead, $cre=null)
     {
@@ -42,7 +46,7 @@ class LeadCre extends Model
             $leadCre->created_by = Auth::user()->employee->name;
 	    	$leadCre->save();
 
-            Lead::updateCre($lead->id, $leadCre->cre);
+            Lead::updateCre($lead->id, $leadCre->cre, $leadCre->id);
             
             $lastStatus = LeadStatus::getLastStatus($lead);
             

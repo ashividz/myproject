@@ -112,7 +112,9 @@
         <script src="/js/app.js"></script>
 
         <!-- Sparkline -->
-        <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  -->      
+        <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  --> 
+
+        <!-- Vue Chart -->   
 
     </head>
     <body>

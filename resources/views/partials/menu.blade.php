@@ -90,33 +90,66 @@
                     <a href="/lead/addLead" id="menu_lead_add">Add Lead</a>
                 </li>
 
-                <li>
-                    <a href="#" id="menu_cart" class="firstLevelMenu"><b>Cart Order</b></a>
-                    <ul>
-                        <li>
-                            <a href="/carts/approval" id="menu_cart_approval">Cart Approval</a>
-                        </li>
-                        <li>
-                            <a href="/cart/approval/pending" id="menu_cart_approval_pending">Pending Carts</a>
-                        </li>
-                        @if(Auth::user()->hasRole('admin') ||Auth::user()->hasRole('finance'))
-                            <li>
-                                <a href="/cart/approval/cod" id="menu_cart_approval_cod">Pending Carts(COD)</a>
-                            </li>
-                        @endif
-                        @if(Auth::user()->hasRole('admin') ||Auth::user()->hasRole('registration'))
-                            <li>
-                                <a href="/cart/approval/pending_registration" id="menu_cart_approval_registration">Pending Registration</a>
-                            </li>
-                        @endif                        
-                        <li>
-                            <a href="/orders" id="menu_orders">Orders</a>
-                        </li>
-                    </ul>
-                </li>                 
+                                
                                                 
             </ul> <!-- second level -->                        
         </li>
+        <li>
+            <a href="#" class="firstLevelMenu"><b>Carts</b></a>
+            <ul>
+                <li>
+                    <a href="/carts/">Carts</a>
+                </li>
+                <li>
+                    <a href="/carts/approval" id="menu_cart_approval">Cart Approval</a>
+                </li>
+            @if(Auth::user()->canUploadInvoice())   
+                <li>
+                    <a href="/carts/invoices">Carts Invoices</a>
+                </li>
+            @endif
+                <li>
+                    <a href="/cart/approval/pending" id="menu_cart_approval_pending">Pending Carts</a>
+                </li>
+                @if(Auth::user()->hasRole('admin') ||Auth::user()->hasRole('finance'))
+                    <li>
+                        <a href="/cart/approval/cod" id="menu_cart_approval_cod">Pending Carts(COD)</a>
+                    </li>
+                @endif
+                @if(Auth::user()->hasRole('admin') ||Auth::user()->hasRole('registration'))
+                    <li>
+                        <a href="/cart/approval/pending_registration" id="menu_cart_approval_registration">Pending Registration</a>
+                    </li>
+                @endif
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('quality'))  
+                <li>
+                    <a href="/shippings">Shippings</a>
+                    <ul>
+                        <li>
+                            <a href="/shipping/fedex">Fedex</a>
+                        </li>
+                    </ul>
+                </li>     
+            @endif                 
+                <li>
+                    <a href="/orders" id="menu_orders">Orders</a>
+                </li>
+                <li>
+                    <a href="#" id="menu_orders">Reports</a>
+                    <ul>
+                        <li>
+                            <a href="/carts/reports/funnel">Carts Funnel</a>
+                        </li>
+                        <li>
+                            <a href="/carts/reports/shippings">Carts Shippings</a>
+                        </li>
+                        <li>
+                            <a href="/carts/reports/invoices">Carts Invoices</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li> 
 
     @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('cre') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('marketing'))    
         <li class="{{ $menu == 'cre' ? 'current' : '' }}">
@@ -211,6 +244,9 @@
             <a href="/sales" id="menu_sales" class="firstLevelMenu"><b>Sales</b></a>
             
             <ul>       
+                <li>
+                    <a href="/leads/churn" id="menu_sales_hot">Leads Churn</a>
+                </li>       
                 <li>
                     <a href="/sales/hot" id="menu_sales_hot">Hot Pipelines</a>
                 </li>

@@ -13,6 +13,11 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
+Route::get('leads/update', 'LeadsController@update');
+
+
+
+
 Route::group([
     'middleware' => ['auth', 'roles','checkip']],
     function() { 
@@ -97,6 +102,10 @@ Route::group([
     'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service']], 
     function() {
+
+        /** Sales Report**/
+        Route::get('getSales', 'CartReportController@getSales');
+
         /** Cart Activate for Extension or Balance Payment **/
         Route::post('cart/{id}/activate', 'CartController@activate');
 
@@ -124,12 +133,43 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => ['auth', 'roles','checkip'],
+    'middleware' => ['auth', 'roles', 'checkip'],
+    'roles' => [
+        'admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service', 'quality','service_tl', 'logistics', 'cre', 'nutritionist'
+    ]], 
+    function() {
+        Route::get('carts', 'CartReportController@index');
+
+        Route::get('api/getCarts', 'CartController@get');
+});
+
+Route::group([
+    'middleware' => ['auth', 'roles', 'checkip'],
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality','service_tl', 'logistics']], 
     function() {
-    Route::get('carts', 'CartReportController@index');
-    Route::post('carts', 'CartReportController@index');
-    Route::get('api/getCarts', 'CartController@get');
+        
+        Route::post('carts', 'CartReportController@index');
+
+        /** Cart Reports */
+        Route::get('getCartsFunnel', 'CartReportController@funnel');
+
+        Route::get('getCartInvoices', 'CartReportController@invoices');
+        Route::get('getCartProformas', 'CartReportController@proformas');
+
+        Route::get('carts/reports/funnel', function() {
+            return view('carts.reports.funnel');
+        });
+
+        Route::get('carts/reports/invoices', function() {
+            return view('carts.reports.invoices');
+        });
+        Route::get('carts/reports/shippings', function() {
+            return view('carts.reports.shippings');
+        });
+
+        Route::get('getCartShippings', 'CartReportController@shippings');
+
+        
 
 });
 
@@ -153,6 +193,10 @@ Route::group([
     'roles' => ['admin', 'marketing']], 
     function() {
         
+        Route::get('leads/churn', 'LeadsController@viewChurn');
+        Route::post('leads/churn', 'LeadsController@churn');
+        Route::get('getLeadsByAssignedDate', 'LeadsController@getLeadsByAssignedDate');
+
         Route::get('marketing', 'MarketingController@index');
 
         Route::get('marketing/leads', 'MarketingController@viewLeads');
@@ -309,7 +353,7 @@ Route::group([
         /** Bulk SMS **/
         Route::get('marketing/sms/patients', 'SMSController@patients');
         Route::get('marketing/sms/leads', 'SMSController@leads');
-        Route::post('api/getLeads', 'SMSController@getLeads');
+        Route::post('api/getLeads', 'LeadsController@get');
         Route::post('api/getPatients', 'SMSController@getPatients');
         Route::post('api/sendSMS', 'SMSController@send');
 
@@ -321,6 +365,18 @@ Route::group([
         Route::post('lead/converted', 'LeadController@converted');
         Route::post('api/churnLeads', 'MarketingController@churn');
         
+});
+
+
+Route::group([
+    'middleware' => ['auth', 'roles','checkip'],
+    'roles' => ['admin', 'finance', 'logistics', 'registration']], 
+    function() {
+        Route::get('getCartsWithoutInvoice', 'InvoiceController@getCartsWithoutInvoice');
+
+        Route::get('carts/invoices', function() {
+            return view('carts.invoices');
+        });
 });
 
 Route::group([
@@ -382,6 +438,7 @@ Route::group([
     'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'cre', 'marketing', 'sales', 'sales_tl']], 
     function() {
+
         Route::get('cre', 'CREController@index');
         Route::post('cre', 'CREController@index');
         Route::get('cre/leads', 'CREController@viewLeads');
@@ -710,7 +767,7 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::POST('lead/saveSource', 'LeadController@saveSource');
 
     Route::get('lead/{id}/viewDispositions', 'LeadController@viewDispositions');
-    Route::POST('lead/{id}/saveDisposition', 'CallDispositionController@saveDisposition');
+    Route::POST('lead/{id}/disposition', 'CallDispositionController@store');
     Route::get('lead/{id}/viewPersonalDetails', 'LeadController@showPersonalDetails');
     Route::POST('lead/{id}/savePersonalDetails', 'LeadController@savePersonalDetails');
     Route::get('lead/{id}/viewContactDetails', 'LeadController@showContactDetails');
@@ -738,6 +795,10 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
     Route::get('lead/{id}/program', 'LeadProgramController@show');
     Route::post('lead/{id}/program', 'LeadProgramController@store');
+    Route::get('getLeadPrograms', 'LeadProgramController@get');
+
+    Route::get('getLeadCarts', 'LeadController@getCarts');
+
 
     Route::get('lead/{id}', 'LeadController@showLead');
 
@@ -748,6 +809,9 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('api/getStatusList', function() {
         return App\Models\Status::get();
     });
+
+    Route::get('api/getPrograms', 'ProgramController@get');
+        
     Route::get('api/getCountryList', 'APIController@getCountryList');
     Route::get('api/getRegionList', 'APIController@getRegionList');
     Route::get('api/getCityList', 'APIController@getCityList');
@@ -909,12 +973,7 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
 
     Route::get('/', function () {
-        $data = array(
-            'menu'      => 'welcome',
-            'section'   => ''
-            );
-
-        return view('home')->with($data);
+        return view('dashboard');
     });
 
     
