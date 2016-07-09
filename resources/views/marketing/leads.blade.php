@@ -14,6 +14,7 @@
 					<th>Lead Source</th>
 					<th>Status</th>
 					<th width="30%">Disposition</th>
+					<th>latest fee daterange</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -30,6 +31,8 @@
 					<td style="width: 120px;"><div style="display:none">{{$lead->status_id}} {{$lead->status->name or ""}}</div><div class="status" data-score="{{ $lead->status_id }}" number="{{$lead->status_id > 5 ? $lead->status_id : 5}}"></div></td>
 
 					<td>[{{ $lead->dispositions()->count()}}]<b> {{ $lead->disposition->master->disposition_code or ""}}</b> :{{ $lead->disposition->remarks or ""}}<small class="pull-right"><em>[{{$lead->disposition->created_at or ""}}]</em></small></td>
+
+					<td>{{($lead->patient && $lead->patient->fee) ? date('Y-m-d',strtotime($lead->patient->fee->entry_date))  :''}}</td>
 
 					<td style="text-align:center"><div class="info" data-html="true" data-toggle="popover" title="INFO" data-content="<b>Created By</b> : {{$lead->created_by}}<p><b>Created at </b>: {{ date('M j, Y h:i A',strtotime($lead->created_at)) }}" data-placement="left"><i class="fa fa-info-circle"></i></div></td>
 				</tr>
@@ -89,4 +92,13 @@ $(document).ready(function()
             return $(this).attr('number');
         },
 	});
+</script>
+<script>
+$(document).ready(function() 
+{
+    
+    $('#table_yuwow_usage').dataTable({
+        bPaginate : false
+    });
+});
 </script>
