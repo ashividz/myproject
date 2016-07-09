@@ -401,6 +401,7 @@ class Lead extends Model
                     ->with('cre')
                     ->with('disposition')
                     ->with('cre')
+                    ->with('patient.fee')
                     ->whereBetween('created_at', array($start_date, $end_date))
                     ->orderBy('id', 'DESC')
                     ->limit(env('DB_LIMIT'))
