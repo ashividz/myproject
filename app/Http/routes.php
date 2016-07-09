@@ -13,7 +13,7 @@
 
 setlocale(LC_MONETARY, "en_IN");
 
-Route::get('leads/update', 'LeadsController@update');
+//Route::get('leads/update', 'LeadsController@update');
 
 
 
@@ -102,6 +102,8 @@ Route::group([
     'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service']], 
     function() {
+
+        Route::get('report/messages', 'MessageController@messages');
 
         /** Sales Report**/
         Route::get('getSales', 'CartReportController@getSales');
@@ -651,7 +653,7 @@ Route::group([
         Route::get('service/viewSurveys', 'SurveyController@viewNutritionistWiseSurvey');
         Route::post('service/viewSurveys', 'SurveyController@viewNutritionistWiseSurvey');
 
-        Route::get('report/messages', 'MessageController@messages');
+        
 
         Route::get('service/bulk', 'ServiceController@bulk');
         Route::post('service/bulk', 'ServiceController@bulk');

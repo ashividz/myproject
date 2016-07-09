@@ -35,7 +35,7 @@
 					<tr>
 						<td>
 							<label> Suit : </label>
-							<textarea name="suit" cols="40">{{$patient->suit->suit or ""}}</textarea>
+							<textarea name="suit" cols="40">{{ $patient->suit->suit or "" }}</textarea>
 						</td>
 						<td>
 							<label> Not Suit : </label> 

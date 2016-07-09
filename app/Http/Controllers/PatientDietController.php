@@ -22,6 +22,7 @@ class PatientDietController extends Controller
         //DB::update("UPDATE diet_assign AS f SET patient_id = (SELECT id FROM patient_details p WHERE p.clinic=f.clinic AND p.registration_no=f.registration_no) WHERE patient_id = 0");
 
         $patient = Patient::with('herbs', 'diets', 'suit', 'weights', 'fee')->find($id);
+        //dd($patient);
       
         $diets = Diet::where('patient_id', $id)
                     ->orderBy('date_assign', 'desc')

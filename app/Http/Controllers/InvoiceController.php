@@ -112,8 +112,8 @@ class InvoiceController extends Controller
                     ->with('creator.employee')
                     ->with('cre.employee.supervisor.employee')
 
-                    ->where('status_id', 3)
-                    ->where('state_id', 1)
+                    ->where('status_id', 4)
+                    //->where('state_id', 1)
                     ->whereBetween('created_at', [$start_date, $end_date])
                     ->orWhere(function($q) use ($start_date, $end_date) {
                         $q->whereHas('payments', function($q) {

@@ -219,7 +219,7 @@ class CartReportController extends Controller
         $data = array();
         
         $carts = Cart::where('status_id', 4)
-                    ->where('state_id', 1)
+                    //->where('state_id', 1)
                     ->whereBetween('created_at', [$start_date, $end_date])
                     ->orWhere(function($q) use ($start_date, $end_date) {
                         $q->whereHas('payments', function($q) use ($start_date, $end_date) {
@@ -233,7 +233,7 @@ class CartReportController extends Controller
 
         $invoices = Cart::with('invoices', 'payments')
                     ->where('status_id', 4)
-                    ->where('state_id', 1)
+                    //->where('state_id', 1)
                     ->whereBetween('created_at', [$start_date, $end_date])
                     ->orWhere(function($q) use ($start_date, $end_date) {
                         $q->whereHas('payments', function($q) {
