@@ -23,7 +23,7 @@
 			<table id="table" class="table table-bordered">
 				<thead>
 					<tr>
-						<th width="5%"></th>
+						<th style="width:5%;"><input type="checkbox" id="checkAll"></th>
 						<th>Name</th>
 						<th>Source</th>
 						<th>CRE</th>
@@ -39,7 +39,7 @@
 			@foreach ($patients as $patient)
 
 					<tr>
-						<td><input type="checkbox" name='check[{{$patient->lead_id}}]' value='{{$patient->lead_id}}'></td>
+						<td><input type="checkbox" name='check[{{$patient->lead_id}}]' value='{{$patient->lead_id}}' class="checkLead"></td>
 						<td>
 							<a href="/lead/{{$patient->lead_id}}/viewDetails" target="_blank">
 								{{$patient->lead->name}}
@@ -130,5 +130,10 @@ $(document).ready(function()
         });
         return false; // avoid to execute the actual submit of the form.
 	});	
+});
+</script>
+<script>
+$("#checkAll").change(function () {
+	$(".checkLead").prop('checked', $(this).prop("checked"));	
 });
 </script>
