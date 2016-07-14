@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -59,6 +58,21 @@ Route::group([
     function() {
         Route::get('cart/{id}/proforma', 'ProformaController@show');
         Route::get('cart/{id}/proforma/download', 'ProformaController@download');
+
+        Route::get('quiz/user/{id}/{id2}/report', 'QuizController@showUserReport');
+        Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
+
+        Route::get('quiz/admin', 'QuizController@admin');
+        Route::post('quiz/admin', 'QuizController@readfile');
+        Route::post('quiz/edit/addToGroup', 'QuizController@addToGroup');
+        Route::get('quiz/edit/{quiz_id}', 'QuizController@editQuiz');
+        Route::post('quiz/edit/{id}', 'QuizController@saveQuiz');
+        Route::get('quiz/report/{id}', 'QuizController@showReport');
+        Route::post('quiz/reattempt', 'QuizController@reattempt');
+        Route::get('quiz/report/{id}/download', 'QuizController@downloadReport');
+        
+
+        
 });
 
 Route::group([
@@ -472,6 +486,7 @@ Route::group([
         Route::get('quiz/report', 'QuizController@showReport');
         Route::get('quiz/user/{id}/report', 'QuizController@showUserReport');
         Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
+
 });
 
 Route::group([
