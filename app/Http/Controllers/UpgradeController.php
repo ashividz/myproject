@@ -114,4 +114,26 @@ class UpgradeController extends Controller
         }
         echo "</div>";
     }
+
+    public function viewUpgradeLeadsDurationWise(Request $request)
+    {
+        $users = User::getUsersByRole('cre');
+        
+        $daysRemaining  = $request->daysRemaining ? $request->daysRemaining : 30;
+
+        $programDuration = $request->programDuration ? $request->programDuration : 30;
+        
+        $patients = Patient::getUpgradeList($daysRemaining,NULL,$programDuration);        
+        
+        $data = array(
+            'menu'             =>  'marketing',
+            'section'          =>  'upgrade_duration_wise',
+            'daysRemaining'    =>  $daysRemaining,
+            'users'            =>  $users,
+            'patients'         =>  $patients,
+            'programDuration'  =>  $programDuration,            
+        );
+
+        return view('home')->with($data) ;
+    }
 }
