@@ -261,7 +261,7 @@ class Patient extends Model
     }
 
     //Marketing Upgrade Leads
-    public static function getUpgradeList($days = NULL, $nutritionist = NULL)
+    public static function getUpgradeList($days = NULL, $nutritionist = NULL, $programDuration=NULL)
     {
         $days = $days <> NULL ? $days : 1;
 
@@ -274,6 +274,9 @@ class Patient extends Model
                   //  $join->on('patient_details.lead_id', '=', 's.lead_id');
                 //})
                 ->whereRaw(DB::RAW("CURDATE() BETWEEN DATE(DATE_SUB(f.end_date, INTERVAL " . $days . " DAY)) AND DATE(DATE_SUB(f.end_date, INTERVAL 0 DAY))"));
+        if ($programDuration) {
+            $query = $query->where('f.duration','=',$programDuration);
+        }
         if ($nutritionist) {
             $query = $query->where('nutritionist', $nutritionist);
         }

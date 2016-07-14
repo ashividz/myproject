@@ -366,7 +366,15 @@
                     <a href="/marketing/leads/dead" id="menu_marketing_dead">Dead Leads</a>
                 </li>
                 <li>
-                    <a href="/marketing/upgradeLeads" id="menu_search">Upgrade Leads</a>
+                    <a href="/marketing/upgradeLeads" id="menu_upgrade_leads">Upgrade Leads</a>
+                    <ul>
+                        <li>
+                            <a href="/marketing/upgradeLeads" id="menu_upgrade_leads_upgrade_leads">Upgrade Leads</a>
+                        </li>
+                        <li>
+                            <a href="/marketing/upgradeLeads/durationWise" id="menu_upgrade_leads_duration_upgrade_leads">upgrade Leads(duration wise)</a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="/marketing/viewProgramEnd" id="menu_program-end">Program End</a>

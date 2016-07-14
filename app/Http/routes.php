@@ -221,6 +221,9 @@ Route::group([
         Route::post('marketing/upgradeLeads', 'UpgradeController@viewLeads');
         Route::post('marketing/saveUpgradeLeads', 'UpgradeController@saveLeads');
 
+        Route::get('marketing/upgradeLeads/durationWise','UpgradeController@viewUpgradeLeadsDurationWise');
+        Route::post('marketing/upgradeLeads/durationWise','UpgradeController@viewUpgradeLeadsDurationWise');
+
 
         Route::get('marketing/viewProgramEnd', 'MarketingController@viewProgramEnd');
         Route::post('marketing/viewProgramEnd', 'MarketingController@viewProgramEnd');
