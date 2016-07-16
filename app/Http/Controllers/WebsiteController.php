@@ -46,88 +46,102 @@ class WebsiteController extends Controller
     	return json_encode($orders);
 	}
 
-    public function onlinePaymentsNew(Request $request)
+   public function onlinePaymentsNew(Request $request)
     {
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
 
-        $orders = WebOrder::with('orderMetas')
-                    ->whereBetween('post_date', array($start_date, $end_date))
-                    ->where('post_type', 'shop_order')
-                    ->orderBy('post_date', 'DESC')
-                    ->get();
-               //dd($orders);     
-        foreach ($orders as $order) {
-            //dd($order->orderMeta);
-            $order->transaction_id = $order->ID;
-            $order->order_date = $order->post_date;
-            foreach ($order->orderMetas as $orderMeta) {
-                if($orderMeta->meta_key=='_billing_phone')
+
+       $start_date = $request->input('start_date') ? date('Y-m-d', strtotime($request->input('start_date'))) : date('Y-m-d');
+       $end_date = $request->input('end_date') ? date('Y-m-d', strtotime($request->input('end_date'))) : date('Y-m-d');
+
+       /*$start_date = '2016-05-25';
+       $end_date = '2016-05-29';*/
+       $end_date = date('Y-m-d', strtotime('+1 days', strtotime($end_date)));
+
+       $data = [
+                  
+                 'filter' => [
+                    'created_at_min' => $start_date,
+                    'created_at_max' => $end_date
+                    ]
+                ];
+
+
+        $fetchedOrders =  Woocommerce::get('orders',$data);
+        $fetchedOrders = json_encode($fetchedOrders);
+        $fetchedOrders = json_decode($fetchedOrders);
+        $orders = array();
+        foreach($fetchedOrders->orders as $fetched_order)
+        {
+            
+            $order = new WebOrder();
+            $order->transaction_id = $fetched_order->id;
+            if($fetched_order->status=='failed' || $fetched_order->status=='cancelled')
+            {
+                $note_url = "orders/".$fetched_order->id."/notes";
+
+                $order_notes =  Woocommerce::get($note_url);
+                //$order_notes = $order_notes->orderBy('id');
+             /*   if($fetched_order->id==4731)
                 {
-                    $phone = Helper::properMobile($orderMeta->meta_value);
-                   $order->phone =  $phone;
-                   $lead = Lead::with('cre')
-                        ->where('phone', $phone)
-                        ->orWhere('mobile', $phone)
-                        ->first();
+                  //$aaa =  array_pop($order_notes);
 
-                    if ($lead) {
-                        $order->lead_id = $lead->id;
-                    }
-                    if (isset($lead->cre)) {                
-                        $order->cre = $lead->cre->cre;
-                    }
+                dd($order_notes);
 
+                }*/
+                $fetchedOrders = json_encode(array_pop($order_notes['order_notes']));
+                $fetchedOrders = json_decode($fetchedOrders);
+                $order->note = $order_notes['order_notes'];//$fetchedOrders->note;
+
+                if($fetched_order->payment_details->method_id=='icici')
+                {
+                $nteArr = explode('$msg$', $fetchedOrders->note);
+                
+                $order->note = array_pop($nteArr);
                 }
-
-                if($orderMeta->meta_key=='_billing_first_name')
-                   $order->firstname =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_billing_last_name')
-                   $order->lastname =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_order_currency')
-                   $order->currency =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_billing_country')
-                   $order->country =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_billing_state')
-                   $order->state =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_billing_city')
-                   $order->city =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_payment_method')
-                   $order->payment_method =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_payment_method_title')
-                   $order->payment_method_title =  $orderMeta->meta_value;
-
-                if($orderMeta->meta_key=='_order_total')
-                   $order->total_amount =  $orderMeta->meta_value;
             }
+            else
+                $order->note = "";
 
-          //dd($order);
-        }
+            $order->order_date = date('Y-m-d H:i:s', strtotime($fetched_order->created_at));
+
+            $order->post_status = $fetched_order->status;
+            $order->currency = $fetched_order->currency;
+            $order->total_amount = $fetched_order->total;
+            $order->subtotal = $fetched_order->subtotal;
+            $order->total_line_items_quantity = $fetched_order->total_line_items_quantity;
+
+            $order->total_discount = $fetched_order->total_discount;
+            
+            $order->payment_method = $fetched_order->payment_details->method_id;
+            $order->firstname = $fetched_order->billing_address->first_name;
+            $order->lastname = $fetched_order->billing_address->last_name;
+            $order->city = $fetched_order->billing_address->city;
+            $order->state = $fetched_order->billing_address->state;
+            $order->country = $fetched_order->billing_address->country;
+
+            $order->email = trim($fetched_order->billing_address->email);
+            $order->phone = trim($fetched_order->billing_address->phone);
+            $lead = Lead::with('cre')
+                            ->where('phone', $order->phone)
+                            ->orWhere('mobile', $order->phone)
+                            ->first();
+
+            if ($lead) 
+            {
+                $order->lead_id = $lead->id;
+            }
+            if (isset($lead->cre)) {                
+                $order->cre = $lead->cre->cre;
+            }
+            else
+                $order->cre = "";
+
+           
+            $order->view_order_url = $fetched_order->view_order_url;
+
+            $orders[] = $order;
+        } 
+        //dd($orders);
         return $orders;
-
-        /*$orders = DB::connection('mysql3')
-            ->table('wp_posts')
-            ->join('paymentprocessors as pp', 'pp.pp_id', '=', 'o.pp_id')
-            ->whereBetween('order_date', array($start_date, $end_date))
-            ->where('post_type','shop_order')
-            ->orderBy('post_date', 'DESC')
-            ->get(array('ID','guid','post_modified', 'post_date','post_status', 'firstname', 'lastname', 'o.status AS payment_status' , 'country', 'city', 'pp_name AS payment_method', 'currency', 'total_amount', 'message'));
-            //var_dump($orders);
-        foreach ($orders as $order) {
-        $ordermeta = DB::connection('mysql3')
-            ->table('wp_postmeta')
-            ->where('order_id',$order->ID)
-            ->get(array('_billing_first_name', '_billing_last_name', '_billing_phone as phone', '_order_currency' , '_billing_country', '_billing_state','_billing_city', '_payment_method AS payment_method','_payment_method_title AS payment_method_title', 'currency', '_order_total as total_amount'));
-            //var_dump($orders);
-
-        }*/
     }
-
 }
