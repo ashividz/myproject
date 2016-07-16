@@ -412,15 +412,16 @@ class Lead extends Model
     public static function getLeadsByUser($user, $start_date, $end_date)
     {
         return Lead::with('sources.master', 'status')
-                    ->with(['disposition'=> function($q) use ($user, $start_date, $end_date) {
+                    ->with(['disposition'=> function($q) use($user) {
                         $q->where('name', $user);
                     }])
                     ->with(['cre'=> function($q) {
                         $q->orderBy('created_at', 'desc');
                     }])
-                    ->whereHas('cre', function($q) use ($user, $start_date, $end_date){
+                    /*->whereHas('cre', function($q) use ($user, $start_date, $end_date){
                         $q->whereBetween('created_at', array($start_date, $end_date));
-                    })
+                    })*/
+                    ->whereBetween('cre_assigned_at', array($start_date, $end_date))
                     ->where('cre_name', $user)
                     ->where('status_id', '<>', '6')
                     ->limit(env('DB_LIMIT'))

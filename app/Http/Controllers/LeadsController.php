@@ -576,8 +576,7 @@ class LeadsController extends Controller
 
         $query = Lead::with('status', 'disposition.master', 'cre', 'patient', 'lsource')
                     ->whereHas('dispositions', function($q) {
-                        $q->whereNull('callback')
-                            ->orWhere('callback', '<=', Carbon::now()->format('Y-m-d'));
+                        $q->where('callback', '<=', Carbon::now());
                     })
                     ->whereBetween('cre_assigned_at', [$start_date, $end_date])
                     ->whereIn('status_id', $request->status_id)

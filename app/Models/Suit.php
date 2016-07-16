@@ -9,6 +9,7 @@ class Suit extends Model
     protected $table = 'suit_ntsuit';
 
     protected $fillable = [
+        'patient_id',
         'suit',
         'not_suit',
         'trial_plan',
