@@ -438,8 +438,14 @@ Route::group([
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');
         Route::get('api/leadStatusReport', 'SalesReportController@leadStatusReport');
 
+        Route::get('creLeadConversion', 'SalesReportController@viewCreLeadStatus');
+        Route::get('api/creConversionReport', 'SalesReportController@creConversionReport');
+
         Route::get('sales/report/pipelines', 'PipelineController@index');
         Route::get('api/getHotPipelines', 'PipelineController@hotPipelines');
+
+        Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
+        Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
 
 });
 Route::group([

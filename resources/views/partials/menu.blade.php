@@ -275,6 +275,9 @@
                         <li>
                             <a href="/sales/report/lead/status" id="menu_sales_lead_status">Lead Status</a>
                         </li>
+                         <li>
+                            <a href="/creLeadConversion" id="menu_sales_lead_status">CRE Leads & Conversion</a>
+                        </li>
                         <li>
                             <a href="/sales/report/pipelines" id="menu_sales_lead_status">Hot Pipelines</a>
                         </li>
