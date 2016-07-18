@@ -67,7 +67,7 @@ var form = $('#quiz_form');
 });
 
 $('form.ajax').on('submit', function(e){
-
+        e.preventDefault();
       $('form.ajax').validate();
             $('input[type=submit]').prop("disabled",true);
             var form = $(this);
