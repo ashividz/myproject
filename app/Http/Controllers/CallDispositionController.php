@@ -12,6 +12,8 @@ use App\Support\SMS;
 use App\Models\CallDisposition;
 use App\Models\Lead;
 use App\Models\LeadStatus;
+use App\Models\EmailTemplate;
+use App\Models\Email;
 use Auth;
 use DB;
 use Mail;
@@ -20,15 +22,18 @@ use Carbon;
 class CallDispositionController extends Controller
 {
     private $daterange;
-    public $start_date;
-    public $end_date;
+    private $promoEmailTemplateId;
+    private $promoLeadDispositions;
+    public  $start_date;
+    public  $end_date;
 
     public function __construct()
     {
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
-        
+        $this->promoEmailTemplateId = 22;        
+        $this->promoLeadDispositions     = [9,14,15];
     }
 
     public function show($clinic, $enquiry_no)
@@ -102,6 +107,12 @@ class CallDispositionController extends Controller
                 $disposition->save();
             }
 
+            //send promo email first time if disposition is explained(9),interested(14) or hot(15)
+            
+            if ( in_array($disposition->disposition_id, $this->promoLeadDispositions) && !Email::where('lead_id',$lead->id)->where('template_id',$this->promoEmailTemplateId)->first() ) {                
+                    $this->sendPromoEmail($lead);
+            }
+            
             return "Dispositions saved";
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -171,4 +182,58 @@ class CallDispositionController extends Controller
         
         return "We were unable to reach you for counseling on Dr.Shikha's Weight Loss at Home advisory. Pls call 18001036663 for counselor " . $caller . ".\n";
     }
+
+    public function sendPromoEmail($lead)
+    {
+        $template = EmailTemplate::find($this->promoEmailTemplateId);        
+        if (!$template)
+            return false;
+        if (!filter_var($lead->email, FILTER_VALIDATE_EMAIL)){
+            return false;
+        }
+
+        $body = $template->email;
+        $body = str_replace('$customer', $lead->name, $body);
+        $body = str_replace('$client', $lead->name, $body);
+        $body = str_replace('$cre', Auth::user()->employee->name, $body);
+
+        if (Auth::user()->hasRole('nutritionist')) {
+            $body = str_replace('$nutritionist', 'Nutritionist ' . Auth::user()->employee->name, $body);
+        }
+        else
+        {
+            $body = str_replace('$nutritionist', 'Nutritionist', $body);
+        }
+        
+        Mail::queue([], [], function($message) use ($body, $lead, $template)
+        {
+            $from = isset($template->from) ? $template->from : 'noreply@nutrihealthsystems.com';            
+            
+            $message->to($lead->email, $lead->name)
+            ->subject($template->subject)
+            ->from($from, 'Nutri-Health Systems' );
+            
+            //Add CC
+            if (filter_var($lead->email_alt, FILTER_VALIDATE_EMAIL)) {
+                $message->cc($lead->email_alt, $name = null);
+            }
+
+            $message->setBody($body, 'text/html');
+
+            //Add attachments
+            foreach ($template->attachments as $attachment) {
+                $message->attachData($attachment->file, $attachment->name);
+            }
+        });    
+        
+        $email = new Email();
+        $email->user_id = Auth::user()->id;
+        $email->lead_id = $lead->id;
+        $email->template_id = $this->promoEmailTemplateId;
+        $email->email = str_replace('$client', $lead->name, $template->email);
+        $email->save();       
+
+        return true;
+    }
+    
 }
