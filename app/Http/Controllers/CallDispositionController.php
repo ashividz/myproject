@@ -33,7 +33,8 @@ class CallDispositionController extends Controller
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
         $this->promoEmailTemplateId = 22;        
-        $this->promoLeadDispositions     = [9,14,15];
+        $this->promoLeadDispositions     = [9,13,14,15];
+        //9-interested, 13-price issue,14- explained,15-hot
     }
 
     public function show($clinic, $enquiry_no)
