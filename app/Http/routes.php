@@ -729,6 +729,9 @@ Route::group([
 
         Route::get('sales/paymentsNew', 'SalesController@viewPaymentsNew');
         Route::POST('sales/paymentsNew', 'SalesController@viewPaymentsNew');
+
+        Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
+        Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
 });
 
 Route::group(['middleware' => ['auth', 'roles','checkip']], 

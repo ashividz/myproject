@@ -8,7 +8,7 @@
             <div class="panel-body">
 
                 <form id="form" class="form-inline" action="/marketing/leads/churn/save" method="post">
-                    <p style='font-weight: bold'>Total Self Assigns {{count($leads)}}</p>
+                    <p style='font-weight: bold'>Pushed: {{$leads_in_dialer}} | Self Assigns: {{count($leads)}} | Converted: {{$converted}}</p>
                     <table id="leads" class="table table-bordered">
                         <thead>
                             <tr>
@@ -16,7 +16,8 @@
                                 
                                 <td>CRE</td>
                                 <td>Lead</td>
-                                <td>disposition</td>
+                                <td>Date</td>
+                                <td>Disposition</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,12 +28,17 @@
                                 <td>
                                     {{$lead->cre}}
                                 </td>
-                               <td>
+                                <td>
                                   <a target='_blank' href='http://amikus/lead/{{$lead->lead->id}}/viewDispositions'>{{$lead->lead->name}}</a>
+                                </td>
+                                 <td>
+                                  {{$lead->lead->cre->created_at}}
+                                  
                                 </td>
                                  <td>
                                   <span style='color: #444444;font-weight: bold'>{{$lead->lead->disposition->master->disposition}}</span>
                                   <span style='color: #555555;font-size: 12px'>{{$lead->lead->disposition->remarks}}</span>
+                                  <br><em><span style='color: #555555;font-size: 12px'>{{$lead->lead->disposition->created_at}}</span></em>
                                 </td>
                             </tr>
 
