@@ -1,5 +1,16 @@
 @extends('patient.index')
 @section('top')
+@if(Auth::user()->hasRole('yuwow_support'))
+<div class="container1">  
+    <div class="panel panel-default">
+        <div class="panel-heading1">
+        </div>
+        <div class="panel-body">
+            <b>Preferred Time</b> : {{$patient->suit->trial_plan or ""}}
+        </div>
+    </div>
+</div>
+@endif
 <div class="container1">  
     <div class="panel panel-default">
         <div class="panel-heading1">

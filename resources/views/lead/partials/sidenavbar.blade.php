@@ -27,3 +27,8 @@
 	<li{!! (($section == "partials.medicalTest") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/medicalTest">Medical Test</a></li>  
 </ul>
 @endif
+@if(Auth::user()->hasRole('yuwow_support'))
+	<ul id="sidenav">
+		<li{!! (($section == "partials.yuwow") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/yuwow">YuWoW</a></li>		
+	</ul>
+@endif
