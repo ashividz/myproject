@@ -57,7 +57,7 @@
                         @endforeach
                     @endif 
                     </div>                                     
-<input type="submit" value="Submit" class="btn btn-default">
+<input type="submit" value="Submit" id='submit' class="btn btn-default">
 <a class="next-question-button btn {{ $next['class'] }}" href="{{ $next['url'] }}" style="display: none;" role="button">{{ $next['text'] }}</a>
 <p id="validation-error-container"></p>
 </form>
@@ -91,4 +91,4 @@
         })();
     </script>
     
-<script src="/js/quiz_main.js"></script>
+<script src="/js/quiz_main2.js"></script>
