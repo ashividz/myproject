@@ -281,6 +281,9 @@
                         <li>
                             <a href="/sales/report/pipelines" id="menu_sales_lead_status">Hot Pipelines</a>
                         </li>
+                          <li>
+                            <a href="selfAssignCount" id="menu_sales_lead_status">Self Assign</a>
+                        </li>
                     </ul>
                 </li>   
                             
