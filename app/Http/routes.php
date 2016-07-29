@@ -533,7 +533,10 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'doctor', 'service', 'service_tl','yuwow_support']], function() {
+    'roles' => ['admin', 'doctor', 'service', 'service_tl','nutritionist','yuwow_support']], function() {
+
+        Route::get('patient/{id}/yuwow', 'YuWoWController@progress');
+        Route::post('patient/{id}/yuwow', 'YuWoWController@progress');
 
         Route::get('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
         Route::post('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
@@ -611,8 +614,6 @@ Route::group([
         Route::post('patient/{id}/prakriti/copy', 'PrakritiController@copy');
 
 
-        Route::get('patient/{id}/yuwow', 'YuWoWController@progress');
-        Route::post('patient/{id}/yuwow', 'YuWoWController@progress');
 
         Route::post('patient/{id}/advance_diet', 'PatientController@advanceDiet');
 
