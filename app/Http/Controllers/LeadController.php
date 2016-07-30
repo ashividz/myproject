@@ -321,7 +321,10 @@ class LeadController extends Controller
                 if(trim($lead->mobile) <> '' && ( $lead->mobile <> $lead->phone)) {
                     $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', $lead->mobile);
                 }
-                        
+            if ( $lead->country=='IN' && Helper::isIndianNumber($lead->phone) )
+                   $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile($lead->phone));
+            if ( $lead->country=='IN' && Helper::isIndianNumber($lead->mobile) )
+                   $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile($lead->mobile));
                 
             $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
                                     $join->on('crl.disposition', '=', 'c.disponame');

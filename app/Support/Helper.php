@@ -141,4 +141,14 @@ class Helper {
         }
         return true;
     }
+
+    public static function isIndianNumber($number)
+    {
+    	if ( strlen(self::properMobile($number)) == 10 )
+    		return true;
+    	else
+    		return false;
+
+
+    }
 }
