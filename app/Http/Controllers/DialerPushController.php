@@ -33,12 +33,12 @@ class DialerPushController extends Controller
       public function __construct(Request $request)
     {   
         $this->limit = isset($request->limit) ? $request->limit : 2000;
-        $this->list_id = "SALES13072016";//"sales06052016";
+        $this->list_id = "SALES13072016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
-        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("2014-12-01 0:0:0");
-        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('2014-12-30 23:59:59');
+        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("2015-01-01 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('2015-01-15 23:59:59');
         
     }
 
@@ -61,6 +61,10 @@ class DialerPushController extends Controller
         
         return view('home')->with($data);
     }*/
+
+     
+
+
 public function getLeadsConsecutive(Request $request)
     {
       $users = User::getUsersByRole('cre');
@@ -129,17 +133,17 @@ public function getLeadsConsecutive(Request $request)
 
      public function getLeads(Request $request)
     {
-       $users = User::getUsersByRole('cre');
-       $leads = null;
+        $users = User::getUsersByRole('cre');
+        $leads = null;
 
        if(isset($this->daterange) && $this->daterange!="")
         {
         $cre = $request->user;
-        $dispo_date = date('2016-03-30 0:0:0');
+        $dispo_date = date('2016-06-15 0:0:0');
         $cur_date = date('Y-m-d 0:0:0');
         //dd( $this->end_date );
         $leads_qry = Lead::select('marketing_details.*')
-            ->with('cre', 'disposition');
+                        ->with('cre', 'disposition');
              /* ->with(['disposition' => function($q) use($dispo_date, $cur_date){
                     $q->whereIn('disposition_id',[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14])
                      ->where('created_at', '<', $dispo_date)
@@ -149,7 +153,7 @@ public function getLeadsConsecutive(Request $request)
                             });
                 }]);*/
 
-         $leads_qry->leftJoin(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS cd"), function($join) {
+        $leads_qry->leftJoin(DB::raw("(SELECT * FROM call_dispositions cd1 WHERE id = (SELECT MAX(id) FROM call_dispositions cd2 WHERE cd1.lead_id=cd2.lead_id)) AS cd"), function($join) {
                              $join->on('marketing_details.id', '=', 'cd.lead_id');
                             })
 
@@ -160,59 +164,52 @@ public function getLeadsConsecutive(Request $request)
                               ->orWhereNull('cd.callback');
                             }); 
 
-         if(isset($request->user) && $request->user != "Select User")
+             
+
+             if(isset($request->user) && $request->user != "Select User")
                     $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE cre = '$cre' and (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
                              $join->on('marketing_details.id', '=', 'c.lead_id');
                         });
-         else
-                $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
-                         $join->on('marketing_details.id', '=', 'c.lead_id');
-                    });
+             else
+                    $leads_qry->join(DB::raw("(SELECT * FROM lead_cre A WHERE (deleted_at IS NULL OR deleted_at = '') and id = (SELECT MAX(id) FROM lead_cre B WHERE A.lead_id=B.lead_id)) AS c"), function($join) {
+                             $join->on('marketing_details.id', '=', 'c.lead_id');
+                        });
             
            
 
-            $leads_qry->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id');
-           
+            $leads_qry->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
+                      ->leftjoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                                $join->on('p.id', '=', 'f.patient_id');
+                            })->where(function($q)  {
+                                    $q->whereNull('p.id')
+                                    ->orWhere(function($r)  {
+                                              $r->whereNull('f.id')
+                                              ->orWhere('f.end_date', '<',  date('Y-m-d'));
+                                          });
+                                    });
+                                    
+                  
 
             $leads_qry->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id');
            
-            $leads_qry->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id');
+            //$leads_qry->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id');
             $leads_qry->whereBetween('marketing_details.created_at', array($this->start_date, $this->end_date))
-                        ->whereNull('p.id')
+                        
                         ->whereNull('d.id')
                         //->whereNull('dp.id')
-                        //->where('dp.list_id', '<>' , $this->list_id)
+                       
                         ->where(function($q)  {
                                 $q->where('marketing_details.country','=','IN')
                                   ->orWhereNull('marketing_details.country')
-                                  ->orWhere('marketing_details.country','=', '');
+                                  ->orWhere('marketing_details.country','=','');
                          });
           
             //->whereNotNull('marketing_details.source_id')
             
             
             $leads = $leads_qry->limit($this->limit)->get();
-              }
-        
-            $data = array(
-                'section'       => 'dialer_pushstat',
-                'menu'          => 'lead',
-                'start_date'    => $this->start_date,
-                'end_date'      => $this->end_date,
-                'leads'         => $leads,
-                'users'         => $users,
-                'name'          => $this->cre,
-                'limit'         => $this->limit,
-                'i'             => 1
-            ); 
-            return view('home')->with($data);
-          
-            //->whereNotNull('marketing_details.source_id')
-            
-            
-            $leads = $leads_qry->limit($this->limit)->get();
               
-        
+        }
             $data = array(
                 'section'       => 'dialer_pushstat',
                 'menu'          => 'lead',
@@ -406,7 +403,7 @@ public function getLeadsConsecutive(Request $request)
                         if(!$lead->patient->hasTag('VIP'))
                               $push = 1;
                             else 
-                                $push = 0;
+                              $push = 0;
                             
                 }
               else
@@ -480,7 +477,7 @@ public function getLeadsConsecutive(Request $request)
                 //$dialer_push->name = $cre_name;
                
                 $dialer_push->phone = $phone;
-                $dialer_push->list_id =  $list_id;
+                //$dialer_push->list_id =  $list_id;
                 $dialer_push->created_by = Auth::user()->employee->name;
                 $dialer_push->status = $output;
                 $dialer_push->save();
@@ -615,48 +612,13 @@ public function getLeadsConsecutive(Request $request)
                         ->where('self_assign','=',1)
                         ->whereBetween('lead_cre.created_at',array('2016-03-05 00:00:00','2016-03-05 23:59:59'))->orderBy('lead_cre.cre','desc')->get();
        */
-
-         $leads =         Lead::with('cre', 'disposition')
-                                ->join(DB::raw("(SELECT * FROM dialer_push A) AS c"), function($join) {
-                                 $join->on('marketing_details.id', '=', 'c.lead_id');
-                            })
-                            ->whereHas('cre', function($q) {
-                                // Query the department_id field in status table
-                                 $q->whereBetween('lead_cre.created_at',array($this->start_date,$this->end_date)) // '=' is optiona
-                                 ->whereRaw('lead_cre.cre = lead_cre.created_by');
-                                })->get();
-       // dd($leads);
-        $leads = LeadCre::with('lead', 'lead.cre', 'lead.disposition')
+        $leads = LeadCre::with('lead')
                         ->join(DB::raw("(SELECT * FROM dialer_push A) AS c"), function($join) {
                                  $join->on('lead_cre.lead_id', '=', 'c.lead_id');
                             })
-                       /* ->whereHas('lead.disposition', function($q) {
-                                // Query the department_id field in status table
-                                 $q->where('call_dispositions.created_at', '<', 'lead_cre.created_at'); // '=' is optional
-                                })*/
                         ->whereRaw('lead_cre.cre = lead_cre.created_by')
                         ->whereBetween('lead_cre.created_at',array($this->start_date,$this->end_date))->orderBy('lead_cre.cre','desc')
                         ->get();
-
-        $leads_in_dialer = DialerPush::whereBetween('created_at',array($this->start_date,$this->end_date))->count();
-       
-        $converted = Lead::with('cre', 'disposition')
-                                ->join(DB::raw("(SELECT * FROM dialer_push A where created_at between '$this->start_date' and '$this->end_date') AS c"), function($join) {
-                                 $join->on('marketing_details.id', '=', 'c.lead_id');
-                            })
-                               /* ->whereHas('cre', function($q) {
-                                // Query the department_id field in status table
-                                 $q->whereBetween('lead_cre.created_at',array($this->start_date,$this->end_date)) // '=' is optiona
-                                 ->whereRaw('lead_cre.cre = lead_cre.created_by');
-                                })*/
-                                ->Join('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
-                                ->join(DB::raw("(SELECT * FROM fees_details fd1 WHERE id = (SELECT min(id) FROM fees_details fd2 WHERE fd1.patient_id=fd2.patient_id)) AS fd"), function($join) {
-                                     $join->on('p.id', '=', 'fd.patient_id');
-                                    })
-                                ->where('fd.created_at', '>', $this->start_date)
-                                ->count();
-                                //dd($converted);
-                                //->whereBetween('c.created_at',array($this->start_date,$this->end_date))
                        
 
     /*    $total_leads = Lead::join(DB::raw("(SELECT * FROM dialer_push A) AS c"), function($join) {
@@ -672,9 +634,7 @@ public function getLeadsConsecutive(Request $request)
             'section'       =>  'self_assign',
             'start_date'    =>  $this->start_date,
             'end_date'      =>  $this->end_date,
-            'leads'         =>  $leads,
-            'leads_in_dialer' => $leads_in_dialer,
-            'converted'      => $converted
+            'leads'         =>  $leads
         );
 
         return view('home')->with($data);
