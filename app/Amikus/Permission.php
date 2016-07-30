@@ -106,4 +106,12 @@ Trait Permission {
                         ->first();
     }
 
+    public function canPost()
+    {
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('doctor') || Auth::user()->hasRole('service') || Auth::user()->hasRole('nutritionist')) {
+            return true; 
+        }
+
+        return false;
+    }
 }
