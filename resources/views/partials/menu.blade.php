@@ -26,7 +26,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="/quiz" id="menu_quiz">Quiz</a>
+                    <a href="/quiz" id="menu_quiz"><b>Quiz</b></a>
                     @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('quality'))
                     <ul>
                         <li>
@@ -35,6 +35,9 @@
                         </li>
                     </ul>
                     @endif
+                </li>
+                <li>
+                    <a href="/posts" id="menu_notification" class="firstLevelMenu"><b>Posts</b></a>
                 </li>
                             
             </ul> <!-- second level -->                        

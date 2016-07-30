@@ -42,6 +42,22 @@ Route::group([
 
     Route::get('getPaymentMethods', 'PaymentMethodController@get');
 
+    
+    
+    Route::get('/posts', 'PostController@showPosts');
+    Route::get('/getPosts', 'PostController@getPosts');
+    Route::get('/getPost/{id}', 'PostController@getPost');
+    Route::get('/getLikes/{id}', 'PostController@getLikes');
+    Route::patch('/updateLike/{id}', 'PostController@updateLike');
+    Route::post('/commentSubmit/{id}', 'PostController@commentSubmit');
+    Route::get('/getComments/{id}', 'PostController@getComments');
+    Route::get('/getComment/{id}', 'PostController@getComment');
+    Route::get('/getChildComments/{id}', 'PostController@getChildComments');
+    Route::get('/getPosts/user/{id}', 'PostController@getUserPosts');
+    
+    Route::get('/editPosts', 'PostController@editPost');
+    Route::post('/storePost', 'PostController@storePost');
+    Route::get('/addPost', 'PostController@addPost');
 });
 
 
