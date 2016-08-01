@@ -5,7 +5,7 @@
     <div class="panel">
          
         <div class="panel-body" >
-        <div class='col-md-3'>
+        <div class='col-md-3' style='display: none'>
         <div  v-show="myposts.length">
             <div class="panel-heading">
               <h3 class="page_head">My Posts</h3>
@@ -17,11 +17,12 @@
 
           </div>
         </div>
-        <div class='col-md-9'>
+        <div class='col-md-12'>
             <div class="panel-heading">
             <div class='row'>
             <div class='col-md-6'>
             <h3 class="page_head">Posts</h3>
+            <input type="text" id="postDate" class='pull-right' v-model="postDate" size="15" readonly/>
             </div>
 
             @if(\Auth::user()->canPost())
@@ -578,16 +579,22 @@ var vm = new Vue({
     postId: '0',
     addedit: 'Add',
     addPost: false,
-    commentEnabled: false
+    commentEnabled: false,
+    postDate: '{{ Carbon::now()->format('Y-m-d') }}'
   },
    ready : function() {
         this.getPosts();
     },
    methods: {
           getPosts() {
-               this.$http.get('/getPosts')
+               this.loading = true;
+               this.$http.get('/getPosts', {
+                start_date: this.start_date, 
+                end_date: this.end_date,
+                })
                 .success(function(data) {
                     this.posts = data;
+                    this.loading = false;
                     this.setmyPosts();
                 }.bind(this));
             },
@@ -655,8 +662,25 @@ var vm = new Vue({
                 .bind(this);
               
             }
+        },
+
+        computed: {
+            start_date() {
+                var range = this.postDate;
+                return moment(range).format('YYYY-MM-DD') + ' 0:0:0';
+            },
+
+            end_date() {
+                var range = this.postDate;
+                return moment(range).format('YYYY-MM-DD') + ' 23:59:59';
+            }
         }
 });
+
+vm.$watch('postDate', function (newval, oldval) {
+        this.getPosts();
+    })
+
   Vue.filter('format_date', function (value) {
         if (value == null) {
             return null;
@@ -721,7 +745,7 @@ $(document).ready(function()
         $('#daterange').trigger('change'); 
     });
 
-     $('#conversionDate').daterangepicker(
+     $('#postDate').daterangepicker(
     {   
         singleDatePicker: true,
         showDropdowns: true,
@@ -737,9 +761,9 @@ $(document).ready(function()
         format: 'YYYY-MM-DD' 
         }
     );   
-    $('#conversionDate').on('apply.daterangepicker', function(ev, picker) 
+    $('#postDate').on('apply.daterangepicker', function(ev, picker) 
     {   
-        $('#conversionDate').trigger('change'); 
+        $('#postDate').trigger('change'); 
     });
 });
 </script>                   
@@ -811,9 +835,12 @@ height: 40px;
 {
     box-shadow:0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
     padding: 15px;
+    padding-bottom: 25px;
     margin-bottom: 30px;
     box-shadow: 0 1px 3px 1px #d4d4d5, 0 1px 1px 1px #d4d4d5;
     background: #f9f9f9;
+    border: 1px solid #76abd6;
+   
 }
 .panel-body
 {
@@ -904,6 +931,11 @@ margin-bottom: 5px;
 .post_text, .post_text p
 {
     font-size: 14px;
+}
+.post_text
+{
+   overflow: auto;
+    max-height: 500px;
 }
 .post_head
 {
@@ -1013,5 +1045,21 @@ color: #888;
 .truemypost
 {
   border: 1px solid #76abd6;
+}
+#postDate
+{
+  font-size: 14px;
+  background: #cccccc;
+  width: 110px;
+}
+.note-editing-area, .note-editable
+{
+  overflow: auto;
+  max-width: 1000px;
+}
+#txteditr
+{
+  width: 100%;
+  overflow: hidden;
 }
 </style>

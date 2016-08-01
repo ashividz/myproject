@@ -88,7 +88,9 @@ class PostController extends Controller
 
       public function getPosts(Request $request)
     {
-       $posts = Post::with('creator.employee')->orderBy('id', 'DESC')->get();
+       $posts = Post::with('creator.employee')
+                     ->whereBetween('created_at', Array($request->start_date, $request->end_date))
+                     ->orderBy('id', 'DESC')->get();
        foreach($posts as $post)
        {
            $post->likeCount = $post->likes->count();
