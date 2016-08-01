@@ -1049,11 +1049,13 @@ color: #888;
 #postDate
 {
   font-size: 14px;
+  background: #cccccc;
+  wudth: 110px;
 }
 .note-editing-area, .note-editable
 {
   overflow: auto;
-   max-width: 1000px;
+  max-width: 1000px;
 }
 #txteditr
 {
