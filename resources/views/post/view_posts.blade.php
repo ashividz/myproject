@@ -1050,7 +1050,7 @@ color: #888;
 {
   font-size: 14px;
   background: #cccccc;
-  wudth: 110px;
+  width: 110px;
 }
 .note-editing-area, .note-editable
 {
