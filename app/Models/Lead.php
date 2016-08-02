@@ -10,6 +10,8 @@ use App\Support\Helper;
 use Auth;
 use Carbon\Carbon;
 use App\DND;
+use App\Models\Dialer\DialerCallDisposition;
+use App\Models\Dialer\DialerCallBack;
 
 use OwenIt\Auditing\AuditingTrait;
 
@@ -169,6 +171,46 @@ class Lead extends Model
     public function addresses()
     {
         return $this->hasMany(LeadAddress::class);
+    }
+
+    public function dialerphonedispositions()
+    {
+        return $this->hasMany(DialerCallDisposition::class,'phonenumber','phone');
+    }
+
+    public function dialermobiledispositions()
+    {
+        return $this->hasMany(DialerCallDisposition::class,'phonenumber','mobile');
+    }    
+    
+    public function phonecallbacks()
+    {
+        return $this->hasMany(DialerCallBack::class,'phonenumber','phone');
+    }
+
+    public function mobilecallbacks()
+    {
+        return $this->hasMany(DialerCallBack::class,'phonenumber','phone');
+    }
+
+    public function dialerphonedisposition()
+    {
+        return $this->hasOne(DialerCallDisposition::class,'phonenumber','phone');
+    }
+
+    public function dialermobiledisposition()
+    {
+        return $this->hasOne(DialerCallDisposition::class,'phonenumber','mobile');
+    }    
+    
+    public function phonecallback()
+    {
+        return $this->hasOne(DialerCallBack::class,'phonenumber','phone');
+    }
+
+    public function mobilecallback()
+    {
+        return $this->hasOne(DialerCallBack::class,'phonenumber','phone');
     }
 
     public static function isDuplicateMobile($id, $mobile)
