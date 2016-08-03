@@ -740,7 +740,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin','sales', 'sales_tl', 'registration','marketing']], 
+    'roles' => ['admin','sales', 'sales_tl', 'registration','marketing','finance']], 
     function() {
             
         Route::get('sales/payments', 'SalesController@viewPayments');

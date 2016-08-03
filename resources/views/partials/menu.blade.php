@@ -495,6 +495,14 @@
                 <li>
                     <a href="/finance/payments">Payments</a>                   
                 </li>                  
+                <li>
+                    <a href="/sales/payments" id="menu_sales_payments">Online Payments</a>
+                    <ul>
+                        <li>
+                            <a href="/sales/paymentsNew" id="menu_sales_pipeline_status">Online Payments New</a>
+                        </li>
+                    </ul>
+                </li> 
                                                 
             </ul> <!-- second level -->                        
         </li>
