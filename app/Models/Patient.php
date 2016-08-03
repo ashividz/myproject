@@ -161,12 +161,12 @@ class Patient extends Model
 
     public function bt()
     {
-        return $this->hasOne(PatientBt::class)->latest('id');
+        return $this->hasOne(PatientBT::class)->latest('id');
     }
 
     public function bts()
     {
-        return $this->hasMany(PatientBt::class)->orderBy('id', 'DESC');
+        return $this->hasMany(PatientBT::class)->orderBy('id', 'DESC');
     }
 
     public function measurement() {

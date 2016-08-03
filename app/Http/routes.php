@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -519,7 +520,8 @@ Route::group([
         Route::get('doctor/calls', 'DoctorController@calls');
         Route::post('doctor/calls', 'DoctorController@calls');
 
-
+        Route::get('patient/{id}/doctordialercalls', 'DoctorController@dialercalls');
+        
         Route::get('doctor/patients', 'DoctorController@patients');
         Route::post('doctor/patients', 'DoctorController@patients');
 
