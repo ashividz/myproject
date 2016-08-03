@@ -47,9 +47,9 @@
                                    </a>
                                 </td>
                                 <td>
-                                                                        
+                                <a href="/cre/@{{ cre.id }}/leads/converted/?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">                                        
                                    <b>@{{ cre.converted }}</b>
-                                   
+                                   </a>
                                 </td>
                                 <td>
                                     <em>(@{{ cre.leads > 0 ? (cre.converted/cre.leads*100).toFixed(2) : 0 }}%)</em>

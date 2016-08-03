@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\Lead;
 use App\Models\Status;
 use App\Models\Cart;
-
+use App\Models\Fee;
 use Carbon;
 use DB;
 
@@ -133,11 +133,21 @@ class SalesReportController extends Controller
             $calls = 0;
             $never = 0;
             $converted_c = 0;
+
             foreach ($leads as $lead) {
               if($lead->patient && !is_null($lead->patient->fee) && $lead->patient->fee->cre==$cre->name && $lead->patient->fee->created_at < $conversion_last_date)
                 $converted_c++;
             }
-             $cre->converted = $converted_c;
+
+            $cnt = Fee::where(function($r) use($cre) {
+                              $r->where('cre_id', $cre->id)
+                              ->orWhere('cre', $cre->name);
+                            })
+                        ->whereBetween('created_at', array($start_date, $end_date))
+                        ->groupBy('patient_id')->get()->count();
+
+
+            $cre->converted = $cnt;//$converted_c;
              /* $converted = Lead::with('patient.fee')
                                 ->whereHas('patient.fee', function($q) use($conversion_last_date) {
                                 // Query the department_id field in status table
@@ -187,6 +197,40 @@ class SalesReportController extends Controller
         ];
 
         return view('home')->with($data);
+    }
+
+      public function convertedLeads(Request $request, $id)
+    {
+
+        $user = User::find($id);
+        $start_date = $request->start_date ? $request->start_date : Carbon::now()->subDays(30); 
+        $end_date = $request->end_date ? $request->end_date : Carbon::now();
+
+          $fees = Fee::where(function($r) use($user) {
+                              $r->where('cre_id', $user->id)
+                              ->orWhere('cre', $user->employee->name);
+                            })
+                        ->whereBetween('created_at', array($start_date, $end_date))
+                        ->groupBy('patient_id')->get();
+                //dd($fees);    
+         foreach($fees as $fee)
+         {
+            //dd($fee->patient->lead_id);
+            $leads[] = Lead::with('source.master', 'cre', 'status', 'disposition')
+                            ->with(['dispositions' => function($q) use($user) {
+                                    $q->where('name', 'like', $user->employee->name);
+                                }])
+                            ->find($fee->patient->lead_id);
+            
+         }              
+      
+     
+        $data = array(
+            'leads'     =>  $leads,
+            'i'         =>  1
+        );
+
+        return view('sales.modal.leads')->with($data);
     }
 
     
