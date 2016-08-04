@@ -124,9 +124,12 @@ class DoctorController extends Controller
             ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                 $join->on('patient_details.id', '=', 'f.patient_id');
             })
-            ->where('f.end_date', '>=', date('Y-m-d'))
-            ->where('doctor', $this->doctor)
-            ->with(['lead.dialerphonedisposition' => function($query) use($doctorsUserNames){
+            ->where('f.end_date', '>=', date('Y-m-d'));
+        if($this->doctor != ''){
+            $patients = $patients->where('doctor', $this->doctor);
+        }
+            
+        $patients =  $patients->with(['lead.dialerphonedisposition' => function($query) use($doctorsUserNames){
                 $query->with('user')
                 ->whereIn('username',$doctorsUserNames)
                 ->where('duration','>=',$this->connectedCallDuration)

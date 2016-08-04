@@ -2,6 +2,7 @@
 	$today = date('Y-m-d');	
 	foreach ($patients as $patient) {							
 		$fee = $patient->cfee ? $patient->cfee : $patient->fee;
+		$welcomeCallDate = date('Y-m-d', strtotime('-'.'1'.' days', strtotime($fee->start_date)));
 		$lastDisposition  = collect([$patient->lead->dialerphonedisposition,$patient->lead->dialermobiledisposition])
 							->sortByDesc('eventdate')->first();
 		$callBack 		  = collect([$patient->lead->mobilecallback,$patient->lead->phonecallback])
@@ -27,12 +28,12 @@
 			$patient->appointmentDate = $nextCall;
 			$patient->iscallBack 	  = true;
 			$patient->callbackdate    = $callBack->callbackdate;
-		} elseif ( $fee->start_date <= $today ) {
+		} elseif ( strtotime($welcomeCallDate) <= strtotime($today) ) {
 			$nextCall = null;
 			//If BT has been uploaded schedule a call next
 			if ( $patient->lastBTDate && (!$lastDisposition || ($lastDisposition && $lastDisposition->eventdate < $patient->lastBTDate)) ) {
-				$nexttCall = date('Y-m-d', strtotime('+'.'1'.' days', strtotime($patient->lastBTDate)));
-			} elseif ($lastDisposition && ($lastDispositionDate >= $fee->start_date) ) {
+				$nexttCall = date('Y-m-d', strtotime('+'.'1'.' days', strtotime($patient->lastBTDate)));				
+			} elseif ($lastDisposition && ( strtotime($lastDispositionDate) >= strtotime($welcomeCallDate)) ) {
 				//schedule call +15 after last disposition date
 				$nextCall = date('Y-m-d', strtotime('+'.$appointmentInterval.' days', strtotime($lastDisposition->eventdate)));							
 
@@ -48,7 +49,7 @@
 				$patient->appointmentDate = null; //program ended schedule no call					
 		} else {
 			//schedule a welcome call if program has not started
-			$nextCall = date('Y-m-d',strtotime($fee->start_date));
+			$nextCall = $welcomeCallDate;
 			$patient->appointmentDate = $nextCall;			
 		}
 	}
