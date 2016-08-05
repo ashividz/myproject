@@ -437,6 +437,11 @@ public function getLeadsConsecutive(Request $request)
             $phone = $request->phone[$i];
 
             $phone = Helper::properMobile($phone);
+            $pin1 = substr(trim($phone), 0, 2);
+            $pin2 = substr(trim($phone), 0, 3);
+            $pin3 = substr(trim($phone), 0, 4);
+            if($pin1 == "11" || $pin2 == "011" || $pin3 == "9111")
+              continue;
             $cre_name = $request->cre_name[$i];
          
              //dd($username);
