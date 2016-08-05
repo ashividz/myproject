@@ -20,15 +20,18 @@
            <form class="form-horizontal" role="form" method="POST" action='/quiz/edit/addToGroup'>
            <input type="hidden" name="_token" value="{{ csrf_token() }}">
              <ul class='list-group'>
-               <li class='list-group-item' style='background: #ccc; color: #222;border: 1px solid #bbb' >
-                 @if($setting->questions)
-                    @foreach($setting->questions->unique('q_group') AS $question)
-                      @if($question->q_group != "common")
-                       &nbsp; <input type='radio' name='group' value='{{$question->q_group}}' /> {{$question->q_group}}
-                       @endif
-                    @endforeach
-                @endif
-                </li>
+               <div class='list-group-item' style='background: #ccc; color: #222;border: 1px solid #bbb;padding-top: 2px;padding-bottom: 15px' >
+                   @if($setting->questions)
+                      @foreach($setting->questions->unique('q_group') AS $question)
+                        @if($question->q_group != "common")
+                         &nbsp; <input type='radio' name='group' value='{{$question->q_group}}' /> {{$question->q_group}}
+                         @endif
+                      @endforeach
+                  @endif
+                   <button class="btn btn-primary pull-right" style='display: inline-block;margin-bottom: 10px' type="submit">
+                              Add to Group
+                  </button>
+                </div>
             </ul>
             <div class='row' style='margin-bottom: 20px;margin-top: 10px'>
             <div class='col-md-6'>

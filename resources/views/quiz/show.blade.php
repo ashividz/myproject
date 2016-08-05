@@ -70,7 +70,7 @@
 
 
             </div>          
-<script src="//cdn.jsdelivr.net/jquery.validation/1.13.1/jquery.validate.js"></script>
+<script src="/js/jquery.validate.js"></script>
 <script src='/js/timer.jquery.js'></script>
     <script>
         (function(){
