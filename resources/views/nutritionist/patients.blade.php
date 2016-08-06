@@ -55,7 +55,9 @@
 	$notes = "";
 	foreach($patient->herbs AS $herb)
 	{
-		$herbs .= "<p>".$herb->herb->name." : ".$herb->quantity." ".$herb->unit->name." ".$herb->remark." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
+		$herbs .= "<p>".$herb->herb->name." : ".$herb->quantity." ";
+        $herbs .= $herb->unit ? $herb->unit->name : '';
+        $herbs .= " ".$herb->remark." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
 	}
 	foreach($patient->tags as $tag) {
 		$tags .= $tag->name . "<p>";

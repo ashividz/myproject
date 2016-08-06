@@ -226,8 +226,7 @@
                             </div>
                         </div>
                 @endif
-
-                        <table class="table table-bordered" v-show="cart.invoices.length > 0 && !addShipping">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Carrier</th>

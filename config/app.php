@@ -146,6 +146,7 @@ return [
         Barryvdh\Snappy\ServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class, //added by Sunil for audit trail
 
+        Pixelpeter\Woocommerce\WoocommerceServiceProvider::class, 
 
 
         /*
@@ -224,6 +225,8 @@ return [
         'Excel'             => Maatwebsite\Excel\Facades\Excel::class,
         'PDF'               => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'Image'             => Barryvdh\Snappy\Facades\SnappyImage::class,
+
+        'Woocommerce'       => Pixelpeter\Woocommerce\Facades\Woocommerce::class
 
     ],
 
