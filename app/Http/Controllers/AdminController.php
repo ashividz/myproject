@@ -13,6 +13,7 @@ use App\Support\Helper;
 use Auth;
 use DB;
 use App\Models\Cod;
+use App\Models\Carrier;
 
 class AdminController extends Controller
 {
@@ -94,7 +95,11 @@ class AdminController extends Controller
 
     public function cod()
     {
-        return view('cod');
+        $carriers = Carrier::all();
+        return view('cod')
+        ->with([
+            'carriers' => $carriers,
+        ]);
     }
 
     public function saveCod(Request $request)
@@ -123,6 +128,7 @@ class AdminController extends Controller
                 $cod->oda = strpos($oda,'ODA') !== false ? true : false; 
                 $cod->opa = strpos($oda,'OPA') !== false ? true : false; 
                 $cod->cod = strpos($cd,'No') === false ? true : false; 
+                $cod->carrier_id = $request->carrier_id;
                 $cod->save();
                 echo($cd . $cod . "<br/>");
             }

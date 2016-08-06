@@ -6,6 +6,17 @@
 			<legend>Import CSV/Excel file</legend>
 			<div class="control-group">
 				<div>
+					<label>select carrier</label>
+				</div>
+				<div class="controls">
+					<select name="carrier_id">
+					@foreach($carriers as $carrier)
+					 <option value="{{$carrier->id}}">{{$carrier->name
+					 }}</option>
+					@endforeach
+					</select>
+				</div>				
+				<div>
 					<label>CSV/Excel File:</label>
 				</div>
 				<div class="controls">
