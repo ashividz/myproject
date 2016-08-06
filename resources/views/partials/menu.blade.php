@@ -539,6 +539,20 @@
             
         
             <ul>
+            @if(Auth::user()->hasRole('bdm'))
+            <li>
+                <a href="#">Leads</a>  
+                <ul>
+                    <li>
+                        <a href="/report/viewChannelConversion" id="menu_channel_conversion" class="arrow">Channel Conversion</a>
+                    <li>
+                    <li>
+                        <a href="/marketing/leads" id="menu_leads">Leads</a>
+                    </li>                        
+                </ul>
+            </li>
+            @endif
+
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl')  || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('registration')) 
                 <li>
                     <a href="#">Sales</a>  
