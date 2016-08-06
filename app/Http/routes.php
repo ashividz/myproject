@@ -219,7 +219,13 @@ Route::group([
 
 });
 
-
+Route::group([
+    'middleware' => ['auth', 'roles','checkip'],
+    'roles' => ['admin', 'marketing','bdm']], 
+    function() {
+        Route::get('marketing/leads', 'MarketingController@viewLeads');
+        Route::POST('marketing/leads', 'MarketingController@viewLeads');
+});
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
@@ -231,10 +237,7 @@ Route::group([
         Route::get('getLeadsByAssignedDate', 'LeadsController@getLeadsByAssignedDate');
 
         Route::get('marketing', 'MarketingController@index');
-
-        Route::get('marketing/leads', 'MarketingController@viewLeads');
-        Route::POST('marketing/leads', 'MarketingController@viewLeads');
-
+        
         Route::get('marketing/lead_distribution', 'MarketingController@viewLeadDistribution');
         Route::post('marketing/lead_distribution', 'MarketingController@saveLeadDistribution');
         Route::get('marketing/shs_lead_distribution', 'MarketingController@viewSHSLeadDistribution');
