@@ -4,8 +4,13 @@
     </div>  
     <div class="panel-body">        
         <div class="col-md-12">
-            Name : <a href="/patient/{{$patient->id}}/diet" target="_blank">{{$patient->lead->name}}</a><br/>
-            Patient Id : <a href="/patient/{{$patient->id}}/diet" target="_blank">{{$patient->id}}</a>
+            Name : <a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{$lead->name}}</a><br/>
+            
+            Lead Id : <a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{$lead->id}}</a><br/><br/>
+            Patient Id :
+            @if($lead->patient)
+             <a href="/patient/{{$lead->patient->id}}/diet" target="_blank">{{$lead->patient->id}}</a>
+            @endif
         </div>
         
         <div class="col-md-12">
@@ -27,7 +32,7 @@
                         </thead>
                         <tbody>
                 <?php $i=0 ?>
-                @foreach($patient->lead->dispositions as $disposition)
+                @foreach($lead->dispositions as $disposition)
                     <?php $i++ ?>
                             <tr>
                                 <td>{{ $i }}</td>
@@ -36,7 +41,7 @@
                                     {{ $disposition->remarks }}
                                     <small class="pull-right">{!! $disposition->callback ? "Callback On : " . date('jS-M-Y h:i A', strtotime($disposition->callback)) : "" !!}</small>
                                 </td>
-                                <td>Dr. {{ $disposition->name }}</td>
+                                <td>{{$prefix or ''}} {{ $disposition->name }}</td>
                                 <td> 
                                     {!! $disposition->email ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='Email Sent'></span></span>" : "" !!}
                                     {!! $disposition->sms ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='" . $disposition->sms . "'></span></span>" : "" !!}

@@ -718,6 +718,8 @@ Route::group([
 
         Route::get('service/messages', 'ServiceController@showMessages');
 
+        Route::get('patient/{id}/calls','PatientController@calls');
+
 });
 
 Route::group([
