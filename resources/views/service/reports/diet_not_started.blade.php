@@ -24,6 +24,7 @@
                                 <th>Duration</th>
                                 <th>Amount</th>
                                 <th style="width:50px">Remark</th>
+                                <th style="width:50px">Last call</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,6 +37,10 @@
                             $notes .= $note->text;
                             $notes .= "<span class='pull-right'><em><small>".$note->created_by." [".$note->created_at->format('jS M Y')."]"."</small></em></span><p>";
                         }
+
+                        //find last disposition
+                        $lastDisposition  = collect([$patient->lead->dialerphonedisposition,$patient->lead->dialermobiledisposition])
+                            ->sortByDesc('eventdate')->first();
                     ?>
                             <tr>
                                 <td><a href="/lead/{{$patient->lead_id}}/viewDetails" target="_blank">{{ $patient->lead->name or "No Name" }}</a><div class="pull-right"><em>[{{ $fee->entry_date or ""}}]</em></div></td>
@@ -57,6 +62,7 @@
                             @endif
                                 <td>&#8377;{{$fee->total_amount}}</td>
                                 <td>{!!$notes!!} {{$patient->suit->trial_plan or ""}}</td>
+                                <td>@if($lastDisposition) {{date('M j, Y, g:i a',strtotime($lastDisposition->eventdate))}} <a data-toggle="modal" data-target="#disposition" href="/patient/{{$patient->id}}/calls"><i class="fa fa-mobile danger" aria-hidden="true"></i></a>@endif</td>
            
                             </tr>
                         @endforeach
@@ -68,6 +74,28 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal Template-->
+<div class="modal fade" id="disposition" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">Dispositions</h4>
+
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
 $(document).ready(function() 
 {
@@ -96,3 +124,27 @@ $(document).ready(function()
 
 });
 </script>
+
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({ trigger: "hover" }); 
+});
+
+$(document).on('hidden.bs.modal', function (e) {
+    $(e.target).removeData('bs.modal');
+});
+
+
+</script>
+<style type="text/css">
+    .popover {
+        text-align: left;
+        max-width: 1250px;
+    }
+</style>
+<style type="text/css">
+    #disposition .modal-dialog {
+        /* new custom width */
+        width: 95%;
+    }
+</style>

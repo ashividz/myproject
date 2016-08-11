@@ -20,6 +20,7 @@ use App\Models\PrakritiQuestion;
 use App\Models\PatientPrakriti;
 use App\Models\Email;
 use App\Models\EmailTemplate;
+use App\Models\User;
 
 use App\Http\Requests\PatientTagRequest;
 
@@ -296,4 +297,63 @@ class PatientController extends Controller
         return Patient::with('suit')
                 ->find($request->id);
     }
+
+
+    public function calls($id)
+    {
+        $serviceUsers  = User::getUsersByRole('service');
+        $doctors       = User::getUsersByRole('doctor');
+        $serviceTLs    = User::getUsersByRole('service_tl');
+        $nutritionists = User::getUsersByRole('nutritionist');
+
+        $serviceIds = array_merge(
+                $serviceUsers->pluck('id')->toArray(),
+                $doctors->pluck('id')->toArray(),
+                $serviceTLs->pluck('id')->toArray(),
+                $nutritionists->pluck('id')->toArray()
+            );
+        $serviceUserNames   = User::whereIn('id',$serviceIds)->get()->pluck('username')->toArray();
+
+        $serviceNames       = User::whereIn('id',$serviceIds)->with('employee')->get()->pluck('employee.name')->toArray();
+
+        $patient = Patient::findOrFail($id);
+
+        $lead    = Lead::with(['dialerphonedispositions' => function($query) use($serviceUserNames){
+                    $query->with('user')
+                    ->whereIn('username',$serviceUserNames)
+                    ->orderBy('eventdate','desc')
+                    ->limit(20);
+                }])            
+                ->with(['dialermobiledispositions' => function($query) use($serviceUserNames){
+                    $query->with('user')
+                    ->whereIn('username',$serviceUserNames)
+                    ->orderBy('eventdate','desc')
+                    ->limit(20);;
+                }])
+                ->with(['dispositions'=> function($query) use($serviceNames) {
+                    $query->whereIn('name',$serviceNames)
+                    ->orderBy('created_at','desc')
+                    ->limit(20);;
+                }])
+                ->with('patient')
+                ->findOrFail($patient->lead_id);
+
+        $dialer_dispositions = collect();
+        foreach($lead->dialerphonedispositions as $d)
+            $dialer_dispositions->push($d);
+        foreach($lead->dialermobiledispositions as $d)
+            $dialer_dispositions->push($d);        
+        $dialer_dispositions =  $dialer_dispositions->sortByDesc('eventdate')->unique()->take(20);
+        
+        $data = array(
+            'menu'               =>  'lead',
+            'section'            =>  'modals.dispositions',
+            'lead'               =>  $lead,
+            'dialer_dispositions'=>  $dialer_dispositions,
+            'i'                  =>  '0'
+        );
+
+        return view('lead.modals.dispositions')->with($data);
+    }
+
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Fee;
+use App\Models\User;
 
 use DB;
 use Auth;
@@ -332,12 +333,27 @@ class Patient extends Model
         $query .= " ORDER BY start_date DESC";
         return DB::select($query);*/
 
+        $users = User::getUsersByRole('nutritionist');
+
+        $nutritionistIds = $users->pluck('id')->toArray();
+        $nutritionistUserNames   = User::whereIn('id',$nutritionistIds)->get()->pluck('username')->toArray();
+
         return Patient::select("patient_details.*")
                 ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                         $join->on('patient_details.id', '=', 'f.patient_id');
                     })
                 ->whereRaw('f.patient_id NOT IN (SELECT DISTINCT d.patient_id FROM diets d WHERE d.patient_id = f.patient_id AND date_assign >= f.entry_date)')
                 ->where('f.end_date', '>=', date('Y-m-d'))
+                ->with(['lead.dialerphonedisposition' => function($query) use($nutritionistUserNames){
+                    $query->with('user')
+                    ->whereIn('username',$nutritionistUserNames)
+                    ->orderBy('eventdate','desc');
+                }])            
+                ->with(['lead.dialermobiledisposition' => function($query) use($nutritionistUserNames){
+                    $query->with('user')
+                    ->whereIn('username',$nutritionistUserNames)
+                    ->orderBy('eventdate','desc');
+                }])
                 ->get();
 
         

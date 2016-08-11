@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\CallDisposition;
 use App\Models\DialerCallDisposition;
 use App\Models\Patient;
+use App\Models\Lead;
 use Auth;
 use DB;
 
@@ -74,41 +75,43 @@ class DoctorController extends Controller
         $doctorsUserNames   = User::whereIn('id',$doctorIds)->get()->pluck('username')->toArray();
         $doctorsNames       = User::whereIn('id',$doctorIds)->with('employee')->get()->pluck('employee.name')->toArray();
 
-        $patient = Patient::with(['lead.dialerphonedispositions' => function($query) use($doctorsUserNames){
+        $patient = Patient::find($id);
+        $lead = Lead::with(['dialerphonedispositions' => function($query) use($doctorsUserNames){
                 $query->with('user')
                     ->whereIn('username',$doctorsUserNames)
                     ->orderBy('eventdate','desc')
                     ->limit(20);
                 }])            
-                ->with(['lead.dialermobiledispositions' => function($query) use($doctorsUserNames){
+                ->with(['dialermobiledispositions' => function($query) use($doctorsUserNames){
                     $query->with('user')
                     ->whereIn('username',$doctorsUserNames)
                     ->orderBy('eventdate','desc')
                     ->limit(20);;
                 }])
-                ->with(['lead.dispositions'=> function($query) use($doctorsNames) {
+                ->with(['dispositions'=> function($query) use($doctorsNames) {
                     $query->whereIn('name',$doctorsNames)
                     ->orderBy('created_at','desc')
                     ->limit(20);;
                 }])
-                ->findOrFail($id);
+                ->findOrFail($patient->lead_id);
 
         $dialer_dispositions = collect();
-        foreach($patient->lead->dialerphonedispositions as $d)
+        foreach($lead->dialerphonedispositions as $d)
             $dialer_dispositions->push($d);
-        foreach($patient->lead->dialermobiledispositions as $d)
+        foreach($lead->dialermobiledispositions as $d)
             $dialer_dispositions->push($d);        
-        $dialer_dispositions =  $dialer_dispositions->sortByDesc('eventdate')->unique();
+        $dialer_dispositions =  $dialer_dispositions->sortByDesc('eventdate')->unique()->take(20);
         
         $data = array(
-            'menu'               =>  $this->menu,
-            'section'            =>  'modals.doctorCallDispositions',
-            'patient'            =>  $patient,
+            'menu'               =>  'lead',
+            'section'            =>  'modals.dispositions',
+            'lead'               =>   $lead,
             'dialer_dispositions'=>  $dialer_dispositions,
+            'prefix'             =>  'Dr.',
             'i'                  =>  '0'
         );
 
-        return view('doctor.modals.doctorCallDispositions')->with($data);
+        return view('lead.modals.dispositions')->with($data);
     }
 
     public function patients()
