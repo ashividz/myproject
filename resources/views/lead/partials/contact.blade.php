@@ -16,7 +16,7 @@
     <!-- Primary address -->
     <div role="tabpanel" class="tab-pane active" id="address">
 
-    @if($lead->patient && $lead->patient->hasTag('VIP') && !(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service')))
+    @if($lead->patient && $lead->patient->hasTag('VIP') && !(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor')))
   		<h3>VIP Client</h3>
   	@else
 		@if(!$lead->dnc)
