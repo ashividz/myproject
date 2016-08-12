@@ -282,6 +282,9 @@
                             <a href="/creLeadConversion" id="menu_sales_lead_status">CRE Leads & Conversion</a>
                         </li>
                         <li>
+                            <a href="/creLeadConversionWithChurned" id="menu_sales_lead_status">CRE Leads & Conversion With Churned</a>
+                        </li>
+                        <li>
                             <a href="/sales/report/pipelines" id="menu_sales_lead_status">Hot Pipelines</a>
                         </li>
                           <li>

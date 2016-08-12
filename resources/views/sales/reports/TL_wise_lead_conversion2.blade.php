@@ -42,7 +42,7 @@
                                     @{{ cre.name }}
                                 </td>
                                 <td>
-                                 <a href="/cre/@{{ cre.id }}/leads/?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
+                                 <a href="/cre/@{{ cre.id }}/leads/includeChurned?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
                                    <b>@{{ cre.leads }}</b>
                                    </a>
                                 </td>
@@ -118,7 +118,7 @@
             
             getReport() {
                 this.loading = true;
-                $.getJSON("/api/creConversionReport", {
+                $.getJSON("/api/creLeadConversionWithChurned", {
                     'user_id' : this.user,
                     start_date: this.start_date, 
                     end_date: this.end_date,

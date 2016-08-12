@@ -461,6 +461,10 @@ Route::group([
         Route::get('creLeadConversion', 'SalesReportController@viewCreLeadStatus');
         Route::get('api/creConversionReport', 'SalesReportController@creConversionReport');
 
+        Route::get('creLeadConversionWithChurned', 'SalesReportController@viewCreLeadStatus2');
+        Route::get('api/creLeadConversionWithChurned', 'SalesReportController@creLeadConversionWithChurned');
+
+
         Route::get('sales/report/pipelines', 'PipelineController@index');
         Route::get('api/getHotPipelines', 'PipelineController@hotPipelines');
 
@@ -477,6 +481,8 @@ Route::group([
         Route::post('cre/{id}/leads', 'CREController@viewLeads');
 
         Route::get('cre/{id}/leads', 'CreReportController@leads');
+        Route::get('cre/{id}/leads/includeChurned', 'SalesReportController@LeadsIncludeChurned');
+        Route::get('cre/{id}/leads/converted', 'SalesReportController@convertedLeads');
 });
 
 Route::group([
