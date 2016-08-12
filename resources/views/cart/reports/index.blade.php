@@ -109,12 +109,20 @@
                         </a>
                     </div>
                     <div class="col-md-12">
+                        <label>Phone : </label>
+                        @{{ cart.lead.phone }}
+                    </div>    
+                    <div class="col-md-12">
                         <label>Address : </label>
                         <span v-if="cart.shipping_address">
+                            @{{ cart.shipping_address.address }}<br>
                             @{{ cart.shipping_address.city }}, @{{ cart.shipping_address.country }}
+                            , @{{ cart.shipping_address.zip }}
                         </span>
                         <span v-else>
-                            @{{ cart.lead.city }}, @{{ cart.lead.country }}    
+                            @{{ cart.lead.address }}<br>
+                            @{{ cart.lead.city }}, @{{ cart.lead.country }}  
+                            , @{{ cart.lead.zip }}  
                         </span>
                         
                     </div>

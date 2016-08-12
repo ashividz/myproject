@@ -79,12 +79,14 @@ class FedExController extends Controller
     {       
         
         try {
-            $trackings = FedExTracking::with('shipping.cart.lead')->get();
+            $trackings = FedExTracking::with('shipping.cart.lead')
+                            ->whereNull('actual_delivery_timestamp')
+                            ->get();
             foreach ($trackings as $tracking) {
 
                 $tracking = $this->updateTracking($tracking);
 
-                $code = $tracking->status_detail ? $tracking->status_detail->Code : 'FD';
+                $code = $tracking->status_detail && isset($tracking->status_detail->Code) ? $tracking->status_detail->Code : 'FD';
 
                 $shipping = Shipping::updateStatus($tracking->shipping_id, $code, $tracking->estimated_delivery_timestamp, $tracking->actual_delivery_timestamp);
                 //dd($tracking->other_identifiers);
@@ -111,7 +113,7 @@ class FedExController extends Controller
 
     public function updateTracking($tracking)
     {
-        if ($tracking->status_detail && ($tracking->status_detail->Code == 'DL' || ($tracking->status_detail->Code == 'DE' && $tracking->returned))) {
+        if ($tracking->status_detail && isset($tracking->status_detail->Code) && ($tracking->status_detail->Code == 'DL' || ($tracking->status_detail->Code == 'DE' && $tracking->returned))) {
             return $tracking;
         }
         $fedex= new FedEx\TrackService\Track($this->accessKey, $this->password, $this->acctNum, $this->meterNum); 
