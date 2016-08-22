@@ -63,6 +63,14 @@ class LeadController extends Controller
                 ->find($request->id);
     }
 
+      public function leadReferences($id)
+    {
+        $lead = Lead::with('references.patient')
+                ->find($id);
+        return $lead;
+
+    }
+    
     public function dialerCall(Request $request)
     {
         

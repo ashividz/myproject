@@ -200,6 +200,12 @@ class Cart extends Model
                         ->first();
     }
 
+    public static function isBenefitCart($cart)
+    {
+      $benefitCart = BenefitCart::where('cart_id', $cart->id)->get()->first();
+      return $benefitCart;
+    }
+
     public static function setDietDuration($cart)
     {
         $amount = $cart->getDietAmount();

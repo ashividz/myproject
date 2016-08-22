@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -59,6 +58,24 @@ Route::group([
     Route::get('/editPosts', 'PostController@editPost');
     Route::post('/storePost', 'PostController@storePost');
     Route::get('/addPost', 'PostController@addPost');
+
+
+    Route::get('/getBenefits', 'ReferenceBenefitController@getBenefits');
+    Route::post('/applyBenefit', 'ReferenceBenefitController@applyBenefit');
+    Route::get('/getReferenceBenefit/{id}', 'ReferenceBenefitController@getReferenceBenefit');
+    Route::get('/cart/isBenefitCart/{id}', 'ReferenceBenefitController@isBenefitCart');
+    Route::get('/getVoice/{id}', 'LeadController@getVoice');
+  
+
+    Route::get('api/getCarts/benefitReference', 'CartController@get');
+    Route::get('referenceCarts/approval', 'ReferenceCartApprovalController@index');
+    Route::post('referenceCart/{id}/approve', 'ReferenceCartApprovalController@approve');
+    Route::get('categoryProducts/{id}', 'CartProductController@getCategoryProducts');
+
+    Route::get('lead/{id}/viewReferences', 'LeadController@showReferences');
+    Route::get('lead/{id}/leadReferences', 'LeadController@leadReferences');
+    Route::get('downloadRecipies', 'RecipeController@downloadRecipies');
+  
 });
 
 

@@ -35,6 +35,12 @@ class CartProductController extends Controller
         return view('cart.modals.products')->with($data);
     }
 
+     public function getCategoryProducts($id)
+    { 
+        $products = Product::where('product_category_id', $id)->get();
+        return $products;
+    }
+    
     public function store(Request $request, $id)
     {
         $cart = Cart::find($id);

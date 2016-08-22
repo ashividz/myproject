@@ -44,12 +44,19 @@ class Order extends Model
         //$duration = CartProduct::getDietDuration($cart, 1);
         $cart = Cart::setDietDuration($cart);
 
+        if(Cart::isBenefitCart($cart) && !$cart->hasProductCategories([1]))
+            $cart->duration = 1;
+        else if(Cart::isBenefitCart($cart) && $cart->hasProductCategories([1]))
+            $cart->duration = CartProduct::getDietDuration($cart);
+
         if ($cart->duration > 0) {
             $order = Order::firstOrNew(['cart_id' => $cart->id]);
 
             $order->patient_id              = $order->patient_id ? : $patient->id;
             $order->cart_id                 = $order->cart_id ? : $cart->id;
             $order->product_category_id     = $order->product_category_id ? : 1;
+            if(Cart::isBenefitCart($cart) && !$cart->hasProductCategories([1]))
+                $order->product_category_id = 4;
             $order->duration                = $cart->duration;
             $order->created_by              = Auth::id();
             $order->save();
