@@ -70,6 +70,17 @@ class LeadController extends Controller
         return $lead;
 
     }
+
+     public function getVoice(Request $request, $id)
+    {
+        $lead = Lead::with('references.patient')
+                   ->find($id);
+
+        $voices = Voice::whereIn('id',array_pluck($lead->references,'pivot.voice_id'))->get();
+       
+        $voice = $voices->where('id',$request->voice_id)->first()->name or "";
+        return $voice;
+    }
     
     public function dialerCall(Request $request)
     {
