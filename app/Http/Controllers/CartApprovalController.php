@@ -326,7 +326,8 @@ class CartApprovalController extends Controller
 
         if ($request->state == 1) {
 
-            if ($cart->status_id == 2) {
+            if($cart->status_id == 2) {
+                
                 if (!Auth::user()->canApproveDiscount($cart)) {
                     abort('500', 'Cannot Approve Discount');
                 }
@@ -345,6 +346,22 @@ class CartApprovalController extends Controller
                     CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id);
                     CartStep::nextStatus($cart->id);
                 }
+
+                 if(isset($request->benefitCart) && $request->benefitCart)
+                   {
+                    
+                    CartStep::store($request->cart_id, 3, 3, 'Reference Benefit', $discount_id);
+                    CartStep::store($request->cart_id, 4, 3, 'Reference Benefit', $discount_id);
+                    Cart::updateStatus($cart->id, 4); 
+                    Cart::updateState($cart->id, 3); 
+                    $cart = Cart::find($cart->id);
+
+                    $patient = Patient::register($cart);
+                    
+                    Order::store($cart, $patient);
+                    
+                   }
+
             } else if ($cart->status_id == 3) {                 
                 
                 if (!Auth::user()->canApprovePayment($cart)) {

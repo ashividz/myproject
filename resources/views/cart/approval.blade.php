@@ -51,7 +51,7 @@
 </div>
 <template id="cart-approval-template">
     <div class="panel panel-info">
-        <div class="panel-heading" v-show="!expand">
+        <div class="panel-heading" v-show="!expand" v-bind:class="{'benefitCart': cart.benefitCart}">
             <div class="row">
                 <div class="col-md-2">
                     <div>
@@ -105,7 +105,7 @@
                             <div class="col-md-3">                                
                                 <input type="radio" v-model="state" value="2" @click="canApproveCart"> Reject 
                             </div>   
-                            <div class="col-md-3">
+                            <div class="col-md-3" v-show="!cancelled">
                                 <button class="btn btn-primary" v-bind:disabled="!state || !approvePayment || !approveDiscount || loading" @click="approve">Save</button>
                             </div>                           
                         </div> 
@@ -118,7 +118,7 @@
                 </div>                
             </div>
         </div>
-        <div class="panel-body" v-show="expand">
+        <div class="panel-body" v-show="expand" v-bind:class="{'benefitCart': cart.benefitCart}">
             <div class="row">
                 <div class="col-md-2"> 
                     <table class="table table-bordered table-condensed table-striped">
@@ -300,7 +300,7 @@
                         <div class="col-md-3">                                
                             <input type="radio" v-model="state" value="2" @click="canApproveCart"> Reject 
                         </div>   
-                        <div class="col-md-3">
+                        <div class="col-md-3" v-show="!cancelled">
                             <button class="btn btn-primary" v-bind:disabled="!state || !approvePayment || !approveDiscount" @click="approve">Save</button>
                         </div>  
                         <div class="col-md-8" style="margin-top:20px;">
@@ -431,14 +431,37 @@ Vue.component('cartApproval', {
             approveDiscount : true,
             remark: '',
             discount_id: '',
-            state: ''
+            state: '',
+            cancelled: false
         }
     },
     ready: function() {
-        
+        this.isBenefitCart();
     },
 
     methods: {
+
+         isBenefitCart(){
+
+            this.$http.get("/cart/isBenefitCart/" + this.cart.id).success(function(data){
+                if(data)
+                {
+                   
+                    this.cart = Object.assign({}, this.cart, { benefitCart: true});
+                    if(this.cart.state_id=='2')
+                        this.cancelled = true; 
+
+                }
+                else
+                    this.cart = Object.assign({}, this.cart, { benefitCart: false});
+            })
+            .error(function(data){
+                
+            })
+            .bind(this);
+
+        },
+
         toggleExpand() {
             this.expand = !this.expand;
         },
@@ -488,6 +511,7 @@ Vue.component('cartApproval', {
                 state: this.state,
                 discount_id: this.discount_id,
                 remark: this.remark,
+                benefitCart: this.cart.benefitCart,
             }).success(function(data){
                 if (data.status == 'Success!') {
                     toastr.success(data.message, data.status);
@@ -641,6 +665,11 @@ $(document).ready(function()
     background-color: #fff; 
     border-color: #ddd;
     color: #111;
+}
+.panel-info>.panel-heading.benefitCart, .panel-info>.panel-body.benefitCart, .panel-info>.panel-body.benefitCart .table-striped > tbody > tr:nth-child(2n+1)
+{
+    background: #e0ebeb;
+   background: #ffe6cc;
 }
 </style>
 @endsection
