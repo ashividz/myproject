@@ -117,6 +117,7 @@ class AdminController extends Controller
                 $pickup = isset($data[3]) ? $data[3] : '';
                 $oda = isset($data[4]) ? $data[4] : '';
                 $cd = isset($data[5]) ? $data[5] : '';
+                $required_form = isset($data[6]) ? $data[6] : '';
 
                 $cod = new Cod;
 
@@ -128,6 +129,7 @@ class AdminController extends Controller
                 $cod->oda = strpos($oda,'ODA') !== false ? true : false; 
                 $cod->opa = strpos($oda,'OPA') !== false ? true : false; 
                 $cod->cod = strpos($cd,'No') === false ? true : false; 
+                $cod->required_form = strlen(trim($required_form)) != '' ? $required_form : NULL;
                 $cod->carrier_id = $request->carrier_id;
                 $cod->save();
                 echo($cd . $cod . "<br/>");
