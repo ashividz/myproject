@@ -101,7 +101,7 @@
          <div id="loader" v-show="loading" style="text-align:center" >
             <img src="/images/loading.gif">
          </div>
-        <div class="panel-body">
+        <div class="panel-body" style='padding-left: 0px'>
             <table class="table table-bordered">
                 <thead>                 
                     <tr>

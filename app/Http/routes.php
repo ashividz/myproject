@@ -65,7 +65,7 @@ Route::group([
     Route::get('/getReferenceBenefit/{id}', 'ReferenceBenefitController@getReferenceBenefit');
     Route::get('/cart/isBenefitCart/{id}', 'ReferenceBenefitController@isBenefitCart');
     Route::get('/getVoice/{id}', 'LeadController@getVoice');
-  
+    Route::get('/canCreateReferenceCart', 'CartController@canCreateReferenceCart');
 
     Route::get('api/getCarts/benefitReference', 'CartController@get');
     Route::get('referenceCarts/approval', 'ReferenceCartApprovalController@index');
@@ -479,7 +479,7 @@ Route::group([
         Route::get('api/creConversionReport', 'SalesReportController@creConversionReport');
 
         Route::get('creLeadConversionWithChurned', 'SalesReportController@viewCreLeadStatus2');
-        Route::get('api/creLeadConversionWithChurned', 'SalesReportController@creLeadConversionWithChurned');
+        Route::get('api/creLeadConversionWithChurned', 'SalesReportController@channelWiseLeadConversion');
 
 
         Route::get('sales/report/pipelines', 'PipelineController@index');
