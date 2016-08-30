@@ -569,7 +569,7 @@ Vue.component('reference-row', {
         },
 
         canCreateCart() {
-            this.$http.get("/canCreateCart", {
+            this.$http.get("/canCreateReferenceCart", {
                 id: this.lead.id
             })
             .success(function(data){
