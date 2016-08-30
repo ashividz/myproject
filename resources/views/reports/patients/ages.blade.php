@@ -88,8 +88,8 @@
                         <tr>
                             <td>{{$j++}}</td>
                             <td><a href="/lead/{{$patient->lead_id}}/viewPersonalDetails" target="_blank">{{$patient->lead->name or ""}}</a></td>
-                            <td>{{$patient->fee->start_date or ""}}</td>
-                            <td>{{$patient->fee->end_date or ""}}</td>
+                            <td>{{ $patient->fee ? $patient->fee->start_date->format('Y-m-d') : "" }}</td>
+                            <td>{{ $patient->fee ? $patient->fee->end_date->format('Y-m-d') : "" }}</td>
                             <td>{{$patient->nutritionist or ""}}</td>
 
                         @if($patient->lead->gender <>'')
@@ -98,7 +98,7 @@
                             <td class="red"></td>
                         @endif
 
-                            <td>{{$patient->lead->dob}}</td>
+                            <td>{{ $patient->lead->dob ? $patient->lead->dob->format('Y-m-d') : '' }}</td>
 
                         @if($age == '' || $age == 0 || $age == 2016)
                             <td class="red"></td>
@@ -120,6 +120,13 @@
 $(document).ready(function() 
 {
     $('#table-age').dataTable({
+
+        "sPaginationType": "full_numbers",
+        "iDisplayLength": 200,
+        "bPaginate": false
+    });
+
+    $('#table-active').dataTable({
 
         "sPaginationType": "full_numbers",
         "iDisplayLength": 200,

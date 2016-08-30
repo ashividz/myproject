@@ -5,7 +5,15 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             Cart Created Date :</b> <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
+            <input type="checkbox" v-model="pending"> Pending
+            <input type="checkbox" v-model="cod"> COD
+            <button class="btn btn-primary" style="margin:5px 10px" @click="getCarts">Fetch</button>
+            <div class="pull-right">
+                <input type="text" class="form-control" size="7" v-model="cart_id" placeholder="Cart Search" @keyup.enter="search">
+            </div>
+            
         </div>
+        
     </div>
 
     <div v-for="cart in carts">
@@ -70,11 +78,15 @@
                     </div>
                     <div class="col-md-12">
                         <label>Address : </label>
-                        <span v-if="cart.shipping_address">
-                            @{{ cart.shipping_address.city }}, @{{ cart.shipping_address.country }}
+                        <span v-if="cart.shippingAddress">
+                            @{{ cart.shippingAddress.address }}<br>
+                            @{{ cart.shippingAddress.city }}, @{{ cart.shippinAddress.country }}
+                            , @{{ cart.shippingAddress.zip }}
                         </span>
                         <span v-else>
-                            @{{ cart.lead.city }}, @{{ cart.lead.country }}    
+                            @{{ cart.lead.address }}<br>
+                            @{{ cart.lead.city }}, @{{ cart.lead.country }}  
+                            , @{{ cart.lead.zip }}  
                         </span>
                         
                     </div>
@@ -126,6 +138,23 @@
                             </td>
                         @endif
 
+                        </tr>
+                    </table>
+                    <hr>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Name</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Discount</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr v-for='product in cart.products'>
+                            <td>@{{ product.name }}</td>
+                            <td>@{{ product.pivot.quantity }}</td>
+                            <td>@{{ product.pivot.price | currency cart.currency.symbol }}</td>
+                            <td>@{{ product.pivot.discount | discount }}%</td>
+                            <td>@{{ product.pivot.amount | currency cart.currency.symbol }}</td>
                         </tr>
                     </table>
                 </div>
@@ -390,14 +419,23 @@ new Vue({
     data: {
         loading: false,
         carts: [],
+        pending: true,
+        cod: false,
         daterange: '{{ Carbon::now()->subDays(7)->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
         start_date: '',
-        end_date: ''
+        end_date: '',
+        cart_id: ''
     },
 
     ready: function(){
         this.getCarts();
         this.$watch('daterange', function (newval, oldval) {
+            this.getCarts();
+        }),
+        this.$watch('pending', function (newval, oldval) {
+            this.getCarts();
+        }),
+        this.$watch('cod', function (newval, oldval) {
             this.getCarts();
         })
     },
@@ -406,11 +444,25 @@ new Vue({
 
         getCarts() {
             $.isLoading({ text: "Loading" });
-            this.$http.get("/getCartsWithoutInvoice", {
+            this.$http.get("/getCartsForInvoices", {
+                pending: this.pending,
+                cod: this.cod,
                 start_date: this.start_date, 
                 end_date: this.end_date,
             }).success(function(data){
+                this.carts = [];
                 this.carts = data;
+                $.isLoading( "hide" );
+            }).bind(this);
+        },
+
+        search() {
+            $.isLoading({ text: "Loading" });
+            this.$http.post("/searchCart", {
+                id: this.cart_id,
+            }).success(function(data){
+                this.carts = [];
+                if (data) {this.carts.push(data);}                
                 $.isLoading( "hide" );
             }).bind(this);
         }

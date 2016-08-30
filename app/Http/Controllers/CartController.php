@@ -476,4 +476,19 @@ class CartController extends Controller
         return $cart;
     }
 
+    public function search(Request $request)
+    {
+        return Cart::with('products', 'payments.method', 'currency', 'status', 'state', 'proforma', 'comments.creator.employee', 'invoices', 'shippingAddress')
+                    ->with(['source' => function($q) {
+                        $q->select('id', 'source_name as name');
+                    }])
+                    ->with(['lead.patient' => function($q) {
+                        $q->select('id', 'lead_id');
+                    }])
+                    ->with('steps.status', 'steps.state', 'steps.creator.employee')
+                    ->with('creator.employee')
+                    ->with('cre.employee.supervisor.employee')
+                    ->find($request->id);
+    }
+
 }

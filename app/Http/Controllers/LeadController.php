@@ -89,9 +89,9 @@ class LeadController extends Controller
 
         if ($mobile) {
 
-            if (OBD::checkCall($mobile)) {
+            /*if (OBD::checkCall($mobile)) {
                return Redirect::to('/lead/addLead/?phone_no=OBD');
-            };
+            };*/
 
             if (!$mobile) {
                 return $this->index();

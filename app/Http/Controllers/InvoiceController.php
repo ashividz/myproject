@@ -96,12 +96,12 @@ class InvoiceController extends Controller
         }
     } 
 
-    public function getCartsWithoutInvoice(Request $request)
+    public function getCartsForInvoices(Request $request)
     {
         $start_date = $request->start_date ? : Carbon::now()->subDays(30)->format('Y-m-d');
         $end_date = $request->end_date ? : Carbon::now()->format('Y-m-d');
 
-        $carts = Cart::with('products', 'payments.method', 'currency', 'status', 'state', 'proforma', 'comments.creator.employee', 'invoices')
+        $query = Cart::with('products', 'payments.method', 'currency', 'status', 'state', 'proforma', 'comments.creator.employee', 'invoices', 'shippingAddress')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])
@@ -110,18 +110,33 @@ class InvoiceController extends Controller
                     }])
                     ->with('steps.status', 'steps.state', 'steps.creator.employee')
                     ->with('creator.employee')
-                    ->with('cre.employee.supervisor.employee')
-
-                    ->where('status_id', 4)
+                    ->with('cre.employee.supervisor.employee');
+                    
+                    
                     //->where('state_id', 1)
-                    ->whereBetween('created_at', [$start_date, $end_date])
-                    ->orWhere(function($q) use ($start_date, $end_date) {
+                    //->whereBetween('created_at', [$start_date, $end_date])
+                    /*->orWhere(function($q) use ($start_date, $end_date) {
                         $q->whereHas('payments', function($q) {
                             $q->whereIn('payment_method_id', [4,5]);
                         })
-                        ->whereBetween('created_at', [$start_date, $end_date]);                        
-                    })
-                    //->has('invoices', '=', 0)
+                                               
+                    })*/
+        if ($request->pending == 'true') {
+            $query->has('invoices', '=', 0);
+        }
+
+        if ($request->cod == 'true') {
+            $query->whereHas('payments', function($q){
+                    $q->whereIn('payment_method_id', [2, 4])
+                        ->where('status_id', '>', 2);
+                });
+        } else {
+            $query->where('status_id', 4);
+        }
+                    
+        $carts = $query->whereBetween('created_at', [$start_date, $end_date])
+                    ->limit(100)
+                    ->orderBy('id', 'desc')
                     ->get();
 
         return $carts;

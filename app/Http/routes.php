@@ -426,9 +426,11 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'finance', 'logistics', 'registration']], 
+    'roles' => ['admin', 'finance', 'logistics', 'quality', 'registration']], 
     function() {
-        Route::get('getCartsWithoutInvoice', 'InvoiceController@getCartsWithoutInvoice');
+        Route::get('getCartsForInvoices', 'InvoiceController@getCartsForInvoices');
+
+        Route::post('searchCart', 'CartController@search');
 
         Route::get('carts/invoices', function() {
             return view('carts.invoices');
