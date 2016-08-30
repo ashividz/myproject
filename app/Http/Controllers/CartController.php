@@ -460,6 +460,41 @@ class CartController extends Controller
 
     }
 
+
+     public function canCreateReferenceCart(Request $request)
+    {
+        $lead = Lead::find($request->id);
+
+        if (!$lead) {
+            return ['status' => 'false', 'message'  => 'Lead not available'];
+        }
+
+        /*$cart = $lead->hasIncompleteDietCart();
+        if ($cart) {
+            return [
+                'status'    =>  'false', 
+                'message'   =>  'Incomplete Diet cart exists', 
+                'cart'      =>  $cart
+            ];
+        }*/
+
+      if($lead->country == 'IN' && (trim($lead->address) == '' || $lead->zip == 0 || trim($lead->zip) == '' )) {
+
+            return ['status' => 'false', 'message'  => 'Lead details not complete'];
+        }
+
+        if($lead->dob <> '' && $lead->gender <> '' && $lead->email <> '' && $lead->phone <> '' && $lead->country <> '' && $lead->state <> '' && $lead->city <> '' && $lead->source_id <> '') {
+
+            return ['status' => 'true'];
+
+        } else {
+            return ['status' => 'false', 'message'  => 'Lead details not complete'];
+        }
+
+
+    }
+
+
     public function activate($id)
     {
         $cart = Cart::find($id);

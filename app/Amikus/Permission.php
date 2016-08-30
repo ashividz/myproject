@@ -63,11 +63,22 @@ Trait Permission {
         }
         return false;
     }
+
+    
+
     
     //Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || 
     public function canCreateCartForOthers()
     {
         if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('service_tl')) {
+            return true;
+        }
+        return false;
+    }
+
+    public function canCreateReferenceCart()
+    {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service')) {
             return true;
         }
         return false;
