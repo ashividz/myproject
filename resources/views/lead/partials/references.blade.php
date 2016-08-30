@@ -101,7 +101,7 @@
          <div id="loader" v-show="loading" style="text-align:center" >
             <img src="/images/loading.gif">
          </div>
-        <div class="panel-body">
+        <div class="panel-body" style='padding-left: 0px'>
             <table class="table table-bordered">
                 <thead>                 
                     <tr>
@@ -143,7 +143,7 @@
                             <div class="col-sm-6">
                            <label>Shipping Address :</label>
                             <select class="form-control" v-model="shipping_address_id" id="shipping_address">
-                                <option value="">Same as Billing Address</option>
+                                <option value="0">Same as Billing Address</option>
                                 <option v-for="address in lead.addresses" :value="address.id">@{{ address.address_type }}</option>                  
                             </select>
                             </div>
@@ -569,7 +569,7 @@ Vue.component('reference-row', {
         },
 
         canCreateCart() {
-            this.$http.get("/canCreateCart", {
+            this.$http.get("/canCreateReferenceCart", {
                 id: this.lead.id
             })
             .success(function(data){
