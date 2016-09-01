@@ -15,6 +15,7 @@ use App\Models\Dialer\DialerCallBack;
 
 use OwenIt\Auditing\AuditingTrait;
 
+use App\Models\City;
 class Lead extends Model
 {
     use AuditingTrait;
@@ -583,5 +584,114 @@ class Lead extends Model
                     ->whereNotIn('state_id', [2,3])
                     ->first();
     }
-    
+
+     public function getInternationalLocalTime()
+    {
+          $this->maskPhone = false;
+          if ($this->country!='IN'){ 
+            $city = new City;
+            $flag = false;
+            $countryflag = false;
+            $regionflag = false;
+            $cityflag = false;
+
+            if ($this->country && $this->country!='' && $city->where('country_code',$this->country)->first()){
+                $city = $city->where('country_code',$this->country);
+                $flag = true;
+                $this->countryflag = true;
+            }
+           
+
+            if ($this->state && $this->state!='' && strpos($this->state,'.') && $city->where('region_code',trim(explode('.',$lead->state)[1]))->first()){
+                $city = $city->where('region_code',trim(explode('.',$this->state)[1]));
+                $flag = true;
+                $this->regionflag = true;
+            }
+            else
+                $this->regionflag = false;
+
+            if ($this->city && $this->city!='' && $city->where('name',$this->city)->first()){
+                $city = $city->where('name',$this->city);                       
+                $flag = true;
+                $this->cityflag = true;
+            }
+            else
+                $this->$cityflag = false;
+       
+
+        if(isset($this->countryflag) && $this->countryflag)
+        {
+            if(!$this->regionflag && !$this->cityflag)
+              $cities = City::with('timeZoneObject')
+                                ->where('country_code', $this->country)
+                                ->get();
+            
+            if(!$this->regionflag && $this->cityflag)
+                $cities = City::with('timeZoneObject')
+                                ->where('country_code', $this->country)
+                                ->where('name', $this->city)
+                                ->get();
+
+            if($this->regionflag && !$this->cityflag)
+                $cities = City::with('timeZoneObject')
+                                ->where('country_code', $this->country)
+                                ->where('region_code', trim(explode('.',$this->state)[1]))
+                                ->get();
+
+
+            if($this->regionflag && $this->cityflag)
+                $cities = City::with('timeZoneObject')
+                                ->where('country_code', $this->country)
+                                ->where('region_code', trim(explode('.',$this->state)[1]))
+                                ->where('name', $this->city)
+                                ->get();
+
+            $sm = 0;
+            if($cities)
+            {
+                foreach($cities as $city)
+                    if($city->timeZoneObject)
+                        $sm = $sm + $city->timeZoneObject->gmt_offset;
+
+                $avg_gmt = $sm/$cities->count();
+            }
+
+            $carbon = Carbon::now('UTC');        
+            $carbon->addSeconds($avg_gmt*3600);
+            $curr_time = $carbon->toTimeString();
+
+            if ($flag && $city->first() && $city->first()->country_code =='IN');      
+            else
+            {
+                if($city->first())
+                {
+                    
+                    $dt = Carbon::now();
+                    $dk = date("Y-m-d $curr_time");
+                  
+                    $dk2 = date('Y-m-d 8:0:0');
+                    $dk3 = date('Y-m-d 21:59:59');
+                    $to_compare = strtotime($dk);
+                    $start_limit =  strtotime($dk2);
+                    $end_limit = strtotime($dk3);
+                    if($to_compare > $start_limit && $to_compare < $end_limit)
+                    {
+                        $this->maskPhone = false;
+                       // dd($lead->maskPhone);
+                    }
+                    else
+                    {
+                        $this->maskPhone = true;
+                        //dd($lead->maskPhone);
+                    }
+                    $this->current_time = $curr_time ;
+
+                }
+                
+            }
+        }
+    }
+      return $this->maskPhone;
+    }
+   
 }
