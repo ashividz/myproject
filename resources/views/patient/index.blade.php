@@ -52,14 +52,14 @@
   					<label class="form-control">Age : {{trim($patient->lead->dob)<>''?$patient->lead->dob->diff(Carbon::now())->format('%y years, %m months and %d days') : ''}}  					 
   					</label>
   					<label class="form-control">N : {{ $patient->nutritionist }}</label>
-                <?php $lead->getInternationalLocalTime(); ?> 
+                <?php $patient->lead->getInternationalLocalTime(); ?> 
   				@if($patient->lead->dnc)
   					<label class="form-control">DNC</label>
-  				@else@elseif($lead->maskPhone)
-                <p class="form-control redtime" style=''>Local Time:  {{($lead->current_time)? date("h:i:s a", strtotime($lead->current_time)): ''}}</p>
-            @else
-                @if(isset($lead->current_time))
-                <p class="form-control greentime" style=''>Local Time:  {{($lead->current_time)? date("h:i:s a", strtotime($lead->current_time)): ''}}</p>
+  				@elseif($patient->lead->maskPhone)
+                <p class="form-control redtime" style=''>Local Time:  {{($patient->lead->current_time)? date("h:i:s a", strtotime($patient->lead->current_time)): ''}}</p>
+                 @else
+                @if(isset($patient->lead->current_time))
+                <p class="form-control greentime" style=''>Local Time:  {{($patient->lead->current_time)? date("h:i:s a", strtotime($patient->lead->current_time)): ''}}</p>
                 @endif
 					<label class="form-control">P : {!! $patient->lead->phone or '' !!} 
 						<a href="{{Lead::dialerUrl($patient->lead->phone)}}" target="_blank"><i class='fa fa-phone pull-right'></i></a>
