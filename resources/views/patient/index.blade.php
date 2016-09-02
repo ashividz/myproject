@@ -52,7 +52,7 @@
   					<label class="form-control">Age : {{trim($patient->lead->dob)<>''?$patient->lead->dob->diff(Carbon::now())->format('%y years, %m months and %d days') : ''}}  					 
   					</label>
   					<label class="form-control">N : {{ $patient->nutritionist }}</label>
-                <?php $patient->lead->getInternationalLocalTime(); ?> 
+                <?php $patient->lead->getInternationalLocalTime(); ?>  
   				@if($patient->lead->dnc)
   					<label class="form-control">DNC</label>
   				@elseif($patient->lead->maskPhone)

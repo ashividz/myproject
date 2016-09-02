@@ -193,7 +193,7 @@
 			@elseif($lead->dnc)
 				<label class="form-control">DNC
 				</label>
-		  	@elseif($lead->maskPhone)
+		  	@elseif($lead->maskPhone) 
                 <p class="form-control redtime" style=''>Local Time:  {{($lead->current_time)? date("h:i:s a", strtotime($lead->current_time)): ''}}</p>
             @else
                 @if(isset($lead->current_time))

@@ -587,78 +587,70 @@ class Lead extends Model
 
      public function getInternationalLocalTime()
     {
-          $this->maskPhone = false;
+           $this->maskPhone = false;
           if ($this->country!='IN'){ 
             $city = new City;
             $flag = false;
             $countryflag = false;
             $regionflag = false;
             $cityflag = false;
-
-            if ($this->country && $this->country!='' && $city->where('country_code',$this->country)->first()){
-                $city = $city->where('country_code',$this->country);
-                $flag = true;
-                $this->countryflag = true;
-            }
-           
-
-            if ($this->state && $this->state!='' && strpos($this->state,'.') && $city->where('region_code',trim(explode('.',$lead->state)[1]))->first()){
-                $city = $city->where('region_code',trim(explode('.',$this->state)[1]));
-                $flag = true;
-                $this->regionflag = true;
-            }
-            else
-                $this->regionflag = false;
-
-            if ($this->city && $this->city!='' && $city->where('name',$this->city)->first()){
-                $city = $city->where('name',$this->city);                       
-                $flag = true;
-                $this->cityflag = true;
-            }
-            else
-                $this->$cityflag = false;
-       
-
-        if(isset($this->countryflag) && $this->countryflag)
-        {
-            if(!$this->regionflag && !$this->cityflag)
-              $cities = City::with('timeZoneObject')
-                                ->where('country_code', $this->country)
-                                ->get();
             
+            if (!is_null($this->country) && $this->country!='')
+                if($city->where('country_code',$this->country)->get()){
+                    $city = $city->where('country_code', $this->country);
+                    $flag = true;
+                    $this->countryflag = true;
+                }
+
+            if (!is_null($this->state) && $this->state!='')
+                if(strpos($this->state,'.') && $city->where('region_code',trim(explode('.',$this->state)[1]))->get()){
+                    $city = $city->where('region_code', trim(explode('.',$this->state)[1]));
+                    $flag = true;
+                    $this->regionflag = true;
+                }
+                else
+                    $this->regionflag = false;
+
+            
+            if(!is_null($this->city) && $this->city!='')
+                
+                if($city->where('name', $this->city)->get()){
+                    $city = $city->where('name', $this->city);                       
+                    $flag = true;
+                    $this->cityflag = true;
+                }
+                else
+                    $this->$cityflag = false;
+            
+             
+
+            $cities = City::join('yuwow_alpha_1_0.timezones as t', 't.time_zone_id', '=', 'yuwow_alpha_1_0.cities.timezone');
+           
+        
             if(!$this->regionflag && $this->cityflag)
-                $cities = City::with('timeZoneObject')
-                                ->where('country_code', $this->country)
-                                ->where('name', $this->city)
-                                ->get();
+                $cities = $cities->where('yuwow_alpha_1_0.cities.name', $this->city);
 
             if($this->regionflag && !$this->cityflag)
-                $cities = City::with('timeZoneObject')
-                                ->where('country_code', $this->country)
-                                ->where('region_code', trim(explode('.',$this->state)[1]))
-                                ->get();
+                $cities = $cities->where('yuwow_alpha_1_0.cities.region_code', trim(explode('.',$this->state)[1]));
 
 
             if($this->regionflag && $this->cityflag)
-                $cities = City::with('timeZoneObject')
-                                ->where('country_code', $this->country)
-                                ->where('region_code', trim(explode('.',$this->state)[1]))
-                                ->where('name', $this->city)
-                                ->get();
+                $cities = $cities->where('yuwow_alpha_1_0.cities.region_code', trim(explode('.',$this->state)[1]))
+                                 ->where('yuwow_alpha_1_0.cities.name', $this->city);                
+        
 
-            $sm = 0;
-            if($cities)
-            {
-                foreach($cities as $city)
-                    if($city->timeZoneObject)
-                        $sm = $sm + $city->timeZoneObject->gmt_offset;
-
-                $avg_gmt = $sm/$cities->count();
+            if($this->countryflag)
+                $cities = $cities->selectRaw("AVG(t.gmt_offset) as avg_gmt")->get();
+            else
+                $cities = $cities->selectRaw("t.gmt_offset as avg_gmt")->get();
+           
+            if($cities && $cities->count())
+            {   
+                $avg_gmt = $cities->first()->avg_gmt;
+                $carbon = Carbon::now('UTC');        
+                $carbon->addSeconds($avg_gmt*3600);
+                $curr_time = $carbon->toTimeString();
             }
-
-            $carbon = Carbon::now('UTC');        
-            $carbon->addSeconds($avg_gmt*3600);
-            $curr_time = $carbon->toTimeString();
 
             if ($flag && $city->first() && $city->first()->country_code =='IN');      
             else
@@ -687,11 +679,9 @@ class Lead extends Model
                     $this->current_time = $curr_time ;
 
                 }
-                
             }
-        }
-    }
-      return $this->maskPhone;
+       }
+        return $this->maskPhone;
     }
    
 }
