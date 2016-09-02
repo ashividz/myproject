@@ -335,15 +335,15 @@ class LeadController extends Controller
         try {
 
             $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
-                            ->where('crl.phonenumber', '=', $lead->phone);
+                            ->where('crl.phonenumber', '=', trim($lead->phone));
             
-                if(trim($lead->mobile) <> '' && ( $lead->mobile <> $lead->phone)) {
-                    $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', $lead->mobile);
+                if(trim($lead->mobile) <> '' && ( trim($lead->mobile) <> trim($lead->phone))) {
+                    $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', trim($lead->mobile));
                 }
-            if ( $lead->country=='IN' && Helper::isIndianNumber($lead->phone) )
-                   $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile($lead->phone));
-            if ( $lead->country=='IN' && Helper::isIndianNumber($lead->mobile) )
-                   $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile($lead->mobile));
+            if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->phone)) )
+                   $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->phone)));
+            if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->mobile)) )
+                   $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->mobile)));
                 
             $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
                                     $join->on('crl.disposition', '=', 'c.disponame');
