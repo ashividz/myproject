@@ -34,14 +34,15 @@
 	@endif
 
 	@if(!$lead->patient->doctors->isEmpty())
+		<?php  $doctor = $lead->patient->doctors->sortByDesc('id')->first();?>
 		<div class="col-md-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h2 class="panel-title">Doctor</h2>
 				</div>
 				<div class="panel-body">
-					<label>Dr. {{$lead->patient->doctors->last()->name or ""}}</label><br>
-                    <em class='pull-right'><small>since {{date('jS M, Y', strtotime($lead->patient->doctors->last()->created_at))}}</small></em>
+					<label>Dr. {{$doctor->name or ""}}</label><br>
+                    <em class='pull-right'><small>since {{date('jS M, Y', strtotime($doctor->created_at))}}</small></em>
 				</div>
 			</div>
 		</div>
@@ -55,11 +56,11 @@
 				</div>
 				<div class="panel-body">
 				@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
-					<label>{{$lead->sources->last()->master->source_name or ""}}</label>
-				@elseif($lead->sources->last()->master && ($lead->sources->last()->master->channel->id==5 || $lead->sources->last()->master->channel->id ==6))
-					<label>{{ $lead->sources->last()->master->channel->name or "" }}:{{$lead->sources->last()->master->source_name or ""}}</label>
+					<label>{{$lead->source->master->source_name or ""}}</label>
+				@elseif($lead->source->master && ($lead->source->master->channel->id==5 || $lead->source->master->channel->id ==6))
+					<label>{{ $lead->source->master->channel->name or "" }}:{{$lead->source->master->source_name or ""}}</label>
 				@else
-					<label>{{ $lead->sources->last()->master->channel->name or "" }}</label>
+					<label>{{ $lead->source->master->channel->name or "" }}</label>
 				@endif
 				<br>
                 <small><em class='pull-right'>since {{$lead->source->created_at->format('jS M, Y')}}</em></small>
