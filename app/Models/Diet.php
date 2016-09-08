@@ -76,7 +76,7 @@ class Diet extends Model
             foreach ($diets as $diet) {
                 $body .= Diet::emailBody($diet);
             }                
-
+            //dd($body);
             $body .= Diet::emailFooter();
             
             if(Diet::email($patient, $body)) {
@@ -154,10 +154,39 @@ class Diet extends Model
         $body = str_replace('$lunch', $diet->lunch, $body);
         $body = str_replace('$evening', $diet->evening, $body);
         $body = str_replace('$dinner', $diet->dinner, $body);
-        $body = str_replace('$herbs', $diet->herbs, $body);
+        $hrbs = Diet::nl2list($diet->herbs);
+        //$hrbs =  '<li>' . str_replace("\n", '</li><li>', $diet->herbs) . '</li>';
+        //$hrbs = str_replace('\r\n', '<br>', $hrbs);
+        $body = str_replace('$herbs', $hrbs, $body);
         $body = str_replace('$remarks', $diet->rem_dev, $body);
 
         return $body;
+    }
+
+    public static function nl2list($str, $tag = 'ol')
+    {
+        if(strpos($str, "\n"))
+            $herbs = explode("\n", $str);
+        else
+            $herbs = explode(" + ", $str);
+
+        if($tag=='ol')
+        {
+            $newstring = '<' . $tag . ' style="padding: 0px">';
+
+            foreach ($herbs as $herb) {
+                $newstring .= "<li>" . $herb . "</li>";
+            }
+        }
+        else
+        {   $newstring = "";
+            foreach ($herbs as $herb) {
+                $newstring .= $herb . "<hr style='margin: 4px;border-top: 1px solid #999;width: 100%'>";
+            }
+
+        }
+
+        return $newstring . '</' . $tag . '>';
     }
 
     public static function emailFooter()
