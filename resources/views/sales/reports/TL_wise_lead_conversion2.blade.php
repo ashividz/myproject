@@ -7,6 +7,7 @@
         @if(Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('admin'))
             <span>
                 <select v-model="user">
+                    <option value="0">Select All</option>
                     <option v-for="user in users"  v-bind:value="user.id">@{{ user.name }}</option>
                 </select>
                 <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download</a>
@@ -32,7 +33,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Leads</th> 
-                                <th>Converted before <input type="text" id="conversionDate" v-model="conversionDate" size="15" readonly/></th>
+                                <th>Converted on <input type="text" id="conversionDate" v-model="conversionDate" size="20" readonly/></th>
                                 <th>Conversion %</th>
                             </tr>
                         </thead>
@@ -42,12 +43,12 @@
                                     @{{ cre.name }}
                                 </td>
                                 <td>
-                                 <a href="/cre/@{{ cre.id }}/leads/includeChurned?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
+                                 <a href="/cre/@{{ cre.id }}/leads/includeChurned?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}&conversion_start_date=@{{ encodeURIComponent(conversion_start_date) }}&conversion_end_date=@{{ encodeURIComponent(conversion_end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
                                    <b>@{{ cre.leads }}</b>
                                    </a>
                                 </td>
                                 <td>
-                                <a href="/cre/@{{ cre.id }}/leads/converted/?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">                                        
+                                <a href="/cre/@{{ cre.id }}/leads/churnedConverted/?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}&conversion_start_date=@{{ encodeURIComponent(conversion_start_date) }}&conversion_end_date=@{{ encodeURIComponent(conversion_end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">                                        
                                    <b>@{{ cre.converted }}</b>
                                    </a>
                                 </td>
@@ -88,8 +89,10 @@
             daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
             start_date: '',
             end_date: '',
-            conversion_last_date: '',
-            conversionDate: '{{ Carbon::now()->format('Y-m-d') }}'
+            conversion_start_date: '',
+            conversion_end_date: '',
+            conversionDate: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
+            
         },
 
         ready: function(){
@@ -122,6 +125,8 @@
                     'user_id' : this.user,
                     start_date: this.start_date, 
                     end_date: this.end_date,
+                    conversion_start_date: this.conversion_start_date,
+                    conversion_end_date: this.conversion_end_date,
                     conversion_last_date: this.conversion_last_date
                      }, function(cres){
                     this.cres = cres;
@@ -143,9 +148,15 @@
                 var range = this.daterange.split(" - ");
                 return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
             },
-            conversion_last_date() {
-                var range = this.conversionDate;
-                return moment(range).format('YYYY-MM-DD') + ' 23:59:59';
+
+             conversion_start_date() {
+                var range = this.conversionDate.split(" - ");
+                return moment(range[0]).format('YYYY-MM-DD') + ' 0:0:0';
+            },
+
+            conversion_end_date() {
+                var range = this.conversionDate.split(" - ");
+                return moment(range[1]).format('YYYY-MM-DD') + ' 23:59:59';
             }
         }
     })
@@ -155,6 +166,7 @@
     })
 
     vm.$watch('daterange', function (newval, oldval) {
+        this.conversionDate = this.daterange;
         this.getReport();
     })
 
@@ -234,8 +246,7 @@ $(document).ready(function()
 
      $('#conversionDate').daterangepicker(
     {   
-        singleDatePicker: true,
-        showDropdowns: true,
+        
         ranges: 
         {
             'Today': [new Date(), new Date()],
@@ -252,6 +263,10 @@ $(document).ready(function()
     {   
         $('#conversionDate').trigger('change'); 
     });
+
+    $('#modal').on('hidden.bs.modal', function () {
+       $('#modal tbody').html("");//location.reload();
+    }) 
 });
 </script>                   
 </div>
