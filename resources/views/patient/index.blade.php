@@ -52,10 +52,15 @@
   					<label class="form-control">Age : {{trim($patient->lead->dob)<>''?$patient->lead->dob->diff(Carbon::now())->format('%y years, %m months and %d days') : ''}}  					 
   					</label>
   					<label class="form-control">N : {{ $patient->nutritionist }}</label>
-
+                <?php $patient->lead->getInternationalLocalTime(); ?>  
   				@if($patient->lead->dnc)
   					<label class="form-control">DNC</label>
-  				@else
+  				@elseif($patient->lead->maskPhone)
+                <p class="form-control redtime" style=''>Local Time:  {{($patient->lead->current_time)? date("h:i:s a", strtotime($patient->lead->current_time)): ''}}</p>
+                 @else
+                @if(isset($patient->lead->current_time))
+                <p class="form-control greentime" style=''>Local Time:  {{($patient->lead->current_time)? date("h:i:s a", strtotime($patient->lead->current_time)): ''}}</p>
+                @endif
 					<label class="form-control">P : {!! $patient->lead->phone or '' !!} 
 						<a href="{{Lead::dialerUrl($patient->lead->phone)}}" target="_blank"><i class='fa fa-phone pull-right'></i></a>
 					</label>
@@ -84,3 +89,17 @@
 @else
 	<h4>NOT AUTHORIZED</h4>
 @endif
+<style type="text/css">
+
+    .redtime
+    {
+        background: #ac3939;
+        color: #ffffff;
+    }
+     .greentime
+    {   
+        background: #2d8659;
+        background: #9fdfbf;
+        color: #333;
+    }
+</style>

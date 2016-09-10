@@ -166,7 +166,9 @@
 		  		<div class="panel-title pull-right" data-html="true" data-toggle="popover" title="Lead Details" data-content="{!! $data !!}"><i class="fa fa-info-circle"></i></div>
 		    	<h1 class="panel-title"><?php echo $lead->name;?></h1>
 		  	</div>
-		  	<div class="panel-body">			  	
+		  	<div class="panel-body">	
+            <?php $lead->getInternationalLocalTime(); ?> 
+                		  	
 		  		<label class="form-control">Lead Id : <?php echo $lead->id;?></label>
 
 		  		<label class="form-control">Patient Id :   				
@@ -191,7 +193,12 @@
 			@elseif($lead->dnc)
 				<label class="form-control">DNC
 				</label>
-		  	@else
+		  	@elseif($lead->maskPhone) 
+                <p class="form-control redtime" style=''>Local Time:  {{($lead->current_time)? date("h:i:s a", strtotime($lead->current_time)): ''}}</p>
+            @else
+                @if(isset($lead->current_time))
+                <p class="form-control greentime" style=''>Local Time:  {{($lead->current_time)? date("h:i:s a", strtotime($lead->current_time)): ''}}</p>
+                @endif
 				<label class="form-control">P : {{$lead->phone}} <a href="{{Lead::dialerUrl($lead->phone)}}" target="_blank"><i class='fa fa-phone pull-right'></i></a>
 				</label>
 				<label class="form-control"> M : {{$lead->mobile}} <a href="{{Lead::dialerUrl($lead->mobile)}}" target="_blank"><i class='fa fa-phone pull-right'></i></a>
@@ -203,6 +210,12 @@
             @endif
 				<label class="form-control" id="status">
 				</label>
+
+             
+                   
+                   
+
+                
 		  	</div>
 		</div>
 	</div>
@@ -240,6 +253,17 @@ $(document).ready(function(){
 		max-width: 1024px;
 		color: #444;
 	}
+    .redtime
+    {
+        background: #ac3939;
+        color: #ffffff;
+    }
+     .greentime
+    {   
+        background: #2d8659;
+        background: #9fdfbf;
+        color: #333;
+    }
 </style>
 
 @endif
