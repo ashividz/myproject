@@ -7,6 +7,7 @@
         @if(Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('admin'))
             <span>
                 <select v-model="user">
+                    <option value="0">Select All</option>
                     <option v-for="user in users"  v-bind:value="user.id">@{{ user.name }}</option>
                 </select>
                 <a id="downloadCSV" class="btn btn-primary pull-right" style="margin-bottom:2em;">download</a>
