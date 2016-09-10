@@ -90,7 +90,7 @@
 
 			$when = rtrim($when, "& ");
 			$herbs .= ' ('.$when.') '; 
-			$herbs .= " + ";
+			$herbs .= " \n ";
 		}
 
 		$herbs = rtrim($herbs, " + ");
@@ -333,7 +333,7 @@
 							<i class="fa fa-copy pull-right blue" title="dinner"></i>
 						</td>
 						<td>
-							<div class="herbs">{{$diet->herbs}}</div>
+							<div class="herbs">{!!App\Models\Diet::nl2list($diet->herbs, 'hr')!!}</div>
 							<i class="fa fa-copy pull-right blue" title="herbs"></i>
 						</td>
 						 <td>
