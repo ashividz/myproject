@@ -18,8 +18,12 @@
             
         @foreach($orders as $order)
              <div class="panel panel-info">
-                <div class="panel-heading"></div>
-                <div class="panel-body">
+                <div class="panel-heading {{($order->cart->benefitCart)?'benefitCarthead':''}}">
+                    @if($order->cart->benefitCart)
+                    <div class='referencesticker'>Reference Benefit</div>
+                    @endif
+                </div>
+                <div class="panel-body {{($order->cart->benefitCart)?'benefitCart':''}}">
                     <div class="col-md-2">
                         <div>
                             <label>Cart No : </label>
@@ -131,3 +135,19 @@
         $("#form").submit();
     });
 </script>
+<style>
+.benefitCart
+{
+    background: #d5f1f6;
+}
+.referencesticker
+{
+  color: #0d383f;
+  z-index: 999;
+  padding: 5px 20px;
+}
+.benefitCarthead
+{
+  padding: 0px !important;
+}
+</style>
