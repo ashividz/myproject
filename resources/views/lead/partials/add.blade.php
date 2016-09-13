@@ -123,6 +123,12 @@ $(document).ready(function()
             else if (field.id == 13 || field.id == 16 || field.id == 17 || field.id == 26) {
                 $("#source").append("<option value='" + field.id + "'> " + field.source_name + "</option>");
             } 
+            @if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('b2b'))
+            //for corporate leads
+            if ( field.channel_id==5 ) {
+                $("#source").append("<option value='" + field.id + "' selected> " + field.source_name + "</option>");
+            }
+            @endif
             
         });
     });
