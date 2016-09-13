@@ -142,7 +142,7 @@
 }
 .referencesticker
 {
-  color: #0d383f;
+  color: #09252a;
   z-index: 999;
   padding: 5px 20px;
 }
