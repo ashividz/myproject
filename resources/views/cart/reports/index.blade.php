@@ -53,14 +53,19 @@
     </div>
 </div>
 <template id="cart-field">
-    <div class="panel panel-info">
+    <div class="panel panel-info" v-bind:class="{'benefitCart': cart.benefitCart}">
         <div class="panel-heading">
             <div class="col-md-12">                
                 <div class="pull-right" @click="toggleExpand">
                     <i class="fa @{{ !expand ? 'fa-plus-circle' : 'fa-minus-circle' }} fa-2x"></i>
                 </div>
+                <div class='pull-left order_placed' v-show="cart.status_id==4 && cart.state_id==3" >
+                    Order Placed
+                </div>
                 <hr>
             </div>
+
+            
             <div class="row">
                 <div class="col-md-2">
                      <div>
@@ -649,9 +654,30 @@ Vue.component('cartField', {
 
     ready: function() {
         this.carriers = this.$parent.carriers;
+        this.isBenefitCart();
     },
 
     methods: {
+
+
+        isBenefitCart(){
+            this.$http.get("/cart/isBenefitCart/" + this.cart.id).success(function(data){
+                if(data)
+                {
+                  this.cart = Object.assign({}, this.cart, { benefitCart: true});
+                    if(this.cart.state_id=='2')
+                        this.cancelled = true; 
+                }
+                else
+                    this.cart = Object.assign({}, this.cart, { benefitCart: false});
+            })
+            .error(function(data){
+                
+            })
+            .bind(this);
+
+        },
+
         toggleExpand() {
             this.expand = !this.expand;
         },
@@ -880,6 +906,16 @@ $(document).ready(function()
   height: 0;
   padding: 0 10px;
   opacity: 0;
+}
+.panel.benefitCart >.panel-heading,  .panel.benefitCart>.panel-body
+{
+    background: #e0ebeb;
+   background: #ffe6cc !important;
+}
+.order_placed
+{
+    
+    color: #444;
 }
 </style>
 @endsection
