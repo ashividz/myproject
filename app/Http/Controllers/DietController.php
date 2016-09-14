@@ -102,7 +102,7 @@ class DietController extends Controller
         $diet->lunch = trim($request->lunch);
         $diet->evening = trim($request->evening);
         $diet->dinner = trim($request->dinner);
-        $diet->herbs = trim($request->herbs);
+        $diet->herbs = $this->getHerbs($patient);
         $diet->rem_dev = trim($request->rem_dev);
         $diet->save();
 
@@ -145,6 +145,8 @@ class DietController extends Controller
 
         $diet = Diet::find($request->id);
 
+        $patient = Patient::find($diet->patient_id);
+
         //$diet->date = date('Y-m-d', strtotime($request->date));
 
         $diet->weight = $request->weight;
@@ -155,7 +157,7 @@ class DietController extends Controller
         $diet->lunch = $request->lunch;
         $diet->evening = $request->evening;
         $diet->dinner = $request->dinner;
-        $diet->herbs = $request->herbs;
+        $diet->herbs = $this->getHerbs($patient);
         $diet->rem_dev = $request->rem_dev;
         $diet->save();
 
@@ -197,6 +199,37 @@ class DietController extends Controller
                     ->get();
 
         dd($patients2);
+    }
+
+    private function getHerbs($patient)
+    {
+        $herbs = '';
+        if ($patient->herbs) {
+
+            foreach ($patient->herbs as $herb) {
+
+                $when = '';
+
+                $herbs .= $herb->herb->name." : ".$herb->quantity." ";
+                $herbs .= $herb->unit?$herb->unit->name:"";
+                $herbs .= " ".$herb->remark;
+
+                //if(isset($herb->mealtimes)) {
+                foreach ($herb->mealtimes as $mealtime) {
+                    $when .= $mealtime->mealtime ? $mealtime->mealtime->name . ' & ' : '' ;
+                }
+                //}     
+
+                $when = rtrim($when, "& ");
+                $herbs .= ' ('.$when.') '; 
+                $herbs .= " \n ";
+            }
+
+            $herbs = rtrim($herbs, " + ");
+        }
+
+        return trim($herbs);
+
     }
 
 }

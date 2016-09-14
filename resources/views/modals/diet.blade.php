@@ -46,7 +46,11 @@
 					<tr>				
 						<td><textarea name="evening" id="evening" cols="30">{{ $diet->evening}}</textarea></td>
 						<td><textarea name="dinner" id="dinner" cols="30">{{ $diet->dinner}}</textarea></td>
-						<td><textarea name="herbs" id="herbs" cols="30">{{ $diet->herbs}}</textarea></td>
+						<td>
+							<div style="height:7em;width:25 em;overflow:scroll;">
+							{{ $diet->herbs}}
+							</div>
+						</td>
 						<td><textarea name="rem_dev" id="rem_dev" cols="30">{{ $diet->rem_dev}}</textarea></td>
 					</tr>
 					
