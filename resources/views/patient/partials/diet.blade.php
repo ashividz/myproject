@@ -248,9 +248,9 @@
 							<div id="dinner-list" class="diet-list"></div>
 						</td>
 						<td>
-							<div><label>Herbs:</label></div>
-							<textarea name="herbs" id="herbs" class="diet-area" placeholder="Herbs">{!!$herbs!!}</textarea>
-							<div id="herbs-list" class="diet-list"></div>
+							<div style="height:6em;width:25em;overflow:scroll;">
+								{!!$herbs!!}							
+							</div>
 						</td>
 						<td>
 							<div><label>Remarks/Deviations:</label></div>
