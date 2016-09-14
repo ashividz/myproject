@@ -284,9 +284,9 @@
                         <li>
                             <a href="/creLeadConversionWithChurned" id="menu_sales_lead_status">CRE Leads & Conversion With Churned</a>
                         </li>
-                        <li>
+                        <li> 
                             <a href="/channelWiseLeadConversion" id="menu_sales_lead_status">Channel Wise Leads Created & Assigned</a>
-                        </li>
+                        </li> 
                         <li>
                             <a href="/sales/report/pipelines" id="menu_sales_lead_status">Hot Pipelines</a>
                         </li>
