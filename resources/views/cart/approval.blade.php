@@ -432,6 +432,7 @@ Vue.component('cartApproval', {
             remark: '',
             discount_id: '',
             state: '',
+            referenceCartApprover: {{(Auth::user()->hasRole('marketing'))?'true':'false'}},
             cancelled: false
         }
     },
@@ -492,7 +493,8 @@ Vue.component('cartApproval', {
                         this.discount_id = data.discount_id;
                         this.approveDiscount = true;
                     }
-                    
+                    if(this.cart.benefitCart && !this.referenceCartApprover)
+                        this.approveDiscount = false;
                 }).bind(this);
 
             } else if (this.cart.status_id == 3) {
