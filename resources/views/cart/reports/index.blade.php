@@ -14,6 +14,9 @@
                     CRE : <input type="radio" name="role" value="cre" v-model="role" debounce="5000" > 
                 </span>
             </div> 
+
+           
+
             <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
                 <span>
                     All : <input type="radio" v-model="filter" debounce="5000" value="all" checked>
@@ -30,7 +33,16 @@
                 <span style="margin-left:30px">
                     Shipping : <input type="radio" v-model="filter" debounce="5000" value="shipping">
                 </span> 
-            </div>  
+            </div> 
+
+             <div class="" style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
+                All : <input type="radio" name="role" value="all" v-model="referenceFilter" debounce="5000" checked>
+                <span style="margin-left:5px">
+                    Reference : <input type="radio" name="role" value="reference" v-model="referenceFilter" debounce="5000" >   
+                </span>
+               
+            </div> 
+
             <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
                 <span>
                     Diets : <input type="checkbox" v-model="categories" value="1" debounce="5000" checked>
@@ -767,6 +779,7 @@ new Vue({
         end_date: '',
         role: '',
         filter: '',
+        referenceFilter: '',
         categories: [],
         carriers: [],
     },
@@ -781,6 +794,9 @@ new Vue({
             this.getCarts();
         });
         this.$watch('filter', function (newval, oldval) {
+            this.getCarts();
+        })
+        this.$watch('referenceFilter', function (newval, oldval) {
             this.getCarts();
         })
         this.$watch('categories', function (newval, oldval) {
@@ -802,6 +818,7 @@ new Vue({
                 pi: this.pi,
                 filter: this.filter,
                 categories: this.categories,
+                referenceFilter: this.referenceFilter
             }).success(function(data){
                 this.carts = data;
                 $.isLoading( "hide" );
@@ -915,7 +932,8 @@ $(document).ready(function()
 .order_placed
 {
     
-    color: #444;
+    color: #1c4263;
+    font-weight: bold;
 }
 </style>
 @endsection
