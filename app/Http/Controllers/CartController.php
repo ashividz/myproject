@@ -356,6 +356,11 @@ class CartController extends Controller
                 break; 
         }
 
+        if(isset($request->referenceFilter) && $request->referenceFilter=='reference')
+        {
+            $carts = $carts->has('benefitCart', '>', 0);
+        }
+
         $carts = $carts->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->orderBy('id', 'desc')
                     ->get();

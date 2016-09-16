@@ -206,6 +206,11 @@ class Cart extends Model
       return $benefitCart;
     }
 
+     public function benefitCart()
+    {
+     return $this->hasOne(BenefitCart::class)->latest();
+    }
+
     public static function setDietDuration($cart)
     {
         $amount = $cart->getDietAmount();

@@ -105,7 +105,7 @@
                             <div class="col-md-3">                                
                                 <input type="radio" v-model="state" value="2" @click="canApproveCart"> Reject 
                             </div>   
-                            <div class="col-md-3" v-show="!cancelled">
+                            <div class="col-md-3" v-show="!cancelled && showButton">
                                 <button class="btn btn-primary" v-bind:disabled="!state || !approvePayment || !approveDiscount || loading" @click="approve">Save</button>
                             </div>                           
                         </div> 
@@ -432,6 +432,7 @@ Vue.component('cartApproval', {
             remark: '',
             discount_id: '',
             state: '',
+            showButton: true,
             cancelled: false
         }
     },
@@ -454,6 +455,9 @@ Vue.component('cartApproval', {
                 }
                 else
                     this.cart = Object.assign({}, this.cart, { benefitCart: false});
+                var referenceCartApprover = {{(Auth::user()->hasRole('marketing'))?'true':'false'}};
+                if(this.cart.benefitCart && !referenceCartApprover)
+                        this.showButton = false;
             })
             .error(function(data){
                 

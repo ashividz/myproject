@@ -290,7 +290,7 @@
             <td>@{{reference.pivot.created_at}}</td>
             <td>@{{reference.pivot.sourced_by}}</td>
             <td>
-            <input v-if="reference.patient && !benefited" type="checkbox" @click="getBen()" name="check[]" v-model="selected" value="@{{reference.id}}">
+            <input v-if="reference.patient && !benefited && roleCheck" type="checkbox" @click="getBen()" name="check[]" v-model="selected" value="@{{reference.id}}">
             <a v-show="benefit && benefit.bcart.cart_id" target='blank' href='/cart/@{{ benefit.bcart.cart_id }}' >@{{ benefit.bcart.cart_id }}</a>
             </td>
         </tr>
@@ -310,7 +310,8 @@ Vue.component('reference-row', {
      active: false,
      loading: false,
      benefited: false,
-     benefit: ''
+     benefit: '',
+     roleCheck: {{(Auth::user()->hasRole('cre'))?'false':'true'}}
     }
     },
     created: function () {
