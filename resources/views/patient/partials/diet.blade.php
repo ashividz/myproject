@@ -261,7 +261,7 @@
 			</table>
 
 			<div class="form-group">
-				<button class="btn btn-primary" name="email" {{date('Y-m-d') > $patient->fee->end_date->format('Y-m-d') ? 'disabled' : ''}}>Add Diet</button>
+				<button class="btn btn-primary" name="email" {{date('Y-m-d') > $fee->end_date->format('Y-m-d') ? 'disabled' : ''}}>Add Diet</button>
 				<!--<input type="text" placeholder="Weight" size="5" name="weight" {{ old('weight')}}>-->
 				
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">

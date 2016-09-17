@@ -74,19 +74,21 @@
 <script type="text/javascript" src="/js/modals/cre.js"></script>
 <script type="text/javascript" src="/js/modals/source.js"></script>
 <?php	
-	if(isset($lead->patient->fee)) {
+	$fee = $lead->patient->cfee ? $lead->patient->cfee : $lead->patient->fee;
+	
+	if(isset($fee)) {
 		$remaining_days = 0;
-		$remaining_days = date('Y/m/d') < date('Y/m/d', strtotime($lead->patient->fee->end_date)) ? "<strong>" . floor((strtotime($lead->patient->fee->end_date) - strtotime(date('Y/m/d')))/(60*60*24)) . "</strong> days remaining" : "Program has finished";
+		$remaining_days = date('Y/m/d') < date('Y/m/d', strtotime($fee->end_date)) ? "<strong>" . floor((strtotime($fee->end_date) - strtotime(date('Y/m/d')))/(60*60*24)) . "</strong> days remaining" : "Program has finished";
 
-		$now = date('Y-m-d') > $lead->patient->fee->end_date ? $lead->patient->fee->end_date : date('Y-m-d');            
-		$days = floor((strtotime(date($now)) - strtotime($lead->patient->fee->start_date))/(60*60*24));
-		$totalDays = floor((strtotime($lead->patient->fee->end_date) - strtotime($lead->patient->fee->start_date))/(60*60*24));
+		$now = date('Y-m-d') > $fee->end_date ? $fee->end_date : date('Y-m-d');            
+		$days = floor((strtotime(date($now)) - strtotime($fee->start_date))/(60*60*24));
+		$totalDays = floor((strtotime($fee->end_date) - strtotime($fee->start_date))/(60*60*24));
 		$progressPercentage = $totalDays > 0 ? floor((($days)/$totalDays)*100) : 0;
 	}
 		
 ?>
 
-@if(isset($lead->patient->fee))
+@if($fee)
 <div class="container">
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -107,20 +109,20 @@
 				</tr>
 
 	<?php
-		$days = floor((strtotime($lead->patient->fee->end_date) - strtotime($lead->patient->fee->start_date))/(60*60*24));
+		$days = floor((strtotime($fee->end_date) - strtotime($fee->start_date))/(60*60*24));
 
 		$diet = 0; //Diet Count
 
 	?>
 				<tr>
 					<td>
-						<h6>{{ $lead->patient->fee->start_date ? date('l\, jS F\, Y', strtotime($lead->patient->fee->start_date)) : "" }}</h6>
+						<h6>{{ $fee->start_date ? date('l\, jS F\, Y', strtotime($fee->start_date)) : "" }}</h6>
 					</td>
 					<td>
 						<h6 align="center">Total days : {{$days}}</h6>
 					</td>
 					<td>
-						<h6 class="pull-right">{{ $lead->patient->fee->end_date ? date('l\, jS F\, Y', strtotime($lead->patient->fee->end_date)) : "" }}</h6>
+						<h6 class="pull-right">{{ $fee->end_date ? date('l\, jS F\, Y', strtotime($fee->end_date)) : "" }}</h6>
 					</td>
 				</tr>
 
@@ -133,7 +135,7 @@
 						@for($i = 0; $i < $days; $i++)
 	<?php
 		$color = '#ca4e4e';
-		$dt = date('Y-m-d', strtotime('+ '.$i.' days', strtotime($lead->patient->fee->start_date)));
+		$dt = date('Y-m-d', strtotime('+ '.$i.' days', strtotime($fee->start_date)));
 		if($lead->patient->diets->where('date_assign', $dt)->first())
 		{
 			$color = '#addf58';

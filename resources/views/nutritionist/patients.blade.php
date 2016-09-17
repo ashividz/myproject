@@ -46,6 +46,7 @@
 	$date = $patient->advance_diet ? $carbon->now()->addDays($patient->advance_diet) : $carbon->today();
 	$date = $date->addDay(1)->format('Y-m-d');
 	$diet = $patient->diets->where('date_assign', $date)->where('email', '1')->first();
+	$fee  = $patient->cfee ? $patient->cfee : $patient->fee;
 ?>
 
 	@if(!$diet)				
@@ -81,7 +82,7 @@
 							<td><div class="article"><div class="description"><p>{{$patient->suit->trial_plan or ""}}</p><a href="#more" class="more grad"></a></div></div></td>
 
 							<td><div class="pull-left" data-html="true" data-toggle="popover" title="Notes" data-content="{!!$notes==''?'No Note':$notes!!}"><a href="/patient/{{$patient->id}}/notes" target="_blank"><i class="fa fa-sticky-note fa-2x {{$patient->notes->isEmpty() ? 'red': 'green'}}"></i></a></div>@if($patient->notes->isEmpty())<div class="article"><div class="description"><p>{{$patient->remark}}</p><a href="#more" class="more grad"></a></div></div>@endif
-							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$patient->fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$patient->fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
+							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
 
 							<td>{{!$patient->diets->isEmpty()?date('d-m-Y', strtotime($patient->diets->first()->date_assign)) :''}}</td>
 
@@ -95,15 +96,15 @@
 						}
 				?>
 					
-					@if($dt < $patient->fee->start_date->format('Y-m-d'))
+					@if($dt < $fee->start_date->format('Y-m-d'))
 
 						<td></td>
 
-					@elseif($dt == $patient->fee->start_date->format('Y-m-d'))
+					@elseif($dt == $fee->start_date->format('Y-m-d'))
 
 						<td title="Program Start" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}""><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-play"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
 
-					@elseif($dt == $patient->fee->end_date->format('Y-m-d'))
+					@elseif($dt == $fee->end_date->format('Y-m-d'))
 
 						<td title="Program End" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-stop"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
 
@@ -195,7 +196,7 @@
 							<td><div class="article"><div class="description"><p>{{$patient->suit->trial_plan or ""}}</p><a href="#more" class="more grad"></a></div></div></td>
 
 							<td><div class="pull-left" data-html="true" data-toggle="popover" title="Notes" data-content="{!!$notes==''?'No Note':$notes!!}"><a href="/patient/{{$patient->id}}/notes" target="_blank"><i class="fa fa-sticky-note fa-2x {{$patient->notes->isEmpty() ? 'red': 'green'}}"></i></a></div>@if($patient->notes->isEmpty())<div class="article"><div class="description"><p>{{$patient->remark}}</p><a href="#more" class="more grad"></a></div></div>@endif
-							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$patient->fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$patient->fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
+							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
 
 							<td>{{!$patient->diets->isEmpty()?date('d-m-Y', strtotime($patient->diets->first()->date_assign)) :''}}	</td>
 							<td style="text-align:center"><input type="checkbox" name="advance_diet" id="{{$patient->id}}" class="advance" {{$patient->advance_diet ? 'checked' :''}}  ></td>
@@ -210,15 +211,15 @@
 						}
 				?>
 					
-					@if($dt < $patient->fee->start_date->format('Y-m-d'))
+					@if($dt < $fee->start_date->format('Y-m-d'))
 
 						<td></td>
 
-					@elseif($dt == $patient->fee->start_date->format('Y-m-d'))
+					@elseif($dt == $fee->start_date->format('Y-m-d'))
 
 						<td title="Program Start" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}""><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-play"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
 
-					@elseif($dt == $patient->fee->end_date->format('Y-m-d'))
+					@elseif($dt == $fee->end_date->format('Y-m-d'))
 
 						<td title="Program End" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-stop"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
 
@@ -301,7 +302,7 @@
 							<td><div class="article"><div class="description"><p>{{$patient->suit->trial_plan or ''}}</p><a href="#more" class="more grad"></a></div></div></td>
 
 							<td><div class="pull-left" data-html="true" data-toggle="popover" title="Notes" data-content="{!!$notes==''?'No Note':$notes!!}"><a href="/patient/{{$patient->id}}/notes" target="_blank"><i class="fa fa-sticky-note fa-2x {{$patient->notes->isEmpty() ? 'red': 'green'}}"></i></a></div>@if($patient->notes->isEmpty())<div class="article"><div class="description"><p>{{$patient->remark}}</p><a href="#more" class="more grad"></a></div></div>@endif
-							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$patient->fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$patient->fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
+							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
 						
 						@if(!$patient->diets->isEmpty())
 							<td>{{date('d-m-Y',strtotime($patient->diet->date_assign))}}</td>
@@ -320,15 +321,15 @@
 						}
 				?>
 					
-					@if($dt < $patient->fee->start_date->format('Y-m-d'))
+					@if($dt < $fee->start_date->format('Y-m-d'))
 
 						<td></td>
 
-					@elseif($dt == $patient->fee->start_date->format('Y-m-d'))
+					@elseif($dt == $fee->start_date->format('Y-m-d'))
 
 						<td title="Program Start" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}""><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-play"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
 
-					@elseif($dt == $patient->fee->end_date->format('Y-m-d'))
+					@elseif($dt == $fee->end_date->format('Y-m-d'))
 
 						<td title="Program End" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-stop"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
 
