@@ -25,7 +25,13 @@
                     FedEx : <input type="radio" v-model="filter" debounce="5000" value="fedex">
                 </span>    
                 <span style="margin-left:30px">
-                    Paid : <input type="radio" v-model="filter" debounce="5000" value="paid">
+                    COD : <input type="radio" v-model="filter" debounce="5000" value="cod">
+                </span>    
+                <span style="margin-left:30px">
+                    Confirm Payment : <input type="radio" v-model="filter" debounce="5000" value="payment">
+                </span>    
+                <span style="margin-left:30px">
+                    Place Order : <input type="radio" v-model="filter" debounce="5000" value="order">
                 </span> 
             </div>  
             <div style="display:inline;padding:5px; border:1px solid #eee;margin-left:30px">
@@ -41,6 +47,7 @@
                 <span>
                     Books : <input type="checkbox" v-model="categories" value="4" debounce="5000" checked>
                 </span>  
+                <span><button class="btn btn-primary" @click="getCarts">Search</button></span>
             </div>
         </div>
     </div>
@@ -374,8 +381,6 @@
         </div>
     </div>
 </template>
-@{{methods}}
-@include('partials.modal')
 <script>
 Vue.component('editableField', {
     mixins: [ VueFocus.mixin ],
@@ -570,11 +575,12 @@ new Vue({
     data: {
         //loading: false,
         carts: [],
-        daterange: '{{ Carbon::now()->format('Y-m-01') }} - {{ Carbon::now()->format('Y-m-d') }}',
+        daterange: '{{ Carbon::now()->format('Y-m-d') }} - {{ Carbon::now()->format('Y-m-d') }}',
         start_date: '',
         end_date: '',
         statuses: [0],
-        methods: []
+        methods: [],
+        categories: [],
     },
 
     ready: function(){
@@ -582,6 +588,15 @@ new Vue({
         this.getCartApproverStatuses(),
         this.$watch('daterange', function (newval, oldval) {
             this.getCarts();
+        }),
+        this.$watch('role', function(){
+            this.getCarts();
+        }),
+        this.$watch('filter', function(){
+            this.getCarts();
+        }),
+        this.$watch('categories', function(){
+            //this.getCarts();
         })
     },
 
@@ -592,7 +607,10 @@ new Vue({
             this.$http.get("/api/getCarts", {
                 start_date: this.start_date, 
                 end_date: this.end_date,
-                statuses: this.statuses
+                role: this.role,
+                pi: this.pi,
+                filter: this.filter,
+                categories: this.categories,
             }).success(function(data){
                 this.carts = data;
                 $.isLoading( "hide" );

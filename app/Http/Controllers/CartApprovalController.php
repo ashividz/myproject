@@ -347,8 +347,8 @@ class CartApprovalController extends Controller
                     CartStep::nextStatus($cart->id);
                 }
 
-                 if(isset($request->benefitCart) && $request->benefitCart)
-                   {
+                if(isset($request->benefitCart) && $request->benefitCart)
+                {
                     
                     CartStep::store($request->cart_id, 3, 3, 'Reference Benefit', $discount_id);
                     CartStep::store($request->cart_id, 4, 3, 'Reference Benefit', $discount_id);
@@ -360,7 +360,7 @@ class CartApprovalController extends Controller
                     
                     Order::store($cart, $patient);
                     
-                   }
+                }
 
             } else if ($cart->status_id == 3) {                 
                 

@@ -165,7 +165,7 @@
             </table>
             <div class="col-md-4">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" v-if="status" :disabled="!currency_id || !shipping_address_id || !cre_id" @click="store">Add Cart</button>
+                <button class="btn btn-primary" v-if="status" :disabled="!currency_id ||  !cre_id" @click="store">Add Cart</button>
             </div>
             <div class="col-md-8">
                 <div class="alert alert-danger" v-show="message">

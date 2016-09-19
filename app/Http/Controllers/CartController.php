@@ -347,8 +347,22 @@ class CartController extends Controller
                  });
                 break; 
 
-            case 'paid':
-                $carts = $carts->where('status_id', '>=', 4);
+            case 'cod':
+                $carts = $carts->where('status_id', '=', 3)
+                            ->whereHas('payments', function($q){
+                                $q->whereIn('payment_method_id', [2, 4]);
+                             });
+                break; 
+
+            case 'payment':
+                $carts = $carts->where('status_id', '=', 3)
+                            ->whereHas('payments', function($q){
+                                $q->whereNotIn('payment_method_id', [2, 4]);
+                             });
+                break; 
+
+            case 'order':
+                $carts = $carts->where('status_id', '=', 4)->where('state_id', '=', 1);
                 break; 
 
             case 'shipping':
