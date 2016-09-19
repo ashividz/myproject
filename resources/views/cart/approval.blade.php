@@ -610,6 +610,7 @@ new Vue({
                 role: this.role,
                 pi: this.pi,
                 filter: this.filter,
+                statuses: this.statuses,
                 categories: this.categories,
             }).success(function(data){
                 this.carts = data;
