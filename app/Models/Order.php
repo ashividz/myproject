@@ -43,7 +43,7 @@ class Order extends Model
 
         //$duration = CartProduct::getDietDuration($cart, 1);
         $cart = Cart::setDietDuration($cart);
-
+        $category_id = 1;
         if(Cart::isBenefitCart($cart) && !$cart->hasProductCategories([1]))
         {
             $cart->duration = 1;
