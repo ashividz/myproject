@@ -62,7 +62,7 @@
                         </li>
                         <li>
                             <label>Remarks</label>
-                            <textarea rows="3" cols="50" id="remarks" name="remarks" required>
+                            <textarea rows="3" cols="50" id="remarks" name="remark" required>
                             </textarea>
                         </li>
                     @if(Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('admin'))

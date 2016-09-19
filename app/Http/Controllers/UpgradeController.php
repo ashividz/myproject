@@ -20,12 +20,18 @@ class UpgradeController extends Controller
     public $daterange;
     public $start_date;
     public $end_date;
+    protected $updgrade_4k_source; // upgrade from trial plan
+    protected $trial_period; // upgrade from trial plan
+
 
     public function __construct()
     {
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
-        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');        
+        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');     
+        $this->updgrade_4k_source = 55;
+        $this->trial_period       = 30;
+   
     } 
 
     /**
@@ -95,6 +101,10 @@ class UpgradeController extends Controller
         foreach ($checks as $check) {
             $lead = Lead::find($check);
             
+            if ( $this->isTrialUpgradeSource($lead) ) {
+                $request->source  =  $this->updgrade_4k_source;    
+            }
+            
             LeadSource::saveSource($lead, $request);
             LeadStatus::saveStatus($lead, 1);
             LeadCre::saveCre($lead, $request->cre);
@@ -136,4 +146,15 @@ class UpgradeController extends Controller
 
         return view('home')->with($data) ;
     }
+
+    public function isTrialUpgradeSource($lead)
+    {
+        if ( $lead->patient->fee && ($lead->patient->fee->duration == $this->trial_period) && ($lead->patient->fees()->where('end_date','>=',date('Y-m-d'))->count() < 2) ) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 }
