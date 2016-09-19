@@ -74,7 +74,9 @@
 <script type="text/javascript" src="/js/modals/cre.js"></script>
 <script type="text/javascript" src="/js/modals/source.js"></script>
 <?php	
-	$fee = $lead->patient->cfee ? $lead->patient->cfee : $lead->patient->fee;
+	$fee=null;
+	if($lead->patient)
+		$fee = $lead->patient->cfee ? $lead->patient->cfee : $lead->patient->fee;
 	
 	if(isset($fee)) {
 		$remaining_days = 0;
