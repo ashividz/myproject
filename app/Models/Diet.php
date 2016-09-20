@@ -54,7 +54,7 @@ class Diet extends Model
         $message = '';
         $status = '';
 
-        $diets = Diet::whereIn('id',$request->checkbox)->get();
+        $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
 
         if($request->sms && $patient->lead->country == 'IN')
         {
