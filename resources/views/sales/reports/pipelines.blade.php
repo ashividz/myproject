@@ -30,7 +30,8 @@
                                     <table class="table table-bordered">
                                         <thead v-if="cre.pipelines.length">
                                             <tr>
-                                                <th>Lead</th>
+                                                <th>Lead id</th>
+                                                <th>Lead name</th>
                                                 <th>Date</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
@@ -41,6 +42,9 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="pipeline in cre.pipelines"  class="@{{ pipeline.state.css_class }}">
+                                                <td>
+                                                    <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.id }}</a>
+                                                </td>
                                                 <td>
                                                     <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.name }}</a>
                                                 </td>
@@ -79,7 +83,8 @@
                                     <table class="table table-bordered">
                                         <thead v-if="cre.pipelines.length">
                                             <tr>
-                                                <th>Lead</th>
+                                                <th>Lead id</th>
+                                                <th>Lead name</th>
                                                 <th>Date</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
@@ -90,6 +95,9 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="pipeline in cre.pipelines" class="@{{ pipeline.state.css_class }}">
+                                                <td>
+                                                    <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.id }}</a>
+                                                </td>
                                                 <td>
                                                     <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.name }}</a>
                                                 </td>
@@ -128,7 +136,8 @@
                                     <table class="table table-bordered">
                                         <thead v-if="cre.pipelines.length">
                                             <tr>
-                                                <th>Lead</th>
+                                                <th>Lead id</th>
+                                                <th>Lead name</th>
                                                 <th>Date</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
@@ -139,6 +148,9 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="pipeline in cre.pipelines" class="@{{ pipeline.state.css_class }}">
+                                                <td>
+                                                    <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.id }}</a>
+                                                </td>
                                                 <td>
                                                     <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.name }}</a>
                                                 </td>
@@ -177,7 +189,8 @@
                                     <table class="table table-bordered">
                                         <thead v-if="cre.pipelines.length">
                                             <tr>
-                                                <th>Lead</th>
+                                                <th>Lead id</th>
+                                                <th>Lead name</th>
                                                 <th>Date</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
@@ -188,6 +201,9 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="pipeline in cre.pipelines" class="@{{ pipeline.state.css_class }}">
+                                                <td>
+                                                    <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.id }}</a>
+                                                </td>
                                                 <td>
                                                     <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.name }}</a>
                                                 </td>
@@ -226,7 +242,8 @@
                                     <table class="table table-bordered">
                                         <thead v-if="cre.pipelines.length">
                                             <tr>
-                                                <th>Lead</th>
+                                                <th>Lead id</th>
+                                                <th>Lead name</th>
                                                 <th>Date</th>
                                                 <th>Price</th>
                                                 <th>Discount</th>
@@ -237,6 +254,9 @@
                                         </thead>
                                         <tbody>
                                             <tr v-for="pipeline in cre.pipelines" class="@{{ pipeline.state.css_class }}">
+                                                <td>
+                                                    <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.id }}</a>
+                                                </td>
                                                 <td>
                                                     <a href="/lead/@{{ pipeline.lead.id }}/cart" target="_blank">@{{ pipeline.lead.name }}</a>
                                                 </td>
