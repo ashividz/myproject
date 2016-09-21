@@ -307,7 +307,7 @@
                         <div class="col-md-3">                                
                             <input type="radio" v-model="state" value="2" @click="canApproveCart"> Reject 
                         </div>   
-                        <div class="col-md-3" v-show="!cancelled">
+                        <div class="col-md-3" v-show="!cancelled && showButton">
                             <button class="btn btn-primary" v-bind:disabled="!state || !approvePayment || !approveDiscount" @click="approve">Save</button>
                         </div>  
                         <div class="col-md-8" style="margin-top:20px;">
