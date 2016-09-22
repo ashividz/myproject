@@ -58,7 +58,7 @@
             <div class="panel-heading">
             
             </div>
-            <div class="panel-body">            
+            <div class="panel-body {{($cart->benefitCart)?'benefitCart': ''}}">            
                 <div class="container1">
                     <table class="table">
                         <thead>
@@ -167,7 +167,9 @@
                                     <div class="form-group"> 
                                         <input type="hidden" name="cart[{{$cart->id}}]" value="{{$cart->id}}">
                                         <input type="hidden" name="discount_id" value=""></input>
-                                        <button type="submit" class="btn btn-primary" {{ $disabled }} onclick="this.disabled=true;this.form.submit();">Save</button>
+                                        @if(((Auth::user()->hasRole('marketing')) && $cart->benefitCart) || !$cart->benefitCart)
+                                            <button type="submit" class="btn btn-primary" {{ $disabled }} onclick="this.disabled=true;this.form.submit();">Save</button>
+                                        @endif
                                     </div>  
                             @elseif($cart->status_id == 4 && $cart->state_id <> 3)
                                     <a href="#" onclick="order({{$cart->id}})" class="btn btn-primary">{{ $cart->lead->patient ? '' : 'Register Patient & '}}Place Order</a>
@@ -242,6 +244,15 @@
     }
     table>tbody>tr>td {
         padding: 5px;
+    }
+    .panel-body.benefitCart, .benefitCart .container1 table > thead
+    {
+        background: #e0ebeb;
+       background: #ffe6cc;
+    }
+    .container1 table > thead
+    {
+    color: #404e6c;
     }
 </style>
 @endsection
