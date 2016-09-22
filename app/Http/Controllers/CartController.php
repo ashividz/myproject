@@ -375,7 +375,7 @@ class CartController extends Controller
             $carts = $carts->has('benefitCart', '>', 0);
         }
 
-        $carts = $carts->whereBetween('created_at', [$this->start_date, $this->end_date])
+        $carts = $carts->whereBetween('updated_at', [$this->start_date, $this->end_date])
                     ->orderBy('id', 'desc')
                     ->get();
 
