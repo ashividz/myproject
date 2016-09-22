@@ -364,7 +364,7 @@ class SalesReportController extends Controller
                 $fees = $fees->whereBetween('fees_details.created_at', array($request->conversion_start_date, $request->conversion_end_date));
                
 
-            $fees = $fees->groupBy('fees_details.patient_id')->get();
+            $fees = $fees->get();
            
             $channel_conversion = array_fill(0, 7, 0);
            
@@ -427,7 +427,7 @@ class SalesReportController extends Controller
          
 
        
-        $fees = $fees->groupBy('patient_id')->get();
+        $fees = $fees->get();
                        
                    
          foreach($fees as $fee)

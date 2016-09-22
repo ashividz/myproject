@@ -23,6 +23,8 @@
               <span style='margin-left: 10px'>
               Created <input type='radio' v-model="createAssign" value='created' /> Assigned <input type='radio' v-model="createAssign" value='assigned' />
               </span>
+
+              <button class="btn btn-success" @click="getReport">Submit</button>
         @endif
         </div>
         <div class="panel-body" v-if="cres">
@@ -319,22 +321,6 @@
         }
     })
 
-    vm.$watch('user', function (newval, oldval) {
-        this.getReport();
-    })
-
-    vm.$watch('daterange', function (newval, oldval) {
-        this.conversionDate = this.daterange;
-        this.getReport();
-    })
-
-    vm.$watch('conversionDate', function (newval, oldval) {
-        this.getReport();
-    })
-
-    vm.$watch('createAssign', function (newval, oldval) {
-        this.getReport();
-    }) 
 
     Vue.filter('total', function (list, key1) {
         return list.reduce(function(total, item) {
