@@ -157,6 +157,11 @@ class Lead extends Model
         return $this->hasMany(Cart::class)->orderBy('id', 'desc');
     }
 
+    public function orders()
+    {
+        return $this->hasManyThrough(Order::class,Cart::class);
+    }
+
     public function dialer()
     {
         return $this->hasOne(DialerPush::class, 'lead_id')->latest();

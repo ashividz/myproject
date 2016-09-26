@@ -420,6 +420,12 @@ Route::group([
         Route::get('lead/converted', 'LeadController@converted');
         Route::post('lead/converted', 'LeadController@converted');
         Route::post('api/churnLeads', 'MarketingController@churn');
+
+        /*Product,BT reports*/
+        Route::get('reports/products', 'ProductReportController@products');
+        Route::get('/api/getProductPurchases', 'ProductReportController@getProducts');
+        Route::get('reports/products/repeat_orders', 'ProductReportController@repeatOrders');
+
         
 });
 
