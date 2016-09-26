@@ -8,6 +8,8 @@ use Carbon\Carbon;
 
 use App\Models\ProductCategory;
 use App\Models\Fee;
+use App\Models\Product;
+use App\Models\Cart;
 
 class Order extends Model
 {
@@ -33,6 +35,14 @@ class Order extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function products()
+    {
+        return $this->hasManyThrough(
+            Product::class,
+            CartProduct::class,'cart_id','cart_id'
+        )->where('orders.product_category_id','=','products.product_category_id');
     }
 
     public static function store($cart, $patient = null)

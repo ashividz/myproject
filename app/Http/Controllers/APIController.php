@@ -52,10 +52,12 @@ class APIController extends Controller
 
     public function getUsersByRole(Request $request)
     {
+        if (isset($request->supervisor)) {            
+            return User::getUsersByRole($request->role,$request->supervisor);    
+        }
         return User::getUsersByRole($request->role);
     }
 
-    
 
     public function getVoiceList()
     {

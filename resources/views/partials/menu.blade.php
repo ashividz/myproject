@@ -444,6 +444,12 @@
                         <li>
                             <a href="/lead/converted" id="menu_dnc">Converted</a>
                         </li>
+                        <li>
+                            <a href="/reports/products" id="menu_reports_products">Products</a>
+                        </li>
+                        <li>
+                            <a href="/reports/products/repeat_orders" id="menu_reports_products_repeat_orders">Repeat Orders</a>
+                        </li>
                     </ul>
                 </li>
 
