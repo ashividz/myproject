@@ -125,7 +125,7 @@ $(document).ready(function()
             } 
             @if( Auth::user()->hasRole('admin') || Auth::user()->hasRole('b2b'))
             //for corporate leads
-            if ( field.channel_id==5 ) {
+            if ( field.channel_id==5 || field.channel_id==6 ) {
                 $("#source").append("<option value='" + field.id + "' selected> " + field.source_name + "</option>");
             }
             @endif
