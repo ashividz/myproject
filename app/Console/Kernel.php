@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\Inspire::class,
+        \App\Console\Commands\ProductEmailer::class,
     ];
 
     /**
@@ -24,6 +25,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('product_email:send')
+        ->dailyAt('11:00')
+        ->appendOutputTo('/var/www/html/cron/emaillog')
+        ->before(function () {
+                $status = PHP_EOL.'-----------------------------------------------------------'.PHP_EOL;
+                $status .= 'product_order_email_start_at :'.date('Y-m-d H:i:s').PHP_EOL;
+                exec('echo "'.$status.'" >> '.' /var/www/html/cron/emaillog');
+            })
+        ->after(function() {
+            $status = PHP_EOL.'-----------------------------------------------------------'.PHP_EOL;
+                $status .= 'product_order_email_end_at :'.date('Y-m-d H:i:s').PHP_EOL;
+                exec('echo "'.$status.'" >> '.' /var/www/html/cron/emaillog');
+        });
+
         $schedule->command('inspire')
                  ->hourly();
     }

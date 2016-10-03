@@ -6,6 +6,7 @@ use App\Models\ApproverDiscount;
 use App\Models\ApproverPayment;
 use DateTime;
 use Auth;
+use Blade;
 
 class Helper {
 	public static function emptyStringToNull($string)
@@ -151,4 +152,17 @@ class Helper {
 
 
     }
+
+    public static function renderView($__php, $__data)
+	{
+	    $__php = Blade::compileString($__php);
+	    
+	    $obLevel = ob_get_level();
+	    ob_start();
+	    extract($__data, EXTR_SKIP);
+	    eval('?' . '>' . $__php);
+	    
+	    return ltrim(ob_get_clean());
+	}
+
 }
