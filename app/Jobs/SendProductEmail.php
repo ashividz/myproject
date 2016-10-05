@@ -12,6 +12,7 @@ use App\Models\Email;
 use App\Models\EmailTemplate;
 
 use App\Support\Helper;
+use App\Support\SMS;
 
 use Mail;
 
@@ -76,14 +77,25 @@ class SendProductEmail extends Job implements SelfHandling, ShouldQueue
             }
         });
 
+        $sms = null;
+        
+        if ($lead->country == "IN" && $template->sms <> "" && Helper::isIndianNumber($lead->mobile)) {
+            $sms = $this->sendSMS($lead, $template);
+        }
+
         $email = new Email();
         $email->user_id = 0;
         $email->lead_id = $lead->id;
         $email->email   = $body;
+        $email->sms_response = $sms;
         $email->template_id = $this->emailTemplateId;
         $email->save();
 
     }
 
-
+    private function sendSMS($lead, $template) 
+    {
+        $sms = new SMS();
+        return $sms->send($lead->mobile, $template->sms);
+    }
 }
