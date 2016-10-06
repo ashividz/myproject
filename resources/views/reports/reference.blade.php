@@ -73,6 +73,7 @@
                   <th>Leads Conversions</th>
                   <th>Percentage</th>
                   <th>Conversions in Date Range</th>
+                  <th>Sourced and converted in same Date Range</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,12 +93,14 @@
   $fee = Fee::conversions($start_date, $end_date, 10, $summary->sourced_by);
 ?>
                   <td>{{$fee->count()}}</td>
+                  <td>{{$summary->sameDateRangeConversion }}</td>
                   
                 </tr>
 
             <?php 
               $total_leads += $summary->leads;
               $total_conversions += $summary->conversions;
+              $total_conversions_same_range  += $total_conversions_same_range;
             ?>
 
             @endforeach
@@ -110,6 +113,7 @@
                   <th>{{$total_conversions}}</th>
                   <th>{{$total_leads > 0 ? round($total_conversions/$total_leads*100, 2) : '0'}} %</th>
                   <th>{{Fee::conversions($start_date, $end_date, 10)->count()}}</th>
+                  <th>{{$total_conversions_same_range}}</th>
                 </tr>
               </tfoot>
             </table>       
