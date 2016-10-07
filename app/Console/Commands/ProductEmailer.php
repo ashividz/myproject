@@ -62,12 +62,10 @@ class ProductEmailer extends Command
     public function handle()
     {
         $queuedLeadCount = 0;
-        $leadIds = $this->getLeads();
+        $leads = $this->getLeads();
         
-        foreach ($leadIds as $l) {            
-            $lead = Lead::find($l);
-            if ( trim($lead->country)!='IN' && trim($lead->country !='') )
-                    continue;
+        foreach ($leads as $l) {            
+            $lead = Lead::find($l->id);
             $lastEmail =  Email::where('lead_id',$lead->id)
                             ->where('template_id',$this->emailTemplateId)
                             ->orderBy('created_at','desc')
@@ -93,13 +91,13 @@ class ProductEmailer extends Command
                         $query->where('date_assign', '<=', DB::RAW('DATE_ADD(CURDATE(), INTERVAL -7 DAY)'))
                         ->where('date_assign','>=',DB::RAW('(ifnull((select start_date from fees_details where patient_id = patient_details.id order by end_date desc limit 1),"1970-01-01"))'))  ;
                     })
-                    ->select('id')
+                    ->select('lead_id')
                     ->get();        
         
-        $leads     = Lead::whereIn('id',$patients->pluck('id')->toArray())
-                    ->get()
-                    ->pluck('id')
-                    ->toArray();
+        $leads  = Lead::whereIn('id',$patients->pluck('lead_id')->toArray())
+                    ->whereRaw('(country is null or country = "" or country="IN")')
+                    ->select('id')
+                    ->get();
         
         return $leads;
     }
