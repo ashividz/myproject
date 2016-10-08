@@ -27,7 +27,7 @@ class ProductEmailer extends Command
     protected $signature = 'product_email:send';
     protected $productCategoryId = 2;
     protected $waitDaysAfterDiet = 7;
-    protected $emailDuration     = 7;
+    protected $emailDuration     = 5;
     protected $bfaProductId      = 40;
     protected $emailTemplateId   = 26;
     protected $productKitId      = 8;
@@ -96,6 +96,7 @@ class ProductEmailer extends Command
         
         $leads  = Lead::whereIn('id',$patients->pluck('lead_id')->toArray())
                     ->whereRaw('(country is null or country = "" or country="IN")')
+                    ->orderBy('id','desc')
                     ->select('id')
                     ->get();
         
