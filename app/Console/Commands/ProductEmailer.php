@@ -31,6 +31,7 @@ class ProductEmailer extends Command
     protected $bfaProductId      = 40;
     protected $emailTemplateId   = 26;
     protected $productKitId      = 8;
+    protected $minEndDate;
     protected $herbs;
     protected $herbIDs           = [9,10,11,12,13,14];
 
@@ -51,6 +52,7 @@ class ProductEmailer extends Command
     {
         parent::__construct();
         $this->herbs = Product::whereIn('id',$this->herbIDs)->get();
+        $this->minEndDate = Carbon::today()->subDays(60);
     }
 
 
@@ -82,14 +84,17 @@ class ProductEmailer extends Command
 
     private function getLeads()
     {
-        $leadIds = Cart::whereHas('products',function($query) {
-                        $query->where('product_category_id',$this->productCategoryId)
-                            ->where('products.id','<>',$this->bfaProductId);
-                    })->select('lead_id')->get()->toArray();
-        $patients = Patient::whereNotIn('lead_id',$leadIds)
+        $patients = Patient::whereHas('fees',function($query){
+                        $query->where('end_date','>=',$this->minEndDate);
+                    })
                     ->whereHas('diets',function($query) {
-                        $query->where('date_assign', '<=', DB::RAW('DATE_ADD(CURDATE(), INTERVAL -7 DAY)'))
-                        ->where('date_assign','>=',DB::RAW('(ifnull((select start_date from fees_details where patient_id = patient_details.id order by end_date desc limit 1),"1970-01-01"))'))  ;
+                        $query->where('date_assign', '<=',Carbon::today()->subDays($this->waitDaysAfterDiet));
+                    })
+                    ->whereDoesNtHave('lead',function($query) {
+                        $query->whereHas('carts.products' ,function($q) {
+                            $q->where('product_category_id',$this->productCategoryId)
+                                ->where('products.id','<>',$this->bfaProductId);
+                        });
                     })
                     ->select('lead_id')
                     ->get();        
@@ -99,7 +104,6 @@ class ProductEmailer extends Command
                     ->orderBy('id','desc')
                     ->select('id')
                     ->get();
-        
         return $leads;
     }
 
