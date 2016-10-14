@@ -140,7 +140,7 @@ class ServiceController extends Controller
 
         $patients = Patient::getActivePatients($this->nutritionist);
 
-        $templates = EmailTemplate::get();
+        $templates = EmailTemplate::where('email_template_category_id',1)->get();
 
         $data = array(
             'menu'      => 'service',
@@ -196,7 +196,7 @@ class ServiceController extends Controller
                         $body = str_replace('$nutritionist', $lead->patient->nutritionist, $body);
                     }
 
-                    Mail::queue('templates.emails.empty', array('body' => $body), function($message) use ($lead, $subject, $from)
+                    Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($lead, $subject, $from)
                     {
                        $message->to($lead->email, $lead->name)
                             ->bcc("diet@nutrihealthsystems.co.in")
