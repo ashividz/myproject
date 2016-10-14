@@ -203,6 +203,28 @@
 						</thead>
 						<tbody>
 					@foreach($lead->patient->fees as $fee)
+						<?php
+							$fee_changes  = '<table border=1 padding=2>';
+							$fee_changes .= '<thead><tr><td>adjusted on</td><td>old start date</td><td>new start date</td><td>old end date</td><td>new end date</td><td>first diet after old start date</td></tr></thead><tbody>';
+							foreach ($fee->logs->sortByDesc('created_at') as $log) {
+								$fee_changes .= 
+									'<tr><td>'
+									.$log->created_at->toDayDateTimeString().'</td><td>'
+									.Carbon::parse($log->old_value->start_date)->toFormattedDateString().'</td><td>'
+									.Carbon::parse($log->new_value->start_date)->toFormattedDateString().'</td><td>'
+									.Carbon::parse($log->old_value->end_date)->toFormattedDateString().'</td><td>'
+									.Carbon::parse($log->new_value->end_date)->toFormattedDateString().'</td>';
+									$first_diet= $lead->patient->diets->filter(function($item) use($log){
+										return ($item->email==1) && (Carbon::parse($item->date_assign)->gte(Carbon::parse($log->old_value->start_date)));	
+									})->sortBy('date_assign')->first();
+									$fee_changes .= '<td>';
+									$fee_changes .= $first_diet ? Carbon::parse($first_diet->date_assign)->toFormattedDateString() :'';
+									$fee_changes .= '</td>';
+									$fee_changes .= '</tr>';
+							}
+							$fee_changes .= '</tbody></table>';
+						?>	
+
 							<tr>
 								<td>
 							@if(trim($fee->duration) <> '')
@@ -212,7 +234,12 @@
 							@endif
 							</td>
 								<td>{{ date('jS M, Y', strtotime($fee->entry_date)) }}</td>
-								<td>{{ date('jS M, Y', strtotime($fee->start_date)) }}</td>
+								<td>
+									{{ date('jS M, Y', strtotime($fee->start_date)) }}
+									@if(!$fee->logs->isEmpty())
+										<span data-toggle="popover" data-html="true" title="late start adjust" data-content="{{$fee_changes}}" data-placement="top"><i class="fa fa-info-circle"></i></span>
+									@endif
+								</td>
 								<td>{{ date('jS M, Y', strtotime($fee->end_date)) }}</td>
 								<td>{{ $fee->currency->symbol }} {{ $fee->total_amount }}</td>
 								<td>{{ $fee->cre }}</td>

@@ -15,6 +15,8 @@ use App\Models\LeadStatus;
 use App\Models\Fee;
 use App\Models\User;
 use App\Models\Source;
+use App\Models\Log;
+use App\Models\Diet;
 use Auth;
 use DB;
 
@@ -91,5 +93,77 @@ class PatientRegistrationController extends Controller
         );
         return view('home')->with($data);
 
+    }
+
+    public function showLateStart()
+    {
+        $data = array(
+            'menu'          => 'reports',
+            'section'       => 'registration.lateStart',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,            
+            'i'             => 1
+        );
+        return view('home')->with($data);        
+    }
+
+    public function getLateStart(Request $request)
+    {
+        $feeIds = Log::where('owner_type','App\Models\Fee')
+                    ->whereBetween('created_at',array($request->start_date,$request->end_date))
+                    ->select(DB::raw('distinct(owner_id)'))
+                    ->get()->pluck('owner_id')->toArray();        
+        $total =    Fee::whereIn('id',$feeIds)->select(DB::raw('distinct(patient_id)'))->count();
+
+        $limit   =  $request->limit  && $request->limit >= 0  && $request->limit <= 1000  ? $request->limit  : '20';
+        $offset  =  $request->offset && $request->offset >= 0 && $request->offset < $total ? $request->offset : '0';
+
+        $patientIDs = Fee::whereIn('id',$feeIds)
+                      ->select(DB::raw('distinct(patient_id)'))
+                      ->orderBy('entry_date')
+                      ->take($limit)
+                      ->skip($offset)
+                      ->get()
+                      ->pluck('patient_id')->toArray(); 
+
+        $patients =  Patient::whereIn('id',$patientIDs)
+                        ->with([                                
+                            'fees' => function($query) use($request) {
+                                $query->whereHas('log',function($q) use($request){
+                                        $q->whereBetween('created_at',array($request->start_date,$request->end_date))
+                                            ->where('type','updated')
+                                            ->where('route','Job:AutoAdjustStartDate');
+                                    })
+                                ->with(['log' => function($q) use($request) {
+                                        $q->whereBetween('created_at',array($request->start_date,$request->end_date))
+                                            ->where('type','updated')
+                                            ->where('route','Job:AutoAdjustStartDate');
+                                    }
+                                ])
+                                ->with([                                    
+                                    'source',
+                                    'currency'
+                                ]);
+                            }
+                        ])
+                        ->with([
+                            'lead' => function($query){
+                                $query->select(DB::raw('id,name'));
+                            },                            
+                        ])
+                        ->get();
+
+        foreach ($patients as $patient) {
+            foreach ($patient->fees as $fee ) {
+                $diet =  Diet::where('date_assign','>=',$fee->log->old_value->start_date)
+                        ->where('patient_id',$fee->patient_id)
+                        ->whereRaw('IFNULL(diets.email,0) = 1')
+                        ->orderBy('date_assign')
+                        ->first();                
+                if($diet)
+                    $fee->first_diet = $diet->date_assign;
+            }
+        }        
+        return json_encode(['patients' => $patients, 'total' => $total]);
     }
 }

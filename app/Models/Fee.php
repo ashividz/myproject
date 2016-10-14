@@ -43,6 +43,17 @@ class Fee extends Model
         return $this->belongsTo(User::class, 'cre_id');
     }
 
+    public function log()
+    {
+        return $this->morphOne(Log::class, 'owner')->orderBy('id','desc');
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'owner');
+    }
+
+
     public static function conversionCount($cre = NULL, $start_date = NULL, $end_date = NULL) 
     {
         $start_date = isset($start_date) ? $start_date : date('Y/m/d 0:0:0');
