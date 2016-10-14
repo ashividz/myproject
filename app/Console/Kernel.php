@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Inspire::class,
         \App\Console\Commands\ProductEmailer::class,
         \App\Console\Commands\ProductReminderMail::class,
+        \App\Console\Commands\AutoAdjustStartDate::class,
 
     ];
 
@@ -54,6 +55,21 @@ class Kernel extends ConsoleKernel
                 $status .= 'product_reorder_email_end_at :'.date('Y-m-d H:i:s').PHP_EOL;
                 exec('echo "'.$status.'" >> '.' /var/www/html/cron/emaillog');
         });
+
+        $schedule->command('fee:adjuststartdate')
+        ->dailyAt('10:30')
+        ->appendOutputTo('/var/www/html/cron/feelog')
+        ->before(function () {
+                $status = PHP_EOL.'-----------------------------------------------------------'.PHP_EOL;
+                $status .= 'fee_adjust_start_at :'.date('Y-m-d H:i:s').PHP_EOL;
+                exec('echo "'.$status.'" >> '.' /var/www/html/cron/feelog');
+            })
+        ->after(function() {
+            $status = PHP_EOL.'fee_adjust_end_at :'.date('Y-m-d H:i:s').PHP_EOL;
+            $status .= '-----------------------------------------------------------'.PHP_EOL;
+            exec('echo "'.$status.'" >> '.' /var/www/html/cron/feelog');
+        });
+
 
 
         $schedule->command('inspire')

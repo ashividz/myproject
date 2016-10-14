@@ -1056,6 +1056,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('report/registration/fees', 'PatientRegistrationController@showPatientFeeStatus');
     Route::post('report/registration/fees', 'PatientRegistrationController@showPatientFeeStatus');
 
+    Route::get('report/registration/lateStart', 'PatientRegistrationController@showLateStart');
+    Route::get('/api/getLateStart', 'PatientRegistrationController@getLateStart');
     
     Route::get('report/patients/occupation', 'ReportController@occupation');
     Route::post('report/patients/occupation', 'ReportController@occupation');
