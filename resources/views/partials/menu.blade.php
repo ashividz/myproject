@@ -586,6 +586,9 @@
                         <li>
                             <a href="/report/registration/fees" id="menu_report_registration_fee">Patient Fee Audit</a>
                         </li> 
+                         <li>
+                            <a href="/report/registration/lateStart" id="menu_report_registration_late_start">Late Start</a>
+                        </li> 
                     </ul>                 
                 </li>
             @endif

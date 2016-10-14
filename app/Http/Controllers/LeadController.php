@@ -530,7 +530,7 @@ class LeadController extends Controller
 
     public function viewDetails($id)
     {
-        $lead = Lead::with('patient', 'patient.fee', 'patient.cfee','patient.fees.source', 'patient.diets', 'patient.primaryNtr', 'patient.secondaryNtr', 'patient.doctors')
+         $lead = Lead::with('patient', 'patient.fee', 'patient.fees.source','patient.fees.logs', 'patient.diets', 'patient.primaryNtr', 'patient.secondaryNtr', 'patient.doctors')
                 ->with('status')
                 ->find($id);
                 
