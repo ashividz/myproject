@@ -147,7 +147,7 @@ class CallDispositionController extends Controller
                 'name'      => Auth::user()->employee->name,                
             );
 
-        Mail::queue('templates.emails.rnr', $data, function($message) use ($lead)
+        Mail::send('templates.emails.rnr', $data, function($message) use ($lead)
         {
             $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'dietplan@nutrihealthsystems.co.in' : 'sales@nutrihealthsystems.com';
             
@@ -206,7 +206,7 @@ class CallDispositionController extends Controller
             $body = str_replace('$nutritionist', 'Nutritionist', $body);
         }
         
-        Mail::queue([], [], function($message) use ($body, $lead, $template)
+        Mail::send([], [], function($message) use ($body, $lead, $template)
         {
             $from = isset($template->from) ? $template->from : 'noreply@nutrihealthsystems.com';            
             

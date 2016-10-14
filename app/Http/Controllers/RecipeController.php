@@ -315,7 +315,7 @@ class RecipeController extends Controller
         $sent_recipe->created_by = Auth::user()->id;
         $sent_recipe->save();
         
-       Mail::queue([], [], function($message) use ($email_body, $lead, $recipe_name)
+       Mail::send([], [], function($message) use ($email_body, $lead, $recipe_name)
         {
             $from = 'diet@nutrihealthsystems.co.in';
             $message->to($lead->email, $lead->name)

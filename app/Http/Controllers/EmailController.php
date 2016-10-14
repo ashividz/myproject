@@ -24,7 +24,8 @@ class EmailController extends Controller
 					->limit('20')
 					->get();
 
-		$templates = EmailTemplate::with('attachments')->get();
+		$templates = EmailTemplate::where('email_template_category_id',1)
+					->with('attachments')->get();
 
 		$data = array(
             'menu'          => 'lead',
@@ -93,7 +94,7 @@ class EmailController extends Controller
 			$body = str_replace('$nutritionist', 'Nutritionist', $body);
 		}
 		
-		Mail::queue([], [], function($message) use ($body, $lead, $template)
+		Mail::send([], [], function($message) use ($body, $lead, $template)
 		{
 		    $from = isset($template->from) ? $template->from : 'sales@nutrihealthsystems.com';
 		    
