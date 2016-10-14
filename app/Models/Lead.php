@@ -30,7 +30,8 @@ class Lead extends Model
 
     public function getMobileAttribute($value)
     {
-        if (!Auth::user()->canViewContactDetails()) {
+        //do not check if it's a cron job
+        if (Auth::check() && !Auth::user()->canViewContactDetails()) {
             return Helper::mask($value);
         }
         return $value;
@@ -38,7 +39,8 @@ class Lead extends Model
 
     public function getPhoneAttribute($value)
     {
-        if (!Auth::user()->canViewContactDetails()) {
+        //do not check if it's a cron job
+        if (Auth::check() && !Auth::user()->canViewContactDetails()) {
             return Helper::mask($value);
         }
         return $value;
@@ -46,7 +48,8 @@ class Lead extends Model
 
     public function getEmailAttribute($value)
     {
-        if (!Auth::user()->canViewContactDetails()) {
+        //do not check if it's a cron job
+        if (Auth::check() && !Auth::user()->canViewContactDetails()) {
             return Helper::mask(trim(strtolower(ucfirst($value))));
         }
         return trim(strtolower(ucfirst($value)));
@@ -54,11 +57,13 @@ class Lead extends Model
 
     public function getEmailAltAttribute($value)
     {
-        if (!Auth::user()->canViewContactDetails()) {
+        //do not check if it's a cron job
+        if (Auth::check() && !Auth::user()->canViewContactDetails()) {
             return Helper::mask(trim(strtolower(ucfirst($value))));
         }
         return trim(strtolower(ucfirst($value)));
     }
+
 
     public function query1()
     {
