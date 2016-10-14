@@ -196,7 +196,7 @@ class Diet extends Model
 
     public static function email($patient, $body)
     {
-        Mail::queue('templates.emails.empty', array('body' => $body), function($message) use ($patient)
+        Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($patient)
         {
             $message->to($patient->lead->email, $patient->lead->name)
                 ->bcc("diet@nutrihealthsystems.co.in")

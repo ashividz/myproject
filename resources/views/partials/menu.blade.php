@@ -706,6 +706,20 @@
         </li>
         @endif
 
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('goods_sale'))                 
+        <li>
+            <a href="#" id="herbs">Herbs Sale</a>
+            <ul>
+                <li>
+                    <a href="/reports/products/no_repeat_purchases" id="menu_herbs_no_repeat_purchases">No Repeat Purchases</a>
+                </li>                          
+                <li>
+                    <a href="/reports/products/no_purchases" id="menu_herbs_no_purchases">No Purchases</a>
+                </li>                          
+            </ul>
+        </li>
+        @endif
+
         </ul> <!-- second level -->  
         @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))                
         <li class="{{ $menu == 'settings' ? 'current' : '' }}">

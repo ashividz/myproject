@@ -18,4 +18,9 @@ class EmailTemplate extends Model
     {
     	return $this->hasMany(EmailAttachment::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(EmailTemplateCategory::class);
+    }
 }

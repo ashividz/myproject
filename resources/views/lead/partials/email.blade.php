@@ -23,7 +23,7 @@
 					<tr>
 						<td>{{$i++}}</td>
 						<td>
-							{{$email->user->employee->name}}
+							{$email->user ? $email->user->employee->name : 'cron'}}
 						</td>
 						<td>
 							<pre>{!!$email->email!!}</pre>

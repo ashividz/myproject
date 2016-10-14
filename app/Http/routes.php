@@ -436,6 +436,18 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
+    'roles' => ['admin', 'marketing','goods_sale']], 
+    function() {
+        Route::get('reports/products/no_purchases', 'ProductReportController@noPurchases');
+        Route::get('api/getNoPurchases', 'ProductReportController@getNoPurchases');
+        Route::get('reports/products/no_repeat_purchases','ProductReportController@noRepeatPurchases');
+        Route::get('api/getNoRepeatPurchases', 'ProductReportController@getNoRepeatPurchases');
+});
+
+
+
+Route::group([
+    'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'finance', 'logistics', 'quality', 'registration']], 
     function() {
         Route::get('getCartsForInvoices', 'InvoiceController@getCartsForInvoices');
