@@ -30,6 +30,7 @@
                 </span>
             </div>  
             <div class="col-lg-12" style="height:4em;">
+                <!--
                 <div style="display:inline;padding:10px;border:1px solid #000;margin-left:30px;">
                     <span>
                         Diets : <input type="radio" v-model="categories_radio" value="1" >
@@ -43,15 +44,15 @@
                     <span>
                         Books : <input type="radio" v-model="categories_radio" value="4" >
                     </span>  
-                </div>               
+                </div>  -->             
                 <div style="display:inline;padding:10px;border:1px solid #000;margin-left:30px">
-                    <span>
+                    <span style="margin-right:10px">
                         Diets : <input type="checkbox" v-model="categories_check" value="1">
                     </span> 
-                    <span>
+                    <span style="margin-right:10px">
                         Goods : <input type="checkbox" v-model="categories_check" value="2">
                     </span>
-                    <span>
+                    <span style="margin-right:10px">
                         BT : <input type="checkbox" v-model="categories_check" value="3">
                     </span> 
                     <span>
@@ -66,11 +67,12 @@
                         
                         <thead>
                             <tr>
-                                <th>SN</th>
-                                <th>lead id</th>
-                                <th>name</th>
-                                <th>cre</th>
-                                <th>products</th>
+                                <th>#</th>
+                                <th>Lead id</th>
+                                <th>Name</th>
+                                <th>CRE</th>
+                                <th>Products</th>
+                                <th>Days</th>
                             </tr>
                         </thead>
                         <tbody>                
@@ -80,28 +82,57 @@
                                 <td><a href="/lead/@{{lead.id}}/cart" target="_blank">@{{lead.name}}</a></td>
                                 <td>@{{lead.cre_name}}</td>
                                 <td>
-                                    <table class="table table-bordered">                                        
+                                    <table class="table table-bordered">   
                                         <tr>
                                             <th>SN</th>
-                                            <th>cart id</th>
-                                            <th>product name</th>
-                                            <th>product price</th>
-                                            <th>prodcut discount</th>
-                                            <th>product amount</th>
-                                            <th>purchase date</th>
+                                            <th>Cart id</th>
+                                            <th>Products</th>
+                                            <th>Payments</th>
                                         </tr>
-
-                                        <tr v-for="product in lead.products">
+                                        <tr v-for="cart in lead.carts">
                                             <td>@{{$index+1}}</td>
-                                            <td><a href="/cart/@{{product.cart_id }}/" target="_blank">@{{product.cart_id }}</a></td>
-                                            <td>@{{product.name}}</td>
-                                            <td>@{{product.pivot.price}}</td>
-                                            <td>@{{product.pivot.discount}}</td>
-                                            <td>@{{product.pivot.amount}}</td>
-                                            <td>@{{product.purchase_date}}</td>
+                                            <td><a href="/cart/@{{ cart.id }}/" target="_blank">@{{ cart.id }}</a></td>
+                                            <td>
+                                                <table class="table table-bordered">
+                                                    <tr>             
+                                                        <th>Product Name</th>
+                                                        <th>Product Price</th>
+                                                        <th>Product Discount</th>
+                                                        <th>Product Amount</th>
+                                                        <th>Product Date</th>
+                                                    </tr>
+                                                    <tr v-for="product in cart.products">
+                                                        <td>@{{product.name}}</td>
+                                                        <td>@{{product.pivot.price}}</td>
+                                                        <td>
+                                                            @{{product.pivot.discount}}
+                                                            @{{product.product_category_id }}
+                                                        </td>
+                                                        <td>@{{product.pivot.amount}}</td>
+                                                        <td>@{{product.pivot.updated_at}}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table class="table table-bordered">
+                                                    <tr>             
+                                                        <th>Payment Date</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Payment Amount</th>
+                                                    </tr>
+                                                    <tr v-for="payment in cart.payments">
+                                                        <td>@{{ payment.date }}</td>
+                                                        <td>@{{ payment.method.name }}</td>
+                                                        <td>@{{ payment.amount }}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>         
                                         </tr>
 
                                     </table>
+                                </td>
+                                <td>
+                                    @{{ lead.carts[0].payments[0].date | days }}
                                 </td>
                             </tr>
                         </tbody>
@@ -115,7 +146,7 @@
 </div>
 
 <script type="text/javascript">
-    vm = new Vue({
+    new Vue({
         el: '#products',
 
         data: {
@@ -195,10 +226,15 @@
                     return categories;
                 }
             },
-        }
+        },
     })    
 
-
+Vue.filter('days', function (value) {
+    if (!value) {return }
+    date = value.split('-');
+    return moment().diff(moment([date[0], date[1]-1 , date[2]]), 'd');
+    return moment([date[0], date[1]-1 , date[2]]).fromNow(true);  
+})
 </script>
 
 <script type="text/javascript">

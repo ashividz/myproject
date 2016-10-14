@@ -72,6 +72,10 @@ Route::group([
     Route::post('referenceCart/{id}/approve', 'ReferenceCartApprovalController@approve');
     Route::get('categoryProducts/{id}', 'CartProductController@getCategoryProducts');
 
+
+    Route::get('api/products', 'ProductController@get');
+    Route::get('api/categories', 'ProductController@getCategories');
+
     Route::get('lead/{id}/viewReferences', 'LeadController@showReferences');
     Route::get('lead/{id}/leadReferences', 'LeadController@leadReferences');
     Route::get('downloadRecipies', 'RecipeController@downloadRecipies');
@@ -1096,20 +1100,21 @@ Route::group([
     /* Cart */
 
     Route::get('findCart', 'CartController@find');
-    Route::delete('cart/{cart_id}/payment/{payment_id}', 'CartPaymentController@delete');
+    //Route::delete('cart/{cart_id}/payment/{payment_id}', 'CartPaymentController@delete');
 
     Route::get('canCreateCart', 'CartController@canCreateCart');
     Route::get('lead/{id}/cart', 'CartController@index');
     Route::post('lead/{id}/cart', 'CartController@store');
 
     Route::get('cart/{id}/product/add', 'CartProductController@show');
-    Route::post('cart/{id}/product/add', 'CartProductController@store');
+    Route::post('cart/{id}/products', 'CartProductController@store');
 
-    Route::post('cart/{id}/product/delete', 'CartProductController@destroy');
-    Route::post('cart/{id}/payment/delete', 'CartPaymentController@destroy');
+    Route::delete('cart/{cart}/product/{id}', 'CartProductController@destroy');
+    Route::delete('cart/{cart}/payment/{id}', 'CartPaymentController@destroy');
 
     Route::get('cart/product/{id}/edit', 'CartProductController@edit');
-    Route::post('cart/product/{id}/edit', 'CartProductController@update');
+    Route::patch('cart/{cart}/product/{product}', 'CartProductController@update');
+    //Route::post('cart/product/{id}/edit', 'CartProductController@update');
 
     Route::post('api/coupon/validate', 'CouponController@validateCoupon');
 

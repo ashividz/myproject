@@ -25,7 +25,6 @@ class CouponController extends Controller
             return $percentage;
         }
 
-        
         $url = env('COUPON_VALIDATION_URL');
         $id  = env('COUPON_VALIDATION_ID');
         $key = env('COUPON_VALIDATION_KEY');
@@ -37,7 +36,6 @@ class CouponController extends Controller
         $token = md5($time.$key);
        
         $params = array('id' => $id, 'token' => $token,'code'=>$code);
-
 
         $postData = '';
         //create name value pairs seperated by &
@@ -57,7 +55,8 @@ class CouponController extends Controller
         $output=curl_exec($ch); 
         curl_close($ch);
 
-        $output = json_decode($output);
+        //$output = json_decode($output); 
+        return $output;
 
         if ($output && $output->valid) {
             $percentage = $output->percentage;

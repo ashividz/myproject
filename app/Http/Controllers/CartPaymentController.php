@@ -41,12 +41,20 @@ class CartPaymentController extends Controller
         return view('cart.modals.payment')->with($data);
     }
 
-    public function store(CreateCartPaymentRequest $request, $id)
+    public function store(Request $request, $id)
     {
+        $this->validate($request, [
+            'date' => 'required|date',
+            'amount' => 'required|numeric',
+            'payment_method_id' => 'required|numeric',
+        ]);
+
         try {
                 $cart = Cart::find($id);
                 $cart->payments()->create($request->all());
                 $cart->updateAmount();
+
+                return $cart->load('payments.method', 'products.category', 'currency');
                
            } catch (\Illuminate\Database\QueryException $e) {
             
@@ -56,7 +64,7 @@ class CartPaymentController extends Controller
         }       
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $cart, $id)
     {
         $payment = CartPayment::find($request->id);
 
@@ -67,19 +75,8 @@ class CartPaymentController extends Controller
             //Update Order Payment
             $payment->cart->updateAmount($id);
 
-            $data = array(
-                'message' => 'Successfully deleted', 
-                'status' => 'success'
-            );
-
-        } else {
-            $data = array(
-                'message' => 'Error', 
-                'status' => 'error'
-            );
-        }       
-            
-        return Redirect::to('/cart/'.$id)->with($data);
+            return $payment->cart->load('products.category', 'payments.method', 'currency');
+        }    
     }
 
     public function get()
@@ -190,16 +187,26 @@ class CartPaymentController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'amount' => 'required|numeric',
+            'payment_method_id' => 'required|numeric',
+            'date' => 'required|date',
+        ]);
         $payment = CartPayment::find($id);
 
         $payment->update($request->all());
 
-        return $payment->load('method');
+        $payment->cart->updateAmount();
+
+        return $payment->cart->load('products.category', 'payments.method', 'currency');
     }
 
     public function delete($cart_id, $payment_id)
     {
         CartPayment::destroy($payment_id);
-        Cart::find($cart_id)->updateAmount();
+        $cart = Cart::find($cart_id);
+        $cart->updateAmount();
+
+        return $cart->load('products.category', 'payments.method');
     }
 }

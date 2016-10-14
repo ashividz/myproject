@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Lead;
+use App\Models\ProductCategory;
+use App\Models\Cart;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -43,24 +45,91 @@ class ProductReportController extends Controller
     public function getProducts(Request $request)
     {
         $categories = $request->categories;
-        
-        $leads = Lead::where(function($query) use ($categories) {            
-            foreach ($categories as $category ) {
-                $query = $query->whereHas('orders',function($q) use ($category) {
-                    $q->where('orders.product_category_id',$category)
-                      ->whereBetween('orders.updated_at',array($this->start_date,$this->end_date));
-                });
-            }
-        });
 
-        $leads = $leads->with([
+        $n_categories = ProductCategory::whereNotIn('id', $categories)->get();
+        $n_categories = $n_categories->flatten()->pluck('id');
+
+        $leads = Lead::with('carts.products.category', 'carts.payments.method')
+                    ->whereHas('carts', function($q) use ($categories) {            
+                        foreach ($categories as $category ) {
+                            $q = $q->whereHas('products.category',function($q) use ($category) {
+                                $q->where('id', $category);
+                            });
+                        }
+                    });
+        if (count($categories) == 1) {
+            $leads = $leads->whereHas('carts', function($q) use ($categories) {            
+                    foreach ($categories as $category ) {
+                        $q = $q->whereHas('products.category',function($q) use ($category) {
+                            $q->where('id', $category);
+                        }, '<', 1);
+                    }
+                }, '<', 1);
+        }
+        
+                    /*->where(function($q) use ($n_categories) {
+                        foreach ($n_categories as $category ) {
+                            $q = $q->whereHas('carts.products.category',function($q) use ($category) {
+                                $q->where('id', $category);
+                            }, '<', 1);
+                        }
+                    })*/
+        $leads = $leads->with(['carts' => function($q) {
+                        $q->where('status_id', '>=', 3)
+                        ->whereNotIn('state_id', [2]);
+                    }])
+                    ->whereHas('carts', function($q) {
+                        $q->where('status_id', '>=', 3)
+                        ->whereNotIn('state_id', [2]);
+                    })
+                    ->whereHas('carts.payments', function($q) {
+                        $q->whereBetween('updated_at', array($this->start_date,$this->end_date));
+                    })
+                    //->limit(20)
+                    ->get();
+
+        /*$carts = Cart::where(function($query) use ($categories, $n_categories) {
+            foreach ($categories as $category) {
+                $query = $query->whereHas('products',function($q) use ($category){
+                    $q->where('product_category_id',$category);
+                });                
+            } 
+
+            foreach ($n_categories as $category) {
+                $query = $query->whereHas('products',function($q) use ($category){
+                    $q->where('product_category_id',$category);
+                }, 0);                
+            }            
+        })
+        ->limit(100)
+        ->get();
+
+        dd($carts);*/
+        
+        /*$leads = Lead::where(function($query) use ($categories) {            
+                    foreach ($categories as $category ) {
+                        $query = $query->whereHas('carts.products.category',function($q) use ($category) {
+                            $q->where('id', $category);
+                        });
+                    }
+                })
+                ->with(['carts' => function($q) {
+                    $q->whereBetween('updated_at', array($this->start_date,$this->end_date))
+                        ->where('status_id', '>=', 3)
+                        ->whereNotIn('state_id', [2]);
+                }])
+                ->with('carts.products.category', 'carts.payments.method')
+                
+                ->get();*/
+
+        /*$leads = $leads->with([
             'orders'  => function($query) use ($categories) {
                 $query->whereIn('orders.product_category_id',$categories)
                       ->whereBetween('orders.updated_at',array($this->start_date,$this->end_date))
                       ->with('cart');
-            }])->get();
+            }])->get();*/
 
-        foreach ($leads as $lead) {
+        /*foreach ($leads as $lead) {
             $lead->products = collect();            
             foreach ($lead->orders as $order){                
                 $products = $order->cart->products()
@@ -72,7 +141,7 @@ class ProductReportController extends Controller
                     $lead->products->push($product);     
                 }
             }
-        }
+        }*/
 
         return $leads;
 

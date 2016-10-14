@@ -117,7 +117,7 @@ class CartController extends Controller
     {
         $this->validate($request, [
             'currency_id'           => 'required',
-            'shipping_address_id'   => 'required',
+            //'shipping_address_id'   => 'required',
             'cre_id'                =>  'required',
             'source_id'             =>  'required',
         ]);
@@ -384,7 +384,7 @@ class CartController extends Controller
 
     public function find(Request $request)
     {
-        $cart = Cart::with('currency', 'status', 'state', 'products', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma')
+        $cart = Cart::with('currency', 'status', 'state', 'products.category', 'payments.method', 'shippings.carrier', 'comments.creator.employee', 'proforma', 'lead.programs', 'lead.region', 'address.region')
                     ->with(['source' => function($q) {
                         $q->select('id', 'source_name as name');
                     }])

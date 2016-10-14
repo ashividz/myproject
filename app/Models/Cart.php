@@ -129,6 +129,11 @@ class Cart extends Model
         return $this->hasOne(Fee::class);
     }
 
+    public function address()
+    {
+        return $this->belongsTo(LeadAddress::class, 'shipping_address_id', 'id');
+    }
+
     public function shippingAddress()
     {
         return $this->belongsTo(LeadAddress::class, 'shipping_address_id', 'id');

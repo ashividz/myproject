@@ -20,10 +20,10 @@ class CartPayment extends Model
         'created_by'
     ];
 
-    public function setDateAttribute($value)
+    /*public function setDateAttribute($value)
     {
-        $this->attributes['date']   = $value ? Carbon::parse($value) : null;
-    }
+        //$this->attributes['date']   = $value ? Carbon::parse($value) : null;
+    }*/
 
     public function setDeliveryTimeAttribute($value)
     {

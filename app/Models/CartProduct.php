@@ -28,15 +28,15 @@ class CartProduct extends Model
         return $this->belongsTo(Product::class, 'product_offer_parent_id');
     }
 
-    public static function getOffer($CartProduct)
+    public static function getOffer($cartProduct)
     {
-        $offer = CartProduct::checkOffer($CartProduct); 
+        $offer = CartProduct::checkOffer($cartProduct); 
 
         if($offer) {
             $op = new CartProduct;
-            $op->cart_id = $CartProduct->cart_id;
+            $op->cart_id = $cartProduct->cart_id;
             $op->product_id = $offer->product_offer_id;
-            $op->product_offer_parent_id = $CartProduct->product_id;
+            $op->product_offer_parent_id = $cartProduct->product_id;
             $op->product_offer_id = $offer->id;
             $op->quantity = $offer->product_offer_quantity;
             $op->price = 0;
@@ -47,10 +47,10 @@ class CartProduct extends Model
         }
     }
 
-    public static function updateOffer($CartProduct)
+    public static function updateOffer($cartProduct)
     {
-        /*$offer = ProductOffer::where('product_id', $CartProduct->product_id)
-                     ->where('minimum_quantity', '<=', $CartProduct->prevQuantity)
+        /*$offer = ProductOffer::where('product_id', $cartProduct->product_id)
+                     ->where('minimum_quantity', '<=', $cartProduct->prevQuantity)
                     //->where('start_date', '<=', date('Y-m-d'))
                     //->where('end_date', '<', date('Y-m-d'))
                     ->cartBy('product_offer_quantity', 'desc')
@@ -60,16 +60,16 @@ class CartProduct extends Model
             $offer->offerProduct->delete();
         }*/
         //Delete all existing Offers
-        CartProduct::deleteOffer($CartProduct);
+        CartProduct::deleteOffer($cartProduct);
         
 
-        $newOffer = CartProduct::checkOffer($CartProduct);
+        $newOffer = CartProduct::checkOffer($cartProduct);
 
         //dd($newOffer);
 
         if($newOffer) {
             $op = new CartProduct;
-            $op->cart_id = $CartProduct->cart_id;
+            $op->cart_id = $cartProduct->cart_id;
             $op->product_id = $newOffer->product_offer_id;
             $op->product_offer_id = $newOffer->id;
             $op->quantity = $newOffer->product_offer_quantity;
@@ -81,20 +81,20 @@ class CartProduct extends Model
         }
     }
 
-    private static function checkOffer($CartProduct)
+    private static function checkOffer($cartProduct)
     {
-        return ProductOffer::where('product_id', $CartProduct->product_id)
-                    ->where('minimum_quantity', '<=', $CartProduct->quantity)
+        return ProductOffer::where('product_id', $cartProduct->product_id)
+                    ->where('minimum_quantity', '<=', $cartProduct->quantity)
                     //->where('start_date', '<=', date('Y-m-d'))
                     //->where('end_date', '<', date('Y-m-d'))
                     ->orderBy('product_offer_quantity', 'desc')
                     ->first();
     }
 
-    public static function deleteOffer($CartProduct)
+    public static function deleteOffer($cartProduct)
     {
-        CartProduct::where('cart_id', $CartProduct->cart_id)
-                    ->where('product_offer_parent_id', $CartProduct->product_id)
+        CartProduct::where('cart_id', $cartProduct->cart_id)
+                    ->where('product_offer_parent_id', $cartProduct->product_id)
                     ->delete();
     }
 

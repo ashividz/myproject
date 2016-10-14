@@ -7,227 +7,201 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Name :</label>
-                    {{$cart->lead->name or ""}}                    
+                    @{{ cart.lead.name }}                    
                 </div>
                 <div class="form-group">
                     <label>Lead Id :</label>
-                    <a href="/lead/{{$cart->lead->id or ""}}/cart" target="_blank">{{$cart->lead_id or ""}}</a>                       
+                    <a href="/lead/@{{ cart.lead_id }}/cart" target="_blank">@{{ cart.lead_id }}</a>                       
                 </div>
                 <div class="form-group">
                     <label>Patient Id :</label>
-                    {{$cart->lead->patient->id or ""}}                 
+                    @{{ cart.lead.patient.id }}                 
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Location :</label>
-                    {{ $cart->lead->country or ""}}, {{ $cart->lead->region->region_name or ""}}, {{ $cart->lead->city or ""}}
+                    @{{ cart.lead.country }}, @{{ cart.lead.region.region_name }}, @{{ cart.lead-.city }}
                 </div>
                 <div class="form-group">
                     <label>DOB :</label>
-                    {{ isset($cart->lead) && $cart->lead->dob <> '' ? $cart->lead->dob->format('jS M, Y') : '' }}
+                    @{{ cart.lead.dob | format_date1 }}
                 </div>
                 <div class="form-group">
                     <label>Gender :</label>
-                    {{ $cart->lead->gender or "" }}
+                    @{{ cart.lead.gender }}
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Amount :</label>
-                    {{$cart->currency->symbol or ""}} {{ $cart->amount or "" }}
+                    @{{ cart.currency.symbol }} @{{ cart.amount }}
                 </div>
                 <div class="form-group">
                     <label>Payment :</label>
-                    {{$cart->currency->symbol or ""}} {{ $cart->payment or "" }}
+                    @{{ cart.currency.symbol }} @{{ cart.payment }}
                 </div>
                 <div class="form-group">
                     <label>Balance :</label>
-                    {{$cart->currency->symbol or ""}} {{ $cart->amount- $cart->payment}}
+                    @{{ cart.currency.symbol }} @{{ cart.balance }}
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Product Category :</label>
-                    {{ $cart->category->name or "" }}
+                    @{{ cart.category.name }}
                 </div>
                 <div class="form-group">
-                    <label>Programs : </label> <a href="/lead/{{ $cart->lead_id }}/program" target="_blank"><i class="fa fa-edit"></i></a>
+                    <label>Programs : </label> <a href="/lead/@{{ cart.lead_id }}/program" target="_blank"><i class="fa fa-edit"></i></a>
                     <ul>
-                    @foreach($cart->lead->programs as $program)
-                        <li>{{ $program->name }}</li>    
-                    @endforeach
+                        <li v-for="program in cart.lead.programs">@{{ program.name }}</li>  
                     </ul>
                 </div>
             </div>
         </div>
     </div>
     <div class="panel panel-default">
-    <div class="panel-body">
-    <b><i>Shipping Address</i></b><br>
-    <?php
-    $address = $cart->shippingAddress;
-    if($address)
-        $shippingAddress = '<b>name</b>:'.$address->name.', <b>address</b>:'.$address->address.', '.$address->city.', '.$regions->where('region_code',$address->state)->first()->region_name.', '.$countries->where('country_code',$address->country)->first()->country_name.' - '.$address->zip;
-    ?>
-    @if($address)
-    <div class="col-sm-3">{!!$shippingAddress!!}</div>
-    <div class="col-sm-3" style="border:solid 1px #e4c94b;background-color:#fff4c5;">{!!$address->cod!!}</div>
-    @else
-        same as billing address
-    @endif
-    </div>
+        <div class="panel-body">
+            <b><i>Shipping Address</i></b><br>
+            <div v-if="cart.address">
+                <div>
+                    <label>Name : </label> @{{ cart.address.name }}
+                </div>
+                <div>
+                    <label>Address : </label> @{{ cart.address.address }}
+                </div>
+                <div>
+                    @{{ cart.address.city }},
+                    @{{ cart.address.region.region_name }},
+                    @{{ cart.address.country }}
+                    - @{{ cart.address.zip }}
+                </div>
+            </div>
+            <div v-else>
+                <div>
+                    <label>Name : </label> @{{ cart.lead.name }}
+                </div>
+                <div>
+                    <label>Address : </label> @{{ cart.lead.address }}
+                </div>
+                <div>
+                    @{{ cart.lead.city }},
+                    @{{ cart.lead.region.region_name }},
+                    @{{ cart.lead.country }}
+                    - @{{ cart.lead.zip }}
+                </div>
+            </div>
+        </div>
     </div>
     @include('cart.partials.workflow')
     <div class="panel panel-default">
         <div class="panel-heading">
-            Product Details
+            <h4>Product Details</h4>
         </div>
         <div class="panel-body">
-            <form id="form-product" action="/cart/{{$cart->id}}/product/delete" method="post" class="form-inline">
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Category</th>
-                        <th>Product</th>
-                        <th>Description</th>
-                        <th>Duration</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Coupon</th>
-                        <th>Discount (%)</th>
-                        <th>Total</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                @foreach($cart->products as $product)
-                    <tr class="{{$product->pivot->product_offer_id?'offer':''}}">
-                        <td>{{$product->category->name or ""}}</td>
-                        <td>{{$product->name}}
-                        </td>
-                        <td>{{$product->description or ""}}</td>
-                        <td>{{$product->duration}} {{$product->unit->name or ""}}</td>
-                        <td>{{$product->pivot->quantity}}</td>
-                        <td>
-                    @if($product->pivot->product_offer_id)
-                            <label>FREE</label>
-                    @else
-                            <label>{{$cart->currency->symbol or ""}}</label> {{$product->pivot->price}}
-                    @endif
-                        </td>
-                        <td>
-                            {{$product->pivot->coupon or ""}}
-                        </td>
-                        <td>
-                    @if(!$product->pivot->product_offer_id)
-                            {{$product->pivot->discount}}
-                    @endif
-                        </td>
-                        <td>
-                    @if(!$product->pivot->product_offer_id)
-                            <label>{{$cart->currency->symbol or ""}}</label> {{$product->pivot->amount}}
-                    @endif
-                        </td>
-                        <td>
-                    @if(!$product->pivot->product_offer_id && ($cart->status_id == 1 || $cart->state_id == 2))
-                            <a data-toggle="modal" data-target="#myModal" href="/cart/product/{{$product->pivot->id}}/edit" class="primary">
-                                <i class="fa fa-edit"></i>{{$product->pivot->product_offer_id}}
-                            </a>
-                    @endif
-                        </td>
-                        <td>
-                    @if($cart->status_id == 1 || $cart->state_id == 2)
-                            <a href="#" onclick="deleteProduct({{$product->pivot->id}})" class="danger"><i class="fa fa-close"></i></a>
-                    @endif
-                        </td>
-                    </tr>
-                @endforeach
-                    <tr>
-                        <th colspan="8" style="text-align: right;">Grand Total : </th>
-                        <th colspan="3"><label>{{$cart->currency->symbol or ""}}</label> {{$cart->amount}}</th>
-                    </tr>
-                </table>
-                {{ csrf_field() }}
-            </form>
+            <div class="row">
+                <div class="col-md-1">
+                    <label>Category</label>
+                </div>
+                <div class="col-md-2">
+                    <label>Product</label>
+                </div>
+                <div class="col-md-1">
+                    <label>Duration</label>
+                </div>
+                <div class="col-md-1">
+                    <label>Quantity</label>
+                </div>
+                <div class="col-md-1">
+                    <label>Price</label>
+                </div>
+                <div class="col-md-2">
+                    <label>Coupon</label>
+                </div>
+                <div class="col-md-1">
+                    <label>Discount %</label>
+                </div>
+                <div class="col-md-1">
+                    <label>Discount Amount</label>
+                </div>
+                <div class="col-md-1">
+                    <label>Total</label>
+                </div>
+            </div>
+            <div v-for="product in cart.products" class="row" style="border-bottom: 1px solid #999; margin: 15px 0px">
+                <product-editable
+                    :product="product"
+                    :cart="cart"
+                >
+                </product-editable>
+            </div>
+            <div class="row">
+                <div class="col-md-1 col-md-offset-9">
+                    <label>Total</label>
+                </div>
+                <div class="col-md-2">
+                    @{{ cart.amount | currency cart.currency.symbol }}
+                </div>
+            </div>
         </div>
     </div>
     <!-- Payment Details Begin -->
-    @if(!$cart->payments->isEmpty())
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-if="cart.payments.length>0">
         <div class="panel-heading">
-            Payment Details
+            <h4>Payment Details</h4>
         </div>
         <div class="panel-body">
-            <form id="form-payment" action="/cart/{{$cart->id}}/payment/delete" method="post" class="form-inline">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Amount</th>
-                            <th>Payment Method</th>
-                            <th>Remark</th>
-                            <th>Payment date</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="payment in cart.payments">
-                            <td>
-                                @{{ payment.amount | currency cart.currency.symbol}}
-                            </td>
-                            <td>
-                                @{{ payment.method.name }}
-                            </td>
-                            <td>
-                                @{{ payment.remark}}
-                            </td>
-                            <td>
-                                @{{ payment.user }}
-                                @{{ payment.date | format_date1 }}
-                            </td>
-                            <td>
-                                <div v-if="cart.status_id == 1 || cart.state_id == 2">
-                                    <i class="fa fa-close red" @click="deletePayment(payment)"></i>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-                {{ csrf_field() }}
-            </form>
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    <label>Amount</label>
+                </div>
+                <div class="col-md-3">
+                    <label>Payment Method</label>
+                </div>
+                <div class="col-md-4">
+                    <label>Remark</label>
+                </div>
+                <div class="col-md-2">
+                    <label>Payment Date</label>
+                </div>
+            </div>
+            <div v-for="payment in cart.payments" class="col-md-12" style="border-bottom: 1px solid #999; margin: 10px 0px">
+                <payment-editable
+                    :payment="payment"
+                    :cart="cart"
+                >
+                </payment-editable>
+            </div>
         </div>
     </div>
-    @endif
     <!-- Payment Details End -->
-    
-    <div class="row" style="text-align:center; margin:30px;">    
+
+    <div v-if="cart.status_id == 1 || cart.state_id == 2" style="text-align: center; margin: 40px">
+        
+        <!--<span v-if="cart.product_category_id == 1 && cart.programs.length > 0">
+            <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/program/add" class="btn btn-success">Add Program</a>
+
+        </span>-->
+        
+        <span>
+            <button class="btn btn-primary" @click="showProductModal=true">Add Product</button>
+        </span>
         <span v-show="cart.products.length > 0 && (cart.amount == 0 || cart.balance > 0)">
-            <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/payment" class="btn btn-primary">Add Payment</a>
+            <button class="btn btn-primary" @click="showPaymentModal=true">Add Payment</button>
+        </span>
+        
+        <span v-if="cart.payments.length > 0 && cart.state_id == 2"> 
+            <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/approval/update" class="btn btn-danger">Update Order</a>
         </span>
 
-<div v-if="cart.status_id == 1 || cart.state_id == 2">
-    
-    <span v-if="cart.product_category_id == 1 && cart.programs.length > 0">
-        <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/program/add" class="btn btn-success">Add Program</a>
-
-    </span>
-    <span v-else>
-        <a data-toggle="modal" data-target="#myModal" href="/cart/{{$cart->id}}/product/add" class="btn btn-success">Add Product</a>
-
-    </span>
-    
-    <span v-if="cart.payments.length > 0 && cart.state_id == 2"> 
-        <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/approval/update" class="btn btn-danger">Update Order</a>
-    </span>
-
-     <span v-if="cart.payments.length > 0 && cart.status_id ==1">
-         <button type="submit" class="btn btn-danger" @click="processOrder">Process Order</button>
-     </span>
-</div>
+         <span v-if="cart.payments.length > 0 && cart.status_id ==1">
+             <button type="submit" class="btn btn-danger" @click="processOrder">Process Order</button>
+         </span>
+    </div>
 
 @if(Auth::user()->canActivateCart($cart))
     <button class="btn btn-primary" @click="activateCart" v-if="!loading">Activate Cart for Extension or Balance Payment</button>
 @endif
-    </div>
     <div class="row">
         <div class="col-md-6">
             <!-- Cart Steps -->
@@ -267,105 +241,24 @@
                 </div>
                 <div class="panel-body">
                     <ul>
-
                         <li v-for="comment in cart.comments">
                             <b>@{{ comment.text }}</b> 
                             <small>by</small> 
-                            <b>@{{ $comment->creator->employee->name or "" }}</b>
-                            <small class="pull-right"><em> [@{{ $comment->created_at->format('jS M, Y, h:i:A') }}</em> ]</small>
+                            <b>@{{ comment.creator.employee.name }}</b>
+                            <small class="pull-right"><em> [@{{ comment.created_at | format_date1 }}</em> ]</small>
                         </li>
-
                     </ul>
                 </div>
             </div>   
         </div>
     </div>
+@include('cart.components.product')
+@include('cart.components.products')
+@include('cart.components.payment')
 </div>
-<!-- Modal Template-->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                 <h4 class="modal-title">Modal title</h4>
+@include('cart.components.product-editable')
+@include('cart.components.payment-editable')
 
-            </div>
-            <div class="modal-body"><div class="te"></div></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-<!-- Modal Template-->
-<div class="modal fade" id="sModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                 <h4 class="modal-title">Modal title</h4>
-
-            </div>
-            <div class="modal-body"><div class="te"></div></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-<style type="text/css">
-    #myModal .modal-dialog {
-        /* new custom width */
-        width: 95%;
-    }
-    table tr td, table tr td input {
-        font-size: 90% !important;
-    }
-    .offer {
-        background-color: #fff4c5;
-        border: 1px solid #e4c94b;
-    }
-    .form-group {
-        margin-bottom: 0px;
-    }
-</style>
-
-<script type="text/javascript">
-    $('body').on('hidden.bs.modal', '.modal', function () {
-      $(this).removeData('bs.modal');
-    });
-
-    function deleteProduct(id) {
-
-        var r=confirm("Are you sure you want to delete?");
-        if (r==true){
-
-            var input = $("<input>").attr("type", "hidden").attr("name", "id").val(id);
-            $('#form-product').append($(input));
-            $('#form-product').submit();
-        };
-    };
-
-
-    function deletePayment(id) {
-
-        var r=confirm("Are you sure you want to delete?");
-        if (r==true){
-
-            var input = $("<input>").attr("type", "hidden").attr("name", "id").val(id);
-            $('#form-payment').append($(input));
-            $('#form-payment').submit();
-        };
-    };
-</script>
 <script>
 new Vue({
     el: '#cart',
@@ -373,11 +266,18 @@ new Vue({
     data: {
         loading: false,
         id: {{ $cart->id }},
-        cart: '',
+        cart: {!! $cart !!},
+        showPaymentModal: false,
+        showProductModal: false,
+        categories: [],
+        products: [],
+        payment: '',
+        methods: [],
     },
 
     ready() {
         this.findCart();
+        this.getPaymentMethods();
     },
 
     methods: {
@@ -389,31 +289,42 @@ new Vue({
             .success(function(data){
                 this.cart = data;
                 $.isLoading( "hide" );
+                this.getCategories();
             }).bind(this);
         },
 
-        deletePayment(payment) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(function(isConfirm) {
-                if (isConfirm) {
-                    this.$http.delete('/cart/'+ this.id +'/payment/'+ payment.id)
-                    .success(function(data) {
-                        swal(
-                          'Deleted!',
-                          'Payment deleted.',
-                          'success'
-                        );
-                        this.findCart();
-                    });                        
-                }
-            }.bind(this))
+        getCategories() {
+            this.$http.get("/api/categories?country="+this.cart.lead.country+"&currency="+this.cart.currency.name)
+            .then((response) => {
+                this.categories = response.data;
+            }, (response) => {
+                toastr.error("Error occured", "Error");
+            }).bind(this);
+        },
+
+        storeProducts() {
+            this.$http.post('/cart/'+this.cart.id+'/products', {
+                products: this.products
+            })
+            .then((response) => {
+                toastr.success("Products saved", "Hurray!");
+                this.cart = response.data;
+                this.showProductModal = false;
+                this.products = [];
+            }, (response) => {
+                toastr.error("Error Occured "+response.toString(), "Error");
+            }).bind(this);
+        },
+
+        storePayment() {
+            this.$http.post('/cart/'+this.cart.id+'/payment', this.payment)
+            .then((response) => {
+                toastr.success("Payment saved", "Hurray!");
+                this.cart = response.data;
+                this.showPaymentModal = false;
+            }, (response) => {
+                toastr.error("Error Occured "+response.toString(), "Error");
+            }).bind(this);
         },
 
         processOrder() {
@@ -467,7 +378,100 @@ new Vue({
             }.bind(this))
         },
 
+        getPaymentMethods() {
+            this.$http.get("/getPaymentMethods")
+            .success(function(data){
+                this.methods = data;
+            }).bind(this);
+        },
+
+        ifExists(haystack, needle) {
+            for (item in haystack){
+                if (haystack[item]['id'] === needle.id){
+                    return true;
+                }
+            }
+            return false;
+        }
+    },
+
+    filters: {
+        exists: function(pdt) {
+            if (!pdt) { return false };
+            return this.ifExists(this.products, pdt);
+        }
     }
 })
 </script>
+<style>
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-container {
+    width: 95%;
+    height: 100%;
+    margin: 0px auto;
+    padding: 20px 30px;
+    background-color: #ecf0f5;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+}
+
+.modal-body {
+    margin: 20px 0;
+}
+
+.modal-default-button {
+    float: right;
+}
+
+/*
+ * the following styles are auto-applied to elements with
+ * v-transition="modal" when their visiblity is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter, .modal-leave {
+    opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+.modal-footer {
+    border-top: 0;
+}
+.modal-body {
+    padding: 0;
+}
+.form-control {
+    font-size: 10px;
+}
+</style>
 @endsection

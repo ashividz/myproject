@@ -25,6 +25,36 @@ class ProductController extends Controller
         return view('home')->with($data);
     }
 
+    public function get()
+    {
+        return Product::with('category')->get();
+    }
+
+    public function getCategories(Request $request = null)
+    {
+        return ProductCategory::
+                    with(['products.offers.product' => function($q) use($request) {
+                        if ($request->country=='IN') {
+                            $q->selectRaw('products.*, domestic_price_inr as price');
+                        } elseif($request->currency=='USD') {
+                            $q->selectRaw('products.*, international_price_usd as price');
+                        } else {
+                            $q->selectRaw('products.*, international_price_inr as price');
+                        }                        
+                    }])
+                    ->with(['products' => function($q) use($request) {
+                        if ($request->country=='IN') {
+                            $q->selectRaw('products.*, domestic_price_inr as price');
+                        } elseif($request->currency=='USD') {
+                            $q->selectRaw('products.*, international_price_usd as price');
+                        } else {
+                            $q->selectRaw('products.*, international_price_inr as price');
+                        }
+                        
+                    }])
+                    ->get();
+    }
+
     public function modal($id = null)
     {
         $product = Product::find($id);

@@ -37,13 +37,35 @@ class CartProductController extends Controller
 
      public function getCategoryProducts($id)
     { 
-        $products = Product::where('product_category_id', $id)->get();
+        $products = Product::where('product_category_id', $id)
+                    ->get();
         return $products;
     }
     
     public function store(Request $request, $id)
     {
         $cart = Cart::find($id);
+
+        foreach ($request->products as $product) {
+            $cart->products()->attach($product['id'], [
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+                'amount' => $product['amount'],
+                'coupon' => isset($product['coupon']) ? $product['coupon'] : null,
+                'discount' => isset($product['discount']) ? $product['discount'] : null,
+                'created_by' => Auth::id(),
+            ]);
+
+            $pivot_id = $cart->products()->where("product_id", "=",$product['id'])->withPivot("id")->orderBy('pivot_created_at', 'desc')->first()->pivot->id;
+            $product = CartProduct::find($pivot_id);
+            CartProduct::getOffer($product);
+        }
+
+        $cart->updateAmount();
+
+        return $cart->load('products.category', 'payments.method', 'currency');
+
+        /*
         if ($request->get('product_ids')) {
             foreach($request->get('product_ids') as $key => $value)
             {
@@ -79,7 +101,7 @@ class CartProductController extends Controller
             'status' => 'success'
         );    
 
-        return redirect('/cart/'.$id)->with($data);
+        return redirect('/cart/'.$id)->with($data);*/
     }
 
     public function edit($id)
@@ -98,31 +120,36 @@ class CartProductController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $cart, $id)
     {
-        $cartProduct = CartProduct::find($id);
+        $cart = Cart::find($cart);
+
+        $cart->products()->updateExistingPivot($id, $request->all());
+        /*$cartProduct = CartProduct::find($id);
 
         $quantity = $cartProduct->quantity;
         $cartProduct->coupon = $request->coupon;
         $cartProduct->quantity = $request->quantity;
         $cartProduct->discount = $request->discount;
         $cartProduct->amount = $request->amount;
-        $cartProduct->save();
+        $cartProduct->save();*/
 
-        $cartProduct->prevQuantity = $quantity;
+        //$cartProduct->prevQuantity = $quantity;
 
         //Update the Order Amount
-        $cartProduct->cart->updateAmount();
+        $cart->updateAmount();
+
+        return $cart->products->load('category');
 
         //Update Offer
-        CartProduct::updateOffer($cartProduct);
+        //CartProduct::updateOffer($cartProduct);
 
-        $data = array(
+        /*$data = array(
             'message' => 'Successfully updated', 
             'status' => 'success'
-        );
+        );*/
 
-        return Redirect::to('/cart/'.$cartProduct->cart_id)->with($data);
+        //return Redirect::to('/cart/'.$cart->id)->with($data);
 
     }
 
@@ -131,7 +158,7 @@ class CartProductController extends Controller
         return Product::whereIn('id', $request->ids)->get();
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $cart, $id)
     {
         //dd($request->id);
         $cartProduct = CartProduct::find($request->id);
@@ -143,22 +170,13 @@ class CartProductController extends Controller
             }        
             
             CartProduct::destroy($request->id);
+        } 
 
-            $data = array(
-                'message' => 'Successfully deleted', 
-                'status' => 'success'
-            );
-        } else {
-            $data = array(
-                'message' => 'Product not found', 
-                'status' => 'error'
-            );
-        }
-        
+        $cartProduct->cart->updateAmount();
             
 
         //return $data;
-        return Redirect::to('/cart/'.$id)->with($data);
+        return $cartProduct->cart->load('products.category', 'payments.method', 'currency');
     }
 
     
