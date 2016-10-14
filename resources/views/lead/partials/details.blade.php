@@ -57,7 +57,10 @@
 				<div class="panel-body">
 				@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
 					<label>{{$lead->source->master->source_name or ""}}</label>
-				@elseif($lead->source->master && ($lead->source->master->channel->id==5 || $lead->source->master->channel->id ==6))
+				<?php 
+					//show lead source if it is corporate,events or Times Jobs
+				?>
+				@elseif($lead->source->master && ($lead->source->master->channel->id==5 || $lead->source->master->channel->id ==6 || $lead->source->master->id ==57))
 					<label>{{ $lead->source->master->channel->name or "" }}:{{$lead->source->master->source_name or ""}}</label>
 				@else
 					<label>{{ $lead->source->master->channel->name or "" }}</label>
