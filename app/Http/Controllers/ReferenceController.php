@@ -30,8 +30,12 @@ class ReferenceController extends Controller
     {
         $leads = Lead::getReferenceLeads($this->start_date, $this->end_date);
 
+        $end_date = date('Y-m-d H:i:s',strtotime($this->end_date));
+
         $summaries = DB::table('lead_sources AS s')
-                    ->select('sourced_by', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
+                    ->select('sourced_by', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions,
+                        COUNT(CASE WHEN f.entry_date >= s.created_at and f.entry_date<="'.$end_date.'" THEN f.entry_date END) AS sameDateRangeConversion
+                        '))
                     ->leftjoin('patient_details AS p', 'p.lead_id', '=', 's.lead_id')
 
                     ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id = B.patient_id)) AS f'), function($join) {
@@ -68,6 +72,7 @@ class ReferenceController extends Controller
             'summaries'     =>  $summaries,
             'total_leads'   => '0',
             'total_conversions' => '0',
+            'total_conversions_same_range' => '0',
             'referrers'     =>  $referrers
         );
 
