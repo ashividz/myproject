@@ -592,11 +592,7 @@ Route::group([
         Route::get('service/reports/appointments', 'ServiceController@appointments');   
         Route::post('service/reports/appointments', 'ServiceController@appointments');   
 
-        Route::get('patient/{id}/recipes', 'RecipeController@show');
-        Route::post('patient/{id}/recipes', 'RecipeController@show');
-        Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
-        Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
-
+        
         /** APIs **/
         Route::get('api/getPatient', 'PatientController@get');
 
@@ -668,6 +664,10 @@ Route::group([
         Route::post('patient/{id}/measurements', 'PatientMeasurementController@store');
         Route::post('patient/{id}/measurements/copy', 'PatientMeasurementController@copy');
 
+        Route::get('patient/{id}/recipes', 'RecipeController@show');
+        Route::post('patient/{id}/recipes', 'RecipeController@show');
+        Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
+        Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
 
 });
 
