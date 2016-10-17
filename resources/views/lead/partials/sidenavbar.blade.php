@@ -25,6 +25,10 @@
 	<li{!! (($section == "partials.survey") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/survey">Survey</a></li> 
 	<li{!! (($section == "partials.bt") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/bt">BT</a></li> 
 	<li{!! (($section == "partials.medicalTest") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/medicalTest">Medical Test</a></li>  
+
+    <li{!! (($section == "partials.symptoms") ? " class='selected'" : "") !!}><a href="/patient/symptoms/{{ $patient->id or $lead->patient->id }}">Symptoms</a></li>
+    <li{!! (($section == "partials.fab") ? " class='selected'" : "") !!}><a href="/patientFab/{{ $patient->id or $lead->patient->id }}">Fab</a></li> 
+    
 </ul>
 @endif
 @if(Auth::user()->hasRole('yuwow_support'))
