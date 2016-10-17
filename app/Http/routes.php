@@ -607,6 +607,22 @@ Route::group([
         Route::get('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
         Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
 
+        Route::get('patientFab/{id}', 'PatientFABController@patientFab');
+        Route::post('patient/add/eatingTip/', 'PatientFABController@addEatingTip');
+        Route::get('patient/eatingTips', 'PatientFABController@getAllEatingTips');
+        Route::get('patient/sampleDiets', 'PatientFABController@getSampleDiets');
+        Route::post('patient/eatingTip/{id}/delete', 'PatientFABController@deleteEatingTip');
+        Route::get('patient/getFabData', 'PatientFABController@getFabData');
+        Route::post('patient/editMeasurements/{id}', 'PatientFABController@editMeasurements');
+        Route::post('patient/editSymptoms/{id}', 'PatientFABController@editSymptoms');
+        Route::patch('patient/eatingTip/{id}', 'PatientFABController@editEatingTip');
+        Route::post('patient/saveFABDiet/{id}', 'PatientFABController@saveFABDiet');
+        Route::get('patient/getFabDiet', 'PatientFABController@getFabDiet');
+        Route::get('patient/symptoms/{id}', 'PatientFABController@getSymptoms');
+        Route::get('patient/fab/preview/{id}', 'PatientFABController@previewMail');
+        Route::get('patient/sendFabMails/{id}', 'PatientFABController@sendFabMail');
+        Route::post('patient/weightUpdate', 'PatientFABController@weightUpdate');
+
 });
 
 Route::group([
