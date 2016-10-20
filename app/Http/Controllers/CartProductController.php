@@ -48,9 +48,9 @@ class CartProductController extends Controller
 
         foreach ($request->products as $product) {
             $cart->products()->attach($product['id'], [
-                'quantity' => $product['quantity'],
+                'quantity' => 1,//$product['quantity'],
                 'price' => $product['price'],
-                'amount' => $product['amount'],
+                'amount' => $product['price'],
                 'coupon' => isset($product['coupon']) ? $product['coupon'] : null,
                 'discount' => isset($product['discount']) ? $product['discount'] : null,
                 'created_by' => Auth::id(),
@@ -139,7 +139,7 @@ class CartProductController extends Controller
         //Update the Order Amount
         $cart->updateAmount();
 
-        return $cart->products->load('category');
+        return $cart->load('products.category', 'payments.method', 'currency');
 
         //Update Offer
         //CartProduct::updateOffer($cartProduct);

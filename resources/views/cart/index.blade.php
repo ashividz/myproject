@@ -131,7 +131,7 @@
             <div v-for="product in cart.products" class="row" style="border-bottom: 1px solid #999; margin: 15px 0px">
                 <product-editable
                     :product="product"
-                    :cart="cart"
+                    :cart.sync="cart"
                 >
                 </product-editable>
             </div>

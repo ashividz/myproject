@@ -132,8 +132,9 @@ Vue.component('productEditable', {
                 amount: this.product.pivot.amount
             })
             .success(function(data){
-                this.cart.products = data;
+                this.cart = data;
                 toastr.success('Product updated', 'Success!');
+                this.toggleEdit()
             })       
             .error(function(errors) {
                 toastr.error("Error occured", "Error!");

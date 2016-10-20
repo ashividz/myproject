@@ -27,11 +27,9 @@
                                 <h3 style="text-align:center">@{{ category.name }}</h3>
 
                                 <div class="col-md-12"  style="padding:5px;border-bottom: 1px solid silver; font-weight: 500; color: #fff; font-size: 14px; background-color: #797979;">
-                                    <div class="col-md-2">Name</div>
-                                    <div class="col-md-3">Description</div>
-                                    <div class="col-md-1">Quantity</div>
-                                    <div class="col-md-1">Price</div>
-                                    <div class="col-md-1">Amount</div>
+                                    <div class="col-md-3">Name</div>
+                                    <div class="col-md-4">Description</div>
+                                    <div class="col-md-2">Price</div>
                                     <div class="col-md-3">FREE Offers</div>
                                 </div>
 
