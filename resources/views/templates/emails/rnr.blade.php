@@ -11,7 +11,7 @@
                                 </div>
                             </td>
                             <td align='center' valign='middle'>
-                                <img src='http://nutrihealthsystems.com/assets/images/logo.jpg' width='200' height='40' alt='' class='CToWUd'>
+                                <img src='http://drshikhasnutrihealth.com/logo.jpg' width='200' height='40' alt='' class='CToWUd'>
                             </td>
                         </tr>
                     </tbody>
@@ -20,7 +20,7 @@
         </tr>
         <tr>
             <td>
-                I tried calling you but was not able to connect to you. <p>Kindly provide me a suitable time to call you. 
+                I tried calling you but was unable to connect. <p>Kindly let me know a convenient time to call you.
                 </p>
                 Warm Regards,<br>
                 {{$name}},<p>
@@ -38,10 +38,10 @@
                         </tr> 
                         <tr>
                             <td align='right'>
-                                <a href='http://goo.gl/nwzLhF'><img src='http://nutrihealthsystems.com/images/android.jpg'></a>
+                                <a href='http://goo.gl/nwzLhF'><img src='http://drshikhasnutriwelhealth.com/wp-content/uploads/image/android.jpg'></a>
                             </td>
                             <td align='left'>
-                                <a href='http://goo.gl/BCUqro'><img src='http://nutrihealthsystems.com/images/ios.jpg'></a>
+                                <a href='http://goo.gl/BCUqro'><img src='http://drshikhasnutriwelhealth.com/wp-content/uploads/image/ios.jpg'></a>
                             </td>
                         </tr> 
                     </tbody>

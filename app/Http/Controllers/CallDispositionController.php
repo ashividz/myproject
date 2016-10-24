@@ -176,12 +176,12 @@ class CallDispositionController extends Controller
         }
         elseif (Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre')) 
         {
-            $message = "We were unable to reach you for counseling on Dr.Shikha's Weight Loss at Home advisory. Pls call 18001036663 for counselor " . $caller . ".\n";
+            $message = "I tried calling you but was unable to connect".".\n"."Kindly let me know a convenient time to call you.Pls call 18001036663 for counselor " . $caller . ".\n";
             $message .= "http://goo.gl/hRyWeS" . "\n";
             return $message;
         }
         
-        return "We were unable to reach you for counseling on Dr.Shikha's Weight Loss at Home advisory. Pls call 18001036663 for counselor " . $caller . ".\n";
+        return "I tried calling you but was unable to connect".".\n"."Kindly let me know a convenient time to call you.Pls call 18001036663 for counselor " . $caller . ".\n";
     }
 
     public function sendPromoEmail($lead)
