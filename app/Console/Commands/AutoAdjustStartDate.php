@@ -43,7 +43,8 @@ class AutoAdjustStartDate extends Command
             (object) ['limit' => 30,'extension' => 180],
         ]);
         $this->totalChanges = 0;
-        $this->minStartDate = Carbon::today()->subDays(30);
+        //as old email status are not reliable and fee was adjusted manullay before Sep 10,2016, adjust fees started after this date only
+        $this->minStartDate = Carbon::parse('2016-09-10'); 
     }
 
     /**
