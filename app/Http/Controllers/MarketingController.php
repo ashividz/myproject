@@ -184,7 +184,7 @@ class MarketingController extends Controller
         for ($i=1; $i <= $size; $i++) { 
 
             //Skip if no CRE
-            if($request->cre[$i] == "")
+            if($request->cre[$i] == "" || $request->phone[$i]=="")
             {    
 
                 //dd($request->cre[$i]);          
@@ -194,7 +194,7 @@ class MarketingController extends Controller
             //Check Duplicate Lead
             $lead = Lead::where('phone', Helper::properMobile($request->phone[$i]))->first();
 
-            if (!isset($lead)) {
+            if (!isset($lead) && (trim($request->email[$i]) != "") ) {
                 $lead = Lead::where('email', $request->email[$i])->first();
             }            
 
