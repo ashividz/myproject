@@ -99,7 +99,7 @@ class NutritionistController extends Controller
             'days'              =>  $days,
             'x'                 =>  '1',
             'y'                 =>  '1',
-            'z'                 =>  '1'
+           
         );
         return view('home')->with($data);
     }

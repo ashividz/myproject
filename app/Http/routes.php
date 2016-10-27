@@ -42,8 +42,6 @@ Route::group([
 
     Route::get('getPaymentMethods', 'PaymentMethodController@get');
 
-    
-    
     Route::get('/posts', 'PostController@showPosts');
     Route::get('/getPosts', 'PostController@getPosts');
     Route::get('/getPost/{id}', 'PostController@getPost');
@@ -622,7 +620,7 @@ Route::group([
         Route::get('patient/fab/preview/{id}', 'PatientFABController@previewMail');
         Route::get('patient/sendFabMails/{id}', 'PatientFABController@sendFabMail');
         Route::post('patient/weightUpdate', 'PatientFABController@weightUpdate');
-
+        Route::get('patient/fabReport', 'PatientFABController@fabReport');
 });
 
 Route::group([
