@@ -76,7 +76,8 @@ Route::group([
 
     
     Route::get('download/sourceLeads', 'LeadController@sourceLeads');
-  
+
+    
 });
 
 
@@ -624,6 +625,8 @@ Route::group([
         Route::get('patient/sendFabMails/{id}', 'PatientFABController@sendFabMail');
         Route::post('patient/weightUpdate', 'PatientFABController@weightUpdate');
         Route::get('patient/fabReport', 'PatientFABController@fabReport');
+        Route::post('patient/fabReport', 'PatientFABController@fabReport');
+        Route::get('getSentFab/{id}', 'PatientFABController@getSentFab');
 });
 
 Route::group([

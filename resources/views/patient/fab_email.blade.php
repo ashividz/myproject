@@ -1,13 +1,13 @@
 
-<div>
+<div style='padding: 10px'>
     <div>
         
         <div>
         <div>
-          <div>
+          <div >
           <table width='100%'>
               <tr><td colspan='2' style='text-align: center'>
-                 <img width='300' src='https://nutrihealthsystems.com/wp-content/uploads/2016/03/logo.png' />
+                 <img width='300' src='http://nutrihealthsystems.com/logo.jpg' />
                  <h4>FINAL ANALYSIS BROCHURE</h4></td>
                </tr>
                <tr><td width='50%'>
@@ -40,7 +40,7 @@
         <table width='100%' border='1' bordercolor='grey' cellspacing='0'>
             <thead>
             <tr><td colspan='3' style='padding: 10px;text-align: left;background: #ccc'>
-              <h4 style='margin: 0px' >MEASUREMENTS:</h4>
+              <h4 style='margin: 0px;color: #333' >MEASUREMENTS:</h4>
             </td></tr>
             <tr><th style='padding: 10px;text-align: left'>Parameters </th><th style='padding: 10px;text-align: left'>Initial </th><th style='padding: 10px;text-align: left'>Final </th></tr></thead>
               <tr><td style='padding: 10px'>Height (cm)</td><td style='padding: 10px'>{{$patient->lead->height}}</td><td style='padding: 10px'>{{$patient->lead->height}}</td></tr>
@@ -167,7 +167,7 @@
               <h4>EATING OUT TIPS</h4>
               <ol>
                 @foreach($eatingTips as $eatingTip)
-                <li class="col-md-12">
+                <li class="col-md-12" style='float: none'>
                     {{$eatingTip->name}}
                 </li>
                @endforeach
@@ -192,7 +192,7 @@
               <h4>GENERAL GUIDELINES</h4>
               <ol>
                 @foreach($patient->guidelines as $guideline)
-                <li class="col-md-12">
+                <li class="col-md-12" style='float: none'>
                     {{$guideline->description}}
                 </li>
                @endforeach

@@ -43,13 +43,13 @@ class PatientFABController extends Controller
     protected $start_date;
     protected $end_date;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->menu = "patient";
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
-        $this->nutritionist = isset($request->user) ? $request->user;
+        $this->nutritionist = isset($request->user) ? $request->user:'';
     }
 
     public function index(Request $request)
@@ -76,27 +76,40 @@ class PatientFABController extends Controller
         return view('home')->with($data);
     }
     
+    public function getSentFab($id)
+    {        
+       
+        $fab = PatientFab::find($id);
+       
+        return $fab->content;
+       /*  $data = array(
+            'categories'    =>  $categories,
+            'cart'          =>  $cart,
+        );
+       return view('cart.modals.products')->with($data);*/
+    }
+
      public function fabReport(Request $request)
     {
         $patients = Patient::with('lead')->wherehas('fees', function($q){
                                     $q->where('end_date', '>', date('Y-m-d'));
                                 }, '<', 1);
-        if(isset($request->user) && !empty($request->user))
-            $patients = $patient->where('nutritionist', $request->user);
+        if(isset($request->user) && !empty($request->user) && $request->user != 'Select User')
+            $patients = $patients->where('nutritionist', $request->user);
 
-        $patients = $patient->has('fab','<', 1)->limit(10)->get();
+        $patients = $patients->has('fab','<', 1)->limit(10)->get();
 
         $patientsFab = Patient::with('lead', 'fab')->wherehas('fees', function($q){
                                     $q->where('end_date', '>', date('Y-m-d'));
                                 }, '<', 1);
 
-        if(isset($request->user) && !empty($request->user))
+        if(isset($request->user) && !empty($request->user) && $request->user != 'Select User')
             $patientsFab = $patientsFab->where('nutritionist', $request->user);
 
         $patientsFab = $patientsFab->has('fab','>', 0)->limit(10)->get();
 
         $users = User::getUsersByRole('nutritionist');
-
+        
         $data = array(            
         'menu'              =>  'patient',
         'section'           =>  'patients_fab_report',
