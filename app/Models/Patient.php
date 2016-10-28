@@ -42,6 +42,21 @@ class Patient extends Model
         return $this->hasMany(Fee::class)->orderBy('id', 'DESC');
     }
 
+      public function fab()
+    {
+        return $this->hasOne(PatientFab::class)->latest();
+    }
+
+    public function fabs()
+    {
+        return $this->hasMany(PatientFab::class)->orderBy('id', 'DESC');
+    }
+
+    public function symptoms()
+    {
+        return $this->hasMany(PatientSymptom::class)->orderBy('id', 'DESC');
+    }
+
     public function weight()
     {
         return $this->hasOne(PatientWeight::class)->latest();
