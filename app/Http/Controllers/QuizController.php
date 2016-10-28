@@ -269,7 +269,7 @@ $newId++;
                 //dd( $users);
     }
 
-      public function downloadReport($id)
+    public function downloadReport($id)
     {
 
          $replies = QuizReply::with('user.employee')
@@ -328,7 +328,7 @@ $newId++;
         }
     }
 
-     public function editQuiz(Request $request) {
+    public function editQuiz(Request $request) {
         $replies = null;
         $setting = QuizSetting::where('id', $request->quiz_id)->with('questions')->get()->first();
         $users = User::getUsersByRole('cre');
@@ -513,18 +513,20 @@ $newId++;
     }*/
 
     public function showUserReport($id, $id2) {
-        $replies = QuizReply::with('question','answer')
 
-        ->where('user_id',$id)
-        ->whereHas('question.quiz', function($q) use($id2) {
+        $replies = QuizReply::with('question','answer')
+                    ->where('user_id', $id)
+                    ->whereHas('question', function($q) use($id2) {
                                 // Query the department_id field in status table
-                                 $q->where('quiz_setting.id', '=', $id2); // '=' is optional
+                                 $q->where('quiz_id', '=', $id2); // '=' is optional
                                 })
-        ->orderBy('is_correct','desc')
-        ->get();
-       // dd($replies);
+                    ->orderBy('is_correct','desc')
+                    ->get();
+                    
+        // dd($replies);
         //$reply = $replies->first();
-       // dd($reply->question->rightAnswer()->description);
+        // dd($reply->question->rightAnswer()->description);
+
         $user_name = User::find($id)->employee->name;
         $data = array(
             'menu'      => 'quiz',
@@ -538,7 +540,6 @@ $newId++;
 
     public function proposeSolution(Request $request) {
         
-
         $questionId = $request->questionId;
         $question = QuizQuestion::find($questionId);
         $answers = $question->answers()->get()->toArray();

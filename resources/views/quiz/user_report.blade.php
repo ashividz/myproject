@@ -1,27 +1,19 @@
 <link href="{{ asset('css/quiz_main.css') }}" rel="stylesheet">
 
             <div class="container">
-              
-
-
             <div class="panel panel-default">
                 <div class="panel-heading timer_bar">
                <h4> {{$user_name}} </h4>
                    </div>
-               
-               
-                <div class="panel-body">
+               <div class="panel-body">
                    
                  <table id="leads" class="table table-striped">
                         <thead>
-                                
                                 <th>Question</th>
                                 <th>Answer</th>
                                 <th>User Answer</th>
                                 <th>Correct</th>
                                 <th>Time </th>
-                                
-                                
                         </thead>
                         <tbody>
                             <?php
@@ -29,6 +21,7 @@
                             ?>
                             @foreach($replies AS $reply)
                             <?php 
+                            dd($reply);
                             $correct += $reply->is_correct;
                             ?>
   
@@ -49,7 +42,7 @@
                                           @else
                                             <span class="glyphicon glyphicon-remove" style="color:red;"></span>
                                            @endif
-                                        </td>
+                                         </td>
                                         <td>
                                          {{$reply->duration}}
                                         </td>
@@ -65,11 +58,11 @@
                                         ?>
                                         </td> -->
                                  
-                                  </tr>
+                                </tr>
 
                             @endforeach
                         </tbody>
-                    </table>
+                </table>
 
                     <div> <h3 style='color: #555'>Attempted {{$replies->count()}} | Correct {{$correct}} | {{round(($correct*100)/$replies->count(),2)}} %</h3></div>
                 </div>

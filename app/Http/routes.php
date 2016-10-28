@@ -73,6 +73,9 @@ Route::group([
     Route::get('lead/{id}/viewReferences', 'LeadController@showReferences');
     Route::get('lead/{id}/leadReferences', 'LeadController@leadReferences');
     Route::get('downloadRecipies', 'RecipeController@downloadRecipies');
+
+    
+    Route::get('download/sourceLeads', 'LeadController@sourceLeads');
   
 });
 

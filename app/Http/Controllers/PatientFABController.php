@@ -49,7 +49,7 @@ class PatientFABController extends Controller
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
-        $this->nutritionist = isset($request->user) ? $request->user : Auth::user()->employee->name;
+        $this->nutritionist = isset($request->user) ? $request->user;
     }
 
     public function index(Request $request)
@@ -80,13 +80,20 @@ class PatientFABController extends Controller
     {
         $patients = Patient::with('lead')->wherehas('fees', function($q){
                                     $q->where('end_date', '>', date('Y-m-d'));
-                                }, '<', 1)
-                            ->has('fab','<', 1)->limit(10)->get();
+                                }, '<', 1);
+        if(isset($request->user) && !empty($request->user))
+            $patients = $patient->where('nutritionist', $request->user);
+
+        $patients = $patient->has('fab','<', 1)->limit(10)->get();
 
         $patientsFab = Patient::with('lead', 'fab')->wherehas('fees', function($q){
                                     $q->where('end_date', '>', date('Y-m-d'));
-                                }, '<', 1)
-                            ->has('fab','>', 0)->limit(10)->get();
+                                }, '<', 1);
+
+        if(isset($request->user) && !empty($request->user))
+            $patientsFab = $patientsFab->where('nutritionist', $request->user);
+
+        $patientsFab = $patientsFab->has('fab','>', 0)->limit(10)->get();
 
         $users = User::getUsersByRole('nutritionist');
 

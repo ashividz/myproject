@@ -34,17 +34,21 @@ use App\Support\Helper;
 use Redirect;
 use Session;
 use App\DND;
+use Excel;
+use Carbon;
 
 class LeadController extends Controller
 {
     protected $menu;
     protected $dialer_url;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->menu = 'lead';
 
         $this->dialer_url = env('DIALER_URL');
+        $this->start_date = $request->start_date ? $request->start_date : Carbon::now()->format('Y-m-d'); 
+        $this->end_date = $request->end_date ? $request->end_date : Carbon::now();
     }
 
     public function index()
@@ -55,6 +59,137 @@ class LeadController extends Controller
         );
 
         return view('home')->with($data);
+    }
+
+
+    public function sourceLeads(Request $request)
+    {   
+        $leads = null;
+        if(isset($request->daterange) && !empty($request->daterange) && isset($request->source) && !empty($request->source))
+        {   
+
+            $this->daterange = isset($_REQUEST['daterange']) ? explode("-", $_REQUEST['daterange']) : "";
+            $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("2015-01-01 0:0:0");
+            $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('2015-01-15 23:59:59');
+        
+
+            $leads = Lead::with('query1','dispositions.master')
+                         ->where('source_id', $request->source)
+                         ->whereBetween('created_at', Array($this->start_date, $this->end_date))
+                         ->get();
+
+           
+            $dialer_dispositions = array();
+            foreach($leads as $lead)
+            {
+                $dispositiontxt = "";
+                foreach($lead->dispositions as $disposition)
+                  {
+                    $txt = date('jS-M-y h:i A', strtotime($disposition->created_at));
+                    $txt .= " - ".$disposition->master->disposition_code;
+                    $txt .= " - ".$disposition->remarks;
+                    $txt .= " - ".$disposition->name."<br>" ;
+                    $dispositiontxt .= $txt;
+                  }
+            
+                $lead->dispositiontxt =  $dispositiontxt;  
+
+                try {
+
+                        $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
+                                    ->where('crl.phonenumber', '=', trim($lead->phone));
+                    
+                        if(trim($lead->mobile) <> '' && ( trim($lead->mobile) <> trim($lead->phone))) {
+                            $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', trim($lead->mobile));
+                        }
+                    if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->phone)) )
+                           $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->phone)));
+                    if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->mobile)) )
+                           $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->mobile)));
+                        
+                    $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
+                                            $join->on('crl.disposition', '=', 'c.disponame');
+                                            })
+                                        ->join(DB::raw("(SELECT username, userfullname FROM ct_user) AS u"), function($join) {
+                                             $join->on('crl.username', '=', 'u.username');
+                                             })
+                                        ->select('crl.username', 'crl.eventdate', 'crl.disposition', 'crl.duration', 'crl.filename', 'c.dispodesc', 'u.userfullname')
+                                        ->orderby('crl.eventdate','desc')
+                                        ->limit(10)->get();
+                     $ddisposition = "";                   
+                    foreach($dialer_dispositions as $disposition)  
+                    {   
+                         $txt = date('jS-M-y h:i A', strtotime($disposition->eventdate));
+                          $txt .= " ".$disposition->disposition." - ".$disposition->duration."<br>";
+                        $ddisposition .= $txt;
+                    } 
+                 $lead->ddisposition =  $ddisposition;                    
+                  
+                } catch (\Exception $e) {
+                    
+                    Session::flash("message", "Error connecting with Dialer Database");
+                    Session::flash("status", "error");
+                }   
+            }
+        } 
+
+            //  $data = array(
+            //         'leads'     => $leads
+            //     );   
+            // return view('lead.partials.source_lead_download')->with($data); 
+              
+            if ($leads) {
+            Excel::create('SourceLeads', function($excel) use($leads) {
+                    $excel->sheet('Leads', function($sheet) use($leads) {
+                    //$sheet->fromArray($carts);
+                        
+                    $sheet->loadView('lead.partials.source_lead_download', array('leads' => $leads));
+                   /*     
+                    $sheet->appendRow(array(
+                           'Transaction ID', 
+                           'Lead ID',
+                           'Name', 
+                           'Email',
+                           'Phone',
+                           'Disposition',
+                           'Dialer'
+                                             
+                    ));
+                    foreach ($leads as $lead) {
+                        $transaction_id  = $lead->query1->query_id;
+                        $lead_id  = $lead->id;
+                        $lead_name  = $lead->name;
+                        $lead_email  = $lead->email;
+                        $lead_phone  = $lead->phone;
+                        $dispositiontxt  = $lead->dispositiontxt;
+                        $ddisposition  = $lead->ddisposition;
+
+                        $sheet->appendRow(array(
+                            $transaction_id,
+                        $lead_id,
+                        $lead_name,
+                        $lead_email,
+                        $lead_phone,
+                        $dispositiontxt,
+                        $ddisposition,
+                        ));
+                    }*/
+                });
+            })->download('xls');;
+        } 
+
+        $sources = Source::where('channel_id', 1)->orderBy('source_name')->get();
+        $data = array(
+            'menu'      => 'lead',
+            'section'   => 'partials.download_source_leads',
+            'sources'    => $sources,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date
+        );
+
+        return view('home')->with($data);
+
+
     }
 
     public function find(Request $request)
