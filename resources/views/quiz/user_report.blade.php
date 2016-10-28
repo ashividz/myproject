@@ -21,7 +21,7 @@
                             ?>
                             @foreach($replies AS $reply)
                             <?php 
-                            dd($reply);
+                            //dd($reply);
                             $correct += $reply->is_correct;
                             ?>
   
