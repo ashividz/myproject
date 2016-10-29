@@ -7,14 +7,14 @@
           <div >
           <table width='100%'>
               <tr><td colspan='2' style='text-align: center'>
-                 <img width='300' src='http://nutrihealthsystems.com/logo.jpg' />
+                 <img width='300' src='http://drshikhasnutriwelhealth.com/logo.jpg' />
                  <h4>FINAL ANALYSIS BROCHURE</h4></td>
                </tr>
                <tr><td width='50%'>
                  <br/><br/>
                  <label>NAME: {{$patient->lead->name}}</label> <br>
                  <label>PRAKRITI: {{$patient->prakriti->first_dominant_name}}</label> <br>
-                 <label>BLOOD GROUP: {{$patient->blood_type->name}} {{$patient->rh_factor->code}}</label>  <br>
+                 <label>BLOOD GROUP: {{$patient->blood_type->name}} {{$patient->rh_factor->code or ''}}</label>  <br>
                  <label>DURATION:
                      <span v-if="patient.lastFee.duration">
                           {{ ($patient->lastFee->duration) > 1 ? $patient->lastFee->duration . " days" : $patient->lastFee->duration ." day" }}
@@ -43,14 +43,14 @@
               <h4 style='margin: 0px;color: #333' >MEASUREMENTS:</h4>
             </td></tr>
             <tr><th style='padding: 10px;text-align: left'>Parameters </th><th style='padding: 10px;text-align: left'>Initial </th><th style='padding: 10px;text-align: left'>Final </th></tr></thead>
-              <tr><td style='padding: 10px'>Height (cm)</td><td style='padding: 10px'>{{$patient->lead->height}}</td><td style='padding: 10px'>{{$patient->lead->height}}</td></tr>
-              <tr><td style='padding: 10px'>Weight (kg)</td><td style='padding: 10px'>{{$patient->initialWeight->weight}}</td><td style='padding: 10px'>{{$patient->lastWeight->weight}}</td></tr>
-              <tr><td style='padding: 10px'>Arm (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->arms}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->arms}}</td></tr>
-              <tr><td style='padding: 10px'>Chest (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->chest}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->chest}}</td></tr>
-              <tr><td style='padding: 10px'>Waist (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->waist}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->waist}}</td></tr>
-              <tr><td style='padding: 10px'>Abdomen (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->abdomen}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->abdomen}}</td></tr>
-              <tr><td style='padding: 10px'>Hips (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->hips}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->hips}}</td></tr>
-              <tr><td style='padding: 10px'>Thighs (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->thighs}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->thighs}}</td></tr>
+              <tr><td style='padding: 10px'>Height (cm)</td><td style='padding: 10px'>{{$patient->lead->height or ''}}</td><td style='padding: 10px'>{{$patient->lead->height or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Weight (kg)</td><td style='padding: 10px'>{{$patient->initialWeight->weight or ''}}</td><td style='padding: 10px'>{{$patient->lastWeight->weight or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Arm (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->arms or ''}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->arms or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Chest (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->chest or ''}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->chest or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Waist (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->waist or ''}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->waist or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Abdomen (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->abdomen or ''}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->abdomen or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Hips (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->hips or ''}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->hips or ''}}</td></tr>
+              <tr><td style='padding: 10px'>Thighs (cm)</td><td style='padding: 10px'>{{$patient->initialMeasurement->thighs or ''}}</td><td style='padding: 10px'>{{$patient->lastMeasurement->thighs or ''}}</td></tr>
         </table>
         <br /><br />
         <table width='100%' border='1' bordercolor='grey' cellspacing='0'>
@@ -80,7 +80,7 @@
             </td></tr>
              <tr><th style='padding: 10px;text-align: left'>Parameters </th><th style='padding: 10px;text-align: left'>Initial </th><th style='padding: 10px;text-align: left'>Status </th><th style='padding: 10px;text-align: left'>Final </th><th style='padding: 10px;text-align: left'>Status </th></tr>
                <tr><td colspan="5" align="left" style="padding: 10px;padding-left: 100px;font-weight: bold;background-color:#DDDDDD;">BLOOD HAEMATOLOGY</td></tr>
-                <tr><td style='padding: 10px'>Hemoglobin </td><td style='padding: 10px'>{{$patient->initialMedical->hemoglobin}}</td><td style='padding: 10px'>{{$patient->initialMedical->hemoglobin_staus}}</td<td style='padding: 10px'>{{$patient->lastMedical->hemoglobin}}</td><td style='padding: 10px'>{{$patient->lastMedical->hemoglobin_staus}}</td</tr>
+                <tr><td style='padding: 10px'>Hemoglobin </td><td style='padding: 10px'>{{$patient->initialMedical->hemoglobin}}</td><td style='padding: 10px'>{{$patient->initialMedical->hemoglobin_staus}}</td><td style='padding: 10px'>{{$patient->lastMedical->hemoglobin}}</td><td style='padding: 10px'>{{$patient->lastMedical->hemoglobin_staus}}</td></tr>
 
                 <tr><td style='padding: 10px'>MCV </td><td style='padding: 10px'>{{$patient->initialMedical->mcv}}</td><td style='padding: 10px'>{{$patient->initialMedical->mcv_status}}</td><td style='padding: 10px'>{{$patient->lastMedical->mcv}}</td><td style='padding: 10px'>{{$patient->lastMedical->mcv_status}}</td></tr>
                 
@@ -200,6 +200,12 @@
             </div>
         </div>
         {!!$dietbody!!}
+
+        <br />
+        <br />
+       <p style='font-weight: bold'> Living Light….!!!!</p>
+        <p style='font-weight: bold'>Warm Regards<br>
+        Nutritionist - {{$patient->nutritionist}}</p>
               </div>
               </div>
               </div>

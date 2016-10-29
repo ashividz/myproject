@@ -239,7 +239,7 @@
 
           <a class="btn btn-primary" target='_blank' href="/patient/fab/preview/{{$patient->id}}" >Preview Mail</a>
           <!--<button @click="sendMail" type="button" class="btn btn-primary">Send Mail</button>-->
-           <a class="btn btn-primary" target='_blank' href="/patient/sendFabMails/{{$patient->id}}" >Send Mail</a>
+           <a class="btn btn-primary" @click="sendFabMail"  >Send Mail</a>
  
         </div>
     </div>
@@ -437,8 +437,8 @@ new Vue({
             this.editMeasurements = false;
         },
 
-        sendMail(){
-            this.$http.post("/patient/sendFabMails/{{$patient->id}}", {}).success(function(data){
+        sendFabMail(){
+            this.$http.get("/patient/sendFabMails/{{$patient->id}}", {}).success(function(data){
                 toastr.success('Mail Sent!', 'Success!');
                 this.getPatientFab;
             }).error(function(errors) {

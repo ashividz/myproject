@@ -42,6 +42,8 @@
 	@foreach($patientsFab as $patient)					
 			<?php
 				$fee = $patient->cfee ? $patient->cfee : $patient->fee;
+                $fee = $patient->fees->sortByDesc('end_date', 0)->first();
+                //dd($patient);
 			?>	
 		<tr>
 			<td>{{$y++}}</td>
@@ -52,7 +54,7 @@
             </td>
 			<td>{{$fee->start_date->format('Y-m-d')}}</td>
 			<td>{{$fee->end_date->format('Y-m-d')}}</td>
-			<td>{{$patient->fab->created_at}}
+			
 				
 			</td>
 			<td>{{$patient->lead->cre->cre or ""}}</td>
@@ -97,25 +99,22 @@
 @foreach($patients as $patient)	
 
 <?php 
-	$carbon = new Carbon();
-	$date = $patient->advance_diet ? $carbon->today()->addDays($patient->advance_diet) : $carbon->today();
-	$date = $date->addDay(1)->format('Y-m-d');
-	//$diet = $patient->diets->where('date_assign', $date)->where('email', '1')->first();
-	$diet = $patient->diets->filter(function ($item) use ($date) {
-    	return ( ($item->date_assign == $date) && ($item->email==1) );
-	})->first();	
-	$fee  = $patient->cfee ? $patient->cfee : $patient->fee;
-
-
+     $fee = $patient->fees->sortByDesc('end_date', 0)->first();
 ?>
 		
 	<tr>
 		<td>{{$y++}}</td>
 		<td><a href="/lead/{{$patient->lead->id}}/viewDetails" target="_blank">{{$patient->lead->name}}</a></td>
 		<td>{{$patient->nutritionist}}</td>
-		<td>{{$fee->start_date->format('Y-m-d')}}</td>
-		<td>{{$fee->end_date->format('Y-m-d')}}</td>
-		
+		<td>
+            @if(isset($fee->start_date))
+                {{$fee->start_date->format('Y-m-d')}}
+            @endif
+        </td>
+		<td>
+            @if(isset($fee->start_date))
+                 {{$fee->end_date->format('Y-m-d')}}</td>
+		    @endif
 		<td>{{$patient->lead->cre->cre or ""}}</td>
 		<td>
 		@foreach($patient->notes as $note)
