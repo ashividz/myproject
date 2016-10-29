@@ -37,6 +37,10 @@ use App\DND;
 use Excel;
 use Carbon;
 
+use App\Jobs\DndCheck;
+use App\Models\DndJobRange;
+use Log;
+
 class LeadController extends Controller
 {
     protected $menu;
@@ -61,6 +65,80 @@ class LeadController extends Controller
         return view('home')->with($data);
     }
 
+    public function DndQueue(Request $request) 
+    {
+         $job = null;
+      
+          $job = DB::select( DB::raw("SELECT * FROM jobs WHERE payload LIKE '%DndCheck%'"));
+          if(!$job)
+          {
+              $dndJobRange = DndJobRange::get()->first();
+              if(!$dndJobRange)
+              {
+                  $dndJobRange = new DndJobRange();
+                  $dndJobRange->start_limit  = 0;
+                  $dndJobRange->last_step  = 0;
+              }
+              else if( $dndJobRange->last_step >= $dndJobRange->total)
+              {
+                      $dndJobRange->last_step = 0;
+          
+              }
+              $dndJobRange->save();
+              $this->checkDnd();
+              //$this->dispatch(new DndCheck(Auth::id()));
+          }
+    }
+
+    public function checkDnd()
+    {
+       Log::info("Job Started ");
+       $leads = null;
+       $dndJobRange = DndJobRange::get()->first();
+       $totalRecords = Lead::where(function($q)  {
+                                $q->where('country','=','IN')
+                                  ->orWhereNull('country')
+                                  ->orWhere('country','=', '');
+                                })
+                            ->has('dnd', '<', 1)->count();
+       $count = $totalRecords - $dndJobRange->last_step;
+       $start_limit = $dndJobRange->last_step;
+       
+       $dndJobRange->total =  $totalRecords;
+       $dndJobRange->save();
+       Log::info("Job range saved ".$dndJobRange->last_step);
+       
+ 
+       $leads = Lead::where(function($q)  {
+                              $q->where('country','=','IN')
+                                ->orWhereNull('country')
+                                ->orWhere('country','=', '');
+                              })
+                       ->has('dnd', '<', 1)
+                       ->skip($start_limit)
+                       ->take($count)
+                       ->orderBy('id')
+                       ->limit(500)->get();
+       
+       $i = 1;
+      
+        foreach($leads as $lead)
+         { 
+           Lead::checkDND($lead);
+           
+           $lead->save();
+           //dd($lead);
+           if($i%20 == 0)
+            {
+              $dndJobRange->last_step = $i;
+              $dndJobRange->save();
+            }
+           $i++;
+         }
+         $dndJobRange->last_step = $i-1;
+         $dndJobRange->save();
+    }
+    
 
     public function sourceLeads(Request $request)
     {   
@@ -610,7 +688,8 @@ class LeadController extends Controller
             }
 
             $lead = Lead::updateLead($id, $request);
-
+            Lead::checkDND($lead);
+            $lead->save();
             return "Contact details updated successfully!!!";
             
         } 
@@ -648,7 +727,8 @@ class LeadController extends Controller
         $enquiry_no = Lead::getNewEnquiryNo($clinic);
 
         $lead = Lead::saveLead($request);
-
+        Lead::checkDND($lead);
+        $lead->save();
         //Save Lead Status
         $leadStatus = LeadStatus::saveStatus($lead, 1);
 
@@ -693,7 +773,9 @@ class LeadController extends Controller
         }
 
         $lead = Lead::addLead($request);
-        $this->check($lead);
+        //$this->check($lead);
+        Lead::checkDND($lead);
+        $lead->save();
         //dd($lead);
 
         return redirect("/lead/" . $lead->id . "/viewDispositions");        
@@ -923,8 +1005,9 @@ class LeadController extends Controller
                     $lead->status_id = 1;
                     $lead->created_by = Auth::user()->employee->name;
 
-                    $lead->save(); 
+                    
                     Lead::checkDND($lead);
+                    $lead->save(); 
                     $request = new Request;
                     $request->source = $source->id;
                     $request->remark = $query;

@@ -325,23 +325,56 @@ class Lead extends Model
     public static function checkDND($lead)
     {
         $dnd = new DND;
+        $leadDnd = new LeadDnd;
+        $status = 0;
+        $leadDnd->lead_id = $lead->id;
+        //dd($leadDnd->id."/ ".$leadDnd->mobile_dnd."/ ".$leadDnd->phone_dnd);
+        $resultPhone = $dnd->scrub(Helper::properMobile($lead->phone));
+       //dd("Phone X".$resultPhone);
+       
+        if($resultPhone == "Y"){
 
-        if($dnd->scrub($lead->phone) == true){
-
+            //dd("Phone X".$resultPhone);
             $lead->phone_dnd = 1;
-
-        } elseif ($dnd->scrub($lead->phone) == false) {
+            $leadDnd->phone_dnd = 1;
+            $status = 1;
+            
+        } else if($resultPhone == "N") {
+           //dd("Phone Y".$resultPhone);
             $lead->phone_dnd = 0;
+            $leadDnd->phone_dnd = 0;
+        }
+        else if($resultPhone == "error")
+        {
+            //dd("Phone 2".$resultPhone);
+            return false;
         }
 
-        if($dnd->scrub($lead->mobile) == true){
+        if(trim($lead->mobile) != trim($lead->phone))
+        {
+            $resultMobile = $dnd->scrub(Helper::properMobile($lead->mobile));
+            if($resultMobile == "Y"){
+                //dd("Mobile ".$resultMobile);
+                $lead->mobile_dnd = 1;
+                $leadDnd->mobile_dnd = 1;
 
-            $lead->mobile_dnd = 1;
-
-        } elseif ($dnd->scrub($lead->mobile) == false) {
-
-            $lead->mobile_dnd = 0;
+            } elseif ($resultMobile == "N") {
+                //dd("Mobile ".$resultMobile);
+                $lead->mobile_dnd = 0;
+                $leadDnd->mobile_dnd = 0;
+            }
+             else if($resultMobile == "error")
+            {
+               return false;
+            }
         }
+        else
+        {   
+            $lead->mobile_dnd = $lead->phone_dnd;
+            $leadDnd->mobile_dnd = $leadDnd->phone_dnd;
+        }
+
+        $leadDnd->save();
     }
 
     public static function updateLead($id, $request)
