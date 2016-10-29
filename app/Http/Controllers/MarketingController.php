@@ -216,7 +216,9 @@ class MarketingController extends Controller
 
             //Save Lead
             $lead = Lead::saveLead($request, $i);
-            $this->check($lead);
+            //$this->check($lead);
+            Lead::checkDND($lead);
+            $lead->save();
             //Save Cre
             LeadCre::saveCre($lead, $request->cre[$i]);
 
@@ -280,7 +282,9 @@ class MarketingController extends Controller
             $lead_program->program_id = "10";
             $lead_program->save();
 
-            $this->check($lead);
+            //$this->check($lead);
+            Lead::checkDND($lead);
+            $lead->save();
             //Save Cre
             LeadCre::saveCre($lead, $request->cre[$i]);
 
@@ -318,7 +322,9 @@ class MarketingController extends Controller
         }
 
         $lead = Lead::addLead($request);
-        $this->check($lead);
+        //$this->check($lead);
+        Lead::checkDND($lead);
+        $lead->save();
         return redirect("/lead/" . $lead->id . "/viewDispositions");
     }
 

@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-
+use Log;
 /*define("TIMEOUT", 2000);
 
 #DNCScrubStatusConstants
@@ -44,7 +44,7 @@ define("DNCINDIA_TANDL"         , "TandL");
 define("INVALID_JSON_ERROR_CODE"    ,   -1);
 define("INVALID_JSON_ERROR_DESC"    ,   "Error in json parsing");*/
 
-define("BASE_URI"                    ,  "http://checkdnd.com/api/check_dnd_no_api.php");
+define("BASE_URI"                    ,  "https://www.mobtexting.com/app/dndcheckApi?api_key=3c53bf3903595343ced8b3a0c97e588d26ce16e0&numbers=");
 
 class DND
 {
@@ -58,27 +58,42 @@ class DND
     
     public function scrub($mobile)
     {
-        if ($mobile == NULL) {
-            return 'null';
+        if ($mobile == NULL || $mobile == '') {
+            return 'error';
         }
+        try {
+            $client = new \GuzzleHttp\Client();
+            if (strpos($mobile, ',') !== false)
+              $input = $mobile;
+            else
+               $input = $mobile.', '.$mobile;
 
-        $client = new \GuzzleHttp\Client();
-
-        $response = $client->get(BASE_URI."?mobiles=".$mobile);
-
-        $body = $response->getBody();
-
-        $status = substr($body, strlen($body)-4, 1);
+               
+            $response = $client->get(BASE_URI."?mobiles=".$input);
+            $body = $response->getBody();
+        }
+        catch(\GuzzleHttp\Exception\ConnectException $e) 
+        {
+           Log::info('cURL Exception: ' .$mobile.' '.$e->getMessage());
+           return 'error';
+        }
+        catch(Exception $e) 
+        {
+           Log::info('cURL Exception: ' .$e->getMessage());
+           return 'error';
+        }
+         
+        $response = json_decode($body);
+       
+        $data = $response->data[1];
+        $output = json_decode(json_encode($data), true);
+        $status = $output["$mobile"];
         
         if($status=='Y'){
-
-            return true;
-
-        } else if ($status=='N') {
-
-            return false;
+            return 'Y';
+        } else {
+            return 'N';
         }
-        
         return 'error';
     }
 

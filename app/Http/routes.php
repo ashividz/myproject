@@ -148,6 +148,8 @@ Route::group([
         Route::get('admin/ip/roles', 'IPController@viewIPRoles');
         Route::post('admin/ip/roles/save', 'IPController@saveIPRole');
         Route::get('admin/ip/role/delete', 'IPController@deleteIPRole');
+        Route::get('dndQueue', 'LeadController@DndQueue');
+        Route::get('checkDnd', 'LeadController@checkDnd');
         
 });
 

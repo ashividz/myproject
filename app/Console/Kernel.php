@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ProductEmailer::class,
         \App\Console\Commands\ProductReminderMail::class,
         \App\Console\Commands\AutoAdjustStartDate::class,
-
+        \App\Console\Commands\DndChecker::class,
     ];
 
     /**
@@ -71,6 +71,20 @@ class Kernel extends ConsoleKernel
         });
 
 
+        $schedule->command('dnd:check') 
+        ->everyTenMinutes()
+        ->withoutOverlapping()
+        ->appendOutputTo('/var/www/html/cron/dndlog')
+        ->before(function () {
+                $status = PHP_EOL.'-----------------------------------------------------------'.PHP_EOL;
+                $status .= 'dnd_check_start_at :'.date('Y-m-d H:i:s').PHP_EOL;
+                exec('echo "'.$status.'" >> '.' /var/www/html/cron/dndlog');
+            })
+        ->after(function() {
+            $status = PHP_EOL.'dnd_check_end_at :'.date('Y-m-d H:i:s').PHP_EOL;
+            $status .= '-----------------------------------------------------------'.PHP_EOL;
+            exec('echo "'.$status.'" >> '.' /var/www/html/cron/dndlog');
+        });
 
         $schedule->command('inspire')
                  ->hourly();

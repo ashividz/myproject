@@ -10,7 +10,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Lead;
 use App\DND;
 use Auth;
-
+use App\Jobs\DndCheck;
+use App\Models\DndJobRange;
+use Log;
 
 class DNDController extends Controller
 {
@@ -47,27 +49,35 @@ class DNDController extends Controller
 	{
 		$dnd = new DND;
 
-		if($dnd->scrub($lead->phone) == true){
+		$status = 0;
+        if($dnd->scrub($lead->phone) == "Y"){
 
-			echo '<p>Phone : '.$lead->id.$lead->name;
-			Lead::setPhoneDNDStatus($lead, 1);
+            echo '<p>Phone : '.$lead->id.$lead->name;
+            Lead::setPhoneDNDStatus($lead, 1);
+            $status = 1;
+        } elseif ($dnd->scrub($lead->phone) == "N") {
+            Lead::setPhoneDNDStatus($lead, 0);
+            $status = 0;
+        }
 
-		} elseif ($dnd->scrub($lead->phone) == false) {
-			Lead::setPhoneDNDStatus($lead, 0);
-		}
 
+        
+        if(trim($lead->mobile) != trim($lead->phone))
+        {
+            if($dnd->scrub($lead->mobile) == "Y"){
 
-		
-		
-		if($dnd->scrub($lead->mobile) == true){
+                Lead::setMobileDNDStatus($lead, 1);
+                echo '<p>Mobile : '.$lead->id.$lead->name;
 
-			Lead::setMobileDNDStatus($lead, 1);
-			echo '<p>Mobile : '.$lead->id.$lead->name;
+            } elseif ($dnd->scrub($lead->mobile) == "N") {
 
-		} elseif ($dnd->scrub($lead->mobile) == false) {
-
-			Lead::setMobileDNDStatus($lead, 0);
-		}
+                Lead::setMobileDNDStatus($lead, 0);
+            }
+        }
+        else
+        {   
+            Lead::setMobileDNDStatus($lead, $status);
+        }
 	}
 
 	public function show($id)
@@ -102,10 +112,10 @@ class DNDController extends Controller
 	{
 		$status = 0;
 		$dnd = new DND;
-
-		if($dnd->scrub($phone)){
-			$status = 1;
-		} 
+		$status = $dnd->scrub($phone);
+		// if($dnd->scrub($phone)){
+		// 	$status = 1;
+		// } 
 
 		echo $status;
 	}
