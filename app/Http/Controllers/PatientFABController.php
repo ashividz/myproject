@@ -89,24 +89,30 @@ class PatientFABController extends Controller
        return view('cart.modals.products')->with($data);*/
     }
 
-     public function fabReport(Request $request)
+    public function fabReport(Request $request)
     {
-        $patients = Patient::with('lead')->wherehas('fees', function($q){
+        $patients = Patient::with('lead.cre', 'fees')->wherehas('fees', function($q){
                                     $q->where('end_date', '>', date('Y-m-d'));
-                                }, '<', 1);
+                                }, '<', 1)
+                    ->join(DB::raw("(SELECT * FROM fees_details A WHERE end_date = (SELECT MAX(end_date) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS c"), function($join) {
+                             $join->on('patient_details.id', '=', 'c.patient_id');
+                        })->select('patient_details.*', 'c.id as fid', 'c.start_date as start_date', 'c.end_date as end_date');;
+
         if(isset($request->user) && !empty($request->user) && $request->user != 'Select User')
             $patients = $patients->where('nutritionist', $request->user);
 
-        $patients = $patients->has('fab','<', 1)->limit(10)->get();
+        $patients = $patients->has('fab','<', 1)->orderBy('c.end_date', 'desc')->limit(100)->get();
 
-        $patientsFab = Patient::with('lead', 'fab')->wherehas('fees', function($q){
+        $patientsFab = Patient::with('lead.cre', 'fab', 'fees')->wherehas('fees', function($q){
                                     $q->where('end_date', '>', date('Y-m-d'));
-                                }, '<', 1);
-
+                                }, '<', 1)
+                    ->join(DB::raw("(SELECT * FROM patient_fab A WHERE id = (SELECT MAX(id) FROM patient_fab B WHERE A.patient_id=B.patient_id)) AS c"), function($join) {
+                             $join->on('patient_details.id', '=', 'c.patient_id');
+                        })->select('patient_details.*', 'c.id as fid', 'c.content as content', 'c.created_at as fab_date');
         if(isset($request->user) && !empty($request->user) && $request->user != 'Select User')
             $patientsFab = $patientsFab->where('nutritionist', $request->user);
 
-        $patientsFab = $patientsFab->has('fab','>', 0)->limit(10)->get();
+        $patientsFab = $patientsFab->has('fab','>', 0)->orderBy('c.id', 'desc')->limit(100)->get();
 
         $users = User::getUsersByRole('nutritionist');
         
@@ -115,10 +121,8 @@ class PatientFABController extends Controller
         'section'           =>  'patients_fab_report',
         'users'             =>  $users,
         'name'              =>  $this->nutritionist,
-       
         'patients'          =>  $patients,
         'patientsFab' =>  $patientsFab,
-       
         'x'                 =>  '1',
         'y'                 =>  '1',
         'z'                 =>  '1'
@@ -335,6 +339,7 @@ class PatientFABController extends Controller
 
     public function sendFabMail(Request $request)
     {   
+        $patientFab = null;
         $request->patient_id  = $request->id;  
         $patient = $this->getFabData($request);
         $guidelines = FabGuideline::get();
@@ -356,28 +361,35 @@ class PatientFABController extends Controller
            // $pdf->save($filename);
 
             $view = View::make('patient.fab_email', ['patient' => $patient, 'eatingTips' => $eatingTips, 'dietbody' => $dietbody]);
-            $fabcontent = $view->render();
-            $patientFab = new PatientFab;
-            $patientFab->patient_id = $request->id;
-            $patientFab->content = $fabcontent;
-            $patientFab->created_by = Auth::user()->id;
-            $patientFab->save();
-
-            Mail::send('patient.fab_email', ['patient' => $patient, 'eatingTips' => $eatingTips, 'dietbody' => $dietbody], function($message) use ($patient)
-                {
-                    $message->to($patient->lead->email, $patient->lead->name)
-                        //->bcc("diet@nutrihealthsystems.co.in")
-                        ->subject("FINAL ANALYSIS BROCHURE - ".$patient->lead->name." - ".date('D, jS M, Y H:i:s'))
-                        ->from('diet@nutrihealthsystems.co.in', 'Nutri-Health Systems');
-                    if (trim($patient->lead->email_alt) <> '') {
-                        $message->cc($patient->lead->email_alt, $patient->lead->name);
-                    }
-                });
+            if($view)
+            {
+                $fabcontent = $view->render();
+                $patientFab = new PatientFab;
+                $patientFab->patient_id = $request->id;
+                $patientFab->content = $fabcontent;
+                $patientFab->created_by = Auth::user()->id;
+                $patientFab->save();
+            }
+            if($patientFab)
+            {
+              Mail::send('patient.fab_email', ['patient' => $patient, 'eatingTips' => $eatingTips, 'dietbody' => $dietbody], function($message) use ($patient)
+                    {
+                        $message->to($patient->lead->email, $patient->lead->name)
+                            //->bcc("diet@nutrihealthsystems.co.in")
+                            ->subject("FINAL ANALYSIS BROCHURE - ".$patient->lead->name." - ".date('D, jS M, Y H:i:s'))
+                            ->from('diet@nutrihealthsystems.co.in', 'Nutri-Health Systems');
+                        if (trim($patient->lead->email_alt) <> '') {
+                            $message->cc($patient->lead->email_alt, $patient->lead->name);
+                        }
+                    });
+            }
         }
         else {
             $message .= '<li>Email does not exist for '.$patient->lead->name.'</li>';
             $status = 'error';
         }
+        return $patientFab;
+
     }
 
     public function weightUpdate(Request $request)

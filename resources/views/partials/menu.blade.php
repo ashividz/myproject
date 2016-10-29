@@ -332,6 +332,9 @@
                         <li>
                             <a href="/service/reports/yuwow/feedback" id="menu_service_diet-not-started">Yuwow Feedback</a>
                         </li>
+                        <li>
+                            <a href="/service/reports/fabReport" id="menu_service_fab_report">FAB Report</a>
+                        </li>
                     </ul>
                 </li>
                 
@@ -404,6 +407,11 @@
                 </li>
                 <li>
                     <a href="/marketing/uploadLead" id="menu_upload_lead">Upload Lead</a>
+                    <ul>
+                        <li>
+                            <a href="/download/sourceLeads" id="menu_leads">Download Leads</a>
+                        </li>
+                        </ul>
                 </li> 
                     
                 <li>

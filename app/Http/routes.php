@@ -628,8 +628,8 @@ Route::group([
         Route::get('patient/fab/preview/{id}', 'PatientFABController@previewMail');
         Route::get('patient/sendFabMails/{id}', 'PatientFABController@sendFabMail');
         Route::post('patient/weightUpdate', 'PatientFABController@weightUpdate');
-        Route::get('patient/fabReport', 'PatientFABController@fabReport');
-        Route::post('patient/fabReport', 'PatientFABController@fabReport');
+        Route::get('service/reports/fabReport', 'PatientFABController@fabReport');
+        Route::post('service/reports/fabReport', 'PatientFABController@fabReport');
         Route::get('getSentFab/{id}', 'PatientFABController@getSentFab');
 });
 
