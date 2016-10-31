@@ -316,7 +316,7 @@ class Lead extends Model
         }
             
         $lead->created_by = Auth::user()->employee->name;
-        Lead::checkDND($lead);
+        //Lead::checkDND($lead);
         $lead->save();
 
         return $lead;
@@ -413,7 +413,6 @@ class Lead extends Model
     {
         try 
         {
-
             //Save New Lead
             $lead = Lead::saveLead($request);
 

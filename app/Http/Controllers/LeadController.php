@@ -774,8 +774,8 @@ class LeadController extends Controller
 
         $lead = Lead::addLead($request);
         //$this->check($lead);
-        Lead::checkDND($lead);
-        $lead->save();
+        //Lead::checkDND($lead);
+        //$lead->save();
         //dd($lead);
 
         return redirect("/lead/" . $lead->id . "/viewDispositions");        
