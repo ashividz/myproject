@@ -292,10 +292,9 @@
 	foreach($patient->notes as $note) {
 		$notes .= $note->text . " : <b>". $note->created_by."</b><em> (".$note->created_at.")</em><p>";
 	}
-	
 ?>
 						<tr>
-							<td>{{$z++}}</td>
+							<td></td>
 							<td><a href="/lead/{{$patient->lead->id}}/viewDetails" target="_blank">{{$patient->lead->name}}</a></td>
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
