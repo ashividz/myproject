@@ -31,7 +31,7 @@
     
 </ul>
 @endif
-@if(Auth::user()->hasRole('yuwow_support'))
+@if(Auth::user()->hasRole('yuwow_support') && (isset($lead->patient) || isset($patient) ) )
 	<ul id="sidenav">
 		<li{!! (($section == "partials.yuwow") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/yuwow">YuWoW</a></li>		
 	</ul>
