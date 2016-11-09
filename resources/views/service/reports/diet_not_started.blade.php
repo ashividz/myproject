@@ -51,7 +51,7 @@
                                 <td>{{ $patient->lead->country or "" }} - {{ $patient->lead->region->region_name or "" }} - {{ $patient->lead->city or "" }}</td>
 
                                 <td>{{ $fee->source->source_name or "" }} </td>
-                                <td>{{ $fee->created_at->format('d-M-Y h:i A')}} </td>
+                                <td>{{ $fee->entry_date}}</td>
                                 <td>{{ $fee->start_date->format('d-M-Y')}} </td>
 
                                 <td>{{ $fee->end_date->format('d-M-Y')}} </td>
