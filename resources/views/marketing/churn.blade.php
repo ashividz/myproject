@@ -8,7 +8,13 @@
 			</div>	
 			<div class="panel-body">
 				<form id="form2" class="form-inline" method="POST" action="">
-					<b>FILTER</b>		
+					<b>FILTER</b>	
+
+                    <div class="checkbox">
+                        <label>
+                        <input type="checkbox" id="ncr" checked="true" onchange="filter(this.id)"> Delhi NCR
+                        </label>
+                    </div>  	
 				  	<div class="checkbox">
 				    	<label>
 				      	<input type="checkbox" id="pan" checked="true" onchange="filter(this.id)"> PAN India
@@ -28,6 +34,7 @@
 								<td><input type="checkbox" id="checkAll"></td>
 								<td>Name</td>
 								<td>Country</td>
+                                <td>State</td>
 								<td>CRE Assigned Date</td>
 								<td>Source</td>
 								<td>Status</td>
@@ -41,10 +48,13 @@
 
 							<?php
 								$filter = "";
-									if ($lead->country == 'IN' || trim($lead->country) == '' || !$lead->country) {
-										$filter = "pan";
-										$checkboxclass = "pancheck";
-									}
+									if ($lead->state == 'IN.07') {
+										$filter = "ncr";
+										$checkboxclass = "ncrcheck";
+									}else if (($lead->country == 'IN' || trim($lead->country) == '' || !$lead->country) && $lead->state <> 'IN.07') {
+                                        $filter = "pan";
+                                        $checkboxclass = "pancheck";
+                                    }
 									else{
 										$filter = "int";
 										$checkboxclass = "intcheck";
@@ -57,7 +67,8 @@
 								<td>
 									<a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name"}}</a>
 								</td>
-								<td>{{$lead->country}}</td>
+								<td>{{ $lead->country }}</td>
+                                <td>{{ $lead->region->region_name or "" }}</td>
 								<td>
 									{{date('jS M Y', strtotime($lead->cre->created_at))}}
 								</td>
@@ -151,7 +162,9 @@ $(document).ready(function()
 	});	
 
 	$("#checkAll").change(function () {
-	    if($("#pan").is(':checked'))
+	    if($("#ncr").is(':checked'))
+            $(".ncrcheck").prop('checked', $(this).prop("checked"));
+        if($("#pan").is(':checked'))
 	    	$(".pancheck").prop('checked', $(this).prop("checked"));
 	    if($("#int").is(':checked'))
 	    	$(".intcheck").prop('checked', $(this).prop("checked"));
@@ -165,7 +178,9 @@ $(document).ready(function()
 	    	$('tr.' + id).show();  // checked
 		else{
 	    	$('tr.' + id).hide();// unchecked
-		    if(id=="pan")
+		    if(id=="ncr")
+                $(".ncrcheck").prop('checked', false);
+            if(id=="pan")
 		    	$(".pancheck").prop('checked', false);
 		    if(id=="int")
 		    	$(".intcheck").prop('checked', false);

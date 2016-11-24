@@ -14,11 +14,25 @@ setlocale(LC_MONETARY, "en_IN");
 
 //Route::get('leads/update', 'LeadsController@update');
 
-
-
+/*Route::get('leads/conversions',function(){
+    $leads =  App\Models\Leads::
+            with('patient')
+            ->wherebetween('created_at', ['2016-09-01', '2016-09-31 23:59:59'])
+            //->where('state', '<>', 'IN.07')
+            ->where('country', '<>' ,'IN')
+            //->orWhereNull('country')
+            ->groupBy('country')
+            ->selectRaw('country, count(*) as count')
+            ->get();
+    //dd($leads);
+    foreach ($leads as $lead) {
+        echo $lead->country . " - " . $lead->count . "<p>";
+    }
+});
+*/
 
 Route::group([
-    'middleware' => ['auth', 'roles','checkip']],
+    'middleware' => ['auth', 'roles', 'checkip']],
     function() { 
     /** Tracking**/
     Route::get('shippings','ShippingController@index');

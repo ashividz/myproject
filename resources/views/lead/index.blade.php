@@ -82,9 +82,9 @@
                             <td><b>{{ $disposition->disposition or "" }}</b>
                                 
                             </td>
-                            <td>{{ $disposition->duration }}</td>
-                            <td>{{ $disposition->userfullname }}</td>
-                            <td><a href='/playAudio/?mediafile={{$disposition->filename}}'><i class="fa fa-play-circle"></i></a></td>
+                            <td>{{ $disposition->duration or "" }}</td>
+                            <td>{{ $disposition->userfullname or "" }}</td>
+                            <td><a href='/playAudio/?mediafile={{ $disposition->filename or "" }}'><i class="fa fa-play-circle"></i></a></td>
                         </tr>
             @endforeach
                     </tbody>
