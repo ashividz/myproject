@@ -165,23 +165,21 @@
                             <th>Date</th>
                             <th>Disposition</th>
                             <th>Duration</th>
-                            <th>Name</th>
-                            <th></th>
+                            <th>Name</th>                            
                         </tr>
                     </thead>
                     <tbody>
             <?php $i=0 ?>
             @foreach($dialer_dispositions as $disposition)
-                <?php $i++ ?>
+                <?php $i++; ?>
                         <tr>
                             <td>{{ $i }}</td>
-                            <td>{{ date('jS-M-y h:i A', strtotime($disposition->eventdate)) }}</td>
+                            <td>{{ date('jS-M-y h:i A', strtotime($disposition->recordentrydate))}}</td>
                             <td><b>{{ $disposition->disposition or "" }}</b>
                                 
                             </td>
-                            <td>{{ $disposition->duration }}</td>
-                            <td>{{ $disposition->userfullname }}</td>
-                            <td><a href='/playAudio/?mediafile={{$disposition->filename}}'><i class="fa fa-play-circle"></i></a></td>
+                            <td>{{gmdate('H:i:s',$disposition->callduration) }}</td>
+                            <td>{{ $disposition->userfullname    }}</td>                            
                         </tr>
             @endforeach
                     </tbody>

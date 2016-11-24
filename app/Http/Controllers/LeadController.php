@@ -547,35 +547,27 @@ class LeadController extends Controller
 
         try {
 
-            $dialer_dispositions = DB::connection('pgsql')->table('ct_recording_log as crl')
-                            ->where('crl.phonenumber', '=', trim($lead->phone));
+            $dialer_dispositions = DB::connection('pgsql2')->table('nr_conn_cdr as crl')
+                ->where('crl.phonenumber', '=', trim($lead->phone));
             
-                if(trim($lead->mobile) <> '' && ( trim($lead->mobile) <> trim($lead->phone))) {
+                if (trim($lead->mobile) <> '' && ( trim($lead->mobile) <> trim($lead->phone))) {
                     $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', trim($lead->mobile));
                 }
             if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->phone)) )
                    $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->phone)));
             if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->mobile)) )
                    $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->mobile)));
-                
-            $dialer_dispositions = $dialer_dispositions->join(DB::raw("(SELECT distinct disponame, dispodesc FROM ct_dispositions) AS c"), function($join) {
-                                    $join->on('crl.disposition', '=', 'c.disponame');
-                                    })
-                                ->join(DB::raw("(SELECT username, userfullname FROM ct_user) AS u"), function($join) {
-                                     $join->on('crl.username', '=', 'u.username');
-                                     })
-                                ->select('crl.username', 'crl.eventdate', 'crl.disposition', 'crl.duration', 'crl.filename', 'c.dispodesc', 'u.userfullname')
-                                ->orderby('crl.eventdate','desc')
+            
+            $dialer_dispositions = $dialer_dispositions->select('*')
+                                ->orderby('crl.recordentrydate','desc')
                                 ->limit(10)->get();
             
         } catch (\Exception $e) {
             
             Session::flash("message", "Error connecting with Dialer Database");
             Session::flash("status", "error");
-        }       
-                              
-
-    
+        }      
+              
         $data = array(
             'menu'          =>  'lead',
             'section'       =>  'partials.dispositions',
