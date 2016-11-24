@@ -998,7 +998,7 @@ class LeadController extends Controller
                     $lead->created_by = Auth::user()->employee->name;
 
                     
-                    Lead::checkDND($lead);
+                    //Lead::checkDND($lead);
                     $lead->save(); 
                     $request = new Request;
                     $request->source = $source->id;
