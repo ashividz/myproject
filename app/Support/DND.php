@@ -58,6 +58,8 @@ class DND
     
     public function scrub($mobile)
     {
+        return 'N';
+
         if ($mobile == NULL || $mobile == '') {
             return 'error';
         }
