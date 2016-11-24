@@ -98,15 +98,27 @@ return [
         sudo service apache2 restart
         */
         'pgsql' => [
-            'driver'   => 'pgsql',
-            'host'     => '192.168.1.203',
-            'database' => 'ngucc',
-            'username' => 'postgres',
-            'password' => 'Avis!123',
+            'driver'   => env('DB_DIALER_CONNECTION_NGUCC', 'pgsql'),
+            'host'     => env('DB_DIALER_HOST_NGUCC', 'localhost'),
+            'database' => env('DB_DIALER_DATABASE_NGUCC', 'homestead'),
+            'username' => env('DB_DIALER_USERNAME_NGUCC', 'forge'),
+            'password' => env('DB_DIALER_PASSWORD_NGUCC', 'forge'),
             'charset'  => 'utf8',
             'prefix'   => '',
             'schema'   => 'public',
         ],
+
+        'pgsql2' => [
+            'driver'   => env('DB_DIALER_CONNECTION_REPORTS', 'pgsql'),
+            'host'     => env('DB_DIALER_HOST_REPORTS', 'localhost'),
+            'database' => env('DB_DIALER_DATABASE_REPORTS', 'homestead'),
+            'username' => env('DB_DIALER_USERNAME_REPORTS', 'forge'),
+            'password' => env('DB_DIALER_PASSWORD_REPORTS', 'forge'),
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ],
+
 
         'sqlsrv' => [
             'driver'   => 'sqlsrv',
