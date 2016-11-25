@@ -14,6 +14,11 @@ class LeadSource extends Model
 
     protected $fillable = ['source_id', 'referrer_clinic', 'referrer_enquiry_no', 'sourced_by', 'remarks', 'voice_id', 'httpagent'];
 
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
+    }
+
     public function master()
     {
     	return $this->belongsTo(Source::class, 'source_id');

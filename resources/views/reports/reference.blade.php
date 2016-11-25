@@ -73,47 +73,29 @@
                   <th>Leads Conversions</th>
                   <th>Percentage</th>
                   <th>Conversions in Date Range</th>
-                  <th>Sourced and converted in same Date Range</th>
                 </tr>
               </thead>
               <tbody>
 
             @foreach($summaries AS $summary)  
                 <tr>
-                  <td>{{$summary->sourced_by}}</td>
-                  <td>{{$summary->leads}}</td>
-                  <td>{{$summary->conversions}}</td>
-
-                @if($summary->conversions <> 0)                    
-                  <td>{{round($summary->conversions/$summary->leads*100, 2)}} %</td>
-                @else
-                  <td></td>
-                @endif
-<?php 
-  $fee = Fee::conversions($start_date, $end_date, 10, $summary->sourced_by);
-?>
-                  <td>{{$fee->count()}}</td>
-                  <td>{{$summary->sameDateRangeConversion }}</td>
-                  
+                    <td>{{ $summary->sourced_by }}</td>
+                    <td>{{ $summary->count() }}</td>
+                    <td>{{ $summary->conversions }}</td>
+                    <td>{{ round($summary->conversions/$summary->count()*100, 2) }} %</td>
+                    <td>{{ $summary->patients }}</td>
                 </tr>
-
-            <?php 
-              $total_leads += $summary->leads;
-              $total_conversions += $summary->conversions;
-              $total_conversions_same_range  += $total_conversions_same_range;
-            ?>
-
             @endforeach
 
               </tbody>
               <tfoot>
                 <tr style="background-color:#f2f2f2;">
                   <th>Total</th>
-                  <th>{{$total_leads}}</th>
-                  <th>{{$total_conversions}}</th>
-                  <th>{{$total_leads > 0 ? round($total_conversions/$total_leads*100, 2) : '0'}} %</th>
-                  <th>{{Fee::conversions($start_date, $end_date, 10)->count()}}</th>
-                  <th>{{$total_conversions_same_range}}</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
                 </tr>
               </tfoot>
             </table>       

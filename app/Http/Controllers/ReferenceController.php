@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
+use App\Models\LeadSource;
 use DB;
 
 class ReferenceController extends Controller
@@ -17,8 +18,8 @@ class ReferenceController extends Controller
     public function __construct()
     {
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
-        $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
-        $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');        
+        $this->start_date = isset($this->daterange[0]) ? date('Y-m-d 0:0:0', strtotime($this->daterange[0])) : date("Y-m-01 0:0:0");
+        $this->end_date = isset($this->daterange[1]) ? date('Y-m-d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');        
     } 
 
     /**
@@ -30,9 +31,43 @@ class ReferenceController extends Controller
     {
         $leads = Lead::getReferenceLeads($this->start_date, $this->end_date);
 
-        $end_date = date('Y-m-d H:i:s',strtotime($this->end_date));
+        //$end_date = date('Y-m-d H:i:s',strtotime($this->end_date));
 
-        $summaries = DB::table('lead_sources AS s')
+        $summaries = LeadSource::with(['lead.patient.fees' => function($q) {
+                        $q->where('created_at', '>=', $this->start_date)
+                        ->where('source_id', 10);
+                    }])
+                    ->whereBetween('created_at', [$this->start_date, $this->end_date])
+                    ->where('source_id', 10)
+                    //->where('sourced_by', 'Sulekha Jangra')
+                    ->groupBy('lead_id')
+                    //->limit(9)
+                    ->get(); 
+        $summaries = $summaries->groupBy('sourced_by');
+
+        foreach ($summaries as $key => $value) {
+            $filtered = $value->filter(function ($value) {
+                return isset($value->lead->patient->fees);
+            });
+
+            $value->conversions = $filtered->count();//;$value->where('lead.patient.id', '>', 0)->pluck('lead.patient');
+            $value->sourced_by = $key;
+            $value->patients = LeadSource::
+                                whereHas('lead.patient.fees', function($q) {
+                                    $q->whereBetween('created_at', [$this->start_date, $this->end_date])
+                                        ->where('source_id', 10)
+                                        ;
+                                })
+                                //->with('lead.patient.fees')
+                                ->where('sourced_by', $key)
+                                ->count();
+                                //dd($value->patients);
+                                //dd($value);
+        }
+
+        //dd($summaries);
+
+        /*$summaries = DB::table('lead_sources AS s')
                     ->select('sourced_by', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions,
                         COUNT(CASE WHEN f.entry_date >= s.created_at and f.entry_date<="'.$end_date.'" THEN f.entry_date END) AS sameDateRangeConversion
                         '))
@@ -45,7 +80,7 @@ class ReferenceController extends Controller
                     ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
                     ->groupBy('sourced_by')
                     ->orderBy('conversions', 'DESC')
-                    ->get();
+                    ->get();*/
 
         
 
