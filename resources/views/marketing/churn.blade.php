@@ -70,7 +70,9 @@
 								<td>{{ $lead->country }}</td>
                                 <td>{{ $lead->region->region_name or "" }}</td>
 								<td>
+                                @if($lead->cre)
 									{{date('jS M Y', strtotime($lead->cre->created_at))}}
+                                @endif
 								</td>
 								<td>
 									{{$lead->source->master->source_name or ""}}
