@@ -213,7 +213,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<input type="text" id="date" name="date" size="10" value="{{ $diet_date }}" readonly placeholder="{{ $diet_date }}">
+							<input type="text" id="date" name="date" value="{{ Carbon::parse($diet_date)->format('D, j-m-Y') }}" readonly placeholder="{{ Carbon::parse($diet_date)->format('D, j-m-Y') }}">
 						</td>
 						<!--<td>
 							<div><label>Early Morning:</label></div>
@@ -401,7 +401,7 @@ $(document).ready(function()
   $('#date').daterangepicker({
     singleDatePicker: true,
     showDropdowns: true,
-    format: 'D-M-YYYY',
+    format: 'ddd, D-M-YYYY',
     minDate: new Date()  
   }); 
  });
