@@ -68,9 +68,12 @@ class ServiceController extends Controller
 
     public function saveNutritionist(Request $request)
     {
-        if (Nutritionist::ifMultipleNtrOnSameDate($request)) {
+        /** Removed because of request from Service team
+            Saaz Rai - 26th Nov 2016
+        **/
+        /*if (Nutritionist::ifMultipleNtrOnSameDate($request)) {
             return "Cannot add multiple Nutritionists on same date";
-        }
+        }*/
 
         if (Nutritionist::ifSameNutritionist($request)) {
             return "Cannot add same Nutritionist";
