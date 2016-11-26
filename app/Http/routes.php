@@ -336,6 +336,10 @@ Route::group([
         Route::get('marketing/dialer_push', 'DialerPushController@getLeads');
         Route::post('marketing/dialer_push', 'DialerPushController@getLeads');
 
+        Route::get('marketing/dialer_pushx', 'DialerPushController@PreedictiveQueue');
+        Route::post('marketing/dialer_pushx', 'DialerPushController@PreedictiveQueue');
+
+
         Route::post('dialer/push/leads', 'DialerPushController@execute');
 
         
