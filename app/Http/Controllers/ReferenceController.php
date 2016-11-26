@@ -32,6 +32,7 @@ class ReferenceController extends Controller
         $leads = Lead::getReferenceLeads($this->start_date, $this->end_date);
 
         //$end_date = date('Y-m-d H:i:s',strtotime($this->end_date));
+        //$this->start_date = "2016-11-01";
 
         $summaries = LeadSource::with(['lead.patient.fees' => function($q) {
                         $q->where('created_at', '>=', $this->start_date)
@@ -39,10 +40,11 @@ class ReferenceController extends Controller
                     }])
                     ->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->where('source_id', 10)
-                    //->where('sourced_by', 'Sulekha Jangra')
-                    ->groupBy('lead_id')
+                    //->where('sourced_by', 'Deepti Gupta')
+                    //->groupBy('lead_id')
                     //->limit(9)
                     ->get(); 
+        //dd($summaries->pluck('lead.patient.fees'));
         $summaries = $summaries->groupBy('sourced_by');
 
         foreach ($summaries as $key => $value) {
@@ -60,6 +62,7 @@ class ReferenceController extends Controller
                                 })
                                 //->with('lead.patient.fees')
                                 ->where('sourced_by', $key)
+                                ->where('source_id', 10)
                                 ->count();
                                 //dd($value->patients);
                                 //dd($value);
