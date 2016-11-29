@@ -163,6 +163,7 @@
                         <tr>
                             <th>#</th>
                             <th>Date</th>
+                            <th>Call type</th>
                             <th>Disposition</th>
                             <th>Duration</th>
                             <th>Name</th>                            
@@ -175,6 +176,7 @@
                         <tr>
                             <td>{{ $i }}</td>
                             <td>{{ date('jS-M-y h:i A', strtotime($disposition->recordentrydate))}}</td>
+                            <td><b>{{ $disposition->calltype }}</b></td>
                             <td><b>{{ $disposition->disposition or "" }}</b>
                                 
                             </td>
