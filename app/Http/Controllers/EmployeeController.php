@@ -12,6 +12,7 @@ use App\Support\Helper;
 use App\Models\Employee;
 use App\Models\EmployeeSupervisor;
 use App\Models\User;
+use App\Models\Title;
 use Input;
 use Auth;
 use DB;
@@ -88,7 +89,8 @@ class EmployeeController extends Controller
 
     public function showEditForm($id)
     {
-        $employee = Employee::where('id', $id)->first();
+        $employee = Employee::with('titles')->find($id);
+        //$titles = Title::get();
 
         $data = array(
             "menu"      => "hr",
@@ -232,5 +234,31 @@ class EmployeeController extends Controller
         );
 
         return view('home')->with($data);
+    }
+
+    public function storeTitle(Request $request, $employee_id)
+    {
+        $employee = Employee::find($employee_id);
+
+        $employee->titles()->attach($request->title_id, [
+            'start_date'    => $request->start_date,
+            //'end_date'      => $request->end_date ? : null
+        ]);
+
+        return $employee->titles;
+    }
+
+    public function updateTitle(Request $request, $employee_id, $id)
+    {
+        $employee = Employee::find($employee_id);
+
+        $employee->titles()->updateExistingPivot($id, [
+                'end_date'  =>  $request->end_date? : null
+            ]);
+
+        if ($request->exit) {
+            $employee->delete();
+        }
+
     }
 }

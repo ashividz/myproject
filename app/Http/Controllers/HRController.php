@@ -32,7 +32,7 @@ class HRController extends Controller
 
     public function employees() {
         $employees = Employee::with('supervisor.employee')
-                    ->get();
+                    ->withTrashed()->get();
 
         $data = array(
             "menu"      => "hr",

@@ -1,10 +1,8 @@
-<?php
-
+<?php 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CartState extends Model
-{   
+class Title extends Model {
     
 }

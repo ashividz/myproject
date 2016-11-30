@@ -4,14 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Support\Helper;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable = ['name', 'empno', 'email', 'mobile', 'dob'];
 
     public function user()
     {
     	return $this->hasOne(User::class, 'emp_id', 'id');
+    }
+
+    public function titles()
+    {
+        return $this->belongsToMany(Title::class)->withPivot('start_date', 'end_date');
     }
 
     public function sup()

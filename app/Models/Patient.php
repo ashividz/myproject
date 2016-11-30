@@ -9,6 +9,7 @@ use App\Models\User;
 
 use DB;
 use Auth;
+use Carbon;
 
 use OwenIt\Auditing\AuditingTrait;
 
@@ -191,6 +192,13 @@ class Patient extends Model
 
     public function measurements() {
         return $this->hasMany(PatientMeasurement::class)->orderBy('id', 'DESC');
+    }
+
+    public function scopeActive($q)
+    {
+        return $q->whereHas('fees', function($q) {
+            $q->where('end_date', '>=', Carbon::today());
+        });
     }
 
      public function lead_cre() 

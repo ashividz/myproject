@@ -762,6 +762,8 @@ Route::group([
 
         Route::get('hr/employee/{id}/edit', 'EmployeeController@showEditForm');
         Route::post('hr/employee/{id}/edit', 'EmployeeController@update');
+        Route::patch('employee/{employee_id}/title/{id}', 'EmployeeController@updateTitle');
+        Route::post('employee/{employee_id}/title', 'EmployeeController@storeTitle');
 
         Route::get('hr/employee/{id}/personalDetails', 'EmployeeController@personalDetails');
         Route::post('hr/employee/{id}/personalDetails', 'EmployeeController@personalDetails');
@@ -951,6 +953,9 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
     Route::get('api/getStatusList', function() {
         return App\Models\Status::get();
+    });
+    Route::get('api/getTitles', function() {
+        return App\Models\Title::get();
     });
 
     Route::get('api/getPrograms', 'ProgramController@get');

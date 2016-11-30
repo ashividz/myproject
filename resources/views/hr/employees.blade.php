@@ -13,7 +13,7 @@
 
 			@foreach ($employees as $employee)
 				
-				<tr>
+				<tr class="{{ $employee->deleted_at? 'deleted' : ''}}">
 					<td><a href="/hr/employee/{{$employee->id}}/edit">{{ $employee->name }}</a></td>
 					<td>{{ $employee->emp_no }}</td>
 					<td>{{ $employee->email }}</td>
@@ -30,3 +30,8 @@
 		</div>
 	</div>
 </div>
+<style type="text/css">
+    .deleted {
+        color: red;
+    }
+</style>
