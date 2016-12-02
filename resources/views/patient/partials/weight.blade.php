@@ -4,7 +4,7 @@
     $upgradeDuration = 30;
     $upgradeSourceId = 22;
     $rejoinSourceId  = 23;
-    $cfee = $patient->cfee;
+    $cfee = $patient->cfee ? $patient->cfee : $patient->fees->sortByDesc('end_date')->first();
     $fees = $patient->fees->filter(function ($item) use ($cfee) {
         return ($item->end_date <= $cfee->end_date);
     });
