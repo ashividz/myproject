@@ -137,7 +137,7 @@ class User extends Model implements AuthenticatableContract,
                 ->get();   
     }
 
-    public static function getUsersByRole($role, $user_id = null,$filter = true , $includeSelf = false)
+    public static function getUsersByRole($role, $user_id = null,$filter = true , $includeSelf = true)
     {
         $users =  User::join('employees AS e', 'e.id', '=', 'emp_id')
                 ->join('role_user AS ru', 'users.id', '=', 'user_id')
@@ -165,7 +165,8 @@ class User extends Model implements AuthenticatableContract,
                 ->select('users.id', 'e.name');
         $users = $users->get();
         
-        if ( $includeSelf ) {
+        //include self when cre is also a tl
+        if ( $includeSelf && (Auth::user()->hasRole('cre') && Auth::user()->hasRole('sales_tl') ) ) {
             $self       = Auth::user();
             $self->name = $self->employee->name;
             $users->push($self);            

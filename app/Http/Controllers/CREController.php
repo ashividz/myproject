@@ -93,7 +93,7 @@ class CREController extends Controller
         //dd($leads);
         //$section = "leads";
 
-        $users = User::getUsersByRole('cre',null,true,true);
+        $users = User::getUsersByRole('cre');
 
         $data = array(
             'menu'          => $this->menu,
