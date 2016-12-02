@@ -137,7 +137,7 @@ class User extends Model implements AuthenticatableContract,
                 ->get();   
     }
 
-    public static function getUsersByRole($role, $user_id = null,$filter = true)
+    public static function getUsersByRole($role, $user_id = null,$filter = true , $includeSelf = false)
     {
         $users =  User::join('employees AS e', 'e.id', '=', 'emp_id')
                 ->join('role_user AS ru', 'users.id', '=', 'user_id')
@@ -163,8 +163,15 @@ class User extends Model implements AuthenticatableContract,
                 ->orderBy('e.name')
                 ->groupBy('users.id')
                 ->select('users.id', 'e.name');
-
-        return $users->get();
+        $users = $users->get();
+        
+        if ( $includeSelf ) {
+            $self       = Auth::user();
+            $self->name = $self->employee->name;
+            $users->push($self);            
+        }
+        
+        return $users;
     }
 
     public static function getNamesByRole($role)
