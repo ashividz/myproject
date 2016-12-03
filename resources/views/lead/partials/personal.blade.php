@@ -4,7 +4,7 @@
 <?php
 	$readonly = "readonly";
 	$title = "You do not have the permissions to edit this field. Please contact your Senior or Marketing Department.";
-	if (Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('marketing')) {
+	if (Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('doctor')) {
 		$readonly = "";
 		$title = "";
 	}
