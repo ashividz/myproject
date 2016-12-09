@@ -30,8 +30,8 @@
 				<tr>
 					<th>#</th>
 					<th>Name</th>
-					<th>Start Date</th>
-					<th>End Date</th>
+					<th style="width: 10%"  >Start Date</th>
+					<th style="width: 10%" >End Date</th>
 					<th>Nutritionist</th>
 					<th>Last Diet</th>
 					<th>DOB</th>
@@ -42,6 +42,9 @@
 					<th>Blood Test</th>
 					<th>Measurement</th>
 					<th>Prakriti</th>
+					<th style="width: 10%">Notes</th>
+					<th style="width: 8%">Tags</th>
+					
 				</tr>
 			</thead>
 			<tbody>
@@ -94,8 +97,17 @@
 				@else
 					<td class='red'  title='Measurement Details'></td>
 				@endif
+					<td class="{{ isset($patient->prakriti) ? 'green' :'red'}}" title="Prakriti"></td>
 
-					<td class="{{ isset($patient->prakriti) ? 'red' :'green'}}" title="Prakriti"></td>	
+					<td>{{$patient->note['text']}}</td>	
+					<ul>
+						<td>
+							@foreach($patient->tags as $tag)
+								<li>{{ $tag->name }} </li>
+							@endforeach
+						</td>
+					</ul>
+					
 
 				</tr>
 	@endforeach
