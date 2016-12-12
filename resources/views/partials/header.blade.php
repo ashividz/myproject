@@ -111,6 +111,10 @@
         <script src="/js/mixin.js"></script>
         <script src="/js/app.js"></script>
 
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.3/css/buttons.dataTables.min.css">
+
         <!-- Sparkline -->
         <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  --> 
 

@@ -308,6 +308,49 @@ class ReportController extends Controller
 
     }
 
+    
+
+    public function getFoodAllergy()
+    {
+        $patients = Patient::select('patient_details.*')
+                ->with('lead', 'fee')
+                ->join('marketing_details as m', 'patient_details.lead_id', '=', 'm.id')
+                ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                    $join->on('patient_details.id', '=', 'f.patient_id');
+                })
+                ->whereBetween('start_date', array($this->start_date, $this->end_date))
+                //->groupBy('age')
+                //->whereNotNull('age'
+                //->limit(50)
+                ->get();
+        //dd($patients);
+        $activePatients = Patient::select('patient_details.*')
+                ->with('lead', 'fee')
+                ->join('marketing_details as m', 'patient_details.lead_id', '=', 'm.id')
+                ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                    $join->on('patient_details.id', '=', 'f.patient_id');
+                })
+                ->where('end_date', '>=', date('Y-m-d'))
+                ->orderBy('age')
+                ->get();
+
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'patients.allergy',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'patients'      =>  $patients,
+            'activePatients'=>  $activePatients,
+            'i'             =>  1,
+            'j'             =>  1      
+        );
+
+        return view('home')->with($data);
+
+        
+    
+    }
+
     /*
        Daily Source Perfomrmance 
     */

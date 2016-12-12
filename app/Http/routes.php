@@ -1072,6 +1072,9 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('report/patients/new', 'ReportController@getNewPatients');
     Route::post('report/patients/new', 'ReportController@getNewPatients');
 
+    Route::get('report/patients/allergy', 'ReportController@getFoodAllergy');
+    Route::post('report/patients/allergy', 'ReportController@getFoodAllergy');
+
     Route::get('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');    
     Route::post('report/cre/sourcePerformance', 'ReportController@creWiseSourcePerformance');  
 
