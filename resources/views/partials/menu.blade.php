@@ -626,6 +626,9 @@
                             <a href="/report/referencesReport" id="menu_lead_regionwise" class="arrow">Region Wise References</a>
                         </li>
                         <li>
+                            <a href="/report/refereeReport" id="menu_lead_regionwise_report" class="arrow">Region Wise Referee Report </a>
+                        </li>
+                        <li>
                             <a href="/report/viewUpgrades" id="menu_lead_references" class="arrow">Upgrades</a>
                         </li>
                         <li>
