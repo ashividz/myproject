@@ -623,6 +623,9 @@
                             <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
                         </li>
                         <li>
+                            <a href="/report/referencesReport" id="menu_lead_regionwise" class="arrow">Region Wise References</a>
+                        </li>
+                        <li>
                             <a href="/report/viewUpgrades" id="menu_lead_references" class="arrow">Upgrades</a>
                         </li>
                         <li>
