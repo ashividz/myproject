@@ -88,13 +88,14 @@ class ReferenceController extends Controller
         
 
         $referrers = DB::table('lead_sources AS s')
-                    ->select('m.id', 'm.name', 'referrer_id', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
+                    ->select('m.id', 'm.name', 'pd.nutritionist', 'referrer_id', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
                     ->leftjoin('patient_details AS p', 'p.lead_id', '=', 's.lead_id')
 
                     ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id = B.patient_id)) AS f'), function($join) {
                         $join->on('p.id', '=', 'f.patient_id');
                     })
                     ->join('marketing_details AS m', 'm.id', '=', 'referrer_id')
+                    ->join('patient_details AS pd', 'pd.lead_id', '=', 'm.id')
                     ->where('s.source_id', '10')
                     ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
                     ->groupBy('referrer_id')
