@@ -1053,6 +1053,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::post('report/viewUpgrades', 'UpgradeController@index');  
     Route::get('report/viewReferences', 'ReferenceController@index');
     Route::post('report/viewReferences', 'ReferenceController@index');
+    Route::get('report/referencesReport', 'ReferenceController@churnLeads');
+    Route::post('report/referencesReport', 'ReferenceController@churnLeads');
     Route::get('report/viewPlatinumCustomers', 'ReferenceController@platinum');
     Route::get('report/viewChannelConversion', 'ReportController@channelConversion');
     Route::post('report/viewChannelConversion', 'ReportController@channelConversion');

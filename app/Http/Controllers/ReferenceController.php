@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
+use App\Models\User;
 use App\Models\LeadSource;
 use DB;
 
@@ -141,5 +142,27 @@ class ReferenceController extends Controller
         );
 
         return view('home')->with($data);   
+    }
+
+
+    public function churnLeads()
+    {
+       $users = User::getUsersByRole('cre');
+
+        $leads = Lead::getReferenceLeads($this->start_date, $this->end_date);
+        
+        
+       // dd($leads);
+
+        $data = array(
+            'menu'          =>  'reports',
+            'section'       =>  'churn',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'users'         =>  $users,
+            'leads'         =>  $leads
+        );
+
+        return view('home')->with($data);
     }
 }
