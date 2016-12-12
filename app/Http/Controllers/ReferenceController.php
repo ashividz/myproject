@@ -144,6 +144,90 @@ class ReferenceController extends Controller
         return view('home')->with($data);   
     }
 
+    public function reference()
+    {
+            $leads = Lead::getReferenceLeads($this->start_date, $this->end_date);
+
+            $international = DB::table('lead_sources AS s')
+                    ->select('m.id', 'm.name', 'referrer_id' ,'m.country','m.state', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
+                    ->leftjoin('patient_details AS p', 'p.lead_id', '=', 's.lead_id')
+
+                    ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id = B.patient_id)) AS f'), function($join) {
+                        $join->on('p.id', '=', 'f.patient_id');
+                    })
+                    ->join('marketing_details AS m', function($join){
+                        $join->on('m.id', '=', 'referrer_id')
+                        ->where('m.country' , '<>' , 'IN')->where('m.country' , '<>' , '');
+                    })
+                    ->where('s.source_id', '10')
+                    ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
+                    ->groupBy('referrer_id')
+                    ->orderBy('conversions', 'DESC')
+                    ->get();
+
+                    
+
+            $panindia = DB::table('lead_sources AS s')
+                    ->select('m.id', 'm.name', 'referrer_id' ,'m.country','m.city', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
+                    ->leftjoin('patient_details AS p', 'p.lead_id', '=', 's.lead_id')
+
+                    ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id = B.patient_id)) AS f'), function($join) {
+                        $join->on('p.id', '=', 'f.patient_id');
+                    })
+                    ->join('marketing_details AS m', function($join){
+                        $join->on('m.id', '=', 'referrer_id')
+                        ->where(function ($query)
+                            {
+                               $query->where('m.country' ,'=','IN')
+                               ->orWhere('m.country' , '=' , '');
+
+                            })->where('m.state' ,'<>' , 'IN.07');
+                    })
+                    ->where('s.source_id', '10')
+                    ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
+                    ->groupBy('referrer_id')
+                    ->orderBy('conversions', 'DESC')
+                    ->get();
+
+                    
+
+            $delhincr = DB::table('lead_sources AS s')
+                    ->select('m.id', 'm.name', 'referrer_id' ,'m.country','m.state', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
+                    ->leftjoin('patient_details AS p', 'p.lead_id', '=', 's.lead_id')
+
+                    ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id = B.patient_id)) AS f'), function($join) {
+                        $join->on('p.id', '=', 'f.patient_id');
+                    })
+                    ->join('marketing_details AS m', function($join){
+                        $join->on('m.id', '=', 'referrer_id')
+                        ->where('m.state' ,'=' , 'IN.07');
+                    })
+                    ->where('s.source_id', '10')
+                    ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
+                    ->groupBy('referrer_id')
+                    ->orderBy('conversions', 'DESC')
+                    ->get();
+
+            $data = array(
+            'leads'         =>  $leads,
+            'menu'          => 'reports',
+            'section'       => 'regionwise_reference',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'panindia'     =>  $panindia,
+            'international'     =>  $international,
+            'total_leads'   => '0',
+            'total_conversions' => '0',
+            'total_conversions_same_range' => '0',
+            'delhincr'     =>  $delhincr
+        );
+
+        return view('home')->with($data);  
+
+                
+    }
+
+
 
     public function churnLeads()
     {
