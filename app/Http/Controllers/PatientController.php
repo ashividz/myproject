@@ -16,16 +16,20 @@ use App\Models\Tag;
 use App\Models\PatientTag;
 use App\Models\PatientNote;
 use App\Models\Diet;
+use App\Models\Prakriti;
 use App\Models\PrakritiQuestion;
 use App\Models\PatientPrakriti;
 use App\Models\Email;
 use App\Models\EmailTemplate;
 use App\Models\User;
 
+use App\Support\Helper;
+
 use App\Http\Requests\PatientTagRequest;
 
 use Auth;
 use DB;
+use Mail;
 
 class PatientController extends Controller
 {
@@ -33,6 +37,7 @@ class PatientController extends Controller
     protected $daterange;
     protected $start_date;
     protected $end_date;
+    protected $prakriti_email_template_id;
 
     public function __construct()
     {
@@ -40,7 +45,7 @@ class PatientController extends Controller
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
- 
+        $this->prakriti_email_template_id = 28;  
     }
 
     public function viewPrakriti($id)
@@ -192,10 +197,24 @@ class PatientController extends Controller
             }
         }
 
+        $patient = PatientPrakriti::prakriti($id);
+        $data = array(
+            'message'       =>  '<li>Prakriti Saved</li>',
+            'status'        =>  'success'
+        );
+
+        if (Auth::user()->hasRole('doctor')){
+            if(self::sendPrakritiEmail($patient)) {
+                $data["message"] .= '<li> Prakriti Report Sent</li>';
+            }
+        }
+
+
+
         //PatientPrakriti::calculatePrakriti($id);
 
         //dd($request);
-        return redirect('patient/'.$id.'/prakriti');   
+        return redirect('patient/'.$id.'/prakriti')->with($data);
     }
 
     public function dispositions($id)
@@ -355,5 +374,46 @@ class PatientController extends Controller
 
         return view('lead.modals.dispositions')->with($data);
     }
+
+    private function sendPrakritiEmail($patient)
+    {
+        $template  = EmailTemplate::find($this->prakriti_email_template_id);
+        $prakritis = Prakriti::get();
+        $body = Helper::renderView($template->email,['patient'=>$patient,'prakritis'=>$prakritis]);        
+        
+        Mail::send([], [], function($message) use ($body, $patient, $template)
+        {
+            $from = isset($template->from) ? $template->from : 'quality@nutrihealthsystems.com';
+            
+            $message->to($patient->lead->email, $patient->lead->name)
+            ->subject($template->subject)
+            ->from($from, 'Nutri-Health Systems' );
+            
+            //Add CC
+            if (trim($patient->lead->email_alt) <> '') {
+                $message->cc($patient->lead->email_alt, $name = null);
+            }
+
+            $message->setBody($body, 'text/html');
+
+            //Add attachments
+            foreach ($template->attachments as $attachment) {
+                $message->attachData($attachment->file, $attachment->name);
+            }
+        });
+
+
+
+        $email = new Email();
+        $email->user_id = Auth::user()->id;
+        $email->lead_id = $patient->lead->id;
+        $email->template_id = $this->prakriti_email_template_id;
+        $email->email = $body;
+        
+        $email->save();
+  
+        return true;    
+    }
+
 
 }
