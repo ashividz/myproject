@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Patient;
+use App\Models\PatientWeight;
 use App\Models\Lead;
 use App\Models\Nutritionist;
 use App\Models\CallDisposition;
@@ -327,6 +328,27 @@ class ServiceController extends Controller
             'section'        => 'reports.messages'
         );
         return view('home')->with($data);   
+    }
+
+    public function weightLoss()
+    {
+        $patients = Patient::whereHas('fees',function($query) {
+            $query->where('end_date','>=',DB::raw('curdate()'));
+        })
+        ->with('fees','lead')
+        ->limit(env('DB_LIMIT'))
+        ->get();
+
+        $patients = PatientWeight::weightLoss($patients);
+
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'reports.weight_loss',
+            'patients'      =>  $patients,
+            'x'             =>  1,
+        );
+
+        return view('home')->with($data);
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 /*Block authored by Sunil*/
 //updated on 2016-07-01 to handle upgrade cases
-    $upgradeDuration = 30;
+    $upgradeDuration = \App\Models\Fee::getUpgradeDuration();
     $upgradeSourceId = 22;
     $rejoinSourceId  = 23;
     $cfee = $patient->cfee ? $patient->cfee : $patient->fees->sortByDesc('end_date')->first();

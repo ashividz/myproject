@@ -651,6 +651,7 @@ Route::group([
         Route::get('service/reports/fabReport', 'PatientFABController@fabReport');
         Route::post('service/reports/fabReport', 'PatientFABController@fabReport');
         Route::get('getSentFab/{id}', 'PatientFABController@getSentFab');
+        Route::get('/service/reports/weightLoss', 'ServiceController@weightLoss');        
 });
 
 Route::group([

@@ -12,6 +12,7 @@ class Fee extends Model
 {
     
     protected $table = "fees_details";
+    protected static $upgradeDuration = 30;
 
     protected $fillable = [
         'patient_id',
@@ -53,6 +54,10 @@ class Fee extends Model
         return $this->morphMany(Log::class, 'owner');
     }
 
+    public static function getUpgradeDuration()
+    {
+        return self::$upgradeDuration;
+    }
 
     public static function conversionCount($cre = NULL, $start_date = NULL, $end_date = NULL) 
     {

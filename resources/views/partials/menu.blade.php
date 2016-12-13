@@ -335,6 +335,9 @@
                         <li>
                             <a href="/service/reports/fabReport" id="menu_service_fab_report">FAB Report</a>
                         </li>
+                        <li>
+                            <a href="/service/reports/weightLoss" id="menu_service_weight_loss">Weight Loss</a>
+                        </li>
                     </ul>
                 </li>
                 
