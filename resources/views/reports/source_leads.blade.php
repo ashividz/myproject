@@ -1,8 +1,8 @@
 <div class="container">
  <div class="panel panel-default">
-<div >
-                    @include('reports.partials.daterange_user')
-                </div>
+            <div>
+                @include('reports.partials.daterange_user')
+            </div>
             <div class="panel-heading">
                
                 <h4>Source Leads</h4>
@@ -19,9 +19,11 @@
                                 <td>CRE Assigned Date</td>
                                 <td>Source</td>
                                 <td>Status</td>
-                                <td 0.>Last Call</td>
-                                <td >Callback</td>
+                                <td>Last Call</td>
+                                <td>Callback</td>
                                 <td>Last Call (Days) </td>
+                                <td style="width:20%;">CRM Dispositions</td>
+                                <td style="width:20%;">Dialer Dispositions</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,6 +77,51 @@
                                         {{floor((strtotime(date('Y/m/d')) - strtotime($lead->disposition->created_at))/(60*60*24)) + 1}}
                                     @endif
                                 </td>
+                                <td style="width:20%;">
+                                    <?php
+                                        $dispositions = $lead->dispositions()->with('master')->orderBy('created_at','desc')->limit(5)->get();
+                                    ?>
+                                    @foreach($dispositions as $disposition)
+                                        <div>
+                                        <b>{{$disposition->master->disposition}} : </b>
+                                        {{$disposition->remarks}}
+                                        <br>
+                                        <small>
+                                            <em>[
+                                            {{date('jS M Y, h:i A', strtotime($disposition->created_at))}}
+                                            ]</em>
+                                        </small>    
+                                        </div>
+                                    @endforeach
+                                </td>
+
+                                <td style="width:20%;">
+                                    <?php
+                                        $dialer_dispositions = array();
+                                        $dialer_dispositions = DB::connection('pgsql2')->table('nr_conn_cdr as crl')
+                                                ->where('crl.phonenumber', '=', trim($lead->phone));
+                                        if (trim($lead->mobile) <> '' && ( trim($lead->mobile) <> trim($lead->phone))) {
+                                            $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', trim($lead->mobile));
+                                        }                                        
+                                            
+                                        $dialer_dispositions = $dialer_dispositions->select('disposition','callduration',
+                                            'recordentrydate')
+                                                                ->orderby('crl.recordentrydate','desc')
+                                                                ->limit(5)->get();
+                                    ?>
+                                    @foreach($dialer_dispositions as $disposition)
+                                        <div>
+                                        <b>{{$disposition->disposition}} : </b>
+                                        {{gmdate('H:i:s',$disposition->callduration)}}
+                                        <br>
+                                        <small>
+                                            <em>[
+                                            {{date('jS M Y, h:i A', strtotime($disposition->recordentrydate))}}
+                                            ]</em>
+                                        </small>
+                                        </div>
+                                    @endforeach
+                                </td>                                
                             </tr>
 
                     @endforeach
@@ -99,14 +146,36 @@
     </div>
     
 </div>
+<script type="text/javascript" src = "/js/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src = "/js/datatables/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src = "/js/datatables/buttons.flash.min.js"></script>
+<script type="text/javascript" src = "/js/datatables/jszip.min.js"></script>
+<script type="text/javascript" src = "/js/datatables/pdfmake.min.js"></script>
+<script type="text/javascript" src = "/js/datatables/vfs_fonts.js"></script>
+<script type="text/javascript" src = "/js/datatables/buttons.html5.min.js"></script>
+<script type="text/javascript" src = "/js/datatables/buttons.print.min.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function() 
 {
-    $('#leads').dataTable({
+    $('#leads').DataTable({
+        "iDisplayLength": 5000,
+        dom: 'Bfrtip',
+        "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+                $("td:first", nRow).html(iDisplayIndex +1);
+               return nRow;
+        },
+        buttons: [
+            'csv',
+            'excel',
+        ],        
+    });
+
+/*    $('#leads').dataTable({
         "bInfo" : true,
         "bPaginate" : false,
         "aaSorting": [[ 6, "desc" ]]
-    });
+    });*/
 
     $("#form").submit(function(event) {
 
