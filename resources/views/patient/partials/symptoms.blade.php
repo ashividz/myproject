@@ -27,21 +27,6 @@
                         <option>High</option>
                       </select>
                     </td></tr>
-                    <tr><td>Skin</td><td>
-                       <select class="editfield" v-model="patient.initialSymptom.skin">
-                        <option>Good</option>
-                        <option>Rough</option>
-                        <option>Dry</option>
-                        <option>Oily</option>
-                      </select>
-                    </td><td>
-                       <select class="editfield" v-model="patient.lastSymptom.skin">
-                        <option>Good</option>
-                        <option>Rough</option>
-                        <option>Dry</option>
-                        <option>Oily</option>
-                      </select>
-                    </td></tr>
                     <tr><td>Constipation (cm)</td><td>
                        <select class="editfield" v-model="patient.initialSymptom.constipation">
                         <option>Yes</option>
@@ -111,21 +96,6 @@
                           <option>Sometimes</option>
                           <option>No</option>
                        </select>
-                    </td></tr>
-                    <tr><td>Stress</td><td>
-                      <select class="editfield" v-model="patient.initialSymptom.stress">
-                        <option>Yes</option>
-                        <option>No</option>
-                        <option>Sometimes</option>
-                      </select>
-
-                    </td><td>
-                    
-                     <select class="editfield" v-model="patient.lastSymptom.stress">
-                        <option>Yes</option>
-                        <option>No</option>
-                        <option>Sometimes</option>
-                      </select>
                     </td></tr>
                     <tr><td>Emotional Eating</td><td>
                    
@@ -296,7 +266,7 @@ new Vue({
           saveSymptoms() {
             this.$http.post("/patient/editSymptoms/{{$patient->id}}", {
                 initial_energy_level: this.patient.initialSymptom.energy_level,
-                initial_skin: this.patient.initialSymptom.skin,
+                //initial_skin: this.patient.initialSymptom.skin,
                 initial_constipation: this.patient.initialSymptom.constipation,
                 initial_gas: this.patient.initialSymptom.gas,
                 initial_acidity: this.patient.initialSymptom.acidity,
@@ -310,7 +280,7 @@ new Vue({
                 
 
                 last_energy_level: this.patient.lastSymptom.energy_level,
-                last_skin: this.patient.lastSymptom.skin,
+                //last_skin: this.patient.lastSymptom.skin,
                 last_constipation: this.patient.lastSymptom.constipation,
                 last_gas: this.patient.lastSymptom.gas,
                 last_acidity: this.patient.lastSymptom.acidity,

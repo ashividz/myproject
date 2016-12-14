@@ -112,6 +112,13 @@
                   <tr><td>INSULIN (Fasting) </td><td>@{{patient.initialMedical.insulin_f}}</td><td>@{{patient.initialMedical.insulin_f_status}}</td><td>@{{patient.lastMedical.insulin_f}}</td><td>@{{patient.lastMedical.insulin_f_status}}</td></tr>
                 
                   <tr><td>INSULIN (PP) </td><td>@{{patient.initialMedical.insulin_p}}</td><td>@{{patient.initialMedical.insulin_p_status}}</td><td>@{{patient.lastMedical.insulin_p}}</td><td>@{{patient.lastMedical.insulin_p_status}}</td></tr>
+
+                  <tr><td colspan="5" align="left" style="padding-left: 100px;font-weight: bold;background-color:#DDDDDD;"> OTHERS</td></tr>
+                  <tr><td>Vitamin D </td><td>@{{patient.initialMedical.vitamin_d}}</td><td>@{{patient.initialMedical.vitamin_d_status}}</td><td>@{{patient.lastMedical.vitamin_d}}</td><td>@{{patient.lastMedical.vitamin_d_status}}</td></tr>
+               
+                  <tr><td>Vitamin B12</td><td>@{{patient.initialMedical.vitamin_b12}}</td><td>@{{patient.initialMedical.vitamin_b12_status}}</td><td>@{{patient.lastMedical.vitamin_b12}}</td><td>@{{patient.lastMedical.vitamin_b12_status}}</td></tr>
+                
+                  <tr><td>HBA1C </td><td>@{{patient.initialMedical.hba1c}}</td><td>@{{patient.initialMedical.hba1c_status}}</td><td>@{{patient.lastMedical.hba1c}}</td><td>@{{patient.lastMedical.hba1c_status}}</td></tr>
                  
               </table>
           </div>
@@ -121,13 +128,11 @@
                 <table  class='table-bordered edittable' width='100%'>
                     <thead><tr><th>Parameters </th><th>Initial </th><th>Final </th></tr></thead>
                     <tr><td>Energy Level</td><td>@{{patient.initialSymptom.energy_level}}</td><td>@{{patient.lastSymptom.energy_level}}</td></tr>
-                    <tr><td>Skin</td><td>@{{patient.initialSymptom.skin}}</td><td>@{{patient.lastSymptom.skin}}</td></tr>
                     <tr><td>Constipation (cm)</td><td>@{{patient.initialSymptom.constipation}}</td><td>@{{patient.lastSymptom.constipation}}</td></tr>
                     <tr><td>Gas</td><td>@{{patient.initialSymptom.gas}}</td><td>@{{patient.lastSymptom.gas}}</td></tr>
                     <tr><td>Acidity</td><td>@{{patient.initialSymptom.acidity}}</td><td>@{{patient.lastSymptom.acidity}}</td></tr>
                     <tr><td>Water Retention (cm)</td><td>@{{patient.initialSymptom.water_retention}}</td><td>@{{patient.lastSymptom.water_retention}}</td></tr>
                     <tr><td>Joint Pains</td><td>@{{patient.initialSymptom.joint_pain}}</td><td>@{{patient.lastSymptom.joint_pain}}</td></tr>
-                    <tr><td>Stress</td><td>@{{patient.initialSymptom.stress}}</td><td>@{{patient.lastSymptom.stress}}</td></tr>
                     <tr><td>Emotional Eating</td><td>@{{patient.initialSymptom.emotional_eating}}</td><td>@{{patient.lastSymptom.emotional_eating}}</td></tr>
                     <tr><td>Sugar/Food Craving</td><td>@{{patient.initialSymptom.sugar_food_craving}}</td><td>@{{patient.lastSymptom.sugar_food_craving}}</td></tr>
                     <tr><td>Headache</td><td>@{{patient.initialSymptom.headache}}</td><td>@{{patient.lastSymptom.headache}}</td></tr>
@@ -141,6 +146,8 @@
                     <h4>PRAKRITI</h4>
                     <p style='font-weight: bold'>@{{patient.prakriti.first_dominant_name}} Constitution</p>
                     <p>@{{{patient.prakriti.first_dominant_text}}}</p>
+  
+
                   </div>
                 </div>
 
@@ -158,7 +165,11 @@
                     <div class='panel-body'>
                       <h4>EATING OUT TIPS</h4>
                       <div class="col-md-12">
-                          <input type="text" v-model="eatingTipField" class="form-control" placeholder="Eating Tips *" required @keyup.13="store" />
+                          <input type="textarea" v-model="eatingTipField" class="form-control" placeholder="Eating Tips *" required @keyup.13="store" />
+                          <br>
+                      </div>
+                      <div class="form-group" style="margin-left:175px">
+                        <button class="btn btn-primary" name="eat" @click="store"> Save</button>
                       </div>
                       <div class="col-md-12 " v-for="eatingtipx in eatingTips">
                         <editable-field2 :eatingtipx.sync="eatingtipx"></editable-field2>
