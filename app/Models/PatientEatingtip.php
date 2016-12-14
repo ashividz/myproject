@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+
+/* alter size of name fild */
 class PatientEatingtip extends Model
 {   
     protected $table = "patient_eatingtips";
