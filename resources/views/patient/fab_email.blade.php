@@ -59,13 +59,11 @@
             </td></tr>
                 <tr><th style='padding: 10px;text-align: left'>Parameters </th><th style='padding: 10px;text-align: left'>Initial </th><th style='padding: 10px;text-align: left'>Final </th></tr>
                 <tr><td style='padding: 10px'>Energy Level</td><td style='padding: 10px'>{{$patient->initialSymptom->energy_level}}</td><td style='padding: 10px'>{{$patient->lastSymptom->energy_level}}</td></tr>
-                <tr><td style='padding: 10px'>Skin</td><td style='padding: 10px'>{{$patient->initialSymptom->skin}}</td><td style='padding: 10px'>{{$patient->lastSymptom->skin}}</td></tr>
                 <tr><td style='padding: 10px'>Constipation (cm)</td><td style='padding: 10px'>{{$patient->initialSymptom->constipation}}</td><td style='padding: 10px'>{{$patient->lastSymptom->constipation}}</td></tr>
                 <tr><td style='padding: 10px'>Gas</td><td style='padding: 10px'>{{$patient->initialSymptom->gas}}</td><td style='padding: 10px'>{{$patient->lastSymptom->gas}}</td></tr>
                 <tr><td style='padding: 10px'>Acidity</td><td style='padding: 10px'>{{$patient->initialSymptom->acidity}}</td><td style='padding: 10px'>{{$patient->lastSymptom->acidity}}</td></tr>
                 <tr><td style='padding: 10px'>Water Retention (cm)</td><td style='padding: 10px'>{{$patient->initialSymptom->water_retention}}</td><td style='padding: 10px'>{{$patient->lastSymptom->water_retention}}</td></tr>
                 <tr><td style='padding: 10px'>Joint Pains</td><td style='padding: 10px'>{{$patient->initialSymptom->joint_pain}}</td><td style='padding: 10px'>{{$patient->lastSymptom->joint_pain}}</td></tr>
-                <tr><td style='padding: 10px'>Stress</td><td style='padding: 10px'>{{$patient->initialSymptom->stress}}</td><td style='padding: 10px'>{{$patient->lastSymptom->stress}}</td></tr>
                 <tr><td style='padding: 10px'>Emotional Eating</td><td style='padding: 10px'>{{$patient->initialSymptom->emotional_eating}}</td><td style='padding: 10px'>{{$patient->lastSymptom->emotional_eating}}</td></tr>
                 <tr><td style='padding: 10px'>Sugar/Food Craving</td><td style='padding: 10px'>{{$patient->initialSymptom->sugar_food_craving}}</td><td style='padding: 10px'>{{$patient->lastSymptom->sugar_food_craving}}</td></tr>
                 <tr><td style='padding: 10px'>Headache</td><td style='padding: 10px'>{{$patient->initialSymptom->headache}}</td><td style='padding: 10px'>{{$patient->lastSymptom->headache}}</td></tr>
@@ -141,6 +139,13 @@
                 <tr><td style='padding: 10px'>INSULIN (Fasting) </td><td style='padding: 10px'>{{$patient->initialMedical->insulin_f}}</td><td style='padding: 10px'>{{$patient->initialMedical->insulin_f_status}}</td><td style='padding: 10px'>{{$patient->lastMedical->insulin_f}}</td><td style='padding: 10px'>{{$patient->lastMedical->insulin_f_status}}</td></tr>
               
                 <tr><td style='padding: 10px'>INSULIN (PP) </td><td style='padding: 10px'>{{$patient->initialMedical->insulin_p}}</td><td style='padding: 10px'>{{$patient->initialMedical->insulin_p_status}}</td><td style='padding: 10px'>{{$patient->lastMedical->insulin_p}}</td><td style='padding: 10px'>{{$patient->lastMedical->insulin_p_status}}</td></tr>
+
+                <tr><td colspan="5" align="left" style="padding: 10px;padding-left: 100px;font-weight: bold;background-color:#DDDDDD;">OTHERS</td></tr>
+                <tr><td style='padding: 10px'>VITAMIN D </td><td style='padding: 10px'>{{$patient->initialMedical->vitamin_d}}</td><td style='padding: 10px'>{{$patient->initialMedical->vitamin_d_status}}</td><td style='padding: 10px'>{{$patient->lastMedical->vitamin_d}}</td><td style='padding: 10px'>{{$patient->lastMedical->vitamin_d_status}}</td></tr>
+             
+                <tr><td style='padding: 10px'>VITAMIN B12 </td><td style='padding: 10px'>{{$patient->initialMedical->vitamin_b12}}</td><td style='padding: 10px'>{{$patient->initialMedical->vitamin_b12_status}}</td><td style='padding: 10px'>{{$patient->lastMedical->vitamin_b12}}</td><td style='padding: 10px'>{{$patient->lastMedical->vitamin_b12_status}}</td></tr>
+              
+                <tr><td style='padding: 10px'>HBA1C</td><td style='padding: 10px'>{{$patient->initialMedical->hba1c}}</td><td style='padding: 10px'>{{$patient->initialMedical->hba1c_status}}</td><td style='padding: 10px'>{{$patient->lastMedical->hba1c}}</td><td style='padding: 10px'>{{$patient->lastMedical->hba1c_status}}</td></tr>
                
         </table>
 
@@ -148,17 +153,37 @@
             <div class=''>
               <h4>PRAKRITI</h4>
               <p style='font-weight: bold'>{{$patient->prakriti->first_dominant_name}} Constitution</p>
-              <p>{!!$patient->prakriti->first_dominant_text!!}</p>
+                   @if( $patient->prakriti->first_dominant_name == "Kapha")
+                        <p>The Energy of Lubrication and Retention .<br>
+                            ‘Kapha’ ( Water + Earth) controls the physical structure and fluid balance of the body<br>
+                            As your Prakriti is Kapha dominating it means that you are  blessed with strength, endurance and stamina. You are calm, tolerant and forgiving. You have strong  and you have good immunity power . You  tend to gain weight because of a slow metabolic system.<br>
+                            You  are prone to diseases connected to the water principle such as flu, sinus congestion, and other diseases involving mucous. Sluggishness, excess weight, diabetes, water retention, and headaches are also common.</p>
+
+                   @elseif($patient->prakriti->first_dominant_name == "Pitta")
+                        <p>
+                          The Energy of Digestion, Metabolism and Transformation.<br><br>
+                          ‘Pitta’ manages digestion and metabolism.<br>
+                          Your predominant dosha is Pitta (fire element), you are intense ("hot" - literally), digesting and processing on all levels - from ideas, emotions, and perceptions, to sensations and food. When balanced, you are self-confident, goal-oriented, efficient, focused, with good problem-solving skills and a sharp wit.<br>
+                          A Pitta imbalance can lead you to heartburn, ulcers, insomnia, vision problems, anger, stubbornness, aggressiveness, absolutism and being judgmental.
+                        </p>
+                  @elseif( $patient->prakriti->first_dominant_name == "Vata")
+                        <p>Energy of movement and governs all biological activity.<br><br>
+
+                        It controls blood flow, elimination of wastes, breathing and the movement of thoughts across the mind.<br>
+
+                        As your Prakriti is Vata (ether, or space and air elements), you are in perpetual movement, like change and manifest lightness, quickness, and flexibility in every aspect of your life. When balanced, you have a fun, vibrant, lively, and expressive personality.<br>
+                        A Vata imbalance leads you to increased worrying, impulsiveness, inability to make decisions, depression, insomnia, headaches and fatigue.</p>
+                  @endif
             </div>
           </div>
 
           <div style='margin-top: 15px;border: 1px solid #bbb;border-radius: 4px; padding: 15px'>
             <div>
                 <h4>FOODS/PLANS WHICH SUIT YOU</h4>
-                <p>{{$patient->suit->suit}}</p>
+                <p>{{$patient->suit->suit or " "}}</p>
 
                 <h4>FOODS/PLANS WHICH DO NOT SUIT YOU</h4>
-                <p>{{$patient->suit->not_suit}}</p>
+                <p>{{$patient->suit->not_suit or " "}}</p>
             </div>
         </div>
 

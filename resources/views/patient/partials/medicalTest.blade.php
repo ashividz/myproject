@@ -310,6 +310,39 @@
 		<td><input name="insulin_p" type="text" tabindex="29" onBlur="check_status()" value="{{$latestMedical ?$latestMedical->insulin_p : ''}}"></td>
 		<td><input name="insulin_p_status" type="text"  value="{{$latestMedical ?$latestMedical->insulin_p_status : ''}}"></td>
 	</tr>
+
+	 <!-- OTHERS -->
+	<tr>
+	    <td colspan="5" align="center" style="background-color:#DDDDDD;">OTHERS<center></td>
+	</tr>
+	
+	<tr>
+		<th> </th>
+	    	<th>Female</th>
+		<th>Male</th>
+		<th colspan="2"> </th>
+        </tr>
+	<tr>
+		<td><b>Vitamin D</b></td>
+		<td>-</td>
+		<td>-</td>
+	      	<td><input name="vitamin_d" type="text" tabindex="26" onBlur="check_status()" value="{{$latestMedical ?$latestMedical->vitamin_d:''}}"></td>
+		<td><input  name="vitamin_d_status" type="text"  value="{{$latestMedical ?$latestMedical->vitamin_d_status : ''}}"></td>
+	</tr>
+	<tr>
+		<td><b>Vitamin B12</b></td>
+		<td>-</td>
+		<td>-</td>
+		<td><input name="vitamin_b12" type="text" tabindex="28" onBlur="check_status()" value="{{$latestMedical ?$latestMedical->vitamin_b12 : ''}}"></td>
+		<td><input name="vitamin_b12_status" type="text"  value="{{$latestMedical ?$latestMedical->vitamin_b12_status : ''}}"></td>
+	</tr>
+	<tr>
+		<td><b>HBA1C</b></td>
+		<td>-</td>
+		<td>-</td>
+		<td><input name="hba1c" type="text" tabindex="29" onBlur="check_status()" value="{{$latestMedical ?$latestMedical->hba1c : ''}}"></td>
+		<td><input name="hba1c_status" type="text"  value="{{$latestMedical ?$latestMedical->hba1c_status : ''}}"></td>
+	</tr>
 	<tr>
 		<td colspan="5"><center><input name="submit" class="btn btn-primary" type="submit" value="Submit"></center></td>
 	</tr> 
@@ -840,6 +873,9 @@ function check_status()
 	<th><font face="Verdana" size="1">PROLACTIN (Fastning)</font></th>
 	<th><font face="Verdana" size="1">INSULIN (Fastning)</font></th>
 	<th><font face="Verdana" size="1">INSULIN (PP)</font></th>
+	<th><font face="Verdana" size="1">VITAMIN D</font></th>
+	<th><font face="Verdana" size="1">VITAMIN B12</font></th>
+	<th><font face="Verdana" size="1">HBA1C</font></th>
 </tr>
 </thead>
 @if(!$patient->medicals->isEmpty())
@@ -875,6 +911,9 @@ function check_status()
 	<td><font face="Verdana" size="1">{{$medical->prolactin_f or "" }}</font></td>
 	<td><font face="Verdana" size="1">{{$medical->insulin_f or "" }}</font></td>
 	<td><font face="Verdana" size="1">{{$medical->insulin_p or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->vitamin_d or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->vitamin_b12 or "" }}</font></td>
+	<td><font face="Verdana" size="1">{{$medical->hba1c or "" }}</font></td>
 	</tr>
 	@endforeach
 </tbody>

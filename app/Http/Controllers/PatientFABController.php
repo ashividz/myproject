@@ -468,6 +468,7 @@ class PatientFABController extends Controller
         $eatingtip->name = $request->name;
         $eatingtip->patient_id = $request->patient_id;
         $eatingtip->save();
+        //dd($request);
         return $this->getAllEatingTips($request);
     }
 
