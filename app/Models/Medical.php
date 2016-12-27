@@ -8,7 +8,7 @@ update medical m  set patient_id = (select id from patient_details p where p.cli
 
 /*alter table medical add column (created_by int(4) unsigned not null);*/
 
-/* alter table medical add column (vitamin_d , vitamin_d_status , vitamin_b12 , vitamin_b12_status , hba1c , hba1c_status)*/
+/* alter table medical add (vitamin_d varchar(20), vitamin_d_status varchar(20), vitamin_b12 varchar(20), vitamin_b12_status varchar(20), hba1c varchar(20), hba1c_status varchar(20));*/
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
