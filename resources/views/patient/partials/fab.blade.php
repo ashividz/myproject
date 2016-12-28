@@ -540,7 +540,7 @@ new Vue({
         },
 
         store() {
-            this.$http.post("/patient/add/eatingTip/", {
+            this.$http.post("/patient/add/eatingTip", {
                     name: this.eatingTipField,
                     patient_id: {{$patient->id}}
                 })
