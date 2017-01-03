@@ -8,13 +8,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Lead;
 use App\Models\User;
 use App\Models\LeadSource;
+
 use DB;
+use Carbon;
 
 class ReferenceController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | ReferenceController
+    |--------------------------------------------------------------------------
+    |
+    | This controller is for reporting feature for reference collected by nutritionist.    
+    | This also includes conversions.
+    |
+    */
+
     public $daterange;
     public $start_date;
     public $end_date;
+    protected $waved_off_days = 30; //This is number of days after which reference cen be added to take into account genuine references
 
     public function __construct()
     {
@@ -36,8 +49,8 @@ class ReferenceController extends Controller
         //$this->start_date = "2016-11-01";
 
         $summaries = LeadSource::with(['lead.patient.fees' => function($q) {
-                        $q->where('created_at', '>=', $this->start_date)
-                        ->where('source_id', 10);
+                         $q->whereBetween('created_at', [$this->start_date, $this->end_date]);
+                        //->where('source_id', 10);
                     }])
                     ->whereBetween('created_at', [$this->start_date, $this->end_date])
                     ->where('source_id', 10)
@@ -49,24 +62,40 @@ class ReferenceController extends Controller
         $summaries = $summaries->groupBy('sourced_by');
 
         foreach ($summaries as $key => $value) {
+            
             $filtered = $value->filter(function ($value) {
-                return isset($value->lead->patient->fees);
+                if ( isset($value->lead->patient->fees) ) {
+                    foreach ($value->lead->patient->fees as $fee) {
+                        if ( Carbon::parse($value->created_at)->subDays($this->waved_off_days)->lte($fee->created_at) )
+                            return true;
+                    }
+                }
+                return false;
             });
 
             $value->conversions = $filtered->count();//;$value->where('lead.patient.id', '>', 0)->pluck('lead.patient');
             $value->sourced_by = $key;
             $value->patients = LeadSource::
                                 whereHas('lead.patient.fees', function($q) {
-                                    $q->whereBetween('created_at', [$this->start_date, $this->end_date])
-                                        ->where('source_id', 10)
-                                        ;
+                                    $q->whereBetween('created_at', [$this->start_date, $this->end_date]);
+                                        //->where('source_id', 10);
                                 })
                                 //->with('lead.patient.fees')
                                 ->where('sourced_by', $key)
                                 ->where('source_id', 10)
-                                ->count();
+                                ->get();
                                 //dd($value->patients);
                                 //dd($value);
+            $value->patients = $value->patients->filter(function ($value) {
+                    if ( isset($value->lead->patient->fees) ) {
+                        foreach ($value->lead->patient->fees as $fee) {
+                            if ( Carbon::parse($value->created_at)->subDays($this->waved_off_days)->lte($fee->created_at) )
+                                return true;
+                        }
+                    }
+                    return false;
+                })
+            ->count();
         }
 
         //dd($summaries);
