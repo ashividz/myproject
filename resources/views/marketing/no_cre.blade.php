@@ -8,10 +8,11 @@
 			</div>	
 			<div class="panel-body">
 
-				<form id="form" class="form-inline" action="/marketing/saveRejoin" method="post">
+				<form id="form" class="form-inline" action="/marketing/leads/churn/save" method="post">
 					<table id="leads" class="table table-bordered">
 						<thead>
 							<tr>
+								<td><input type="checkbox" id="checkAll"></td>
 								<td>#</td>
 								<td>Query Id</td>
 								<td width="15%">Name</td>
@@ -27,6 +28,9 @@
 				@foreach($leads AS $lead)
 
 							<tr>
+								<td>
+									<input class='checkbox' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
+								</td>
 								<td>{{$i++}}</td>
 								<td>{{$lead->query_id}}</td>
 								<td>
@@ -67,6 +71,18 @@
 
 						</tbody>
 					</table>
+					<div class="form-control">
+						
+			        	<select name="cre" id="cre" required>
+			        		<option value="">Select User</option>
+
+			        	@foreach($users AS $user)
+			                <option value="{{$user->name}}">{{$user->name}}</option>
+			        	@endforeach	
+
+			        	</select>
+						<button class="btn btn-primary">Churn Leads</button>
+					</div>
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				</form>
 			</div>			

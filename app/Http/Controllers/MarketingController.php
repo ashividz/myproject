@@ -619,6 +619,8 @@ class MarketingController extends Controller
     //Display Leads without CRE assigned
     public function noCre()
     {
+        $users = User::getUsersByRole('cre');
+
         $leads = Lead::select('marketing_details.*')
                 ->with('disposition','source')
                 ->leftJoin('lead_cre AS c', 'marketing_details.id', '=', 'c.lead_id')
@@ -633,6 +635,7 @@ class MarketingController extends Controller
             'section'           =>  'no_cre',
             'start_date'        =>  $this->start_date,
             'end_date'          =>  $this->end_date,
+            'users'             =>  $users,
             'leads'             =>  $leads,
             'i'                 =>  '1'
         );
