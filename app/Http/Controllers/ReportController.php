@@ -538,6 +538,7 @@ class ReportController extends Controller
                                          ->whereBetween('created_at', array($date1, $date2));
                                         }, '=','1')
                                     ->where('source_id', $source->id)
+                                    ->whereBetween('created_at', array($date1, $date2))
                                     ->count();
 
                     $patients = Patient::join('fees_details AS f', 'f.patient_id', '=', 'patient_details.id') 
@@ -546,6 +547,7 @@ class ReportController extends Controller
                                          ->whereBetween('created_at', array($date1, $date2));
                                         }, '=','1')
                                 ->where('source_id', $source->id) 
+                                ->where('cre',$cre->name)
                                 ->whereBetween('f.entry_date', array($this->start_date, $this->end_date))
                                 ->get();
 
