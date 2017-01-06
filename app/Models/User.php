@@ -158,11 +158,24 @@ class User extends Model implements AuthenticatableContract,
                     })
                 ->where('s.supervisor_employee_id', $user_id);//
         }
+        if($role != 'Dcre')
+        {
+            $users = $users->where('r.name', $role)
+                    ->orderBy('e.name')
+                    ->groupBy('users.id')
+                    ->select('users.id', 'e.name');
+        }
 
-        $users = $users->where('r.name', $role)
+        if($role == 'Dcre')
+        {
+            
+            $users = $users->where('r.name', 'cre')
                 ->orderBy('e.name')
                 ->groupBy('users.id')
-                ->select('users.id', 'e.name');
+                ->select('users.id', 'e.name')
+                ->withTrashed();
+        }
+
         $users = $users->get();
         
         //include self when cre is also a tl
