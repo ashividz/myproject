@@ -175,7 +175,7 @@ class DietController extends Controller
                     ->where('nutritionist', 'like', Auth::user()->employee->name)
                     ->limit(10)
                     ->orderBy('id', 'desc')
-                    ->groupBy(DB::RAW($request->id))
+                    //->groupBy(DB::RAW($request->id))
                     ->get();
         //}
         return $diets;
