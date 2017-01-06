@@ -137,7 +137,7 @@ class User extends Model implements AuthenticatableContract,
                 ->get();   
     }
 
-    public static function getUsersByRole($role, $user_id = null,$filter = true , $includeSelf = true)
+    public static function getUsersByRole($role, $user_id = null,$filter = true , $includeSelf = true , $deletedCre = false)
     {
         $users =  User::join('employees AS e', 'e.id', '=', 'emp_id')
                 ->join('role_user AS ru', 'users.id', '=', 'user_id')
@@ -158,11 +158,23 @@ class User extends Model implements AuthenticatableContract,
                     })
                 ->where('s.supervisor_employee_id', $user_id);//
         }
-
+        
         $users = $users->where('r.name', $role)
                 ->orderBy('e.name')
                 ->groupBy('users.id')
                 ->select('users.id', 'e.name');
+        
+
+        if($role == 'cre' && $deletedCre)
+        {
+            
+            $users = $users->where('r.name', $role)
+                ->orderBy('e.name')
+                ->groupBy('users.id')
+                ->select('users.id', 'e.name')
+                ->withTrashed();
+        }
+
         $users = $users->get();
         
         //include self when cre is also a tl

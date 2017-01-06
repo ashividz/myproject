@@ -380,7 +380,7 @@ class MarketingController extends Controller
 
     public function churnLeads(Request $request)
     {
-        $users = User::getUsersByRole('cre');
+        $users = User::getUsersByRole('cre' , null , true, true , true);
         $cre  = $request->user;
 
         $leads = Lead::getLeadsByUser($cre, $this->start_date, $this->end_date);
