@@ -15,6 +15,7 @@ use App\Models\PatientWeight;
 use App\Models\YuWoW\Healthtrack;
 
 use Auth;
+use Carbon;
 
 class PatientWeightController extends Controller
 {
@@ -311,7 +312,7 @@ class PatientWeightController extends Controller
 
         $this->validate($request, [
             'initial_weight'      => 'required|numeric|min:1',
-            'initial_weight_date' => 'required|date',
+            'initial_weight_date' => 'required|date|before:'.Carbon::now()->toDateString(),
         ]);
         $initialWeight = PatientWeight::where('patient_id',$patient->id)
                     ->where('date',$request->initial_weight_date)
