@@ -125,4 +125,13 @@ Trait Permission {
 
         return false;
     }
+
+    public function canUpdateInitialWeight()
+    {
+        if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('service')) {
+            return true; 
+        }
+
+        return false;
+    }
 }

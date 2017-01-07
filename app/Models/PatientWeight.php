@@ -12,6 +12,13 @@ use DB;
 
 class PatientWeight extends Model
 {
+	protected $fillable = [
+			'patient_id',
+			'date',
+			'weight',
+			'created_by',
+	];
+
 	public static function weightLoss($patients)
 	{
 		foreach ($patients as $patient) {

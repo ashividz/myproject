@@ -15,6 +15,7 @@ use App\Models\PatientWeight;
 use App\Models\YuWoW\Healthtrack;
 
 use Auth;
+use Carbon;
 
 class PatientWeightController extends Controller
 {
@@ -300,5 +301,34 @@ class PatientWeightController extends Controller
             return json_encode(array("error code" => $response->ErrorCode, "ErrorMessage" => $response->ErrorMessage));
         }
     }   
+
+    public function updateInitialWeight(Request $request, $id)
+    {
+        $patient = Patient::findOrFail($id);
+        $data = array(
+            'message'       =>  'Weight updated successfully',
+            'status'        =>  'success'
+        );
+
+        $this->validate($request, [
+            'initial_weight'      => 'required|numeric|min:1',
+            'initial_weight_date' => 'required|date|before:'.Carbon::now()->toDateString(),
+        ]);
+        $initialWeight = PatientWeight::where('patient_id',$patient->id)
+                    ->where('date',$request->initial_weight_date)
+                    ->first();
+        if ($initialWeight) {
+            $initialWeight->weight = $request->initial_weight;
+            $initialWeight->save();
+        } else {
+            PatientWeight::create([
+                'patient_id' => $patient->id,
+                'weight'     => $request->initial_weight,
+                'date'       => $request->initial_weight_date,
+                'created_by'  => Auth::id(),
+            ]);
+        }
+        return back()->with($data);
+    }
 
 }

@@ -107,6 +107,13 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['auth', 'roles','checkip'], 
+    'roles' => ['admin','service']], 
+    function() {
+        Route::post('/patient/{id}/initialWeight', 'PatientWeightController@updateInitialWeight');
+});
+
+Route::group([
     'middleware' => ['auth', 'roles','checkip'],
     'roles' => ['admin', 'logistics', 'quality', 'registration']], 
     function() {

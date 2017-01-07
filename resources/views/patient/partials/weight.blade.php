@@ -2,37 +2,32 @@
 /*Block authored by Sunil*/
 //updated on 2016-07-01 to handle upgrade cases
     $upgradeDuration = \App\Models\Fee::getUpgradeDuration();
-    $upgradeSourceId = 22;
-    $rejoinSourceId  = 23;
-    $cfee = $patient->cfee ? $patient->cfee : $patient->fees->sortByDesc('end_date')->first();
-    $fees = $patient->fees->filter(function ($item) use ($cfee) {
-        return ($item->end_date <= $cfee->end_date);
-    });
-    $fees = $fees->sortByDesc('end_date');
-    $startFee = $cfee;
-    foreach($fees as $f){            
-        $diffInDays = floor((strtotime($startFee->start_date) - strtotime($f->end_date))/(24*60*60)) ;
-        $isUpgrade  = $f->source_id == $upgradeSourceId ? true :false;
-        $isRejoin   = $f->source_id == $rejoinSourceId ? true :false;        
-        if ( ($diffInDays <= $upgradeDuration || $isUpgrade) && !$isRejoin )
+    $endFee          = $patient->fees->sortByDesc('end_date')->first();
+    $startFee        = $endFee; 
+    $fees            = $patient->fees->sortByDesc('end_date');
+
+    foreach ($fees as $f ) {
+        $diffInDays = $f->end_date->diffInDays($startFee->start_date,false);
+        if ( ($diffInDays <= $upgradeDuration))
             $startFee = $f;
         else
-            break;                
-    }    
-        
-    $measurementsAfterStartDate = $measurements->filter(function ($item) use ($startFee){
-            if ( $item->weight && (strtotime($item->date) >= strtotime($startFee->start_date)) )
-                return true;
-        });
-
-    $initialWeight   = $measurementsAfterStartDate->sortBy('date')->first();
-    $latestWeight    = $measurementsAfterStartDate->sortByDesc('date')->first();
-    $initialBMI = null;
-    $latestBMI = null;
-    if($patient->lead->height && $patient->lead->height>0){  
-        $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
-        $latestBMI= $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+            break;
     }
+    $initialWeight =  \App\Models\PatientWeight::where('patient_id',$patient->id)
+                             ->where('weight','>',0)
+                             ->where('date','>=',$startFee->start_date)
+                             ->orderBy('date')
+                             ->first();
+
+    $latestWeight  =  \App\Models\PatientWeight::where('patient_id',$patient->id)
+                             ->where('weight','>',0)
+                             ->where('date','>=',$startFee->start_date)
+                             ->orderBy('date','desc')
+                             ->first();
+    if ( $patient->lead->height >0 ) {
+        $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+        $latestBMI = $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+    }   
         
 /*end of the Block authored by Sunil*/
 ?>
@@ -92,18 +87,38 @@
         </div>
     </div>
 </div>
-<div class="col-md-3">      
-</div>
-<div class="col-md-6"> 
-<div class="panel panel-default">
+<div class="col-md-3">
+    <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">Full iFitter Profile</div>
         </div>
         <div class="panel-body">            
-            <a href="{{url('patient/'.$patient->id.'/fullIfitterProfile')}}">Click to see full iFitter profile</a>     
+            <a href="{{url('patient/'.$patient->id.'/fullIfitterProfile')}}" target="_blank">Click to see full iFitter profile</a>     
         </div>
     </div>
 </div>
+@if(Auth::user()->canUpdateInitialWeight())
+<div class="col-md-6"> 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">update initial weight</div>
+        </div>
+        <div class="panel-body">
+            <form id="initial-weight" action="/patient/{{$patient->id}}/initialWeight" method="POST" class="form" >
+                <div class="form-group">
+                    <input type="text" name="initial_weight" size="4" placeholder="initial weight"> Kgs
+                </div>                
+                <input type="date" name="initial_weight_date" value="{{$startFee->start_date->toDateString()}}"/> 
+                <div class="form-group">
+                    <button class="btn btn-primary">Save</button>
+                </div>
+                <input type="hidden" name='_token' value="{{ csrf_token() }}">
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
 @endsection
 
 @section('main')
