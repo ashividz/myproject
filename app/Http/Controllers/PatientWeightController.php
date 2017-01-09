@@ -318,7 +318,8 @@ class PatientWeightController extends Controller
                     ->where('date',$request->initial_weight_date)
                     ->first();
         if ($initialWeight) {
-            $initialWeight->weight = $request->initial_weight;
+            $initialWeight->weight     = $request->initial_weight;
+            $initialWeight->updated_by = Auth::id();
             $initialWeight->save();
         } else {
             PatientWeight::create([
@@ -326,6 +327,7 @@ class PatientWeightController extends Controller
                 'weight'     => $request->initial_weight,
                 'date'       => $request->initial_weight_date,
                 'created_by'  => Auth::id(),
+                'updated_by'  => Auth::id(),
             ]);
         }
         return back()->with($data);
