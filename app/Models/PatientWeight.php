@@ -17,6 +17,7 @@ class PatientWeight extends Model
 			'date',
 			'weight',
 			'created_by',
+			'updated_by',
 	];
 
 	public static function weightLoss($patients)
@@ -64,3 +65,5 @@ class PatientWeight extends Model
 		return $patients;
 	}	
 }
+
+/*alter table patient_weights add column updated_by int(4) default null;*/
