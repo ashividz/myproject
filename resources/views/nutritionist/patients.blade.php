@@ -292,6 +292,7 @@
 	foreach($patient->notes as $note) {
 		$notes .= $note->text . " : <b>". $note->created_by."</b><em> (".$note->created_at.")</em><p>";
 	}
+	$fee  = $patient->cfee ? $patient->cfee : $patient->fee;
 ?>
 						<tr>
 							<td></td>
