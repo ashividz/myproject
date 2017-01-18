@@ -569,6 +569,8 @@ Route::group([
         Route::post('cre/leads', 'CREController@viewLeads');
         Route::get('cre/pipelines', 'CREController@showPipelines');
         Route::post('cre/pipelines', 'CREController@showPipelines');
+        Route::get('cre/interested', 'CREController@interested');
+        Route::post('cre/interested', 'CREController@interested');
         Route::get('cre/viewDispositions', 'CallDispositionController@viewDispositions');
         Route::post('cre/dispositions', 'CREController@saveCallDisposition');
         Route::get('cre/callbacks', 'CREController@viewCallbacks');
