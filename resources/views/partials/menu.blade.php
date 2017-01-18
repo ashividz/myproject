@@ -176,6 +176,10 @@
 
                 <li>
                     <a href="/cre/pipelines" id="menu_cre_pipelines">Pipelines</a>
+                </li> 
+                 
+                <li>
+                    <a href="/cre/interested" id="menu_Intrested">Interested </a>
                 </li>   
                     
                 <li>

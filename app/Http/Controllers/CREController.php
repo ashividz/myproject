@@ -16,8 +16,10 @@ use App\Models\Source;
 use App\Models\Channel;
 use App\Models\Patient;
 use App\Models\Fee;
+use App\Models\CallDisposition;
 use Auth;
 use DB;
+use Carbon;
 
 class CREController extends Controller
 {
@@ -131,8 +133,9 @@ class CREController extends Controller
                                             ->whereIn('dept', [0,1])
                                             ->get();
         }
-                            //dd($calls);
+            
         $statuses = Status::get();
+
 
         $leads = Lead::whereHas('cre', function($q) {
                         $q->whereBetween('created_at', array($this->start_date, $this->end_date));
@@ -146,9 +149,12 @@ class CREController extends Controller
 
         $statuses->leads = $leads->count();
 
+
         foreach ($statuses as $status) {
             $status->leads = $leads->where('status_id', $status->id);
         }
+
+
 
         $users = User::getUsersByRole('cre');
 
@@ -164,6 +170,77 @@ class CREController extends Controller
         );        
 
         return view('home')->with($data);
+    }
+
+
+    /**
+     * Display intrested Leads
+     *cre/leads
+     * @return Response
+     */
+
+    public function interested()
+    {
+        $cre = $this->cre;
+        $start_date = $this->start_date;
+        $end_date = $this->end_date;
+
+
+
+
+        $active = CallDisposition::where('disposition_id', '9')
+        ->whereHas('lead.patient.fees', function($q) {
+            $q->where('end_date', '>=', Carbon::today())
+             ->where('total_amount', '>' , 0);
+        })
+        ->whereBetween('created_at', array($this->start_date, $this->end_date))
+        ->where('name' , $cre)
+        ->get();
+        
+    
+        $arr = [];
+        foreach($active as $act)
+        {
+            $arr[] = $act->lead->id;
+        }
+        
+
+        $leads = CallDisposition::where('disposition_id' , '9')
+        ->whereHas('lead' , function($q) use($arr){
+            $q->whereNotIn('id' , $arr);
+        })
+        ->whereBetween('created_at', array($this->start_date, $this->end_date))
+        ->where('name' , $cre)
+        ->groupBy('lead_id')
+        ->get();
+
+        $leadId = [];
+        foreach ($leads as $l) {
+            $leadId[] = $l->lead->id;
+        }
+
+     
+
+        $leads = Lead::whereHas('disposition' , function($q) use($cre){
+            $q->where('name' , $cre);
+        })
+        ->whereIn('id' , $leadId )
+        ->get();
+       
+
+        $users = User::getUsersByRole('cre');
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'interested',
+            'start_date'        =>  $this->start_date,
+            'end_date'          =>  $this->end_date,
+            'users'             =>  $users,
+            'name'              =>  $this->cre,
+            'leads'             =>  $leads
+        ); 
+
+        return view('home')->with($data);
+
     }
 
     /**
