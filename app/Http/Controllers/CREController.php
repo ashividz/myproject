@@ -219,13 +219,14 @@ class CREController extends Controller
             $leadId[] = $l->lead->id;
         }
 
-     
+    
 
-        $leads = Lead::whereHas('disposition' , function($q) use($cre){
-            $q->where('name' , $cre);
-        })
+        $leads = Lead::has('disposition')
+        ->where('cre_name' , $cre)
         ->whereIn('id' , $leadId )
         ->get();
+       
+       
        
 
         $users = User::getUsersByRole('cre');
