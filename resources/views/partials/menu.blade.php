@@ -580,6 +580,20 @@
             </li>
             @endif
 
+            @if(Auth::user()->canViewOnlinePayments())
+            <li>
+                <a href="#">Online Payments</a>  
+                <ul>
+                    <li>
+                        <a href="/sales/payments" id="menu_sales_payments">Online Payments</a>
+                    </li>
+                    <li>
+                        <a href="/sales/paymentsNew" id="menu_sales_pipeline_status">Online Payments New</a>
+                    </li>
+                </ul>
+            </li> 
+            @endif
+
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl')  || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('registration')) 
                 <li>
                     <a href="#">Sales</a>  
