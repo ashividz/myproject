@@ -23,8 +23,9 @@
                 <tr>
                     <td>{{$i++}}</td>
                     <td><a href="/lead/{{$l->id}}/viewDispositions" target="_blank">{{$l->name or ' '}}</a></td>
-                   	<td>{{$l->disposition->created_at}}</td>
-                   	<td>{{$l->disposition->remarks}}</td>
+                    <td>{{$l->disposition->created_at}}</td>
+                    <td>{{$l->disposition->remarks}}</td>
+                  
                 </tr>
             @endforeach
 
