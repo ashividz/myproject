@@ -376,8 +376,10 @@ class PatientFABController extends Controller
                     {
                         $message->to($patient->lead->email, $patient->lead->name)
                             //->bcc("diet@nutrihealthsystems.co.in")
+                            ->bcc("diet@nutrihealthsystems.co.in")
                             ->subject("FINAL ANALYSIS BROCHURE - ".$patient->lead->name." - ".date('D, jS M, Y H:i:s'))
                             ->from('diet@nutrihealthsystems.co.in', 'Nutri-Health Systems');
+                            
                         if (trim($patient->lead->email_alt) <> '') {
                             $message->cc($patient->lead->email_alt, $patient->lead->name);
                         }
