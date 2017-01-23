@@ -122,7 +122,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                         ->where('callback','>=',DB::raw('curdate()'));
                     },'<',1)
                     ->whereHas('dispositions',function($query) {
-                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -30 DAY)'));
+                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -7 DAY)'));
                     },'<',1)
                     ->where('source_id','<>','57')
                     ->whereHas('patient',function($query) {
