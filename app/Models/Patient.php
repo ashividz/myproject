@@ -209,7 +209,7 @@ class Patient extends Model
     public static function getActivePatients($nutritionist = NULL)
     {
         $query =  Patient::select('patient_details.*')
-                ->with('lead', 'cfee', 'doctor')
+                ->with('lead', 'cfee', 'doctor','suit')
                 /*->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                     $join->on('patient_details.id', '=', 'f.patient_id');
                 })
