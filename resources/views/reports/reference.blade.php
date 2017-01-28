@@ -16,7 +16,7 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="home">
-          <a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Leads Csv</a>
+          <br>
 
           <table id="example" class="table">
             <thead>
@@ -165,12 +165,15 @@
 <script type="text/javascript">
 $(document).ready(function() 
 {
-  $('#example').dataTable({
-
-      "sPaginationType": "full_numbers",
-      "iDisplayLength": 100,
-      "bPaginate": false
-    });
+  $(document).ready(function() {
+    $('#example').DataTable( {
+        "iDisplayLength": 100,
+        dom: 'Bfrtip',
+        buttons: [
+            'csv'
+        ]
+    } );
+} );
 
   $(".editable_voice").editable("/lead/saveVoice", { 
       loadurl   : "/api/getVoices",
