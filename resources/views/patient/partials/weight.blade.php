@@ -28,8 +28,8 @@
     $latestBMI  = null;
     
     if ( $patient->lead->height >0 ) {
-        $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
-        $latestBMI = $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+        $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,2):null ;
+        $latestBMI = $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,2):null ;
     }   
         
 /*end of the Block authored by Sunil*/
