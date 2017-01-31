@@ -56,8 +56,8 @@ class PatientWeight extends Model
 				$inches = $height/2.54;
 		    	$patient->lead->feet = intval($inches/12);
 		    	$patient->lead->inches = $inches%12;
-		    	$patient->initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
-		    	$patient->finalBMI = $finalWeight ? number_format($finalWeight->weight*100*100/pow($patient->lead->height,2) ,1):null ;
+		    	$patient->initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,2):null ;
+		    	$patient->finalBMI = $finalWeight ? number_format($finalWeight->weight*100*100/pow($patient->lead->height,2) ,2):null ;
 
 		    }
 		}
