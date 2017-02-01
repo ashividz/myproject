@@ -20,6 +20,8 @@ class Product extends Model
         'offer'
     ];
 
+    protected static $herbIds = [8,9,10,11,12,13,14];
+
     public function category()
     {
         return $this->belongsTo(ProductCategory::class ,'product_category_id');
@@ -28,5 +30,10 @@ class Product extends Model
     public function offers()
     {
         return $this->hasMany(ProductOffer::class);
+    }
+
+    public static function getHerbIds()
+    {
+        return self::$herbIds;
     }
 }
