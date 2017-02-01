@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 
 use App\Models\Patient;
 use App\Models\Diet;
+use App\Models\Product;
 
 use Auth;
 use DB;
@@ -21,9 +22,16 @@ class PatientDietController extends Controller
     {
         //DB::update("UPDATE diet_assign AS f SET patient_id = (SELECT id FROM patient_details p WHERE p.clinic=f.clinic AND p.registration_no=f.registration_no) WHERE patient_id = 0");
 
-        $patient = Patient::with('herbs', 'diets', 'suit', 'weights', 'fee')->find($id);
-        //dd($patient);
-      
+        $patient     = Patient::with('herbs', 'diets', 'suit', 'weights', 'fee','lead')->find($id);
+        $patient->productCart = $patient->lead->carts()
+               ->whereHas('products',function($query) {
+                    $query->whereIn('products.id',Product::getHerbIds());
+               })
+               ->orderBy('created_at','desc')
+               ->first();        
+        //dd($patient->productCart);
+        //dd($patient->productCart->created_at->diffInDays());
+
         $diets = Diet::where('patient_id', $id)
                     ->orderBy('date_assign', 'desc')
                     ->limit(12)

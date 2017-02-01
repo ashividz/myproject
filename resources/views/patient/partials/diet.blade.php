@@ -474,6 +474,19 @@ $(document).ready(function()
 	    }
 	  }
 	);
+	
+	//Product alert for nutritionist
+	@if($patient->productCart && ( $patient->productCart->created_at->diffInDays() >25 ) )
+		swal({
+			title: "Product Alert!",
+			text: "It's been {{$patient->productCart->created_at->diffInDays()}} days since client ordered herbs.",
+			width: 450,
+			height: 300,
+			imageWidth: 200,
+			imageUrl: "/images/product_kit.jpg",
+			imageSize : "25x25"
+		});
+	@endif
 });
 </script>
 <script type="text/javascript">
