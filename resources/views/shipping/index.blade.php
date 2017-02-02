@@ -1,4 +1,4 @@
-    <div class="container" id="shipping">
+        <div class="container" id="shipping">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <input type="text" id="daterange" v-model="daterange" size="25" readonly/>
@@ -37,7 +37,7 @@
         @{{ shipping.created_at | format_date }}
     </div>
     <div class="col-md-2">
-        <a href="/lead/@{{ shipping.cart.lead.id }}/cart" target="_blank">
+        <a href="/cart/@{{ shipping.cart.id }}" target="_blank">
             @{{ shipping.cart.lead.name }}
         </a>
     </div>
@@ -45,7 +45,7 @@
         @{{ shipping.cart.created_at | format_date2 }}
     </div>
     <div class="col-md-1">
-        @{{ shipping.carrier.name }}
+        @{{ shipping.carrier ? shipping.carrier.name : 'Manual'}}
     </div>
     <div class="col-md-1">
         @{{ shipping.tracking_id }}
@@ -71,7 +71,7 @@
         <div v-else>
             <input type="text" v-model="shipping.actual_delivery_timestamp" class="form-control" placeholder="Delivery Date (dd-mm-yyyy)" @keyup.enter="update">
         </div>
-        <span v-if="shipping.carrier_id > 1" class="pull-right">
+        <span v-if="shipping.carrier_id > 1 || !shipping.carrier_id" class="pull-right">
             <i class="fa fa-edit" @click="toggleEdit"></i>
         </span>
     </div>

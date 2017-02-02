@@ -93,6 +93,45 @@
             </div>
         </div>
     </div>
+    
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <caption>Trackings</caption>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Cart Created At</th>
+                        <th>Carrier</th>
+                        <th>Tracking Id</th>
+                        <th>Status</th>
+                        <th>Estimated Delivery</th>
+                        <th>Actual Delivery</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach($cart->shippings as $shipping)
+                        <tr>
+                            <td>{{$shipping->created_at}}</td>
+                            <td>{{$shipping->cart->lead->name}}</td>
+                            <td>{{$shipping->cart->created_at}}</td>
+                            <td>{{$shipping->carrier ? $shipping->carrier->name : 'Manual'}}</td>
+                            <td>{{$shipping->tracking_id}}</td>
+                            <td>
+                                <div class="statusbar {{ strtolower($shipping->status) }}" title="{{ $shipping->trackingStatus->description or ''}}"></div>
+                                <!-- <div class="statusbar {{ strtolower($shipping->status) }}" title="{{ $shipping->status_detail ? $cart->shipping->status_detail->Description : '' }}"></div> -->
+                            </td>
+                            <td>{{$shipping->estimated_delivery_timestamp}}</td>
+                            <td>{{$shipping->actual_delivery_timestamp}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     @include('cart.partials.workflow')
     <div class="panel panel-default">
         <div class="panel-heading">

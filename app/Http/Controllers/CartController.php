@@ -218,7 +218,7 @@ class CartController extends Controller
         
 
 
-        $cart = Cart::with('currency', 'products.category','status', 'state', 'steps', 'shippingAddress')
+        $cart = Cart::with('currency', 'products.category','status', 'state', 'steps', 'shippingAddress','shippings.trackingStatus')
                 ->with(['creator' => function($q) {
                     $q->withTrashed();
                 }])
@@ -228,6 +228,10 @@ class CartController extends Controller
             abort('400', 'Cart not found');
         }
         $cart = $cart->updateAmount();
+
+        foreach ($cart->shippings as $shipping) {
+            $shipping = $this->statusClass($shipping);
+        }
         //dd(Cart::setDietDuration($cart));
 
         //return $cart->getDietDiscount();
@@ -543,6 +547,34 @@ class CartController extends Controller
                     ->with('creator.employee')
                     ->with('cre.employee.supervisor.employee')
                     ->find($request->id);
+    }
+
+    private function statusClass($shipping)
+    {
+        if(!isset($shipping->status_detail->Code)) {
+            return false;
+        }
+        switch ($shipping->status_detail->Code) {                
+            case 'OC':
+                $shipping->status_class = 'in_progress';
+                break;
+            case 'PU':
+                $shipping->status_class = 'picked_up';
+                break;
+            case 'FD':
+                $shipping->status_class = 'in_transit';
+                break;
+            case 'DE':
+                $shipping->status_class = 'exception';
+                break;
+            case 'DL':
+                $shipping->status_class = 'delivered';
+                break;
+            default:
+                $shipping->status_class = 'in_transit';
+        }
+
+        return $shipping;
     }
 
 }
