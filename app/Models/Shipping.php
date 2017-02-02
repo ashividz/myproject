@@ -28,6 +28,11 @@ class Shipping extends Model
         return $this->belongsTo(Carrier::class);
     }
 
+    public function trackingStatus()
+    {
+        return $this->belongsTo(TrackingStatus::class,'status','code');
+    }
+
     public static function updateStatus($id, $status, $estimated_delivery_timestamp, $actual_delivery_timestamp)
     {
         $shipping = Shipping::find($id);
@@ -37,3 +42,13 @@ class Shipping extends Model
         $shipping->save();
     }
 }
+/*
+create table tracking_statuses (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    code varchar(2),
+    description varchar(255),
+    created_at datetime,
+    updated_at datetime,
+    primary key (`id`)
+);
+*/

@@ -239,6 +239,11 @@ class FedExController extends Controller
             return;
         }
         
+        //dont sent notification if cart or lead does not exist
+        if (!$tracking || !$tracking->shipping || !$tracking->shipping->cart || !$tracking->shipping->cart->lead) {
+            return;
+        }
+
         if ($event->EventType == 'OC') {
             $this->sendShippedIntimation($tracking, $event);
         }
