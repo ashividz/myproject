@@ -54,6 +54,11 @@ class Fee extends Model
         return $this->morphMany(Log::class, 'owner');
     }
 
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
     public static function getUpgradeDuration()
     {
         return self::$upgradeDuration;

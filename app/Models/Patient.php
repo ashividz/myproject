@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Fee;
 use App\Models\User;
+use App\Models\Product;
 
 use DB;
 use Auth;
@@ -288,6 +289,7 @@ class Patient extends Model
     public static function getUpgradeList($days = NULL, $nutritionist = NULL, $programDuration=NULL)
     {
         $days = $days <> NULL ? $days : 1;
+        $wtLossProductIds = Product::getWtLossProductIds();
 
         $query =  Patient::select('patient_details.*')
                 ->with('fee', 'lead', 'lead.sources', 'lead.source', 'lead.cre')
@@ -297,7 +299,16 @@ class Patient extends Model
                 //->leftJoin(DB::raw('(SELECT * FROM lead_sources A WHERE id = (SELECT MAX(id) FROM lead_sources B WHERE A.lead_id=B.lead_id)) AS s'), function($join) {
                   //  $join->on('patient_details.lead_id', '=', 's.lead_id');
                 //})
-                ->whereRaw(DB::RAW("CURDATE() BETWEEN DATE(DATE_SUB(f.end_date, INTERVAL " . $days . " DAY)) AND DATE(DATE_SUB(f.end_date, INTERVAL 0 DAY))"));
+                ->whereRaw(DB::RAW("CURDATE() BETWEEN DATE(DATE_SUB(f.end_date, INTERVAL " . $days . " DAY)) AND DATE(DATE_SUB(f.end_date, INTERVAL 0 DAY))"))
+                ->whereDoesnthave('fee.cart',function($query)  use ($wtLossProductIds) {
+                    $query->whereHas('products',function($q) use ($wtLossProductIds) {
+                        $q->whereIn('products.id',$wtLossProductIds);
+                    })
+                    ->whereHas('products',function($q){
+                        $q->where('products.product_category_id',1)
+                        ->where('cart_product.discount','>',0);
+                    });
+                });
         if ($programDuration) {
             $query = $query->where('f.duration','=',$programDuration);
         }

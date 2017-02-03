@@ -21,6 +21,7 @@ class Product extends Model
     ];
 
     protected static $herbIds = [8,9,10,11,12,13,14];
+    protected static $wtLossProductIds = [55,57,58];
 
     public function category()
     {
@@ -35,5 +36,10 @@ class Product extends Model
     public static function getHerbIds()
     {
         return self::$herbIds;
+    }
+
+    public static function getWtLossProductIds()
+    {
+        return self::$wtLossProductIds;
     }
 }

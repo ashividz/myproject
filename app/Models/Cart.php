@@ -64,7 +64,8 @@ class Cart extends Model
     {
         return $this->belongsToMany(Product::class)
             ->withPivot('id', 'product_offer_parent_id','product_offer_id', 'quantity', 'price', 'amount', 'discount', 'coupon', 'created_by')
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withTrashed();
     }
 
     public function currency()
