@@ -465,7 +465,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'marketing','goods_sale']], 
+    'roles' => ['admin', 'marketing','goods_sale','service']], 
     function() {
         Route::get('reports/products/no_purchases', 'ProductReportController@noPurchases');
         Route::get('api/getNoPurchases', 'ProductReportController@getNoPurchases');
