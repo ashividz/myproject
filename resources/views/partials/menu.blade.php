@@ -747,7 +747,7 @@
         </li>
         @endif
 
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('goods_sale'))                 
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('service'))                 
         <li>
             <a href="#" id="herbs">Herbs Sale</a>
             <ul>
