@@ -167,7 +167,7 @@ $(document).ready(function()
 {
   $(document).ready(function() {
     $('#example').DataTable( {
-        "iDisplayLength": 100,
+        "iDisplayLength": 1000,
         dom: 'Bfrtip',
         buttons: [
             'csv'
