@@ -12,9 +12,9 @@ use Auth;
 
 class PatientSymptom extends Model
 {
-    protected $table = "patient_symptoms";
-  
-
+    protected $table = 'patient_symptoms';
+    
+    protected $fillable = ['patient_id'];
 
    
 }
