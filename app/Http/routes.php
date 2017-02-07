@@ -597,7 +597,7 @@ Route::group([
         Route::post('getQuestion', 'QuizController@getQuestion');
         Route::get('quiz/report', 'QuizController@showReport');
         Route::get('quiz/user/{id}/report', 'QuizController@showUserReport');
-        Route::get('quiz/user/{id}/answer', 'quizzController@setAnswer');
+        Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
 });
 
 Route::group([
