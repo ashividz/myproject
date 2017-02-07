@@ -331,7 +331,15 @@ $newId++;
     public function editQuiz(Request $request) {
         $replies = null;
         $setting = QuizSetting::where('id', $request->quiz_id)->with('questions')->get()->first();
-        $users = User::getUsersByRole('cre');
+        
+        $users  = null;
+        
+        if ( Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') ) {
+            $users = User::getUsersByRole('nutritionist');
+        }
+        else {
+            $users = User::getUsersByRole('cre');
+        }
 
         foreach ($users as $user) {
             $quizUser = QuizUser::where('user_id', $user->id)
@@ -614,8 +622,21 @@ $newId++;
 
         $settings = QuizSetting::with('questions')
                                 ->orderBy('created_at', 'desc')
+                                ->with('creator.roles')
                                 ->limit(20)
                                 ->get();
+        
+        //filter nutritionist quiz for service tl
+        if ( Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') ) {
+            $settings = $settings->filter(function($item) {
+                return $item->creator->hasRole('service_tl') || $item->creator->hasRole('service');
+            });
+        }
+        else {
+            $settings = $settings->filter(function($item) {                
+                return !$item->creator->hasRole('service_tl') && !$item->creator->hasRole('service');
+            });   
+        }
 
 
         $data = array(
@@ -628,7 +649,7 @@ $newId++;
         return view('home')->with($data);
     }
 
-      public function readfile(Request $request)
+    public function readfile(Request $request)
     {
         $file = $request->file('file');
         
@@ -637,10 +658,10 @@ $newId++;
         $extension = $file->getClientOriginalExtension();
 
         $fileName = "quiz_questions-".date("Y-m-d-H-i-s").".".$extension;
-        $file->move('uploads', $fileName);
+        $file->move('../storage/uploads', $fileName);
         $date = date("Y-m-d H:i:s");
         //$results  = Excel::selectSheetsByIndex(1)->load("uploads/$fileName")->get();
-        $results  = Excel::load("uploads/$fileName")->get();
+        $results  = Excel::load("storage/uploads/$fileName")->get();
         $questions = $results->get(0);
         $answers = $results->get(1);
         $skip = 0;
@@ -650,6 +671,7 @@ $newId++;
         $quiz_setting->quiz_duration = '20m';
         $quiz_setting->start_time = $date;
         $quiz_setting->end_time = $date;
+        $quiz_setting->created_by = Auth::id();
         $quiz_setting->save();
 
 
@@ -686,7 +708,14 @@ $newId++;
             $i++;
           
         }
-        $users = User::getUsersByRole('cre');
+        
+        if ( Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl') ) {
+            $users = User::getUsersByRole('nutritionist');
+        }
+        else {
+            $users = User::getUsersByRole('cre');
+        }
+        
         //$setting = QuizSetting::with('questions')->orderBy('id', 'desc')->get()->first();
         foreach($users as $user)
         {

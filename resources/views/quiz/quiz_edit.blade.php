@@ -142,7 +142,7 @@
                         <form   id='reattempt_form' action='/quiz/reattempt' method='post' style='margin: 0px'> 
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
                          <select name='user_id'>
-                         <option value=''>Select CRE</option>
+                         <option value=''>Select User</option>
                             @foreach($replies AS $reply)
                                 <option value='{{$reply->user_id}}'>{{$reply->user->employee->name}}</option>
                             @endforeach
