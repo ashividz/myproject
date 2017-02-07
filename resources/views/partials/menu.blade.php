@@ -42,7 +42,7 @@
                     <a href="/posts" id="menu_notification" class="firstLevelMenu"><b>Posts</b></a>
                 </li>
 
-                @if(Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('cre'))
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('cre'))
                 <li> 
                     <a href="/quiz" id="menu_quiz">Attempt Quiz</a>
                 </li>

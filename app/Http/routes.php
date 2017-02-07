@@ -123,7 +123,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['quality','service_tl','service']], 
+    'roles' => ['admin','quality','service_tl','service']], 
     function() {
         Route::get('quiz/user/{id}/{id2}/report', 'QuizController@showUserReport');
         Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
@@ -597,7 +597,7 @@ Route::group([
         Route::post('getQuestion', 'QuizController@getQuestion');
         Route::get('quiz/report', 'QuizController@showReport');
         Route::get('quiz/user/{id}/report', 'QuizController@showUserReport');
-        Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
+        Route::get('quiz/user/{id}/answer', 'quizzController@setAnswer');
 });
 
 Route::group([
@@ -1150,14 +1150,19 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     
 
     Route::get('home', 'CREController@index');
+});
 
+Route::group([
+    'middleware' => ['auth', 'roles','checkip'], 
+    'roles' => ['admin', 'marketing','training']], 
+    function() {
     Route::get('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/edit', 'EmailTemplateController@show');
     Route::post('email/template/update', 'EmailTemplateController@update');
     Route::get('show/emailAttachment/{id}', 'EmailTemplateController@showAttachment');
     Route::get('update/emailAttachment/{id}', 'EmailTemplateController@getAttachment');
     Route::post('update/emailAttachment/{id}', 'EmailTemplateController@updateAttachment');
-  
+        
 });
 
 // Display all SQL executed in Eloquent
