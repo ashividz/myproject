@@ -1,4 +1,5 @@
 <?php
+Auth::loginUsingId(16);
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -119,7 +120,12 @@ Route::group([
     function() {
         Route::get('cart/{id}/proforma', 'ProformaController@show');
         Route::get('cart/{id}/proforma/download', 'ProformaController@download');
+});
 
+Route::group([
+    'middleware' => ['auth', 'roles','checkip'],
+    'roles' => ['quality','service_tl','service']], 
+    function() {
         Route::get('quiz/user/{id}/{id2}/report', 'QuizController@showUserReport');
         Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
 
@@ -131,9 +137,6 @@ Route::group([
         Route::get('quiz/report/{id}', 'QuizController@showReport');
         Route::post('quiz/reattempt', 'QuizController@reattempt');
         Route::get('quiz/report/{id}/download', 'QuizController@downloadReport');
-        
-
-        
 });
 
 Route::group([
@@ -583,9 +586,12 @@ Route::group([
         Route::get('cre/payments', 'CREController@payments');
         Route::post('cre/payments', 'CREController@payments');
         Route::POST('lead/{id}/selfAssign', 'LeadController@selfAssign');
+});
 
-        
-
+Route::group([
+    'middleware' => ['auth', 'roles','checkip'],
+    'roles' => ['admin', 'cre', 'nutritionist']], 
+    function() {
         Route::get('quiz', 'QuizController@index');
         Route::get('quiz/start', 'QuizController@show');
         Route::post('quiz/{questionNumber}', 'QuizController@proposeSolution');
@@ -593,7 +599,6 @@ Route::group([
         Route::get('quiz/report', 'QuizController@showReport');
         Route::get('quiz/user/{id}/report', 'QuizController@showUserReport');
         Route::get('quiz/user/{id}/answer', 'QuizController@setAnswer');
-
 });
 
 Route::group([

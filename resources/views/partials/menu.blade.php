@@ -25,20 +25,28 @@
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="/quiz" id="menu_quiz"><b>Quiz</b></a>
-                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('quality'))
+                 
+                 @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('quality') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service'))
+                <li>                   
+                    <a href="#" id="menu_quiz"><b>Quiz</b></a>                    
                     <ul>
                         <li>
-                            <a href="/quiz/admin" id="menu_message_compose"><b>Admin</b></a>
+                            <a href="/quiz/admin" id="menu_quiz_admin"><b>Admin</b></a>
                             
                         </li>
-                    </ul>
-                    @endif
+                    </ul>                    
                 </li>
+                @endif
+                
                 <li>
                     <a href="/posts" id="menu_notification" class="firstLevelMenu"><b>Posts</b></a>
                 </li>
+
+                @if(Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('cre'))
+                <li> 
+                    <a href="/quiz" id="menu_quiz">Attempt Quiz</a>
+                </li>
+                @endif
                             
             </ul> <!-- second level -->                        
         </li>
@@ -204,11 +212,7 @@
                             <a href="/cre/viewCountryPerformance" id="menu_cre_country_perormance">Country Performance</a>
                         </li>
                     </ul>
-                </li>    
-                      <li>
-                    <a href="/quiz" id="menu_cre_end">Quiz</a>
-                </li>
-                                           
+                </li>                      
                                                 
             </ul> <!-- second level -->                        
         </li>    
