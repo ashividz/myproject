@@ -23,16 +23,29 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
     protected $uid;
+    protected $list_id;
+    protected $dialerUserName;
+    protected $dialerPassword;
+    protected $campname;
+    protected $skillname;
+    protected $followUpDays;
+    protected $onlyNotInt;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($uid, $dispo_date)
+    public function __construct($uid, $list_id,$dialerUserName,$dialerPassword,$campname,$skillname,$followUpDays,$onlyNotInt)
     {    
-       $this->uid = $uid;
-       $this->dispo_date = $dispo_date;
-        //sudo nohup php artisan queue:work --daemon --tries=3 --timeout=0
+       $this->uid             =   $uid;
+       $this->list_id         =   $list_id;
+       $this->dialerUserName  =   $dialerUserName;
+       $this->dialerPassword  =   $dialerPassword;
+       $this->campname        =   $campname;
+       $this->skillname       =   $skillname;
+       $this->followUpDays    =   $followUpDays;
+       $this->onlyNotInt      =   $onlyNotInt;       
+      //sudo nohup php artisan queue:work --daemon --tries=3 --timeout=0
        //sudo nohup php artisan queue:listen --tries=3 --timeout=0
     }
 
@@ -97,18 +110,18 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        Log::info("Job Started ". $this->uid);
        $leads = null;
        $predictiveJobRange = PredictiveJobRange::get()->first();
-       $end_date = $predictiveJobRange->end_date;
+       $end_date    = $predictiveJobRange->end_date;
        $start_limit = $predictiveJobRange->last_step_date;
-       $end_limit = $end_date;
+       $end_limit   = date('Y-m-d 23:59:59', strtotime('+9 days',strtotime($start_limit)));
        //$end_limit = date('Y-m-d 23:59:59',strtotime('+10 days',strtotime($start_limit)));
        $predictiveJobRange->last_step_date = $end_limit;
        $predictiveJobRange->save();
        $cur_date = 'Y-m-d';
        Log::info("Job range saved");
-       $dispo_date = date('2016-11-10 23:59:59');
-       $callback_date = date('2016-11-1009 23:59:59');
+       // $dispo_date = date('2016-11-10 23:59:59');
+       //$callback_date = date('2016-11-1009 23:59:59');
        //$dispo_date = $this->dispo_date;
-       while($end_limit <= $end_date)
+       while($end_limit <= $end_date && $start_limit<=$end_date)
        {
           
          if(isset($start_limit) && $start_limit!="")
@@ -122,9 +135,11 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                         ->where('callback','>=',DB::raw('curdate()'));
                     },'<',1)
                     ->whereHas('dispositions',function($query) {
-                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -7 DAY)'));
+                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -'.$this->followUpDays.' DAY)'));
                     },'<',1)
+                    //remove times jobs data
                     ->where('source_id','<>','57')
+                    //remove VIP Client
                     ->whereHas('patient',function($query) {
                         $query->whereHas('tags',function($q) {
                             $q->where('tags.id','=',9);;
@@ -134,8 +149,16 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                         $query->whereHas('master.channel',function($q) {
                             $q->where('channels.id','=',5);
                         });
-                    },'=',0)
-                    ->whereHas('patient',function($query) {
+                    },'=',0);
+                    
+                    //include only not interested data if user has checked only not interested data
+                    if ($this->onlyNotInt) {
+                        $leads = $leads->whereHas('status',function($query) {                        
+                            $query->where('m_lead_status.id','=',6);
+                        }); 
+                    }
+                    
+                    $leads = $leads->whereHas('patient',function($query) {
                         $query->whereHas('fees',function($q) {
                             $q->where('end_date','>=',DB::raw('curdate()'));
                         });
@@ -146,13 +169,13 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
 
          $predictiveJobRange = PredictiveJobRange::get()->first();
         
-         $start_limit = $predictiveJobRange->last_step_date;
-         $end_limit = date('Y-m-d 23:59:59', strtotime('+10 days',strtotime($start_limit)));
-   if ($end_limit > $end_date)
-    $end_limit = $end_date;
-         $predictiveJobRange->last_step_date = $end_limit;
-         $predictiveJobRange->save();
-        }
+         $start_limit = date('Y-m-d 0:0:0', strtotime('+1 days',strtotime($predictiveJobRange->last_step_date)));
+         $end_limit   = date('Y-m-d 23:59:59', strtotime('+9 days',strtotime($start_limit)));
+          if ($end_limit > $end_date)
+              $end_limit = $end_date;
+          $predictiveJobRange->last_step_date = $end_limit;
+          $predictiveJobRange->save();
+        }        
     }
 
 
@@ -258,7 +281,6 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
 
       public function executex($leads)
       {   
-        $list_id = "SALES16082016";
         foreach($leads as $lead)
         {
             $output= 'false2';
@@ -288,7 +310,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             //if($push==1)
             //{
             //$ch = curl_init("http://192.168.1.203/test.ajax");
-            $encoded_params = "do=manualUpload&username=admin&password=contaquenv&campname=Sales_Outbound&skillname=ENGLISH&listname=$list_id&phone1=".$phone;
+            $encoded_params = "do=manualUpload&username=".$this->dialerUserName."&password=".$this->dialerPassword."&campname=".$this->campname."&skillname=".$this->skillname."&listname=".$this->list_id."&phone1=".$phone;
             
             /*curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);

@@ -6,28 +6,76 @@
                
             </div>  
             <div class="panel-body">
-            <form id="push-form" class="form-inline" action="/marketing/dialer_pushx" method="post">
+            <form id="push-form" class="form-horizontal" action="/marketing/dialer_push" method="post">
 
                 {!! csrf_field() !!}  
                 <div class="form-group">
-                <input type="text" name="daterange" id="daterange" size="25" value="{{ date('M j, Y', strtotime($start_date)) }} - {{ date('M j, Y', strtotime($end_date)) }}" readonly/>
+                    <input type="text" name="daterange" id="daterange" size="25" value="{{ date('M j, Y', strtotime($start_date)) }} - {{ date('M j, Y', strtotime($end_date)) }}" readonly/>
                 </div>                   
                
-                 <!--
-                 <input type="text" name="dispos_date" id="conversionDate" size="25" value="{{ date('M j, Y', strtotime($dispo_date)) }}" readonly/>
-                 -->
+                <div class="form-group">
+                    <label for="list_id" class="col-sm-2">list id</label>
+                    <div class="col-sm-5">
+                      <input type="text" name="list_id" value="SALES16082016" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dialerUserName" class="col-sm-2">Dialer user name</label>
+                    <div class="col-sm-5">
+                      <input type="text" name="dialerUserName" value="admin"/>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dialerUserName" class="col-sm-2">Dialer Password</label>
+                    <div class="col-sm-5">
+                        <input type="password" name="dialerPassword"/>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="campname" class="col-sm-2">Campaign Name</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="campname" value="Sales_Outbound"/>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skillname" class="col-sm-2">Skill Name</label> 
+                    <div class="col-sm-5">
+                        <input type="text" name="skillname" value="ENGLISH"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lastFollowUp" class="col-sm-2">Last Follow up day</label> 
+                    <div class="col-sm-5">
+                        <input type="number" name="lastFollowUp" value="7"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="onlyNotInt" class="col-sm-2">Include only not interested data</label> 
+                    <div class="col-sm-5">
+                        <input type="checkbox" name="onlyNotInt" value="1" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-7">
+                        <button class="btn btn-primary">Push Leads</button>
+                    </div>
+                </div>
 
-                 <button class="btn btn-primary">Push Leads</button>
+                <!-- <button id='checkstat' class="btn btn-primary">Check</button> -->                
+                <input type='hidden' name='username' value='{{ $username or "" }}' />
+                <!-- <h5 id='jobstat'>{{ ($job)? 'Job already running..': ''}}</h5> -->
 
-                 <button id='checkstat' style='margin-left: 20px' class="btn btn-primary">Check</button>
-
-
-                 <input type='hidden' name='username' value='{{ $username or "" }}' />
-                 
-                 <h5 id='jobstat'>{{ ($job)? 'Job already running..': ''}}</h5>
-                 
             </form>
 
+            <div>
+            {{$msg}}
+            </div>
             </div>          
     </div>
 </div>

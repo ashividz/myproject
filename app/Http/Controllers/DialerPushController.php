@@ -37,35 +37,51 @@ class DialerPushController extends Controller
     public function __construct(Request $request)
     {   
         $this->limit = isset($request->limit) ? $request->limit : 2000;
-        $this->list_id = "SALES16082016";//"sales06052016";
         $this->cre = isset($request->user) ? $request->user : Auth::user()->employee->name;
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
 
         $this->start_date = isset($this->daterange[0]) ? date('Y-m-d 0:0:0', strtotime($this->daterange[0])) : date("2016-08-01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y-m-d 23:59:59', strtotime($this->daterange[1])) : date('2016-08-30 23:59:59');
+        $this->list_id        = $request->list_id;
+        $this->dialerUserName = $request->dialerUserName;
+        $this->dialerPassword = $request->dialerPassword;
+        $this->campname       = $request->campname;
+        $this->skillname      = $request->skillname;
+        $this->lastFollowUp   = $request->lastFollowUp;
+        $this->onlyNotInt     = $request->onlyNotInt;
+        /*dd($this->list_id,$this->dialerUserName,$this->dialerPassword,$this->campname,$this->skillname,$this->lastFollowUp, $this->onlyNotInt);*/
     }
 
-    public function PreedictiveQueue(Request $request)
+    public function PredictiveQueue(Request $request)
     {
       $job = null;
+      $msg = null;
       if(isset($this->daterange) && $this->daterange!="")
         {
-          $job = DB::select( DB::raw("SELECT * FROM jobs WHERE payload LIKE '%PredictiveDialer%'"));
+          //don't check for jobs as we are using sync queue drive for now
+          /*$job = DB::select( DB::raw("SELECT * FROM jobs WHERE payload LIKE '%PredictiveDialer%'"));*/
             if(!$job)
             {
-             $predictiveJobRange = PredictiveJobRange::get()->first();
-             if(!$predictiveJobRange)
-               $predictiveJobRange = new PredictiveJobRange();
+                $predictiveJobRange = PredictiveJobRange::get()->first();
+                if(!$predictiveJobRange)
+                  $predictiveJobRange = new PredictiveJobRange();
 
-             $predictiveJobRange->start_date  = $this->start_date;
-             $predictiveJobRange->end_date = $this->end_date;
-             $predictiveJobRange->last_step_date = $this->start_date;
-             $predictiveJobRange->save();
-             $dispos_date = $request->dispos_date;
-             //$dispos_date = date('Y-m-d', strtotime($dispos_date));
-             //$this->handle();
-             $this->dispatch(new PredictiveDialer(Auth::id(), $dispos_date));
+                $predictiveJobRange->start_date  = $this->start_date;
+                $predictiveJobRange->end_date = $this->end_date;
+                $predictiveJobRange->last_step_date = $this->start_date;
+                $predictiveJobRange->save();
+                //$dispos_date = date('Y-m-d', strtotime($dispos_date));
+                //$this->handle();
+                
+                //Dispatch dialer push queue jobs over sync driver for now
+                $defaultDriver = app('queue')->getDefaultDriver();
+                app('queue')->setDefaultDriver('sync');
+                $this->dispatch(new PredictiveDialer(Auth::id(),$this->list_id,$this->dialerUserName,$this->dialerPassword,$this->campname,$this->skillname,$this->lastFollowUp, $this->onlyNotInt));
+                app('queue')->setDefaultDriver($defaultDriver);
+                //Done dispatching dialer push jobs
+
             }
+            $msg = 'Uploaded successfully';
         }
 
         $dispo_date = '';
@@ -74,9 +90,9 @@ class DialerPushController extends Controller
                 'menu'          => 'lead',
                 'start_date'    => $this->start_date,
                 'end_date'      => $this->end_date,
-                'limit'         => $this->limit,
-                'dispo_date'    => $dispo_date,
+                'limit'         => $this->limit,                
                 'job'           => $job,
+                'msg'           => $msg,
                 'i'             => 1
             ); 
       return view('home')->with($data);
