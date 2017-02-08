@@ -342,11 +342,11 @@ Route::group([
         Route::post('marketing/leads/dead', 'MarketingController@deadLeads');
         Route::post('marketing/leads/dead/churn', 'MarketingController@churnDeadLeads');
 
-        Route::get('marketing/dialer_push', 'DialerPushController@getLeads');
-        Route::post('marketing/dialer_push', 'DialerPushController@getLeads');
+        /*Route::get('marketing/dialer_push', 'DialerPushController@getLeads');
+        Route::post('marketing/dialer_push', 'DialerPushController@getLeads');*/
 
-        Route::get('marketing/dialer_pushx', 'DialerPushController@PreedictiveQueue');
-        Route::post('marketing/dialer_pushx', 'DialerPushController@PreedictiveQueue');
+        Route::get('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
+        Route::post('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
 
 
         Route::post('dialer/push/leads', 'DialerPushController@execute');
