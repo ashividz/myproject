@@ -59,10 +59,10 @@
             </td></tr>
                 <tr><th style='padding: 10px;text-align: left'>Parameters </th><th style='padding: 10px;text-align: left'>Initial </th><th style='padding: 10px;text-align: left'>Final </th></tr>
                 <tr><td style='padding: 10px'>Energy Level</td><td style='padding: 10px'>{{$patient->initialSymptom->energy_level}}</td><td style='padding: 10px'>{{$patient->lastSymptom->energy_level}}</td></tr>
-                <tr><td style='padding: 10px'>Constipation (cm)</td><td style='padding: 10px'>{{$patient->initialSymptom->constipation}}</td><td style='padding: 10px'>{{$patient->lastSymptom->constipation}}</td></tr>
+                <tr><td style='padding: 10px'>Constipation </td><td style='padding: 10px'>{{$patient->initialSymptom->constipation}}</td><td style='padding: 10px'>{{$patient->lastSymptom->constipation}}</td></tr>
                 <tr><td style='padding: 10px'>Gas</td><td style='padding: 10px'>{{$patient->initialSymptom->gas}}</td><td style='padding: 10px'>{{$patient->lastSymptom->gas}}</td></tr>
                 <tr><td style='padding: 10px'>Acidity</td><td style='padding: 10px'>{{$patient->initialSymptom->acidity}}</td><td style='padding: 10px'>{{$patient->lastSymptom->acidity}}</td></tr>
-                <tr><td style='padding: 10px'>Water Retention (cm)</td><td style='padding: 10px'>{{$patient->initialSymptom->water_retention}}</td><td style='padding: 10px'>{{$patient->lastSymptom->water_retention}}</td></tr>
+                <tr><td style='padding: 10px'>Water Retention</td><td style='padding: 10px'>{{$patient->initialSymptom->water_retention}}</td><td style='padding: 10px'>{{$patient->lastSymptom->water_retention}}</td></tr>
                 <tr><td style='padding: 10px'>Joint Pains</td><td style='padding: 10px'>{{$patient->initialSymptom->joint_pain}}</td><td style='padding: 10px'>{{$patient->lastSymptom->joint_pain}}</td></tr>
                 <tr><td style='padding: 10px'>Emotional Eating</td><td style='padding: 10px'>{{$patient->initialSymptom->emotional_eating}}</td><td style='padding: 10px'>{{$patient->lastSymptom->emotional_eating}}</td></tr>
                 <tr><td style='padding: 10px'>Sugar/Food Craving</td><td style='padding: 10px'>{{$patient->initialSymptom->sugar_food_craving}}</td><td style='padding: 10px'>{{$patient->lastSymptom->sugar_food_craving}}</td></tr>
