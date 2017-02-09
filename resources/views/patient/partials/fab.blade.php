@@ -128,10 +128,10 @@
                 <table  class='table-bordered edittable' width='100%'>
                     <thead><tr><th>Parameters </th><th>Initial </th><th>Final </th></tr></thead>
                     <tr><td>Energy Level</td><td>@{{patient.initialSymptom.energy_level}}</td><td>@{{patient.lastSymptom.energy_level}}</td></tr>
-                    <tr><td>Constipation (cm)</td><td>@{{patient.initialSymptom.constipation}}</td><td>@{{patient.lastSymptom.constipation}}</td></tr>
+                    <tr><td>Constipation </td><td>@{{patient.initialSymptom.constipation}}</td><td>@{{patient.lastSymptom.constipation}}</td></tr>
                     <tr><td>Gas</td><td>@{{patient.initialSymptom.gas}}</td><td>@{{patient.lastSymptom.gas}}</td></tr>
                     <tr><td>Acidity</td><td>@{{patient.initialSymptom.acidity}}</td><td>@{{patient.lastSymptom.acidity}}</td></tr>
-                    <tr><td>Water Retention (cm)</td><td>@{{patient.initialSymptom.water_retention}}</td><td>@{{patient.lastSymptom.water_retention}}</td></tr>
+                    <tr><td>Water Retention</td><td>@{{patient.initialSymptom.water_retention}}</td><td>@{{patient.lastSymptom.water_retention}}</td></tr>
                     <tr><td>Joint Pains</td><td>@{{patient.initialSymptom.joint_pain}}</td><td>@{{patient.lastSymptom.joint_pain}}</td></tr>
                     <tr><td>Emotional Eating</td><td>@{{patient.initialSymptom.emotional_eating}}</td><td>@{{patient.lastSymptom.emotional_eating}}</td></tr>
                     <tr><td>Sugar/Food Craving</td><td>@{{patient.initialSymptom.sugar_food_craving}}</td><td>@{{patient.lastSymptom.sugar_food_craving}}</td></tr>
