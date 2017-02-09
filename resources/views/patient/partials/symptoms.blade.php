@@ -27,7 +27,7 @@
                         <option>High</option>
                       </select>
                     </td></tr>
-                    <tr><td>Constipation (cm)</td><td>
+                    <tr><td>Constipation </td><td>
                        <select class="editfield" v-model="patient.initialSymptom.constipation">
                         <option>Yes</option>
                         <option>No</option>
@@ -66,7 +66,7 @@
                         <option>Sometimes</option>
                       </select>
                     </td></tr>
-                    <tr><td>Water Retention (cm)</td><td>
+                    <tr><td>Water Retention</td><td>
                       <select class="editfield" v-model="patient.initialSymptom.water_retention">
                         <option>Yes</option>
                         <option>No</option>
