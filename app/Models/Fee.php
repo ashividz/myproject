@@ -227,6 +227,7 @@ class Fee extends Model
         $fee->cart_id = $fee->cart_id ? : $cart->id;
         $fee->entry_date = Carbon::now();
         $fee->name = $cart->lead->name;
+        $fee->currency_id = $cart->currency_id;
 
         if ($fee->start_date) {
 
