@@ -8,7 +8,7 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
         "guzzlehttp/guzzle": "^6.1",
-        "predis/predis": "^1.0",
+        "predis/predis": "^1.1",
         "wsdltophp/packagebase": "dev-master",
         "arkitecht/fedex-php": "dev-master",
         "arkitecht/fedex-laravel": "dev-master",
