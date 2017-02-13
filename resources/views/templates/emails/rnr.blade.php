@@ -7,7 +7,7 @@
                         <tr>
                             <td width='70%'>
                                 <div>
-                                    <h2>Namaste! {{$customer}},</h2>
+                                    <h2>Namaskar! {{$customer}},</h2>
                                 </div>
                             </td>
                             <td align='center' valign='middle'>
