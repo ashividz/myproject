@@ -230,7 +230,7 @@
         </span>
         
         <span v-if="cart.payments.length > 0 && cart.state_id == 2"> 
-            <a data-toggle="modal" data-target="#sModal" href="/cart/{{$cart->id}}/approval/update" class="btn btn-danger">Update Order</a>
+            <button type="submit" class="btn btn-danger" @click="updateOrder">Update Order</button>
         </span>
 
          <span v-if="cart.payments.length > 0 && cart.status_id ==1">
@@ -341,7 +341,6 @@ new Vue({
             } else {
                 country = this.cart.lead.country;
             }
-            console.log(country);
             this.$http.get("/api/categories?country="+country+"&currency="+this.cart.currency.name)
             .then((response) => {
                 this.categories = response.data;
@@ -375,6 +374,28 @@ new Vue({
             }).bind(this);
         },
 
+        updateOrder() {            
+            swal({
+                title: 'Update',
+                text : 'Kindly enter remark to update',
+                input: 'textarea',
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                showLoaderOnConfirm: true,                    
+                allowOutsideClick: false
+            }).then(function(remark) {
+                this.$http.post('/cart/'+ this.id +'/approval/update',{'remark':remark})
+                .success(function(data) {
+                    swal(
+                        'Updated!',
+                        'Cart Updated.',
+                        'success'
+                    );
+                    this.findCart();
+                });
+            }.bind(this))
+        },
+
         processOrder() {
             swal({
                 title: 'Are you sure?',
@@ -388,13 +409,13 @@ new Vue({
                 if (isConfirm) {
                     this.$http.post('/cart/'+ this.id +'/process')
                     .success(function(data) {
-                        swal(
-                          'Processed!',
-                          'Cart Processed.',
-                          'success'
-                        );
-                        this.findCart();
-                    });                        
+                        swal({
+                            title:'Processed!',
+                            text: 'Cart Processed.',
+                            type: 'success',                            
+                        })
+                        this.findCart();                        
+                    });
                 }
             }.bind(this))
         },
@@ -420,7 +441,8 @@ new Vue({
                         );
                         $.isLoading( "hide" );
                         this.loading = true;
-                        this.findCart();
+                        location.reload();
+                        //this.findCart();
                     });                        
                 }
             }.bind(this))
