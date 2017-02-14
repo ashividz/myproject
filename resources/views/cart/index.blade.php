@@ -306,6 +306,7 @@ new Vue({
         loading: false,
         id: {{ $cart->id }},
         cart: {!! $cart !!},
+        address : {!! $address ? $address : "''" !!},
         showPaymentModal: false,
         showProductModal: false,
         categories: [],
@@ -333,7 +334,15 @@ new Vue({
         },
 
         getCategories() {
-            this.$http.get("/api/categories?country="+this.cart.lead.country+"&currency="+this.cart.currency.name)
+            //use cart->shippingAddress if available 
+            var country = '';
+            if (this.address) {
+                country = this.address.country;
+            } else {
+                country = this.cart.lead.country;
+            }
+            console.log(country);
+            this.$http.get("/api/categories?country="+country+"&currency="+this.cart.currency.name)
             .then((response) => {
                 this.categories = response.data;
             }, (response) => {
