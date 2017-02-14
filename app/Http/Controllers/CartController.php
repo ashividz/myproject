@@ -264,11 +264,13 @@ class CartController extends Controller
             $regions   = Region::where('region_code',$cart->shippingAddress->state)->get();
             $countries = Country::where('country_code',$cart->shippingAddress->country)->get();
         }
+        $address = $cart->shippingAddress;
 
         $statuses = CartStatus::get();
 
         $data = array(
             'cart'      =>  $cart, 
+            'address'   =>  $address,
             'statuses'  =>  $statuses,
             'regions'   =>  $regions,
             'countries' =>  $countries,
