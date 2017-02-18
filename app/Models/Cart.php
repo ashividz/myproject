@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
+use Session;
 
 class Cart extends Model
 {
@@ -221,16 +222,26 @@ class Cart extends Model
     {
         $amount = $cart->getDietAmount();
         $paid = $cart->getDietPaidAmount();
+        $oneMonthPlanPrice  =   CartProduct::getPlanPriceByDuration($cart,30);
+        $threeMonthPlanPrice    =   CartProduct::getPlanPriceByDuration($cart,90);
+        
+        if ( !$oneMonthPlanPrice || $threeMonthPlanPrice ) {
+            Session::flash("message", "Base plan not found");
+            Session::flash("status", "error");
+        }
+        
+        $twoMonthPlanPrice  =   2*$oneMonthPlanPrice;
+        
 
         $duration = CartProduct::getDietDuration($cart);
 
         //echo "Diet Amount : ".$amount."<p>Paid : ".$paid."<p>";
 
-        if ($paid == $amount) {
+        if ($paid >= $amount) {
 
             $cart->duration = $duration; 
 
-        } elseif ($paid > $amount) {
+        } /*elseif ($paid > $amount) {
 
             $product = CartProduct::checkProduct($cart);
 
@@ -242,11 +253,11 @@ class Cart extends Model
 
             }   
             
-        } elseif ($paid >= 4000 && $paid < 8000) {
+        }*/ elseif ($paid >= $oneMonthPlanPrice && $paid < $twoMonthPlanPrice) {
 
             $cart->duration = 30;
 
-        } elseif ($paid >= 8000 && $paid < 11000) { 
+        } elseif ($paid >= $twoMonthPlanPrice && $paid < $threeMonthPlanPrice) { 
             $cart->duration = 60;
 
         } else {

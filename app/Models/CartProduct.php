@@ -124,12 +124,17 @@ class CartProduct extends Model
 
     public static function checkProduct($cart)
     {
-        $amount = ($cart->getDietPaidAmount() *100) / (100 - $cart->getDietDiscount());
+        //Don't use calculation for discounted product based on amount calculated using discount
+        //$amount = ($cart->getDietPaidAmount() *100) / (100 - $cart->getDietDiscount());
+        $basePlanIds = Product::getBasePlanIds();
+        $amount = $cart->getDietPaidAmount();
+
         //echo "Non discounted Amount : ". $amount ."<p>";
         //return $amount;
-        $product = Product::where('product_category_id', 1)                            
+        $product = Product::where('product_category_id', 1)
+                    ->whereIn('id',$basePlanIds)
                     ->whereNull('extension');
-
+                    
         if ($cart->currency_id == 2) {
             $product->where('international_price_usd', '<=' , $amount)
                 ->orderBy('international_price_usd', 'desc');
@@ -143,8 +148,23 @@ class CartProduct extends Model
                 ->orderBy('international_price_inr', 'desc');
         }                
 
-        return $product
-            ->select('duration')
-            ->first();
+        return $product->select('duration')->first();
+    }
+
+    public static function getPlanPriceByDuration($cart, $duration)
+    {
+        $product = Product::getBasePlanByDuration($duration);
+
+        if ( !$product ) {
+            return false;
+        }
+
+        if ($cart->currency_id == 2) {
+            return $product->international_price_usd;
+        } elseif ($cart->lead->country == "IN") {
+            return $product->domestic_price_inr;
+        } else {
+            return $product->international_price_inr;
+        }
     }
 }
