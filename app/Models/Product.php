@@ -22,6 +22,15 @@ class Product extends Model
 
     protected static $herbIds = [8,9,10,11,12,13,14];
     protected static $wtLossProductIds = [55,57,58];
+    //products.id => products.duration
+    protected static $basePlans = array(
+                    2 => 1,
+                    3 => 7,
+                    4 => 30,
+                    5 => 90,
+                    6 => 180,
+                    7 => 365, 
+            );
 
     public function category()
     {
@@ -41,5 +50,22 @@ class Product extends Model
     public static function getWtLossProductIds()
     {
         return self::$wtLossProductIds;
+    }
+
+    public static function getBasePlanByDuration($duration)
+    {
+        $key = array_search($duration, self::$basePlans);
+
+        if($key) {
+            return Product::find($key);
+        } else {
+            return false;
+        }        
+        
+    }
+
+    public static function getBasePlanIds()
+    {
+        return array_keys(self::$basePlans);
     }
 }
