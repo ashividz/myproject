@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('product_email:send')
+       /* $schedule->command('product_email:send')
         ->dailyAt('11:00')
         ->appendOutputTo('/var/www/html/cron/emaillog')
         ->before(function () {
@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
             $status = PHP_EOL.'-----------------------------------------------------------'.PHP_EOL;
                 $status .= 'product_reorder_email_end_at :'.date('Y-m-d H:i:s').PHP_EOL;
                 exec('echo "'.$status.'" >> '.' /var/www/html/cron/emaillog');
-        });
+        });*/
 
         $schedule->command('fee:adjuststartdate')
         ->dailyAt('10:30')
@@ -71,7 +71,7 @@ class Kernel extends ConsoleKernel
         });
 
 
-        $schedule->command('dnd:check') 
+        /*$schedule->command('dnd:check') 
         ->everyTenMinutes()
         ->withoutOverlapping()
         ->appendOutputTo('/var/www/html/cron/dndlog')
@@ -84,7 +84,7 @@ class Kernel extends ConsoleKernel
             $status = PHP_EOL.'dnd_check_end_at :'.date('Y-m-d H:i:s').PHP_EOL;
             $status .= '-----------------------------------------------------------'.PHP_EOL;
             exec('echo "'.$status.'" >> '.' /var/www/html/cron/dndlog');
-        });
+        });*/
 
         $schedule->command('inspire')
                  ->hourly();
