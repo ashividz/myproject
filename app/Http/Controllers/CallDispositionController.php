@@ -128,6 +128,10 @@ class CallDispositionController extends Controller
         {
             return false;
         }
+        elseif(Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre'))
+        {
+            return false;
+        }
         
         $message = $this->getRNRMessage();
         $sms = new SMS();
@@ -138,6 +142,10 @@ class CallDispositionController extends Controller
     public function sendEmail($lead)
     {
         if(trim($lead->email) == '')
+        {
+            return false;
+        }
+        elseif(Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre'))
         {
             return false;
         }
