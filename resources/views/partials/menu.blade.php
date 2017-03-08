@@ -197,7 +197,9 @@
                 <li>
                     <a href="/cre/viewProgramEndList" id="menu_cre_end">Program End</a>
                 </li>
-
+                 <li>
+                    <a href="https://drive.google.com/open?id=0B4HO0bxQ6qePZjB4UmNrczNNX29VdXpMSGtvcWJzUUtrcXo0" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
+                </li>
                     
                 <li>
                     <a href="#" id="menu_cre_end">Reports</a>
