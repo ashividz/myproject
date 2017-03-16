@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
 use App\Http\Requests\PatientDietRequest;
+use GuzzleHttp\Client;
 
 use Auth;
 use DB;
@@ -114,11 +115,36 @@ class DietController extends Controller
         return redirect('patient/'.$id.'/diet')->with($data);
     }
 
-    public function send(Request $request, $id)
+   /* public function send(Request $request, $id)
     {
         $request->patient_id = $id; 
 
         $data = Diet::send($request);
+
+        return redirect('patient/'.$id.'/diet')->with($data);
+    }
+*/
+    public function send(Request $request, $id)
+    {
+        $email;
+        $request->patient_id = $id;
+        $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
+
+        foreach ($diets as $diet) {
+            $user = Patient::find($diet->patient_id) ;
+            $email = $user->lead->email;
+            break;
+        }
+        $client = new Client();
+        $result = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
+                'form_params' => [
+                'diet' => json_encode($diets),
+                    'email' => json_encode($email)]
+                ]);
+        //echo $result->getBody();
+       // echo $result->getStatusCode();
+       // dd($diets);
+       $data = Diet::send($request);
 
         return redirect('patient/'.$id.'/diet')->with($data);
     }
