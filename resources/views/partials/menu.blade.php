@@ -198,7 +198,7 @@
                     <a href="/cre/viewProgramEndList" id="menu_cre_end">Program End</a>
                 </li>
                  <li>
-                    <a href="https://drive.google.com/open?id=0B4HO0bxQ6qePZjB4UmNrczNNX29VdXpMSGtvcWJzUUtrcXo0" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
+                    <a href="https://drive.google.com/a/drshikha.com/file/d/0B4HO0bxQ6qePa1ViN3FORWRsUkE/view?usp=sharing" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
                 </li>
                     
                 <li>
@@ -231,7 +231,7 @@
                 <li><a href="/nutritionist/programEnd" id="menu_nutritionist_program-end">Program End</a></li>
                 <li><a href="/nutritionist/audit" id="menu_nutritionist_audit">Audit</a></li>
                 <li>
-                    <a href="https://drive.google.com/open?id=0B4HO0bxQ6qePZjB4UmNrczNNX29VdXpMSGtvcWJzUUtrcXo0" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
+                    <a href="https://drive.google.com/a/drshikha.com/file/d/0B4HO0bxQ6qePa1ViN3FORWRsUkE/view?usp=sharing" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
                 </li>
                             
             </ul> <!-- second level -->                        
