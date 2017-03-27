@@ -24,6 +24,7 @@
                 <th width="5%"></th>
                     <th>Date</th>
                     <th>Sourced By</th>
+                    <th>Lead Id</th>
                     <th>Name</th>
                     <th>Referrer</th>
                     <th>Voice</th>
@@ -40,6 +41,7 @@
                 <td>{{$i}}</td>
                 <td>{{date('jS M, Y', strtotime($lead->sourced_date))}}</td>
                 <td>{{$lead->sourced_by}}</td>
+                <td>{{$lead->id}}</td>
                 <td><a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{trim($lead->name) <> "" ? $lead->name : "No Name"}}</a></td>
                 <td><a href="/lead/{{$lead->referrer_id}}/viewReferences" target="_blank">{{$lead->referrer_name}}</a></td>
 
