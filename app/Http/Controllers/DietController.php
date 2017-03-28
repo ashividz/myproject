@@ -129,6 +129,7 @@ class DietController extends Controller
         $email;
         $request->patient_id = $id;
         $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
+        dd($diets);
 
         foreach ($diets as $diet) {
             $user = Patient::find($diet->patient_id) ;
