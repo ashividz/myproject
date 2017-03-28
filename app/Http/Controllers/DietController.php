@@ -35,7 +35,7 @@ class DietController extends Controller
 	public function diets()
 	{
 		//Update patient_id in Diet Assign
-        //DB::update("UPDATE diet_assign AS d SET patient_id = (SELECT id FROM patient_details AS p WHERE d.clinic=p.clinic AND d.registration_no=p.registration_no) WHERE patient_id = 0");
+        //DB::update("UPDATE diet_assign AS d SET patient_id = (SELECT id FROM patient_details AS p WHERE d.clinic=p.clinic AND   d.registration_no=p.registration_no) WHERE patient_id = 0");
 
         //Update nutritionist in Diet Assign
         //DB::update("UPDATE diet_assign AS d SET nutritionist = (SELECT nutritionist FROM patient_details AS p WHERE d.clinic=p.clinic AND d.registration_no=p.registration_no) WHERE date_assign >='2015-09-01'");

@@ -285,6 +285,17 @@
                 <li>
                     <a href="#" id="menu_sales_reports">Reports</a>
                     <ul>
+                        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('marketing'))
+                            <li>
+                                <a href="/sales/leads" id="menu_leads">Leads</a>
+                            </li>
+                            <li>
+                                <a href="/sales/upgradeLeads" id="menu_upgrade_leads_upgrade_leads">Upgrade Leads</a>
+                            </li>
+                            <li>
+                                <a href="/sales/viewProgramEnd" id="menu_program-end">Program End</a>
+                            </li>
+                       @endif
                         <li>
                             <a href="/sales/pipelineStatus" id="menu_sales_pipeline_status">Pipeline Status</a>
                         </li>

@@ -525,6 +525,12 @@ Route::group([
         Route::POST('sales/hot', 'SalesController@viewHotPipelines');   
         Route::get('sales/pipelineStatus', 'SalesController@viewPipelineStatus');
         Route::post('sales/pipelineStatus', 'SalesController@viewPipelineStatus');
+        Route::get('sales/upgradeLeads', 'SalesController@viewLeads');
+        Route::post('sales/upgradeLeads', 'SalesController@viewLeads');
+        Route::get('sales/viewProgramEnd', 'SalesController@viewProgramEnd');
+        Route::post('sales/viewProgramEnd', 'SalesController@viewProgramEnd');
+        Route::get('sales/leads', 'MarketingController@viewLeads');
+        Route::POST('sales/leads', 'MarketingController@viewLeads');
 
 
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');

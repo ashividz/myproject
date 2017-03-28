@@ -13,6 +13,7 @@ use DB;
 use App\Models\Lead;
 use App\Models\User;
 use App\Models\Status;
+use App\Models\Patient;
 
 class SalesController extends Controller
 {
@@ -122,4 +123,43 @@ class SalesController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function viewLeads(Request $request)
+    {
+        $users = User::getUsersByRole('cre');
+        
+        $days  = $request->days ? $request->days : 10;
+        
+        $patients = Patient::getUpgradeList($days);
+        
+        $data = array(
+            'menu'          =>  'marketing',
+            'section'       =>  'sales',
+            'days'          =>  $days,
+            'users'         =>  $users,
+            'patients'         =>  $patients
+        );
+
+        return view('home')->with($data);
+    }
+
+    public function viewProgramEnd()
+    {
+        $users = User::getUsersByRole('cre');
+
+        $patients = Patient::getProgramEnd($this->start_date, $this->end_date);
+
+        $data = array(
+            'menu'              =>  'marketing',
+            'section'           =>  'sales_program',
+            'users'             =>  $users,
+            'patients'          =>  $patients,
+            'start_date'        =>  $this->start_date,
+            'end_date'          =>  $this->end_date,
+            'i'                 =>  '1'
+        );
+
+        return view('home')->with($data);
+    }
+
 }
