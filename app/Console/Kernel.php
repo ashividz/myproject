@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('product_email:send')
-        ->weekly()->sundays()->at('9:30');
+        ->weekly()->sundays()->at('9:30')
 
         ->appendOutputTo('/var/www/html/cron/emaillog')
         ->before(function () {
@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
         });
 
         $schedule->command('product_reminder:send')
-        ->weekly()->sundays()->at('9:30');
+        ->weekly()->sundays()->at('9:30')
 
         ->appendOutputTo('/var/www/html/cron/emaillog')
         ->before(function () {
