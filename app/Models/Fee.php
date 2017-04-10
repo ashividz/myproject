@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use LeadSource;
+use Lead;
 
 use DB;
 use Auth;
@@ -165,6 +167,37 @@ class Fee extends Model
     	return Fee::where('source_id', $source)
     				->whereBetween('entry_date', array($start_date, $end_date))
     				->get();
+    }
+
+    public static function conversionCountByDate($source, $start_date, $end_date)
+    {
+        
+
+        $users = Lead::with('patient')
+                       ->where('source_id' , $source)
+                       ->whereBetween('created_at', array($start_date, $end_date))
+                       ->get();
+        $lead = [];
+        foreach ($users as $user) {
+            if(!$user->patient) {
+               continue;
+            }
+            else
+            {
+                $lead[] = $user->patient->id;
+            }   
+        }
+
+        return Fee::whereIn('patient_id' , $lead)
+                    ->where('source_id' , $source)
+                    ->whereBetween('entry_date', array($start_date, $end_date))
+                    /*->with(['lead.patient.fee' => function ($query) use($start_date , $end_date ) {
+                                $query->whereBetween('created_at', array($start_date, $end_date));
+                            }])*/
+                    ->get(); 
+            
+                      
+
     }
 
     public static function conversionAmountBySource($source, $start_date, $end_date)
