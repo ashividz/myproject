@@ -13,6 +13,7 @@
                 <th>Source</th>
                     <th>Leads</th>
                 <th>Conversion</th>
+                <th>Date-conversion</th>
             <th>%</th>
             <th>Amount (₹)</th>
                 </tr>
@@ -31,15 +32,17 @@
             <td>{{$source->leads}}</td>
 
 <?php $fee = Fee::conversionCountBySource($source->source_id, $start_date, $end_date) ?>
+<?php $cfee = Fee::conversionCountByDate($source->source_id, $start_date, $end_date) ?>
 
             <td>{{$fee->count()}}</td>
+             <td>{{$cfee->count()}}</td>
         
         @if($source->leads > 0)
-            <td>{{round($fee->count()/$source->leads*100, 2)}}</td>
+            <td>{{round($cfee->count()/$source->leads*100, 2)}}</td>
         @else
             <td></td>
         @endif
-            <td>{{$fee->sum('total_amount')}}</td>
+            <td>{{$cfee->sum('total_amount')}}</td>
             
                 </tr>
 
