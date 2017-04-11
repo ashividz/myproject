@@ -38,11 +38,11 @@
              <td>{{$cfee->count()}}</td>
         
         @if($source->leads > 0)
-            <td>{{round($cfee->count()/$source->leads*100, 2)}}</td>
+            <td>{{round($fee->count()/$source->leads*100, 2)}}</td>
         @else
             <td></td>
         @endif
-            <td>{{$cfee->sum('total_amount')}}</td>
+            <td>{{$fee->sum('total_amount')}}</td>
             
                 </tr>
 
