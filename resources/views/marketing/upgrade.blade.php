@@ -37,7 +37,13 @@
 				<tbody>
 			
 			@foreach ($patients as $patient)
-
+				@if(isset($patient->lead->cre))
+					<?php if($patient->lead->cre->cre === 'Rohit Arora(NW580)' || $patient->lead->cre->cre === 'Manoj Kumar Rastogi')
+						{
+							continue ;
+						}
+					?>
+				@endif
 					<tr>
 						<td><input type="checkbox" name='check[{{$patient->lead_id}}]' value='{{$patient->lead_id}}' class="checkLead"></td>
 						<td>
