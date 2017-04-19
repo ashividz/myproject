@@ -27,6 +27,7 @@
                     <th>Lead Id</th>
                     <th>Name</th>
                     <th>Referrer</th>
+                    <th>Source</th>
                     <th>Voice</th>
                     <th>CRE</th>
                     <th width="15%">Conversion</th>
@@ -44,6 +45,7 @@
                 <td>{{$lead->id}}</td>
                 <td><a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{trim($lead->name) <> "" ? $lead->name : "No Name"}}</a></td>
                 <td><a href="/lead/{{$lead->referrer_id}}/viewReferences" target="_blank">{{$lead->referrer_name}}</a></td>
+                <td>{{$lead->sourcename}}</td>
 
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))  
                 <td><div class='editable_voice' id='{{ $lead->source->id }}'>{{$lead->source->voice->name or ""}}</div></td> 

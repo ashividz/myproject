@@ -470,9 +470,10 @@ class Lead extends Model
                     ->with('cre', 'source', 'source.voice')
                     ->leftJoin('lead_sources AS s', 's.lead_id', '=', 'marketing_details.id')
                     ->leftJoin('marketing_details AS r', 'r.id', '=', 's.referrer_id')
+                    ->leftJoin('m_lead_source AS p' , 'p.id' , '=' , 'r.source_id')
                     ->where('s.source_id', 10)
                     ->whereBetween('s.created_at', array($start_date, $end_date))
-                    ->select('marketing_details.*', 's.created_at AS sourced_date', 's.sourced_by', 'r.id AS referrer_id', 'r.name AS referrer_name')
+                    ->select('marketing_details.*', 's.created_at AS sourced_date', 's.sourced_by', 'r.id AS referrer_id', 'r.name AS referrer_name', 'p.source_name AS sourcename')
                     ->orderBy('id', 'desc')
                     ->get();
     }
