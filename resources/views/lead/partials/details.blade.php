@@ -318,7 +318,7 @@
 				@foreach($lead->sources as $source)
 						<tr>					
 							<td>
-						@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))
+						@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') ||Auth::user()->hasRole('sales'))
 								{{ $source->master->source_name or ""}}
 								
 								<div class="pull-right">
