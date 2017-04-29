@@ -28,6 +28,12 @@
 						<tbody>
 
 				@foreach($patients AS $patient)
+						<?php 
+							if($patient->lead->cre)
+							if ($patient->lead->cre->cre == 'Manoj Kumar Rastogi' || $patient->lead->cre->cre == 'Rohit Arora(NW580)') {
+								continue;
+							}
+						 ?>
 
 							<tr>
 							<td>{{$i++}}</td>
