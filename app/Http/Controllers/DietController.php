@@ -128,19 +128,22 @@ class DietController extends Controller
     {
         $email;
         $request->patient_id = $id;
-        $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
+        if($request->app)
+        {   
+            $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
 
-        foreach ($diets as $diet) {
-            $user = Patient::find($diet->patient_id) ;
-            $email = $user->lead->email;
-            break;
+            foreach ($diets as $diet) {
+                $user = Patient::find($diet->patient_id) ;
+                $email = $user->lead->email;
+                break;
+            }
+            $client = new Client();
+            $result = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
+                    'form_params' => [
+                    'diet' => json_encode($diets),
+                        'email' => json_encode($email)]
+                    ]);
         }
-        $client = new Client();
-        $result = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
-                'form_params' => [
-                'diet' => json_encode($diets),
-                    'email' => json_encode($email)]
-                ]);
         //echo $result->getBody();
        // echo $result->getStatusCode();
        // dd($diets);

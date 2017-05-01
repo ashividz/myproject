@@ -385,6 +385,10 @@
 				Send SMS
 				<input type="checkbox" name="sms" checked>
 			</div>
+			<div class="form-group">
+				App
+				<input type="checkbox" name="app" checked>
+			</div>
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<div class="form-group pull-right">
 				<a href="/patient/{{$patient->id}}/diets" class="btn btn-success">View All Diets</a></button>
