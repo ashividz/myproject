@@ -19,6 +19,25 @@
 			<h4>Upgrade Leads</h4>
 		</div>
 		<div class="panel-body">
+		<form id="form2" class="form-inline" method="POST" action="">
+					<b>FILTER</b>	
+
+                    <div class="checkbox">
+                        <label>
+                        <input type="checkbox" id="ncr" checked="true" onchange="filter(this.id)"> Delhi NCR
+                        </label>
+                    </div>  	
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="pan" checked="true" onchange="filter(this.id)"> PAN India
+				    	</label>
+				  	</div>		
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="int" checked="true" onchange="filter(this.id)"> International
+				    	</label>
+				  	</div>
+				</form>
 			<form id="form" method="post" action="/marketing/saveUpgradeLeads" class="form-inline">
 			<table id="table" class="table table-bordered">
 				<thead>
@@ -37,6 +56,20 @@
 				<tbody>
 			
 			@foreach ($patients as $patient)
+			    <?php
+								$filter = "";
+									if ($patient->lead->state == 'IN.07') {
+										$filter = "ncr";
+										$checkboxclass = "ncrcheck";
+									}else if (($patient->lead->country == 'IN' || trim($patient->lead->country) == '' || !$patient->lead->country) && $patient->lead->state <> 'IN.07') {
+                                        $filter = "pan";
+                                        $checkboxclass = "pancheck";
+                                    }
+									else  if ($patient->lead->country != 'IN'){
+										$filter = "int";
+										$checkboxclass = "intcheck";
+									}
+							?>
 				@if(isset($patient->lead->cre))
 					<?php if($patient->lead->cre->cre === 'Rohit Arora(NW580)' || $patient->lead->cre->cre === 'Manoj Kumar Rastogi')
 						{
@@ -44,7 +77,7 @@
 						}
 					?>
 				@endif
-					<tr>
+					<tr class = "{{$filter}}">
 						<td><input type="checkbox" name='check[{{$patient->lead_id}}]' value='{{$patient->lead_id}}' class="checkLead"></td>
 						<td>
 							<a href="/lead/{{$patient->lead_id}}/viewDetails" target="_blank">
@@ -136,10 +169,32 @@ $(document).ready(function()
         });
         return false; // avoid to execute the actual submit of the form.
 	});	
+	$("#checkAll").change(function () {
+		if($("#ncr").is(':checked'))
+            $(".ncrcheck").prop('checked', $(this).prop("checked"));
+        if($("#pan").is(':checked'))
+	    	$(".pancheck").prop('checked', $(this).prop("checked"));
+	    if($("#int").is(':checked'))
+	    	$(".intcheck").prop('checked', $(this).prop("checked"));
+	    $(".checkLead").prop('checked', $(this).prop("checked"));	
+	    //$("input:checkbox").prop('checked', $(this).prop("checked"));
+	});
 });
+
 </script>
-<script>
-$("#checkAll").change(function () {
-	$(".checkLead").prop('checked', $(this).prop("checked"));	
-});
+<script type="text/javascript">
+	function filter(id)
+	{
+		if($("#" + id).is(':checked'))
+	    	$('tr.' + id).show();  // checked
+		else{
+	    	$('tr.' + id).hide();// unchecked
+		    if(id=="ncr")
+                $(".ncrcheck").prop('checked', false);
+            if(id=="pan")
+		    	$(".pancheck").prop('checked', false);
+		    if(id=="int")
+		    	$(".intcheck").prop('checked', false);
+		}
+	}
 </script>
