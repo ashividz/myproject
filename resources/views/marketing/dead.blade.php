@@ -7,6 +7,26 @@
 			<h4>Dead Leads</h4>
 		</div>	
 		<div class="panel-body">
+		<form id="form2" class="form-inline" method="POST" action="">
+					<b>FILTER</b>	
+
+                    <div class="checkbox">
+                        <label>
+                        <input type="checkbox" id="ncr" checked="true" onchange="filter(this.id)"> Delhi NCR
+                        </label>
+                    </div>  	
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="pan" checked="true" onchange="filter(this.id)"> PAN India
+				    	</label>
+				  	</div>		
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="int" checked="true" onchange="filter(this.id)"> International
+				    	</label>
+				  	</div>
+				</form>
+
 
 			<form id="form" class="form-inline" action="/marketing/leads/dead/churn" method="post">
 				<table id="leads" class="table table-striped">
@@ -22,11 +42,25 @@
 					</thead>
 					<tbody>
 				@foreach ($leads as $lead)
+				   <?php
+								$filter = "";
+									if ($lead->state == 'IN.07') {
+										$filter = "ncr";
+										$checkboxclass = "ncrcheck";
+									}else if (($lead->country == 'IN' || trim($lead->country) == '' || !$lead->country) && $lead->state <> 'IN.07') {
+                                        $filter = "pan";
+                                        $checkboxclass = "pancheck";
+                                    }
+									else  if ($lead->country != 'IN'){
+										$filter = "int";
+										$checkboxclass = "intcheck";
+									}
+							?>
 
-					@if($lead->cre->cre == $name)
-						<tr>
+					     @if($lead->cre->cre == $name)
+						 <tr class = "{{$filter}}">
 					    	<td>
-								<input class='checkbox' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
+								<input class='checkbox{{$checkboxclass}}' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
 							</td>
 					    	<td><a href="/lead/{{$lead->id}}/viewDispositions" target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name" }}</a></td>
 					    	<td>{{$lead->source->master->source_name or ''}}</td>
@@ -48,6 +82,7 @@
 				@endforeach
 					</tbody>
 				</table>
+
 				<div class="form-control">
 					
 		        	<select name="cre" id="cre">
@@ -65,6 +100,7 @@
 		</div>			
 	</div>
 </div>
+
 
 <script type="text/javascript">
 $(document).ready(function() 
@@ -104,7 +140,29 @@ $(document).ready(function()
 	});	
 
 	$("#checkAll").change(function () {
-	    $("input:checkbox").prop('checked', $(this).prop("checked"));
+		if($("#ncr").is(':checked'))
+            $(".ncrcheck").prop('checked', $(this).prop("checked"));
+        if($("#pan").is(':checked'))
+	    	$(".pancheck").prop('checked', $(this).prop("checked"));
+	    if($("#int").is(':checked'))
+	    	$(".intcheck").prop('checked', $(this).prop("checked"));
+	    //$("input:checkbox").prop('checked', $(this).prop("checked"));
 	});
 });
+</script>
+<script type="text/javascript">
+	function filter(id)
+	{
+		if($("#" + id).is(':checked'))
+	    	$('tr.' + id).show();  // checked
+		else{
+	    	$('tr.' + id).hide();// unchecked
+		    if(id=="ncr")
+                $(".ncrcheck").prop('checked', false);
+            if(id=="pan")
+		    	$(".pancheck").prop('checked', false);
+		    if(id=="int")
+		    	$(".intcheck").prop('checked', false);
+		}
+	}
 </script>

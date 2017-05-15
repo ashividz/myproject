@@ -7,6 +7,25 @@
 				<h4>Program End (Rejoin)</h4>
 			</div>	
 			<div class="panel-body">
+			<form id="form2" class="form-inline" method="POST" action="">
+					<b>FILTER</b>	
+
+                    <div class="checkbox">
+                        <label>
+                        <input type="checkbox" id="ncr" checked="true" onchange="filter(this.id)"> Delhi NCR
+                        </label>
+                    </div>  	
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="pan" checked="true" onchange="filter(this.id)"> PAN India
+				    	</label>
+				  	</div>		
+				  	<div class="checkbox">
+				    	<label>
+				      	<input type="checkbox" id="int" checked="true" onchange="filter(this.id)"> International
+				    	</label>
+				  	</div>
+				</form>
 			<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Csv</a>
 				<form id="form" class="form-inline" action="/marketing/saveRejoin" method="post">
 					<table id="table" class="table table-bordered">
@@ -28,14 +47,22 @@
 						<tbody>
 
 				@foreach($patients AS $patient)
-						<?php 
-							if($patient->lead->cre)
-							if ($patient->lead->cre->cre == 'Manoj Kumar Rastogi' || $patient->lead->cre->cre == 'Rohit Arora(NW580)') {
-								continue;
-							}
-						 ?>
+				        <?php
+								$filter = "";
+									if ($patient->lead->state == 'IN.07') {
+										$filter = "ncr";
+										$checkboxclass = "ncrcheck";
+									}else if (($patient->lead->country == 'IN' || trim($patient->lead->country) == '' || !$patient->lead->country) && $patient->lead->state <> 'IN.07') {
+                                        $filter = "pan";
+                                        $checkboxclass = "pancheck";
+                                    }
+									else  if ($patient->lead->country != 'IN'){
+										$filter = "int";
+										$checkboxclass = "intcheck";
+									}
+							?>
 
-							<tr>
+							<tr class = "{{$filter}}">
 							<td>{{$i++}}</td>
 							<td><input class='checkbox' type='checkbox' name='check[{{$patient->lead_id}}]' value="{{$patient->lead_id}}"></td>
 							<td><a href="/lead/{{$patient->lead_id}}/viewDetails" target="_blank">{{$patient->lead->name or ""}}</a><div class="pull-right"><small><em>{{$patient->fee->cre}}</em></small></div></td>
@@ -108,6 +135,13 @@ $(document).ready(function()
 	});	
 
 	$("#checkAll").change(function () {
+		if($("#ncr").is(':checked'))
+            $(".ncrcheck").prop('checked', $(this).prop("checked"));
+        if($("#pan").is(':checked'))
+	    	$(".pancheck").prop('checked', $(this).prop("checked"));
+	    if($("#int").is(':checked'))
+	    	$(".intcheck").prop('checked', $(this).prop("checked"));
+
 	    $("input:checkbox").prop('checked', $(this).prop("checked"));
 	});
 });
@@ -145,4 +179,23 @@ $(document).ready(function()
             return $(this).attr('number');
         },
 	});
+
+
+
+	function filter(id)
+	{
+		if($("#" + id).is(':checked'))
+	    	$('tr.' + id).show();  // checked
+		else{
+	    	$('tr.' + id).hide();// unchecked
+		    if(id=="ncr")
+                $(".ncrcheck").prop('checked', false);
+            if(id=="pan")
+		    	$(".pancheck").prop('checked', false);
+		    if(id=="int")
+		    	$(".intcheck").prop('checked', false);
+		}
+	}
+
+
 </script>
