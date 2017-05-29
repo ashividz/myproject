@@ -314,27 +314,22 @@
 
 						<td>
 							<div class="breakfast">{{$diet->breakfast}}</div>
-							<i class="fa fa-copy pull-right blue" title="breakfast"></i>
+							
 						</td>
 						<td>
 							<div class="mid_morning">{{$diet->mid_morning or ""}}</div>
-							<i class="fa fa-copy pull-right blue" title="mid_morning"></i>
 						</td>
 						<td>
 							<div class="lunch">{{$diet->lunch}}</div>
-							<i class="fa fa-copy pull-right blue" title="lunch"></i>
 						</td>
 						<td>
 							<div class="evening">{{$diet->evening}}</div>
-							<i class="fa fa-copy pull-right blue" title="evening"></i>
 						</td>
 						<td>
 							<div class="dinner">{{$diet->dinner}}</div>
-							<i class="fa fa-copy pull-right blue" title="dinner"></i>
 						</td>
 						<td>
 							<div class="herbs">{!!App\Models\Diet::nl2list($diet->herbs, 'hr')!!}</div>
-							<i class="fa fa-copy pull-right blue" title="herbs"></i>
 						</td>
 						 <td>
                            <?php
@@ -347,7 +342,6 @@
                         </td>
 						<td>
 							<div class="remark">{{$diet->rem_dev}}</div>
-							<i class="fa fa-copy pull-right blue" title="remark"></i>
 						</td>
 						<td style="text-align:center">
 						@if($diet->created_at >= '2016-02-03')
