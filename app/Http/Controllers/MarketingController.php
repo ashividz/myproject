@@ -903,4 +903,14 @@ class MarketingController extends Controller
             })->download('xls');;
         }
     }
+
+    public function pushNotification()
+    {
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'push_notification'
+        );
+
+        return view('home')->with($data);
+    }
 }

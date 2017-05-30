@@ -403,6 +403,11 @@
                 <li>
                     <a href="/marketing/addLead" id="menu_lead_add">Lead Add</a>
                 </li>
+                @if(Auth::user()->employee->name == 'Aashima Saini')
+                    <li>
+                        <a href="/yuwow/sendNotification" id="push_yuwow_notification">Mobile Notification</a>
+                    </li>
+                @endif
 
                 <li>
                     <a href="/marketing/dialer_push" id="menu_lead_dialer-push">Dialer Push</a>

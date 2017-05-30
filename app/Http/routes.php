@@ -456,6 +456,14 @@ Route::group([
         Route::post('lead/converted', 'LeadController@converted');
         Route::post('api/churnLeads', 'MarketingController@churn');
 
+        /*Send notification on mobile*/
+
+        Route::get('yuwow/sendNotification' , 'MarketingController@pushNotification');
+        route::post('yuwow/sendNotification' , 'MarketingController@pushNotification');
+
+        Route::get('yuwow/yuwowNotification' , 'YuWoWController@yuwowNotification');
+        route::post('yuwow/yuwowNotification' , 'YuWoWController@yuwowNotification');
+
         /*Product,BT reports*/
         Route::get('reports/products', 'ProductReportController@products');
         Route::get('/api/getProductPurchases', 'ProductReportController@getProducts');
