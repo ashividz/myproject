@@ -492,7 +492,7 @@ class LeadController extends Controller
     public function viewDispositions($id)
     {
              
-        $lead = Lead::with('patient','dispositions.master')
+        $lead = Lead::with('patient','dispositions.master' , 'patient.suit')
                 ->with('dialer')
                 ->with(['disposition' => function($q){
                     $q->where('name','=',Auth::user()->employee->name);
