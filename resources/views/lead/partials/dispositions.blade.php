@@ -51,6 +51,16 @@
                                     </div>
                                 </div>     
                             </div>
+                            <hr>
+                            <div class="row">     
+
+                                <div class="form-group col-md-12">
+                                    <td>
+                                        <div> Preferred Time To Call </div> 
+                                        <h5>{{$lead->patient->suit->trial_plan or ""}}</h5>
+                                    </td>
+                                </div>     
+                            </div>
                         </div>
                     </div> 
                     <p></p>
