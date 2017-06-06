@@ -49,16 +49,19 @@
 				@foreach($patients AS $patient)
 				        <?php
 								$filter = "";
-									if ($patient->lead->state == 'IN.07') {
-										$filter = "ncr";
-										$checkboxclass = "ncrcheck";
-									}else if (($patient->lead->country == 'IN' || trim($patient->lead->country) == '' || !$patient->lead->country) && $patient->lead->state <> 'IN.07') {
-                                        $filter = "pan";
-                                        $checkboxclass = "pancheck";
-                                    }
-									else  if ($patient->lead->country != 'IN'){
-										$filter = "int";
-										$checkboxclass = "intcheck";
+									if($patient->lead)
+									{
+										if ($patient->lead->state == 'IN.07') {
+											$filter = "ncr";
+											$checkboxclass = "ncrcheck";
+										}else if (($patient->lead->country == 'IN' || trim($patient->lead->country) == '' || !$patient->lead->country) && $patient->lead->state <> 'IN.07') {
+	                                        $filter = "pan";
+	                                        $checkboxclass = "pancheck";
+	                                    }
+										else  if ($patient->lead->country != 'IN'){
+											$filter = "int";
+											$checkboxclass = "intcheck";
+										}
 									}
 							?>
 
