@@ -1101,6 +1101,9 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('report/patients/country', 'ReportController@getCountryWisePatientSummary');
     Route::post('report/patients/country', 'ReportController@getCountryWisePatientSummary');
 
+    Route::get('report/patients/bmi', 'ReportController@bmi');
+    Route::post('report/patients/bmi', 'ReportController@bmi');
+
     Route::get('report/patients/new', 'ReportController@getNewPatients');
     Route::post('report/patients/new', 'ReportController@getNewPatients');
 

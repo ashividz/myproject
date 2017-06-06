@@ -345,10 +345,53 @@ class ReportController extends Controller
             'j'             =>  1      
         );
 
-        return view('home')->with($data);
-
-        
+        return view('home')->with($data);   
     
+    }
+
+    public function bmi()
+    {
+        $patients = Patient::select('patient_details.*')
+                ->with('lead', 'fee' , 'fees' , 'cfee')
+                ->with(['weights' => function ($query) {
+                        $query->whereBetween('created_at', array($this->start_date, $this->end_date));
+                    }])
+                ->join('marketing_details as m', 'patient_details.lead_id', '=', 'm.id')
+                ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                    $join->on('patient_details.id', '=', 'f.patient_id');
+                })
+                ->whereBetween('start_date', array($this->start_date, $this->end_date))
+                ->get();
+        //dd($patients);
+        $activePatients = Patient::select('patient_details.*')
+                ->with('lead', 'fee')
+                ->with(['weights' => function ($query) {
+                        $query->whereBetween('created_at', array($this->start_date, $this->end_date));
+                    }])
+                ->join('marketing_details as m', 'patient_details.lead_id', '=', 'm.id')
+                ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                    $join->on('patient_details.id', '=', 'f.patient_id');
+                })
+                ->where('end_date', '>=', date('Y-m-d'))
+                ->orderBy('age')
+                ->get();
+
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'patients.bmi',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'patients'      =>  $patients,
+            'activePatients'=>  $activePatients,
+            'i'             =>  1,
+            'j'             =>  1,
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date
+        );
+
+        return view('home')->with($data);
+        
+        
     }
 
     /*

@@ -715,6 +715,9 @@
                             <a href="/report/patients/country" id="menu_patients_country" class="arrow">Country</a>
                         </li>
                         <li>
+                            <a href="/report/patients/bmi" id="menu_patients_bmi" class="arrow">Patient BMI </a>
+                        </li>
+                        <li>
                             <a href="/report/patients/allergy" id="menu_patients_allergy" class="arrow">Food Allergy</a>
                         </li>  
                         <li>
