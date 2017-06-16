@@ -428,7 +428,7 @@ $(document).ready(function()
 	});
 
 	//autocomplete
-	$( "#form-diet .diet-area" ).autocomplete({
+	/*$( "#form-diet .diet-area" ).autocomplete({
     	source: function( request, response ) {
     		//alert($(this.element).prop("id"));
         	var id = $(this.element).prop("id");
@@ -459,7 +459,7 @@ $(document).ready(function()
 	$('body').on('click', '.diet-data', function(){
 		$("#"+this.title).val($(this).text());
 		$("#"+this.title+"-list").hide();
-	});
+	});*/
 
 	//Hide diet-list when not in focus
 	$("body").click
