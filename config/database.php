@@ -80,6 +80,19 @@ return [
             'strict'    => false,
         ],
 
+        'mysql5' => [
+            'driver'    => 'mysql',
+            'host'      => '192.168.1.215',
+            'port'      => '3306',
+            'database'  => 'amikus',
+            'username'  => 'root',
+            'password'  => 'password',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
          //NHS
         'mysql3' => [
             'driver'    => 'mysql',

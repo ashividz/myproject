@@ -193,13 +193,13 @@ class DietController extends Controller
         return "Diet updated!";
     }
 
-
     public function autocomplete(Request $request)
     {
         $diets = null;
-        //if(count($request->term) > 3) {
-
-        $diets = Diet::select(DB::RAW($request->id.' as diet' ))
+        
+            $diets = DB::connection('mysql5')
+                    ->table('diets')
+                    ->select(DB::RAW($request->id.' as diet' ))
                     ->where($request->id, 'like', '%'.$request->term.'%')
                     ->where('nutritionist', 'like', Auth::user()->employee->name)
                     ->limit(10)
@@ -209,7 +209,6 @@ class DietController extends Controller
         //}
         return $diets;
     }
-
     /**WIP Saaz Rai 30-01-2016**/
     public function dietNotStarted()
     {
