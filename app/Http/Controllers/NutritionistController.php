@@ -84,7 +84,12 @@ class NutritionistController extends Controller
                     ->orderBy('name')
                     ->get();
         //dd($days);
+        $users = DB::select('SELECT id , name, dob  FROM marketing_details WHERE DATE(CONCAT(YEAR(CURDATE()), RIGHT(dob, 6))) BETWEEN  DATE_SUB(CURDATE(), INTERVAL 0 DAY) AND  DATE_ADD(CURDATE(), INTERVAL 7 DAY) ;');
 
+        $DOB = [] ;
+        foreach ($users as $user) {
+            $DOB[] = $user->id;
+        } 
         $users = User::getUsersByRole('nutritionist');
 
         $data = array(            
@@ -99,6 +104,7 @@ class NutritionistController extends Controller
             'days'              =>  $days,
             'x'                 =>  '1',
             'y'                 =>  '1',
+            'dob'               =>  $DOB,
            
         );
         return view('home')->with($data);

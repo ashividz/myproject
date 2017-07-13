@@ -502,6 +502,9 @@
                         <li>
                             <a href="/marketing/sms/leads">Leads</a>
                         </li>
+                        <li>
+                            <a href="/marketing/sms/birthday">Birthday</a>
+                        </li>
                     </ul>
                 </li>
                             
