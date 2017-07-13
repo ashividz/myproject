@@ -24,6 +24,7 @@
 						<tr>
 							<th>#</th>
 							<th width="13%">Name</th>
+							<th width="10%">Upcoming Birthday</th>
 							<th>Tags</th>										
 							<th>Doctor</th>
 							<th>Herbs (&#8478;)</th>
@@ -73,6 +74,19 @@
 ?>	<tr>
 							<td>{{$x++}}</td>
 							<td><a href="/patient/{{$patient->id}}/diet" target="_blank">{{$patient->lead->name}}</a></td>
+							<?php
+								$Birthday = false;
+								if(in_array($patient->lead->id, $dob))
+								{
+									$Birthday = true;
+								} 
+							?>
+							@if($Birthday)
+								<td>{{ date('jS F Y',strtotime($patient->lead->dob))}} <i class="fa fa-birthday-cake" aria-hidden="true"></i></td>
+
+							@else
+								<td></td>
+							@endif
 
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
@@ -149,6 +163,7 @@
 							<th>#</th>
 							<th>Patient Id</th>
 							<th width="13%">Name</th>
+							<th width="10%">Upcoming Birthday</th>
 							<th>Tags</th>										
 							<th>Doctor</th>
 							<th>Herbs (&#8478;)</th>
@@ -188,6 +203,20 @@
 							<td>{{$y++}}</td>
 							<td>{{$patient->id}}</td>
 							<td><a href="/patient/{{$patient->id}}/diet" target="_blank">{{$patient->lead->name}}</a></td>
+
+							<?php
+								$Birthday = false;
+								if(in_array($patient->lead->id, $dob))
+								{
+									$Birthday = true;
+								} 
+							?>
+							@if($Birthday)
+								<td>{{ date('jS F Y',strtotime($patient->lead->dob))}} <i class="fa fa-birthday-cake" aria-hidden="true"></i></td>
+
+							@else
+								<td></td>
+							@endif
 
 							<td><div class="pull-left" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div>
 							</td>
@@ -262,7 +291,8 @@
 					<thead>
 						<tr>
 							<th>#</th>		
-							<th>Name</th>	
+							<th>Name</th>
+							<th width="10%">Upcoming Birthday</th>	
 							<th>Tags</th>
 							<th>Primary Nutritionist</th>					
 							<th>Herbs (&#8478;)</th>					
@@ -298,6 +328,19 @@
 						<tr>
 							<td></td>
 							<td><a href="/lead/{{$patient->lead->id}}/viewDetails" target="_blank">{{$patient->lead->name}}</a></td>
+							<?php
+								$Birthday = false;
+								if(in_array($patient->lead->id, $dob))
+								{
+									$Birthday = true;
+								} 
+							?>
+							@if($Birthday)
+								<td>{{ date('jS F Y',strtotime($patient->lead->dob))}} <i class="fa fa-birthday-cake" aria-hidden="true"></i></td>
+
+							@else
+								<td></td>
+							@endif
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
 							<td>{{$patient->nutritionist}}</td>

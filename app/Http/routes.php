@@ -443,9 +443,11 @@ Route::group([
 
         /** Bulk SMS **/
         Route::get('marketing/sms/patients', 'SMSController@patients');
+        Route::get('marketing/sms/birthday', 'SMSController@birthday');
         Route::get('marketing/sms/leads', 'SMSController@leads');
         Route::post('api/getLeads', 'LeadsController@get');
         Route::post('api/getPatients', 'SMSController@getPatients');
+        Route::post('api/getbirthday', 'SMSController@getbirthday');
         Route::post('api/sendSMS', 'SMSController@send');
 
         
