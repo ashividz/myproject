@@ -95,10 +95,9 @@
 	//dd($patient->herbs);
 	foreach($patient->herbs AS $herb)
 	{
-		if($herb->created_by != "Shilpa Kapur")
-		{
-			$herbs .= "<p>".$herb->herb->name." : ".$herb->quantity." ".$herb->unit->name." ".$herb->remark." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
-		}
+		
+		$herbs .= "<p>".$herb->herb->name or " "." : ".$herb->quantity or " "." ".$herb->unit->name or " "." ".$herb->remark or " "." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
+		
 	
 	}
 	foreach($patient->tags as $tag) {
