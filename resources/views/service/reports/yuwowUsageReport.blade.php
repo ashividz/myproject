@@ -34,7 +34,7 @@
                                 <td><a href="{{url('yuwow/yuwowUsers')}}" id="{{$yuwow->nutritionist}}" class="nutritionist" target="_blank">{{$yuwow->nutritionist}}</a></td>
                                 <td>{{$yuwow->onDateServicedClients}}</td>
                                 <td>{{$yuwow->yuwowUsers}}</td>
-                                <td></td>
+                                <td>{{number_format($yuwow->yuwowUsers/$yuwow->onDateServicedClients*100,2)}}</td>
                             </tr>
                             @else
                             <tr>
