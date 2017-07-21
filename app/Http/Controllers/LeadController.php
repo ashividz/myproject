@@ -491,7 +491,8 @@ class LeadController extends Controller
 
     public function viewDispositions($id)
     {
-             
+
+        $disposition = Lead::with('source')->find($id);     
         $lead = Lead::with('patient','dispositions.master' , 'patient.suit')
                 ->with('dialer')
                 ->with(['disposition' => function($q){
@@ -573,7 +574,8 @@ class LeadController extends Controller
             'section'       =>  'partials.dispositions',
             'dept'          =>  $dept,
             'dialer_dispositions' => $dialer_dispositions,
-            'lead'          =>  $lead
+            'lead'          =>  $lead,
+            'remark'        =>  $disposition
         );
 
         return view('home')->with($data);
