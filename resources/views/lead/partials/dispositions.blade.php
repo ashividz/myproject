@@ -61,6 +61,15 @@
                                     </td>
                                 </div>     
                             </div>
+                            <div class="row">     
+
+                                <div class="form-group col-md-12">
+                                    <td>
+                                        <div> Remark </div> 
+                                        <h5>{{$remark->source->remarks or ""}}</h5>
+                                    </td>
+                                </div>     
+                            </div>
                         </div>
                     </div> 
                     <p></p>
