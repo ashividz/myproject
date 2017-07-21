@@ -56,7 +56,10 @@ class EmailController extends Controller
 			return redirect('lead/'.$id.'/email')->with('status', $status);	# code...
 		}		
 
-		$this->sendEmail($lead, $template);
+		if($template->email <> "")
+		{
+			$this->sendEmail($lead, $template);
+		}
 
 		//Save
 		$email = new Email();
