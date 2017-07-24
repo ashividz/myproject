@@ -80,6 +80,20 @@ return [
             'strict'    => false,
         ],
 
+        
+        'mysql4' => [
+            'driver'    => 'mysql',
+            'host'      => 'drshikhasnutriwelhealth.com',
+            'port'      => '3306',
+            'database'  => 'drshikha_query11',
+            'username'  => 'drshikha_query11',
+            'password'  => 'Nutr!w3l',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
         'mysql5' => [
             'driver'    => 'mysql',
             'host'      => '192.168.1.215',
