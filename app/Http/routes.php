@@ -873,6 +873,9 @@ Route::group([
         Route::get('sales/payments', 'SalesController@viewPayments');
         Route::POST('sales/payments', 'SalesController@viewPayments');
 
+        Route::get('sales/new/payments', 'SalesController@viewNewPayments');
+        Route::POST('sales/new/payments', 'SalesController@viewNewPayments');
+
         Route::get('sales/paymentsNew', 'SalesController@viewPaymentsNew');
         Route::POST('sales/paymentsNew', 'SalesController@viewPaymentsNew');
 
@@ -1015,6 +1018,7 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
     Route::get('api/onlinePayments', 'WebsiteController@onlinePayments');
     Route::get('api/onlinePaymentsNew', 'WebsiteController@onlinePaymentsNew');
+    Route::get('api/newonlinePayments', 'WebsiteController@onlinenewPayments');
     Route::get('api/getTagList', 'APIController@getTagList');
 
     Route::get('api/patients/age', 'APIController@ages');

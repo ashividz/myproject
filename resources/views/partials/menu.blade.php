@@ -281,7 +281,15 @@
                             <a href="/sales/paymentsNew" id="menu_sales_pipeline_status">Online Payments New</a>
                         </li>
                     </ul>
-                </li> 
+                </li>
+                <li>
+                    <a href="/sales/new/payments" id="menu_sales_new_payments">New Online Payments</a>
+                    <ul>
+                        <li>
+                            <a href="/sales/new/paymentsNew" id="menu_sales_new_pipeline_status">New Online Payments New</a>
+                        </li>
+                    </ul>
+                </li>  
                 <li>
                     <a href="#" id="menu_sales_reports">Reports</a>
                     <ul>

@@ -76,7 +76,19 @@ class SalesController extends Controller
         return view('home')->with($data);
     }
 
-      public function viewPaymentsNew()
+    public function viewNewPayments()
+    {
+        $data = array(
+            'menu'          => 'sales',
+            'section'       => 'newpayments',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'url'           => $this->url
+        );
+        return view('home')->with($data);
+    }
+
+    public function viewPaymentsNew()
     {
         $data = array(
             'menu'          => 'sales',
