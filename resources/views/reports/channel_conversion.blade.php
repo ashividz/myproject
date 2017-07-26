@@ -1,4 +1,4 @@
-<div class="container">  
+<div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
       <div class="pull-left">
@@ -36,25 +36,37 @@
 
             <td>{{$fee->count()}}</td>
              <td>{{$cfee->count()}}</td>
-        
+
         @if($source->leads > 0)
             <td>{{round($fee->count()/$source->leads*100, 2)}}</td>
         @else
             <td></td>
         @endif
-            <td>{{$fee->sum('total_amount')}}</td>
-            
+            <?php
+              $amount = 0;
+              foreach ($fee as $f) {
+                if($f->currency_id == 2)
+                {
+                  $amount = $amount + ($f->total_amount)*65;
+                }
+                else{
+                  $amount = $amount + $f->total_amount;
+                }
+              }
+            ?>
+            <td>{{$amount}}</td>
+
                 </tr>
 
-        @endforeach     
-        
+        @endforeach
+
             </tbody>
         </table>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function() 
+$(document).ready(function()
 {
   $('#table').dataTable({
     "bPaginate": false,
@@ -67,7 +79,7 @@ $(document).ready(function()
     var date_selected = $('#daterange').val();
     var lnk = frameSrc +"?daterange="+date_selected;
     window.location = lnk;
-    
+
 });
 });
 </script>

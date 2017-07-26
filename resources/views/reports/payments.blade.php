@@ -4,7 +4,7 @@
   			@include('partials.daterange')
 		</div>
 		<h4>Payment Details</h4>
-	</div>	
+	</div>
 	<div class="panel-body"><!-- Nav tabs -->
       	<ul class="nav nav-tabs" role="tablist">
         	<li role="presentation" class="active">
@@ -18,7 +18,7 @@
       	<!-- Tab panes -->
       	<div class="tab-content">
         	<div role="tabpanel" class="tab-pane active" id="home">
-    		
+
 		<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Csv</a>
 
 				<table id="table" class="table table-bordered">
@@ -40,10 +40,19 @@
 							<th>Audit</th>
 						</tr>
 					</thead>
-					<tbody>	
+					<tbody>
 
-@foreach($fees AS $fee)	
-				
+@foreach($fees AS $fee)
+						<?php
+							$amount = 0;
+							if($fee->currency_id ==2)
+							{
+								$amount = $fee->total_amount*65;
+							}
+							else {
+								$amount = $fee->total_amount;
+							}
+						?>
 						<tr>
 							<td>{{$fee->patient_id or ""}}</td>
 							<td><a href="/lead/{{$fee->patient->lead->id or ""}}/viewDetails" target="_blank">{{$fee->patient->lead->name or ""}}</a></td>
@@ -54,13 +63,13 @@
 							<td>{{isset($fee->entry_date) ? date('Y-m-d', strtotime($fee->entry_date)) : ""}}</td>
 							<td>{{$fee->start_date->format('Y-m-d')}}</td>
 							<td>{{$fee->end_date->format('Y-m-d')}}</td>
-							<td>{{$fee->total_amount or ""}}</td>
+							<td>{{$amount}}</td>
 							<td>{{$fee->source->source_name or ""}}</td>
 							<td>{{$fee->cre or ""}}</td>
 							<td>{{$fee->patient->nutritionist or ""}}</td>
 
-						@if($fee->audit==1)	
-							<td>{{$fee->audit}}</td>	
+						@if($fee->audit==1)
+							<td>{{$fee->audit}}</td>
 						@elseif($fee->audit==2)
 							<td>{{$fee->audit}}</td>
 						@else
@@ -69,14 +78,14 @@
 
 						</tr>
 
-@endforeach	
+@endforeach
 
 					</tbody>
 				</table>
 			</div>
 
 			<!-- Nutritionist Summary Report -->
-			<div role="tabpanel" class="tab-pane fade" id="packages">        
+			<div role="tabpanel" class="tab-pane fade" id="packages">
   				<div class="container">
   					<p>&nbsp;</p>
   					<div class="col-md-4">
@@ -89,7 +98,7 @@
 	  							</tr>
 	  						</thead>
 	  						<tbody>
-	  							
+
 	  					@foreach($packages AS $package)
 	  							<tr>
 	  								<td style="text-align:center">{{$package->name}}</td>
@@ -113,7 +122,7 @@
   					</div>
   				</div>
 
-			</div>			
+			</div>
 		</div>
 	</div>
 </div>
@@ -160,14 +169,14 @@ $(function () {
                 name: "Brands",
                 colorByPoint: true,
                 data: [
-                	
+
                 @foreach($packages AS $package)
                 	{
                 		name : {{$package->name}},
                 		y : {{$package->count}}
                 	},
                 @endforeach
-                
+
                 ]
             }]
         });
@@ -175,21 +184,21 @@ $(function () {
 });
 </script>
 <script type="text/javascript">
-$(document).ready(function() 
+$(document).ready(function()
 {
   	$('#table').dataTable({
 
 	    "bPaginate": false,
 	    "aaSorting": [[ 4, "desc" ]]
-  	}); 
+  	});
 
-  	$( "#downloadCSV" ).bind( "click", function() 
+  	$( "#downloadCSV" ).bind( "click", function()
   	{
     	var csv_value = $('#table').table2CSV({
                 delivery: 'value'
             });
     	downloadFile('payments.csv','data:text/csv;charset=UTF-8,' + encodeURIComponent(csv_value));
-    	$("#csv_text").val(csv_value);  
+    	$("#csv_text").val(csv_value);
   	});
 
   	function downloadFile(fileName, urlData){
