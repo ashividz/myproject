@@ -10,7 +10,7 @@ Trait Permission {
 
     public function canSearchLead()
     {
-        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service')|| Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('yuwow_support') || Auth::user()->hasRole('quality') || Auth::user()->hasRole('shs_sale')) {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service')|| Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('logistics') || Auth::user()->hasRole('sales_tl') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('yuwow_support') || Auth::user()->hasRole('quality') || Auth::user()->hasRole('shs_sale') || Auth::user()->hasRole('doctor')) {
             return true;
         }
         return false;
