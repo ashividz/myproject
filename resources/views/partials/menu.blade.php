@@ -575,7 +575,14 @@
                         </li>
                     </ul>
                 </li> 
-                                                
+                <li>
+                    <a href="/sales/new/payments" id="menu_sales_new_payments">New Online Payments</a>
+                    <ul>
+                        <li>
+                            <a href="/sales/new/paymentsNew" id="menu_sales_new_pipeline_status">New Online Payments New</a>
+                        </li>
+                    </ul>
+                </li>                                  
             </ul> <!-- second level -->                        
         </li>
     @endif 
