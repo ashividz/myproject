@@ -96,11 +96,11 @@ return [
 
         'mysql5' => [
             'driver'    => 'mysql',
-            'host'      => '192.168.1.215',
+            'host'      => '192.168.1.201',
             'port'      => '3306',
             'database'  => 'amikus',
             'username'  => 'root',
-            'password'  => 'password',
+            'password'  => 'Am!ku$',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
