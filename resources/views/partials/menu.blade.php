@@ -233,7 +233,16 @@
                 <li>
                     <a href="https://drive.google.com/a/drshikha.com/file/d/0B4HO0bxQ6qePT0haRVo3X0M4RTA/view?usp=sharing" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
                 </li>
-                            
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl'))        
+                    <li>
+                        <a href="/sales/new/payments" id="menu_sales_new_payments">New Online Payments</a>
+                        <ul>
+                            <li>
+                                <a href="/sales/new/paymentsNew" id="menu_sales_new_pipeline_status">New Online Payments New</a>
+                            </li>
+                        </ul>
+                    </li> 
+                @endif             
             </ul> <!-- second level -->                        
         </li>
     @endif     
@@ -628,6 +637,7 @@
                     </li>
                 </ul>
             </li> 
+
             @endif
 
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl')  || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl')  || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('registration')) 
