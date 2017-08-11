@@ -166,14 +166,14 @@ class NutritionistController extends Controller
           $id = [];  
         foreach ($users as $user) {
             if($user->diet)
-                if($user->diet->date_assign <= Carbon::now()->subDays(7)->toDateString() )
+                if($user->diet->date_assign <= Carbon::now()->subDays(7)->toDateString())
                 {
                     $id[] = $user->lead->id;
                 }
            // echo "</br>";
         }
 
-        $patients = Patient::getDietNotStarted();
+        /*$patients = Patient::getDietNotStarted();
         
         $pid = [];
 
@@ -182,12 +182,12 @@ class NutritionistController extends Controller
             $pid[] = $patient->lead_id; 
         }
 
-       $result = array_diff($id, $pid);
+       $result = array_diff($id, $pid);*/
 
        
         
-       $coustomers = Lead::with('patient','patient.fee', 'patient.diet')
-                        ->whereIn('id' , $result)
+       $coustomers = Lead::with('patient','patient.cfee', 'patient.diet')
+                        ->whereIn('id' , $id)
                         ->get();
 
         $data = array(            
