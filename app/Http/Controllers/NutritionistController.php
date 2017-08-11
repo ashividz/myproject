@@ -65,9 +65,7 @@ class NutritionistController extends Controller
     {
         $days = round((strtotime($this->end_date) - strtotime($this->start_date)) / (60 * 60 * 24));
 
-        $patients = Patient::with('lead', 'cfee', 'doctor','suit' , 'fee')
-
-                    ->get();
+        $patients = Patient::getActivePatients($this->nutritionist);
 
         $secondaryPatients = Patient::select('patient_details.*')
                     ->with('diets', 'fee','cfee','suit')                    
