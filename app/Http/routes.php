@@ -696,6 +696,7 @@ Route::group([
         Route::post('nutritionist/sendDiet', 'NutritionistController@sendDiet');
 
         Route::get('nutritionist/patients', 'NutritionistController@patients');
+        Route::get('service/break', 'NutritionistController@Breakadjestment');
         Route::post('nutritionist/patients', 'NutritionistController@patients');
 
         Route::get('nutritionist/appointments', 'NutritionistAppointmentController@show');

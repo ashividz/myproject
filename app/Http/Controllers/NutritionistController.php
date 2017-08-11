@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Patient;
 use App\Models\User;
+use App\Models\Lead;
 use Auth;
 use DB;
+use Carbon;
 
 class NutritionistController extends Controller
 {
@@ -63,7 +65,9 @@ class NutritionistController extends Controller
     {
         $days = round((strtotime($this->end_date) - strtotime($this->start_date)) / (60 * 60 * 24));
 
-        $patients = Patient::getActivePatients($this->nutritionist);
+        $patients = Patient::with('lead', 'cfee', 'doctor','suit' , 'fee')
+
+                    ->get();
 
         $secondaryPatients = Patient::select('patient_details.*')
                     ->with('diets', 'fee','cfee','suit')                    
@@ -147,6 +151,57 @@ class NutritionistController extends Controller
             'patients'          =>  $patients
         );
         return view('home')->with($data);   
+    }
+
+    public function Breakadjestment()
+    {
+       $users = Patient::select('patient_details.*')
+                ->with('lead', 'fee' , 'diet')
+                
+                ->join('marketing_details as m', 'patient_details.lead_id', '=', 'm.id')
+                ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                    $join->on('patient_details.id', '=', 'f.patient_id');
+                })
+                ->where('end_date', '>=', date('Y-m-d'))
+                ->orderBy('age')
+                ->get();
+          $id = [];  
+        foreach ($users as $user) {
+            if($user->diet)
+                if($user->diet->date_assign <= Carbon::now()->subDays(7)->toDateString() )
+                {
+                    $id[] = $user->lead->id;
+                }
+           // echo "</br>";
+        }
+
+        $patients = Patient::getDietNotStarted();
+        
+        $pid = [];
+
+        foreach ($patients as $patient) {
+            
+            $pid[] = $patient->lead_id; 
+        }
+
+       $result = array_diff($id, $pid);
+
+       
+        
+       $coustomers = Lead::with('patient','patient.fee', 'patient.diet')
+                        ->whereIn('id' , $result)
+                        ->get();
+
+        $data = array(            
+            'menu'              =>  $this->menu,
+            'section'           =>  'breakadjestment',
+            'coustomers'        =>  $coustomers,
+            'i'                 =>  '1'
+           
+        );
+        return view('home')->with($data);
+
+        
     }
 
 
