@@ -37,7 +37,7 @@
                         <tr>
                             <td>{{$i++}}</td>
                              <td>{{$customer->patient->id}}</td>
-                            <td><a href="/lead/{{$customer->id}}/viewPersonalDetails" target="_blank">{{$customer->name or ""}}</a></td>
+                            <td><a href="/patient/{{$customer->patient->id}}/diet" target="_blank">{{$customer->name or ""}}</a></td>
                             <td>{{$customer->country or ""}}</td>
                             <td>{{$customer->patient->fee->start_date or ""}}</td>
                             <td>{{$customer->patient->fee->end_date or ""}}</td>
