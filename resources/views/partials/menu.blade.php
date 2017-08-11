@@ -348,7 +348,10 @@
                     <ul>
                         <li>
                             <a href="/service/reports/diet_not_started" id="menu_service_diet-not-started">Diet Not Started</a>
-                        </li>  
+                        </li> 
+                        <li>
+                            <a href="/service/break" id="menu_break">Break Adjustment</a>
+                        </li> 
                         <li>
                             <a href="/service/diets" id="menu_diets">Diets</a>
                         </li>
