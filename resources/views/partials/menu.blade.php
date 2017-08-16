@@ -806,7 +806,7 @@
         </li>
         @endif
 
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('service'))                 
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('goods_sale') || Auth::user()->hasRole('service') ||Auth::user()->hasRole('service_tl'))                 
         <li>
             <a href="#" id="herbs">Herbs Sale</a>
             <ul>

@@ -11,6 +11,8 @@
 							<th>#</th>
 							<th>Lead id</th>
 							<th>Name</th>
+							<th>Doctor</th>
+							<th>Nutritionist</th>
 							<th>Total Days elapsed</th>
 							<th>last order date</th>
 							<th>Total herbs orders</th>
@@ -26,6 +28,8 @@
 							<a href='/lead/{{$lead->id}}/cart' target='_blank'> {{$lead->id}}</a></td>
 							<td>
 							<a href='/lead/{{$lead->id}}/viewDetails' target='_blank'> {{$lead->name}}</a></td>
+							<td>{{$lead->patient->doctor or " "}}</td>
+							<td>{{$lead->patient->nutritionist or " "}}</td>
 							<td>{{Carbon::parse($lead->carts->sortByDesc('updated_at')->first()->updated_at)->diffInDays(Carbon::today())}}</td>
 							<td>{{$lead->carts->sortByDesc('updated_at')->first()->updated_at}}</td>
 							<td>{{$lead->carts->count()}}</td>

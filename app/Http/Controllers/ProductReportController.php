@@ -206,7 +206,8 @@ class ProductReportController extends Controller
     {
         $lastOrderDate    =  Carbon::today()->subDays($this->reorderDuration);
         
-        $leads = Lead::whereHas('carts.products',function($query) use ($lastOrderDate) {
+        $leads = Lead::with('patient')
+                ->whereHas('carts.products',function($query) use ($lastOrderDate) {
                 $query->where('product_category_id',$this->productCategoryId)
                   ->where('carts.updated_at','<=',$lastOrderDate)
                   ->where('products.id','<>',$this->bfaProductId);

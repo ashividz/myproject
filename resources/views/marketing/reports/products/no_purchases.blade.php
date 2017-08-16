@@ -27,6 +27,8 @@
 							<th>#</th>
 							<th>Lead id</th>
 							<th>Name</th>
+							<th>Doctor</th>
+							<th>Nutritionist</th>
 							<th>start Date</th>
 							<th>end Date</th>				
 						</tr>
@@ -39,7 +41,8 @@
 							<a href='/lead/@{{patient.lead_id}}/cart' target='_blank'> @{{patient.lead.id}}</a></td>
 							<td>
 							<a href='/lead/@{{patient.lead_id}}/viewDetails' target='_blank'> @{{patient.lead.name}}</a></td>
-							
+							<td> @{{patient.doctor}} </td>
+							<td> @{{patient.nutritionist}} </td>
 							<td> @{{patient.start_date}} </td>
 							<td> @{{patient.end_date}} </td>
 						</tr>
