@@ -4,7 +4,7 @@
             <div class="pull-left">
                 @include('partials/daterange')
             </div>
-            <h4 style="margin-left:400px">Food Allergy</h4>
+            <h4 style="margin-left:400px">Weight Loss/BMI</h4>
     </div>
     <div class="panel-body">
         <!-- Nav tabs -->

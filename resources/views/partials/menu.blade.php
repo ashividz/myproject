@@ -334,6 +334,9 @@
                           <li>
                             <a href="selfAssignCount" id="menu_sales_lead_status">Self Assign</a>
                         </li>
+                        <li>
+                            <a href="/report/patients/bmi" id="menu_patients_weight" class="arrow">Patient Weight </a>
+                        </li>
                     </ul>
                 </li>   
                             
@@ -382,6 +385,7 @@
                         <li>
                             <a href="/service/reports/weightLoss" id="menu_service_weight_loss">Weight Loss</a>
                         </li>
+                        
                     </ul>
                 </li>
                 
@@ -398,9 +402,7 @@
                 </li>
                 <li>
                     <a href="/service/messages">Messages</a>
-                </li>
-
-                            
+                </li>              
             </ul> <!-- second level -->                        
         </li>  
     @endif  
