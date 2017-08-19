@@ -399,13 +399,7 @@
                 </li>
                 <li>
                     <a href="/service/messages">Messages</a>
-                </li>
-
-                <li>
-                    <a href="/service/breakadjustment">Break Adjustment</a>
-                </li>
-
-                            
+                </li>              
             </ul> <!-- second level -->                        
         </li>  
     @endif  
