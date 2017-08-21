@@ -762,6 +762,9 @@
                         <li>
                             <a href="/report/patients/occupation" id="menu_patients_occupation" class="arrow">Occupation</a>
                         </li> 
+                         <li>
+                            <a href="/report/patients/suitnotsuit" id="menu_patients_suitnotsuit" class="arrow">Suit not Suit </a>
+                        </li>
                     </ul>
                 </li> 
 
