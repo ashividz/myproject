@@ -60,7 +60,7 @@
 					     @if($lead->cre->cre == $name)
 						 <tr class = "{{$filter}}">
 					    	<td>
-								<input class='checkbox{{$checkboxclass}}' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
+								<input class='checkbox {{$checkboxclass}}' type='checkbox' name='check[{{$lead->id}}]' value="{{$lead->id}}">
 							</td>
 					    	<td><a href="/lead/{{$lead->id}}/viewDispositions" target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name" }}</a></td>
 					    	<td>{{$lead->source->master->source_name or ''}}</td>
