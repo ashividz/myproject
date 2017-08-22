@@ -337,6 +337,9 @@
                         <li>
                             <a href="/report/patients/bmi" id="menu_patients_weight" class="arrow">Patient Weight </a>
                         </li>
+                        <li>
+                            <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
+                        </li>
                     </ul>
                 </li>   
                             
@@ -648,6 +651,18 @@
                         <a href="/sales/paymentsNew" id="menu_sales_pipeline_status">Online Payments New</a>
                     </li>
                 </ul>
+            </li> 
+
+            @endif
+
+             @if(Auth::user()->canViewOnlinePayments())
+            <li>
+                <a href="/sales/new/payments" id="menu_sales_new_payments">New Online Payments</a>
+                    <ul>
+                        <li>
+                            <a href="/sales/new/paymentsNew" id="menu_sales_new_pipeline_status">New Online Payments New</a>
+                        </li>
+                    </ul>
             </li> 
 
             @endif
