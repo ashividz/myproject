@@ -919,7 +919,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('quality/patients', 'SurveyController@patients');
     Route::post('quality/patients', 'SurveyController@patients');
 
-    
+    Route::get('quality/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
+    Route::post('quality/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
     
     Route::get('quality/patient/{id}/survey', 'SurveyController@patientSurvey');
     Route::post('quality/patient/{id}/survey', 'SurveyController@savePatientSurvey');
