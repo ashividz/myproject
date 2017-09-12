@@ -55,19 +55,43 @@
                             <div class="row">     
 
                                 <div class="form-group col-md-12">
-                                    <td>
-                                        <div> Preferred Time To Call </div> 
-                                        <h5>{{$lead->patient->suit->trial_plan or ""}}</h5>
-                                    </td>
+                                    <table class="table table-condensed table-bordered">
+                                            <tr>
+                                               <td>  Preferred Time To Call </td>
+                                                <td>{{$lead->patient->suit->trial_plan or ""}}</td>
+                                            <tr>
+                                    </table>
                                 </div>     
                             </div>
                             <div class="row">     
 
                                 <div class="form-group col-md-12">
-                                    <td>
-                                        <div> Remark </div> 
-                                        <h5>{{$remark->source->remarks or ""}}</h5>
-                                    </td>
+                                    <table class="table table-condensed table-bordered">
+                                        <tr>
+                                            <td> Remark </td>
+                                            <td>{{$remark->source->remarks or ""}}</td>
+                                        </tr>
+                                    </table>
+                                </div>     
+                            </div>
+                            <div class="row">     
+
+                                <div class="form-group col-md-12">
+                                    @if($medical->patient)
+                                        <div><strong>Medical History</strong></div>
+                                         <table class="table table-condensed table-bordered">
+                                            <tr>
+                                               <td><strong>Dignosis</strong></td> 
+                                               <td><strong>Medical Problem</strong></td>
+                                               <td><strong>Medical History</strong></td>
+                                            </tr>
+                                            <tr>
+                                               <td>{{$medical->patient->diagnosis  or ""}}</td> 
+                                               <td>{{$medical->patient->medical_problem  or ""}}</td>
+                                               <td>{{$medical->patient->medical_history  or ""}}</td>
+                                            </tr>
+                                        </table>
+                                    @endif
                                 </div>     
                             </div>
                         </div>
