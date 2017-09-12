@@ -44,11 +44,15 @@
 						</li>
 						<li>
 							<label>Weight (Kgs)</label>
-							<input type="text" id="weight" name="weight" value="{{ $lead->weight }}">
+							<input type="text" id="weight" name="weight" value="{{ $lead->weight }}"> 
+							<tr>
+								<td><input type="radio" name="kg" value="kg"> <strong> kg </strong></td> &nbsp;
+								<td><input type="radio" name="pound" value="pound"> <strong> pound </strong></td>
+							</tr>
 						</li>
 						<li>
 							<label>BMI</label>
-							
+							<input type="text" id="bmi" name="bmi" value="{{ $lead->bmi }}"> 
 						</li>
 					</ol>
 				</fieldset>					
