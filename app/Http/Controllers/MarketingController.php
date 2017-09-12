@@ -913,4 +913,50 @@ class MarketingController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function notConverted()
+    {
+        $cre = $this->user;
+        
+        $leads = Lead::SELECT('marketing_details.*')
+                    ->doesntHave('patient')
+                    ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                    ->orderBy('id', 'DESC')
+                    ->get();
+
+        
+        $data = array(
+            'menu'          => $this->menu,
+            'section'       => 'notConverted',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'leads'         => $leads,
+            'i'             => 1
+        );
+
+        return view('home')->with($data);
+    }
+
+    public function notInterestedleads()
+    {
+        $cre = $this->user;
+        
+        $leads = Lead::SELECT('marketing_details.*')
+                    ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                    ->where('status_id', '6')
+                    ->orderBy('id', 'DESC')
+                    ->get();
+
+        
+        $data = array(
+            'menu'          => $this->menu,
+            'section'       => 'notInterestedleads',
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'leads'         => $leads,
+            'i'             => 1
+        );
+
+        return view('home')->with($data);
+    }
 }

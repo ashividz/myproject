@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px"><i class="fa fa-download fa-2x"></i></a>
+		<!-- <a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px"><i class="fa fa-download fa-2x"></i></a> -->
 		@include('../partials/daterange')
 	</div>
 	<div class="panel-body">
@@ -101,4 +101,25 @@ $(document).ready(function()
         bPaginate : false
     });
 });
+</script>
+</script>
+<script type="text/javascript" src = "https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src = "https://cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src = "//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.print.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#table-leads').DataTable( {
+        "iDisplayLength": 100,
+        dom: 'Bfrtip',
+        buttons: [
+            'csv'
+        ]
+    } );
+} );
 </script>
