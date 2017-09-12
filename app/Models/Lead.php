@@ -391,6 +391,8 @@ class Lead extends Model
         $lead->gender       = isset($request->gender) ? Helper::emptyStringToNull($request->gender) : Helper::emptyStringToNull($lead->gender);
         $lead->height       = isset($request->height) ? Helper::emptyStringToNull($request->height) : Helper::emptyStringToNull($lead->height);
         $lead->weight       = isset($request->weight) ? Helper::emptyStringToNull($request->weight) : Helper::emptyStringToNull($request->weight);
+        
+        if($request->bmi)
         $lead->bmi          = isset($request->bmi) ? Helper::emptyStringToNull($request->bmi) : Helper::emptyStringToNull($request->bmi);
         
         $lead->mobile       = isset($request->mobile) ? Helper::properMobile($request->mobile) : Helper::properMobile($lead->mobile);

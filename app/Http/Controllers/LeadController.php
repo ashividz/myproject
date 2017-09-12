@@ -642,8 +642,14 @@ class LeadController extends Controller
             $request->weight = $conversion;
           }
 
-          $request->bmi = (((float)$request->weight/((int)$request->height *(int)$request->height))*10000);
+          if($request->height && $request->weight)
+          {
+            $request->bmi = (((float)$request->weight/((int)$request->height *(int)$request->height))*10000);  
+          }
+
           $lead = Lead::updateLead($id, $request);
+
+          
 
           return "Personal details updated successfully!!!";
             
