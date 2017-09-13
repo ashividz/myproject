@@ -26,7 +26,7 @@
 				    	</label>
 				  	</div>
 				</form>
-			<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Csv</a>
+			<!-- <a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Csv</a> -->
 				<form id="form" class="form-inline" action="/marketing/saveRejoin" method="post">
 					<table id="table" class="table table-bordered">
 						<thead>
@@ -148,7 +148,8 @@ $(document).ready(function()
 	    $("input:checkbox").prop('checked', $(this).prop("checked"));
 	});
 });
-</script><script type="text/javascript">
+</script>
+<!-- <script type="text/javascript">
 $(document).ready(function() 
 {
 	
@@ -170,7 +171,7 @@ $(document).ready(function()
     	aLink.dispatchEvent(evt);
 	}
 });
-</script>
+</script> -->
 <script type="text/javascript">
 	$('.status').raty({ 
 		readOnly: true,
@@ -201,4 +202,24 @@ $(document).ready(function()
 	}
 
 
+</script>
+<script type="text/javascript" src = "https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src = "https://cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src = "//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.print.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#table').DataTable( {
+        "iDisplayLength": 100,
+        dom: 'Bfrtip',
+        buttons: [
+            'csv'
+        ]
+    } );
+} );
 </script>

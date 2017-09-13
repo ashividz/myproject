@@ -342,6 +342,15 @@ Route::group([
         Route::post('marketing/leads/dead', 'MarketingController@deadLeads');
         Route::post('marketing/leads/dead/churn', 'MarketingController@churnDeadLeads');
 
+        Route::get('marketing/notInterestedleads', 'MarketingController@notInterestedleads');
+        Route::post('marketing/notInterestedleads', 'MarketingController@notInterestedleads');
+
+        Route::get('marketing/notConverted', 'MarketingController@notConverted');
+        Route::post('marketing/notConverted', 'MarketingController@notConverted');
+
+        Route::get('marketing/activeInactive', 'ReportController@activeInactive');
+        Route::post('marketing/activeInactive', 'ReportController@activeInactive');        
+
         /*Route::get('marketing/dialer_push', 'DialerPushController@getLeads');
         Route::post('marketing/dialer_push', 'DialerPushController@getLeads');*/
 

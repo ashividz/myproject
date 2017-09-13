@@ -492,7 +492,11 @@ class LeadController extends Controller
     public function viewDispositions($id)
     {
 
-        $disposition = Lead::with('source')->find($id);     
+        $disposition = Lead::with('source')->find($id);
+
+        $medical  = Lead::with('patient')->find($id);
+
+
         $lead = Lead::with('patient','dispositions.master' , 'patient.suit')
                 ->with('dialer')
                 ->with(['disposition' => function($q){
@@ -575,7 +579,8 @@ class LeadController extends Controller
             'dept'          =>  $dept,
             'dialer_dispositions' => $dialer_dispositions,
             'lead'          =>  $lead,
-            'remark'        =>  $disposition
+            'remark'        =>  $disposition,
+            'medical'       =>  $medical
         );
 
         return view('home')->with($data);
@@ -623,15 +628,30 @@ class LeadController extends Controller
 
     public function savePersonalDetails(Request $request, $id)
     {
+        
+        
         if($request->height && is_numeric($request->height) && $request->height >=100 && $request->height <= 300);
         elseif($request->height)
             return 'Please enter a valid height in cms';
 
         try 
         {
-            $lead = Lead::updateLead($id, $request);
+          if($request->pound)
+          {
+            $conversion = ((float)$request->weight) * (0.453592);
+            $request->weight = $conversion;
+          }
 
-            return "Personal details updated successfully!!!";
+          if($request->height && $request->weight)
+          {
+            $request->bmi = (((float)$request->weight/((int)$request->height *(int)$request->height))*10000);  
+          }
+
+          $lead = Lead::updateLead($id, $request);
+
+          
+
+          return "Personal details updated successfully!!!";
             
         } 
         catch (Exception $e) 
