@@ -28,8 +28,7 @@ class PatientMedicalController extends Controller
             'section'  	 	=> 'partials.medical',
             'patient'  		=> 	$patient,
             'blood_groups'	=>	$blood_groups,
-            'rh_factors'	=>	$rh_factors
-
+			'rh_factors'	=>	$rh_factors					
         );
 
         return view('home')->with($data);

@@ -17,6 +17,8 @@ use Mail;
 use App\Models\Patient;
 use App\Models\Diet;
 use App\Models\User;
+use App\Models\MasterDietCopy;
+use App\Models\PatientPrakriti;
 
 use App\Support\SMS;
 
@@ -72,6 +74,8 @@ class DietController extends Controller
 
     public function store(PatientDietRequest $request, $id)
     {
+
+        
         $date = date('Y-m-d', strtotime($request->date));
 
         $diet = Diet::where('patient_id', $id)
@@ -82,6 +86,11 @@ class DietController extends Controller
             return redirect('patient/'.$id.'/diet')->with('status', 'Diet already added for '. $date);
         }
 
+        // add diet in master diet table 
+        if($request->adddiet)
+        {
+            $this->addMasterDiet($id , $request);
+        }
 
         $patient = Patient::find($id);
 
@@ -258,6 +267,41 @@ class DietController extends Controller
 
         return trim($herbs);
 
+    }
+
+    private function addMasterDiet($id , $request)
+    {
+        $patient     = Patient::with('herbs', 'diets', 'suit', 'weights', 'fee','lead')->find($id);
+        $patientprakriti = PatientPrakriti::prakriti($id);
+        $diet_date = $patient->diet ? date('Y-m-d', strtotime('+1 day', strtotime($patient->diet->date_assign))) : date('Y-m-d');
+        $diet_date = strtotime($diet_date) >= strtotime(date('Y-m-d')) ? $diet_date : date('Y-m-d');
+        
+        $fee = $patient->cfee ? $patient->cfee : $patient->fee;
+        $days = floor((strtotime($diet_date) - strtotime($fee->start_date))/(60*60*24));
+        $blood_grouop = Patient::where('id' , $id) 
+                   ->with('blood_type' , 'rh_factor')
+                   ->first();
+        $diet = new MasterDietCopy;
+        $diet->patient_id = $id;
+        $diet->nutritionist = Auth::user()->employee->name;
+        $diet->date_assign = date('Y-m-d', strtotime($request->date));
+        $diet->breakfast = trim($request->breakfast);
+        $diet->mid_morning = trim($request->mid_morning);
+        $diet->lunch = trim($request->lunch);
+        $diet->evening = trim($request->evening);
+        $diet->dinner = trim($request->dinner);
+        $diet->program_id = $request->program;
+        $diet->isapproved = 0;
+        $diet->day        = $days;
+        $diet->blood_group = $blood_grouop->blood_type->name;
+        $diet->rh_factor = $blood_grouop->rh_factor->code;
+        $diet->prakriti = $patientprakriti->first_dominant_name;
+        $diet->created_at = date('Y-m-d h:i:s');
+        $diet->updated_at = date('Y-m-d h:i:s');
+        
+        $diet->save();
+
+        return "master Diet Added";
     }
 
 }

@@ -17,7 +17,14 @@ use App\Models\User;
 use App\Models\Email;
 use App\Models\EmailTemplate;
 use App\Models\Diet;
+use App\Models\MasterDietCopy;
 use App\Support\SMS;
+use App\Models\BloodGroup;
+use App\Models\RhFactor;
+use App\Models\Program;
+use App\Models\Prakriti;
+use App\Models\Master_Diet;
+
 use DB;
 use Auth;
 use Mail;
@@ -351,4 +358,178 @@ class ServiceController extends Controller
         return view('home')->with($data);
     }
 
+    public function verifySentDiet() 
+    {    
+           $diets = MasterDietCopy::where('isapproved' , 0)
+                                ->get();           
+           $data = array('menu'    =>  $this->menu,   
+                         'section' =>  'approve_dietsent',
+                         'diets'   =>  $diets,
+                         'i'       =>  1,
+                        );   
+            return view('home')->with($data);
+    }
+
+    public function approveDiet($id)
+    {        
+        MasterDietCopy::where('id' , $id)                    
+                    ->update(['isapproved' => 1]);         
+        return $this->verifySentDiet();   
+    }
+    public function getMasterDiet()
+    {
+        $blood_groups = BloodGroup::get();
+        $rh_factors	=	RhFactor::get();
+        $programs = Program::get();
+        $prakriti = Prakriti::get();
+        $diet =     DB::table('master_diet AS md')
+                        ->join('programs','md.Program_ID','=','programs.id')
+                        ->join('MasterDietCondition','md.Condition_ID','=','MasterDietCondition.CID')
+                        ->where('isapproved',0)
+                        ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner')
+                        ->orderBy('md.created_at','desc')
+                        ->limit(15)
+                        ->get();
+          
+                   
+        $data = array(
+            'menu'           =>  'service',
+            'section'        =>  'addMasterDiet',
+            'blood_groups'	=>	$blood_groups,
+            'rh_factors'	=>	$rh_factors,
+            'programs'      =>  $programs,
+            'prakriti'      =>  $prakriti,
+            'diets'    =>  $diet
+            
+        );
+        return view('home')->with($data);
+    }
+
+    public function saveMasterDiet(Request $request)
+    {   
+        try{
+            
+            $prakriti = trim($request->prakriti_name);
+            $rhfactor = trim($request->rhfactor_name);
+            $bloodgroup = trim($request->blood_group_name);
+            $program = trim($request->program_id);
+            $Condition = DB::table('MasterDietCondition')
+                        ->where('Blood_Group',$bloodgroup)
+                        ->where('Rh_Factor',$rhfactor)
+                        ->where('Body_Prakriti',$prakriti)
+                        ->first();          
+            $DayCount = DB::table('master_diet')
+                        ->where('Condition_ID',$Condition->CID)
+                        ->where('Program_ID',$program)
+                        ->max('Day_Count');
+                      
+            $diet = new Master_Diet;
+            $diet->Breakfast = trim($request->breakfast);
+            $diet->MidMorning = trim($request->midmorning);
+            $diet->Lunch = trim($request->lunch);
+            $diet->Evening = trim($request->evening);
+            $diet->Dinner = trim($request->dinner);
+            $diet->Condition_ID = $Condition->CID;
+            $diet->Program_ID = $program;
+            $diet->Day_Count = $DayCount+1;  
+            $diet->Added_by = Auth::user()->employee->name;   
+            $diet->save();
+        } catch (Illuminate\Database\QueryException $e) {
+        echo $e;
+        }
+
+        return redirect('service/addMasterDiet');
+
+    }
+
+    public function showMasterDiet(Request $request)
+    {
+        $blood_group = BloodGroup::get();
+        $rh_factor	=	RhFactor::get();
+        $program = Program::get();
+        $prakriti = Prakriti::get();
+        $diet = null;
+        $heading = null; 
+        if($request->prakriti_name && $request->rhfactor_name && $request->blood_group_name && $request->program_id)
+        {
+            $prakritis = trim($request->prakriti_name);
+            $rhfactors = trim($request->rhfactor_name);
+            $bloodgroups = trim($request->blood_group_name);
+            $programs = trim($request->program_id);
+            $Condition = DB::table('MasterDietCondition')
+                            ->where('Blood_Group',$bloodgroups)
+                            ->where('Rh_Factor',$rhfactors)
+                            ->where('Body_Prakriti',$prakritis)
+                            ->first();
+                                            
+            $diet = DB::table('master_diet')
+                        ->where('Condition_ID',$Condition->CID)
+                        ->where('Program_ID',$programs)
+                        ->where('isapproved',1)
+                        ->get();
+
+            $program_name =  Program::where('id',$programs)->first();           
+            $heading .= $program_name->name." (".$bloodgroups.$rhfactors." ".$prakritis.")";      
+        }
+        
+        $data = array(
+        'menu'           =>  'service',
+        'section'        =>  'viewMasterDiet',
+        'blood_groups'	=>	$blood_group,
+        'rh_factors'	=>	$rh_factor,
+        'programs'      =>  $program,
+        'prakriti'      =>  $prakriti,
+        'diets'         =>  $diet,
+        'headings'      =>  $heading
+        );
+    return view('home')->with($data);                  
+    }
+
+    public function editMasterDiet($id)
+    {       
+            
+            $diet = DB::table('master_diet')
+                        ->where('id',$id)
+                        ->first();
+            $data = array(
+                        'diet' => $diet,
+                        'id'   => $id
+            );
+            return view('modals.masterdiet')->with($data);                                 
+    }
+
+    public function updateMasterDiet(Request $request)
+    {
+            //dd($request->id);
+            $diet = Master_Diet::find($request->id);
+            $diet->Breakfast  = $request->breakfast;
+            $diet->MidMorning = $request->mid_morning;
+            $diet->Lunch      = $request->lunch;
+            $diet->Evening    = $request->evening;
+            $diet->Dinner     = $request->dinner;
+            $diet->isapproved = 1;
+            $diet->save();
+
+            return "Master Diet Updated";
+
+    }
+
+    public function verifyMasterDiet()
+    {
+        $diets = DB::table('master_diet AS md')
+                    ->join('programs','md.Program_ID','=','programs.id')
+                    ->join('MasterDietCondition','md.Condition_ID','=','MasterDietCondition.CID')
+                    ->where('isapproved',0)
+                    ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner')
+                    ->get();          
+
+        $data = array(
+                    'menu'           =>  'service',
+                    'section'        =>  'verifyMasterDiet',
+                    'diets'          =>   $diets
+                     );            
+
+        return view('home')->with($data);        
+
+    }
 }
