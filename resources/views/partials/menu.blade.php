@@ -405,7 +405,24 @@
                 </li>
                 <li>
                     <a href="/service/messages">Messages</a>
-                </li>              
+                </li>
+                <li>
+                    <a href="#" id="MasterDiet">Master Diet</a>
+                     <ul>
+                        <li>
+                            <a href="/service/addMasterDiet" id="menu_service_addmasterdiet">Add MasterDiet</a>
+                        </li>
+                        <li>
+                            <a href="/service/verifyMasterDiet" id="menu_service_verifyMasterDiet">Verify MasterDiet</a>
+                        </li>                            
+                        <li>
+                            <a href="/service/viewMasterDiet" id="menu_service_viewmasterdiet">View MasterDiet </a>
+                        </li> 
+                        <li>
+                            <a href="/service/reports/verifySentDiet" id="menu_service_verifysentDiet">Verify SentDiet</a>
+                        </li>                   
+                    </ul>
+                </li>               
             </ul> <!-- second level -->                        
         </li>  
     @endif  

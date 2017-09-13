@@ -85,7 +85,6 @@ class PatientBTController extends Controller
             $patient_bt->size = $f->getSize();
            }
         $patient_bt->save();
-          //return('hughugj2');
         Session::flash('status', 'Report Updated Successfully!');
         return $this->edit($id);
     }

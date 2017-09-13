@@ -195,8 +195,17 @@
     $diet_date = strtotime($diet_date) >= strtotime(date('d-m-Y')) ? $diet_date : date('d-m-Y');
 ?>
 	<div class="panel-body">
+	<form>
+		<select id="programs" class="selectpicker" name = "program" onchange="this.form.submit()">
+			  @foreach($programs->lead->programs as $program)
+			  	<option value="{{$program->id}}" <?php if ($program_id == $program->id) echo "selected='selected'";?> >{{$program->name}}</option>
+			  @endforeach	  
+		</select>
+	</form>
+		<hr>
 		<form id="form-diet" action="/patient/{{$patient->id}}/diet" method="post" class="form-inline">
 			<table class="table table-bordered blocked">
+				<input id ="programid" type="hidden" name="program">
 				<!--
 				<thead>
 					<tr>					
@@ -222,29 +231,29 @@
 						</td>-->
 						<td>
 							<div><label>Breakfast:</label></div>
-							<textarea name="breakfast" id="breakfast" class="diet-area" placeholder="Breakfast">{{ old('breakfast')}}</textarea>
+							<textarea name="breakfast" id="breakfast" class="diet-area" placeholder="Breakfast"></textarea>
 							<div id="breakfast-list" class="diet-list"></div>
 						</td>
 						<td>
 							<div><label>Mid Morning:</label></div>
-							<textarea name="mid_morning" id="mid_morning" class="diet-area" placeholder="Mid Morning">{{ old('mid_morning')}}</textarea>
-							<div id="mid_morning-list" class="diet-list"></div>
+							<textarea name="mid_morning" id="mid_morning" class="diet-area" placeholder="Mid Morning"></textarea>
+							<div id="mid_morning-list" class="diet-k"></div>
 						</td>
 						<td>
 							<div><label>Lunch:</label></div>
-							<textarea name="lunch" id="lunch" class="diet-area" placeholder="Lunch">{{ old('lunch')}}</textarea>
+							<textarea name="lunch" id="lunch" class="diet-area" placeholder="Lunch"></textarea>
 							<div id="lunch-list" class="diet-list"></div>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<div><label>Evening:</label></div>
-							<textarea name="evening" id="evening" class="diet-area" placeholder="Evening">{{ old('evening')}}</textarea>
+							<textarea name="evening" id="evening" class="diet-area" placeholder="Evening"></textarea>
 							<div id="evening-list" class="diet-list"></div>
 						</td>
 						<td>
 							<div><label>Dinner:</label></div>
-							<textarea name="dinner" id="dinner" class="diet-area" placeholder="Dinner">{{ old('dinner')}}</textarea>
+							<textarea name="dinner" id="dinner" class="diet-area" placeholder="Dinner"></textarea>
 							<div id="dinner-list" class="diet-list"></div>
 						</td>
 						<td>
@@ -267,6 +276,8 @@
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 			</div>
+			<input type="button" id="masterdiet" class="btn btn-primary btn-md " onclick="check()"  style="height: 36px" value="Master Diet"  > 
+			<input type="checkbox" id="myCheck" name="adddiet">
 			<a href="/patient/{{$patient->id}}/weight" class="btn btn-success pull-right">Enter Weight</a>
 		</form>
 	</div>
@@ -314,22 +325,29 @@
 
 						<td>
 							<div class="breakfast">{{$diet->breakfast}}</div>
+							<i class="fa fa-copy pull-right blue" title="breakfast"></i>
 							
 						</td>
 						<td>
 							<div class="mid_morning">{{$diet->mid_morning or ""}}</div>
+							<i class="fa fa-copy pull-right blue" title="mid_morning"></i>
+
 						</td>
 						<td>
 							<div class="lunch">{{$diet->lunch}}</div>
+							<i class="fa fa-copy pull-right blue" title="lunch"></i>
 						</td>
 						<td>
 							<div class="evening">{{$diet->evening}}</div>
+							<i class="fa fa-copy pull-right blue" title="evening"></i>
 						</td>
 						<td>
 							<div class="dinner">{{$diet->dinner}}</div>
+							<i class="fa fa-copy pull-right blue" title="dinner"></i>
 						</td>
 						<td>
 							<div class="herbs">{!!App\Models\Diet::nl2list($diet->herbs, 'hr')!!}</div>
+							<i class="fa fa-copy pull-right blue" title="herbs"></i>
 						</td>
 						 <td>
                            <?php
@@ -513,6 +531,29 @@ $(document).ready(function()
 	        });
         };
 	};
+</script>
+
+<script type="text/javascript">
+	var breakfast = '{{$mdiet->Breakfast or " "}}'
+	var midmorning = '{{$mdiet->MidMorning or " "}}'
+	var lunch = '{{$mdiet->Lunch or " "}}'
+	var evening = '{{$mdiet->Evening or " "}}'
+	var dinner =    '{{$mdiet->Dinner or " "}}'
+	var program = $("#programs").val()
+	$("#programid").val(program)
+
+	$("#masterdiet").click(function(){
+		$("#breakfast").val(breakfast)
+		$("#mid_morning").val(midmorning)
+		$("#lunch").val(lunch)
+		$("#evening").val(evening)
+		$("#dinner").val(dinner)
+
+	})
+	function check() {
+    	document.getElementById("myCheck").checked = true;
+	}
+
 </script>
 <style type="text/css">
 	#form-diet textarea {

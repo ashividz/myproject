@@ -689,7 +689,28 @@ Route::group([
         Route::get('service/reports/fabReport', 'PatientFABController@fabReport');
         Route::post('service/reports/fabReport', 'PatientFABController@fabReport');
         Route::get('getSentFab/{id}', 'PatientFABController@getSentFab');
-        Route::get('/service/reports/weightLoss', 'ServiceController@weightLoss');        
+        
+        Route::get('service/reports/verifySentDiet', 'ServiceController@verifySentDiet');
+        Route::post('service/reports/verifySentDiet', 'ServiceController@verifySentDiet');        
+        Route::get('/service/addMasterDiet', 'ServiceController@getMasterDiet');
+        Route::post('/service/addMasterDiet', 'ServiceController@saveMasterDiet');
+        Route::get('/service/viewMasterDiet', 'ServiceController@showMasterDiet');
+        Route::post('/service/viewMasterDiet', 'ServiceController@showMasterDiet');
+
+        Route::get('/service/verifyMasterDiet','ServiceController@verifyMasterDiet');
+        Route::post('/service/verifyMasterDiet','ServiceController@verifyMasterDiet');
+
+        Route::get('masterdiet/{id}/edit', 'ServiceController@editMasterDiet');
+        Route::post('/service/masterdiet/update', 'ServiceController@updateMasterDiet');
+
+        Route::get('/service/reports/weightLoss', 'ServiceController@weightLoss');
+        Route::post('service/{id}/approved', 'ServiceController@approveDiet');         
+        Route::get('service/{id}/approved', 'ServiceController@approveDiet');
+        //added
+        Route::get('service/editMasterdiet/{id}','ServiceController@EditMasterDiet');
+        Route::post('service/editMasterdiet/{id}','ServiceController@EditMasterDiet');
+
+
 });
 
 Route::group([
@@ -1003,7 +1024,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     });
 
     Route::get('api/getPrograms', 'ProgramController@get');
-        
+    //Added ProgramList
+    Route::get('api/getProgramList','APIController@getProgramList'); 
     Route::get('api/getCountryList', 'APIController@getCountryList');
     Route::get('api/getRegionList', 'APIController@getRegionList');
     Route::get('api/getCityList', 'APIController@getCityList');
