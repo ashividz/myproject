@@ -21,8 +21,6 @@ class PatientDietController extends Controller
 {
 	public function show($id , Request $request)
     {
-        //DB::update("UPDATE diet_assign AS f SET patient_id = (SELECT id FROM patient_details p WHERE p.clinic=f.clinic AND p.registration_no=f.registration_no) WHERE patient_id = 0");
-        //dd($request);
         $patient     = Patient::with('herbs', 'diets', 'suit', 'weights', 'fee','lead')->find($id);
         $programs    = Patient::where('id' ,$id)
                                 ->with('lead.programs')->first();
@@ -33,8 +31,6 @@ class PatientDietController extends Controller
                })
                ->orderBy('created_at','desc')
                ->first();        
-        //dd($patient->productCart);
-        //dd($patient->productCart->created_at->diffInDays());
 
         $diets = Diet::where('patient_id', $id)
                     ->orderBy('date_assign', 'desc')

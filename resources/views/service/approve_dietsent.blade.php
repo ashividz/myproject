@@ -6,17 +6,17 @@
 			<table class="table table-bordered blocked">
 				<thead>
 					<tr>
-						<td>#</td>
-						<td>patient Id</td>
-						<td>Prakriti</td>
-						<td>Blood group</td>
-						<td>BreakFast</td>
-						<td>Midmorning</td>
-						<td>Lunch</td>
-						<td>Evening</td>
-						<td>Dinner</td>
-						<td>nutritionist</td>
-						<td>Verify</td>
+						<td >#</td>
+						<td >patient Id</td>
+						<td >Prakriti</td>
+						<td >Blood group</td>
+						<td >BreakFast</td>
+						<td >Midmorning</td>
+						<td >Lunch</td>
+						<td >Evening</td>
+						<td >Dinner</td>
+						<td >nutritionist</td>
+						<td >Verify</td>
 					</tr>
 				</thead>
 				<tbody>
@@ -41,4 +41,5 @@
 				</tbody>
 			</table>
 	</div>
+	{!! $diets->render() !!}
 </div>

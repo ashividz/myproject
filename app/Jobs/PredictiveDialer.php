@@ -321,7 +321,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             //}
 
           if($pin1 != "11" && $pin2 != "011")
-            $output = file_get_contents("http://192.168.1.206/test.ajax?".$encoded_params);
+            $output = file_get_contents("http://192.168.1.202/test.ajax?".$encoded_params);
           else
             $output = "Landline-No. Skipped";
             

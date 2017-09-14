@@ -361,7 +361,8 @@ class ServiceController extends Controller
     public function verifySentDiet() 
     {    
            $diets = MasterDietCopy::where('isapproved' , 0)
-                                ->get();           
+                                ->orderBy('id' , 'desc')
+                                ->paginate(50);           
            $data = array('menu'    =>  $this->menu,   
                          'section' =>  'approve_dietsent',
                          'diets'   =>  $diets,
