@@ -11,6 +11,8 @@
 			</h3>
 		</div>
 		<div class="panel-body">
+		<form id="form-diet" action="/patient/{{$patient->id}}/herbs/send" method="post" class="form-inline">
+			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -27,7 +29,7 @@
 				</thead>
 				<tbody>
 
-		@foreach($patient->herbs as $herb)
+			@foreach($patient->herbs as $herb)
 					<tr>
 						<td></td>
 						<td>{{$herb->herb->name or ""}}</td>
@@ -61,6 +63,10 @@
 
 				</tbody>
 			</table>
+			<div class="form-group">
+				<button class="btn btn-primary" name="email">Send Email</button>
+			</div>
+		</form>
 		</div>
 	</div>
 @endsection

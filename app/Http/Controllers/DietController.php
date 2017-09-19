@@ -153,15 +153,21 @@ class DietController extends Controller
                         'email' => json_encode($email)]
                     ]);
         }
-        //echo $result->getBody();
-       // echo $result->getStatusCode();
-       // dd($diets);
+        // echo $result->getBody();
+        // echo $result->getStatusCode();
+        // dd($diets);
        $data = Diet::send($request);
 
         return redirect('patient/'.$id.'/diet')->with($data);
     }
 
-    
+    public function sendHerbs(Request $request, $id)
+    {
+      
+        $request->patient_id = $id;
+        $data = Diet::herbs($id);
+        return redirect('patient/'.$id.'/herbs')->with($data);
+    }
 
     public function edit($id) {
 
