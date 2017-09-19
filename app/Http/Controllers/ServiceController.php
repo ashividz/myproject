@@ -339,20 +339,43 @@ class ServiceController extends Controller
 
     public function weightLoss()
     {
-        $patients = Patient::whereHas('fees',function($query) {
+        $weightLoss = Patient::whereHas('fees',function($query) {
             $query->where('end_date','>=',DB::raw('curdate()'));
         })
-        ->with('fees','lead')
+        ->with('fees','lead','lead.programs')
+        ->whereHas('lead.programs', function($q) {
+                        $q->where('programs.id', 1);
+                    })
         ->limit(env('DB_LIMIT'))
         ->get();
 
-        $patients = PatientWeight::weightLoss($patients);
+        
+
+
+        $weightLoss = PatientWeight::weightLoss($weightLoss);
+
+        $weightGain = Patient::whereHas('fees',function($query) {
+            $query->where('end_date','>=',DB::raw('curdate()'));
+        })
+        ->with('fees','lead','lead.programs')
+        ->whereHas('lead.programs', function($q) {
+                        $q->where('programs.id', 2);
+                    })
+        ->limit(env('DB_LIMIT'))
+        ->get();
+
+        
+
+
+        $weightGain = PatientWeight::weightLoss($weightGain);
 
         $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'reports.weight_loss',
-            'patients'      =>  $patients,
+            'weightLoss'    =>  $weightLoss,
+            'weightGain'    =>  $weightGain,
             'x'             =>  1,
+            'y'             =>  1,
         );
 
         return view('home')->with($data);
