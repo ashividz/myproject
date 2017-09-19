@@ -746,6 +746,7 @@ Route::group([
         Route::post('patient/{id}/diet/save', 'DietController@store');
 
         Route::post('patient/{id}/diets/send', 'DietController@send');
+        Route::post('patient/{id}/herbs/send', 'DietController@sendHerbs');
 
         Route::get('diet/{id}/edit', 'DietController@edit');
         Route::post('diet/update', 'DietController@update');

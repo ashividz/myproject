@@ -47,6 +47,66 @@ class Diet extends Model
         return Diet::destroy($id);
     } 
 
+    public static function herbs($id)
+    {
+        $patient = Patient::find($id);
+
+        $doctor = $patient->doctor;
+
+       // dd($doctor);
+
+        $herbs = '';
+        $message = '';
+        if ($patient->herbs)
+        {
+
+            foreach ($patient->herbs as $herb) {
+
+                $when = '';
+
+                $herbs .= $herb->herb->name." : ".$herb->quantity." ";
+                $herbs .= $herb->unit?$herb->unit->name:"";
+                $herbs .= " ".$herb->remark;
+
+                //if(isset($herb->mealtimes)) {
+                    foreach ($herb->mealtimes as $mealtime) {
+                        $when .= $mealtime->mealtime ? $mealtime->mealtime->name . ' & ' : '' ;
+                    }
+                //}     
+
+                $when = rtrim($when, "& ");
+                $herbs .= ' ('.$when.') '; 
+                $herbs .= " \n ";
+            }
+        }
+
+        $herbs = rtrim($herbs, " + ");
+
+        if (trim($patient->lead->email) <> '') {
+            $body = Diet::herbsHeader($patient);
+            $body .= Diet::herbsBody($herbs , $doctor);
+            $body .= Diet::emailFooter();
+            
+            if(Diet::herbsEmail($patient, $body)) {
+                $message .= '<li>Herbs Email Sent</li>';
+                $status = 'success';
+                //Diet::setEmailStatus($diets);
+            }
+        }
+        else {
+            $message .= '<li>Email does not exist for '.$patient->lead->name.'</li>';
+            $status = 'error';
+        }
+
+        $data = array(
+            'message'       =>  $message,
+            'status'        =>  $status
+        );
+
+        return $data;    
+    }
+
+
     public static function send($request)
     {
         $patient = Patient::find($request->patient_id);
@@ -141,6 +201,14 @@ class Diet extends Model
         return $body;
     }
 
+    public static function herbsHeader($patient)
+    {
+        $body = Storage::get('templates/diets/herbsheader.php'); 
+        $body = str_replace('$patient', $patient->lead->name, $body); 
+
+        return $body;
+    }
+
     public static function emailBody($diet)
     {
         $patient = Patient::find($diet->patient_id);
@@ -159,6 +227,18 @@ class Diet extends Model
         //$hrbs = str_replace('\r\n', '<br>', $hrbs);
         $body = str_replace('$herbs', $hrbs, $body);
         $body = str_replace('$remarks', $diet->rem_dev, $body);
+
+        return $body;
+    }
+
+    public static function herbsBody($herbs ,$doctor)
+    {
+        
+
+        $body = Storage::get('templates/diets/herbs.php'); 
+        $body = str_replace('$Doctors', $doctor, $body);
+        $hrbs = Diet::nl2list($herbs);
+        $body = str_replace('$herbs', $hrbs, $body);
 
         return $body;
     }
@@ -202,6 +282,25 @@ class Diet extends Model
                 ->bcc("diet@nutrihealthsystems.co.in")
                 ->subject("Diet Plan - ".$patient->lead->name." - ".date('D, jS M, Y H:i:s'))
                 ->from('diet@nutrihealthsystems.co.in', 'Nutri-Health Systems');
+                //->setBody($body);
+            
+            //Add CC
+            if (trim($patient->lead->email_alt) <> '') {
+                $message->cc($patient->lead->email_alt, $patient->lead->name);
+            }
+        });
+
+        return true;
+    }
+
+    public static function herbsEmail($patient, $body)
+    {
+        Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($patient)
+        {
+            $message->to($patient->lead->email, $patient->lead->name)
+                ->bcc("diet@nutrihealthsystems.co.in")
+                ->subject("Herbs prescription - ".$patient->lead->name." - ".date('D, jS M, Y H:i:s'))
+                ->from('service@nutrihealthsystems.com', 'Nutri-Health Systems');
                 //->setBody($body);
             
             //Add CC
