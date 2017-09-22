@@ -1,3 +1,22 @@
+@if(Auth::user()->hasRole('cre'))
+                
+    @if(isset($lead->dialer))
+        @if(($lead->cre && $lead->cre->cre != Auth::user()->employee->name && $lead->cre->cre != $lead->cre->created_by))
+                 <div class= "row">
+                    <div class="col-md-6 col-md-offset-3">
+                            <br>
+                            <br>
+                        <form method="POST" action="/lead/{{ $lead->id }}/selfAssign" role="form" class="form-inline" id="form_selfassign">
+                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                         <button  id="self_assign" type='submit' class='btn btn-info active' style="margin-left: 400px"> Self Assign</button>
+                        </form>
+                    </div>
+                </div>       
+        @endif
+    @endif
+@endif
+
+
 @if($lead->cre && Auth::user()->hasRole('cre') && !(Auth::user()->roles->count()>1) && trim($lead->cre->cre) <> trim(Auth::user()->employee->name) && (!$lead->dialer || $lead->hideDisposition))
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">

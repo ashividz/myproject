@@ -509,6 +509,8 @@ class LeadController extends Controller
                 ->select('marketing_details.*', 'cd.disposition_id as last_dispo', 'cd.callback as callback')*/
 
                 ->find($id);
+
+          //dd($lead->dialer);
                 //$lead->last_dispo = 1;
      /*   if($lead->dialer && array_search($lead->last_dispo, [8, 9, 10, 11, 15]))
             $lead->hideDisposition = true;*/
