@@ -107,6 +107,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
 
   public function handle()
     {
+       $cre = ['Avadesh Kumar' , 'Shadhvi Srivastava' , 'Shivam Rohilla' , 'Manoj Kumar Rastogi' , 'Shashank Maheshwari' , 'Harshil Sharma' , 'Rohit Arora(NW580)'];
        Log::info("Job Started ". $this->uid);
        $leads = null;
        $predictiveJobRange = PredictiveJobRange::get()->first();
@@ -127,6 +128,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
          if(isset($start_limit) && $start_limit!="")
           {
              $leads = Lead::whereBetween('created_at',array($start_limit , $end_limit))
+                    ->whereNotIn('cre_name', $cre)
                     //->has('dispositions','<',4)
                     ->has('dnc', '<', 1)
                     ->whereRaw( "(country ='IN' or country is null or country ='')")
@@ -321,13 +323,13 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             //}
 
           if($pin1 != "11" && $pin2 != "011")
-            $output = file_get_contents("http://192.168.1.202/test.ajax?".$encoded_params);
+            $output = file_get_contents("http://192.168.1.200/test.ajax?".$encoded_params);
           else
             $output = "Landline-No. Skipped";
             
             //$output = "Number added successfully.";  
             
-            if($output == "Number added successfully.")
+            if($output)
             {
                 //$lead = Lead::find($lead_id);
                 $dialer_push = New DialerPush;
@@ -336,7 +338,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                 //$dialer_push->name = $cre_name;
                
                 $dialer_push->phone = $phone;
-                $dialer_push->list_id =  $list_id;
+                $dialer_push->list_id =  1;
                 $dialer_push->created_by = $this->uid;
                 $dialer_push->lead_date = $lead_date;
                 $dialer_push->status = $output;
