@@ -17,6 +17,7 @@ use GuzzleHttp\Client;
 use DB;
 use App;
 use App\Models\Patient;
+use App\Models\Lead;
 use App\Models\Days365;
 use DateTime;
 use DateInterval;
@@ -260,6 +261,8 @@ class YuWoWController extends Controller
     }
     public function yuwowNotification(Request $request)
     {
+
+        dd($request);
         
         define( 'API_ACCESS_KEY', 'AAAALPfWeKg:APA91bEI1NK1YqI-aJwBa-_g3NNgkbR00zlw9tmSYN0tSfklOHHqWHIw0kD2G44PV3H7h3GlxkVVSRHoixgE69TYSXZYuIBzlesIFYoPjZTzwROhWiSRhpxho1FMHHoYYa8lbl-8i8vE' );
        // print_r($device_id);
@@ -268,57 +271,167 @@ class YuWoWController extends Controller
         $message = $request->message;
         $title  = $request->title;
         $device_id;
-        $client = new Client();
+       /* $client = new Client();
         $result = $client->request('POST', 'https://portal.yuwow.com/index.php/notification/saveMessage', [
                 'form_params' => [
                 'message' => json_encode($request->message)
                 ]
-                ]);
+                ]);*/
+        $states = [];
         foreach ($users as $user) 
         {
-            if(strpos($user->device_id, '?') !== false)
-            {
-                $pos = strpos($user->device_id, '?');
-                $result = substr($user->device_id, 0, $pos);
-                $device_id = $result;
-                $registrationIds = $device_id;
-            }
-            else
-            {
-                $registrationIds = $user->device_id;
-            }
-                
-            // prep the bundle
-            $msg = array
-            (
-                'body'      => $message,
-                'title'     => $title,
-                'vibrate'   => 1,
-                'sound'     => 1,
-                'click_action' => 'com.yuwow.OPEN_ACTIVITY_1',
-            );
+            $lead = Lead::where('email' , $user->user_email)->first();
             
-            $fields = array
-            (
-                'registration_ids'  => array ( $registrationIds ), 
-                'notification' =>  $msg 
-            );
-             
-            $headers = array
-            (
-                'Authorization: key=' . API_ACCESS_KEY,
-                'Content-Type: application/json'
-            );
-             
-            $ch = curl_init();
-            curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
-            curl_setopt( $ch,CURLOPT_POST, true );
-            curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-            curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-            curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
-            $result = curl_exec($ch );
-            curl_close( $ch );
+            if($lead)
+            {
+                if($lead->state == "IN.07" && $request->notification == "NCR")
+                {
+
+                
+
+                    if(strpos($user->device_id, '?') !== false)
+                    {
+                        $pos = strpos($user->device_id, '?');
+                        $result = substr($user->device_id, 0, $pos);
+                        $device_id = $result;
+                        $registrationIds = $device_id;
+                    }
+                    else
+                    {
+                        $registrationIds = $user->device_id;
+                    }
+                        
+                    // prep the bundle
+                    $msg = array
+                    (
+                        'body'      => $message,
+                        'title'     => $title,
+                        'vibrate'   => 1,
+                        'sound'     => 1,
+                        'click_action' => 'com.yuwow.OPEN_ACTIVITY_1',
+                    );
+                    
+                    $fields = array
+                    (
+                        'registration_ids'  => array ( $registrationIds ), 
+                        'notification' =>  $msg 
+                    );
+                     
+                    $headers = array
+                    (
+                        'Authorization: key=' . API_ACCESS_KEY,
+                        'Content-Type: application/json'
+                    );
+                     
+                    $ch = curl_init();
+                    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+                    curl_setopt( $ch,CURLOPT_POST, true );
+                    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+                    curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+                    $result = curl_exec($ch );
+                    curl_close( $ch );
+                }
+                if($lead->state != "IN.07" && $lead->country == "IN" && $request->notification == "PAN")
+                {
+
+                
+
+                    if(strpos($user->device_id, '?') !== false)
+                    {
+                        $pos = strpos($user->device_id, '?');
+                        $result = substr($user->device_id, 0, $pos);
+                        $device_id = $result;
+                        $registrationIds = $device_id;
+                    }
+                    else
+                    {
+                        $registrationIds = $user->device_id;
+                    }
+                        
+                    // prep the bundle
+                    $msg = array
+                    (
+                        'body'      => $message,
+                        'title'     => $title,
+                        'vibrate'   => 1,
+                        'sound'     => 1,
+                        'click_action' => 'com.yuwow.OPEN_ACTIVITY_1',
+                    );
+                    
+                    $fields = array
+                    (
+                        'registration_ids'  => array ( $registrationIds ), 
+                        'notification' =>  $msg 
+                    );
+                     
+                    $headers = array
+                    (
+                        'Authorization: key=' . API_ACCESS_KEY,
+                        'Content-Type: application/json'
+                    );
+                     
+                    $ch = curl_init();
+                    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+                    curl_setopt( $ch,CURLOPT_POST, true );
+                    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+                    curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+                    $result = curl_exec($ch );
+                    curl_close( $ch );
+                }
+                if($lead->country != "IN" && $lead->country != " " && $request->notification == "INT")
+                {
+
+                
+
+                    if(strpos($user->device_id, '?') !== false)
+                    {
+                        $pos = strpos($user->device_id, '?');
+                        $result = substr($user->device_id, 0, $pos);
+                        $device_id = $result;
+                        $registrationIds = $device_id;
+                    }
+                    else
+                    {
+                        $registrationIds = $user->device_id;
+                    }
+                        
+                    // prep the bundle
+                    $msg = array
+                    (
+                        'body'      => $message,
+                        'title'     => $title,
+                        'vibrate'   => 1,
+                        'sound'     => 1,
+                        'click_action' => 'com.yuwow.OPEN_ACTIVITY_1',
+                    );
+                    
+                    $fields = array
+                    (
+                        'registration_ids'  => array ( $registrationIds ), 
+                        'notification' =>  $msg 
+                    );
+                     
+                    $headers = array
+                    (
+                        'Authorization: key=' . API_ACCESS_KEY,
+                        'Content-Type: application/json'
+                    );
+                     
+                    $ch = curl_init();
+                    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+                    curl_setopt( $ch,CURLOPT_POST, true );
+                    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+                    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+                    curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+                    $result = curl_exec($ch );
+                    curl_close( $ch );
+                }
+            }
         }
         return redirect('yuwow/sendNotification');
     }

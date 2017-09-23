@@ -103,8 +103,8 @@ class CallDispositionController extends Controller
             //Send SMS & Email if Call Not Connected
             
             if ($request->status == 2 && !$lead->dispositions()->where('created_at', '>=', Carbon::now()->format('Y-m-d'))->whereNotNull('email')->first()) {
-                $disposition->sms = $this->sendSMS($lead->phone);
-                $disposition->email = $this->sendEmail($lead);
+                $disposition->sms = $this->sendSMS($lead->mobile);
+                //$disposition->email = $this->sendEmail($lead);
                 $disposition->save();
             }
 
@@ -130,12 +130,12 @@ class CallDispositionController extends Controller
         }
         elseif(Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre'))
         {
-            return false;
+            $message = $this->getRNRMessage();
+            $sms = new SMS();
+            return $sms->send($mobile, $message);
         }
         
-        $message = $this->getRNRMessage();
-        $sms = new SMS();
-        return $sms->send($mobile, $message);
+        
 
     }
 
@@ -182,14 +182,15 @@ class CallDispositionController extends Controller
             $message = "We were unable to reach you to discuss your health plan at Dr.Shikha's Nutrihealth. Pls call 011-49945900 for " . $caller . ".\n";
             return $message;
         }
-        elseif (Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre')) 
+        if (Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre')) 
         {
-            $message = "I tried calling you but was unable to connect".".\n"."Kindly let me know a convenient time to call you.Pls call 18001036663 for counselor " . $caller . ".\n";
-            $message .= "http://goo.gl/hRyWeS" . "\n";
+            $message = "We called you for festival special staying healthy plans but were unable to connect".".\n".
+                        "Call 18001036663/Chat@";          
+            $message .= "http://bit.ly/2iXIRts"." 9am-8pm".".\n";
+            $message .= "Dr. Shikhas Nutrihealth.";
             return $message;
         }
         
-        return "I tried calling you but was unable to connect".".\n"."Kindly let me know a convenient time to call you.Pls call 18001036663 for counselor " . $caller . ".\n";
     }
 
     public function sendPromoEmail($lead)

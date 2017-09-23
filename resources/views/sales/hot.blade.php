@@ -42,21 +42,21 @@
                             </span>
                             </small></em>
                     @endif
-                        </td>
+                        <!-- </td>
     					<td style='text-align:center'>
     						@if(isset($lead->patient->fees))
     							@foreach($lead->patient->fees AS $fee)
     								@if($fee->entry_date >= $lead->disposition->callback->format('Y-m-d'))
-    									<i class='fa fa-check fa-2x' title='CONVERTED : {{date('M j, Y',strtotime($fee->entry_date))}}' style='color:green'></i>
+    									<i class='fa fa-check fa-2x' title='CONVERTED : {{ date('M j, Y',strtotime($fee->entry_date))}}' style='color:green'></i>
     								@else
-    									<i class='fa fa-certificate' title='Past Payment : {{date('M j, Y',strtotime($fee->entry_date))}}' style='color:blue'></i>
+    									<i class='fa fa-certificate' title='Past Payment : {{ date('M j, Y',strtotime($fee->entry_date))}}' style='color:blue'></i>
     								@endif	
     							@endforeach
     						@else
     							<i class='fa fa-fire fa-2x' title='HOT' style='color:red'></i>
     						@endif
     					</td>
-    				</tr>
+    				</tr> -->
     			@endforeach
                 </tbody>
 				
