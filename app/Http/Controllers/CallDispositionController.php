@@ -79,6 +79,8 @@ class CallDispositionController extends Controller
 
     public function store(Request $request, $id)
     {
+
+
         try {
             $lead = Lead::find($id);
 
@@ -102,9 +104,9 @@ class CallDispositionController extends Controller
 
             //Send SMS & Email if Call Not Connected
             
-            if ($request->status == 2 && !$lead->dispositions()->where('created_at', '>=', Carbon::now()->format('Y-m-d'))->whereNotNull('email')->first()) {
+            if ($request->status == 2) {
                 $disposition->sms = $this->sendSMS($lead->mobile);
-                //$disposition->email = $this->sendEmail($lead);
+                $disposition->email = $this->sendEmail($lead);
                 $disposition->save();
             }
 
