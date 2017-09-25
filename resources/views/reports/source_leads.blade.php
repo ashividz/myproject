@@ -14,6 +14,7 @@
                         <thead>
                             <tr>
                                 <td><input type="checkbox" id="checkAll"></td>
+                                <td>Lead ID</td>
                                 <td>Name</td>
                                 <td>CRE</td>
                                 <td>CRE Assigned Date</td>
@@ -34,6 +35,7 @@
                                 <td>
                                     <input class='checkbox' type='checkbox' name='check[]' value="{{$lead->id}}">
                                 </td>
+                                <td>{{$lead->id or ""}}</td>
                                 <td>
                                     <a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name"}}</a>
                                 </td>
