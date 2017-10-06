@@ -8,6 +8,7 @@
 				<th>Lead Assign Date</th>
 				<th>Lead Source</th>
 				<th>Status</th>
+				<th>Tag</th>
                 <th>Last Disposition Date</th>
                 <th>Disposition Count</th>
 				<th>Disposition</th>
@@ -28,6 +29,7 @@
 		@endif
 		
 		    	<td><div style="display:none">{{$lead->status_id}} {{$lead->status->name or ""}}</div><div class="status" data-score="{{ $lead->status_id }}"></div></td>
+		    	<td>{{$lead->program_explain or " "}}</td>
                 <td>
                     {{ $lead->disposition->created_at or "" }}
                 </td>
