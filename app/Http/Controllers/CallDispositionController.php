@@ -79,7 +79,7 @@ class CallDispositionController extends Controller
 
     public function store(Request $request, $id)
     {
-
+        
 
         try {
             $lead = Lead::find($id);
@@ -92,11 +92,21 @@ class CallDispositionController extends Controller
             $disposition->disposition_id = $request->disposition;
             $disposition->name = Auth::user()->employee->name;
             $disposition->remarks = $request->remarks;
-            $disposition->callback = trim($request->callback) ? date('Y-m-d H:i:s', strtotime($request->callback)) : Helper::emptyStringToNull($request->callback);        
+            $disposition->callback = trim($request->callback) ? date('Y-m-d H:i:s', strtotime($request->callback)) : Helper::emptyStringToNull($request->callback);         
 
             $disposition->save();
 
             //Update Status
+            if ($request->status == 1 && $request->program != "")
+            {
+                if($lead)
+                {
+                    $lead->program_explain = $request->program;
+                    $lead->save();
+                }
+                
+            }
+
             $status = $disposition->getStatusFromDisposition($disposition->disposition_id);
             $leadStatus = new LeadStatus;
             $leadStatus->setStatus($id, $status->status); 
