@@ -134,7 +134,7 @@ $(function(){
         $('.rto').val('');
         $(':radio').removeAttr('checked');
         $("#divdeps").dialog('close');
-        $("#rtodetails").val(arr);
+        $("#rtodetails").val(JSON.stringify(arr));
     });
 });
 </script>
