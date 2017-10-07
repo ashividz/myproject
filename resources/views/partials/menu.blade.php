@@ -478,6 +478,11 @@
                 </li>
                 <li>
                     <a href="/marketing/viewProgramEnd" id="menu_program-end">Program End</a>
+                    <ul>
+                        <li>
+                             <a href="/marketing/viewAMP" id="menu_program-AMP">annual maintenance program</a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="/marketing/uploadLead" id="menu_upload_lead">Upload Lead</a>
