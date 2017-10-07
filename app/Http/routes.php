@@ -309,7 +309,10 @@ Route::group([
 
         Route::get('marketing/viewProgramEnd', 'MarketingController@viewProgramEnd');
         Route::post('marketing/viewProgramEnd', 'MarketingController@viewProgramEnd');
+        Route::get('marketing/viewAMP', 'MarketingController@viewAMP');
+        Route::post('marketing/viewAMP', 'MarketingController@viewAMP');
         Route::post('marketing/saveRejoin', 'MarketingController@saveRejoin');
+        Route::post('marketing/saveAMP', 'MarketingController@saveAMP');
 
         Route::get('marketing/viewChannelDistribution', 'MarketingController@viewChannelDistribution');
         Route::post('marketing/viewChannelDistribution', 'MarketingController@viewChannelDistribution');

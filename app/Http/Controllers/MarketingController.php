@@ -468,7 +468,72 @@ class MarketingController extends Controller
         return view('home')->with($data);
     }
 
+    public function viewAMP()
+    {
+        $users = User::getUsersByRole('cre');
+
+        $patients = Patient::getProgramEnd($this->start_date, $this->end_date);
+
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'amp',
+            'users'             =>  $users,
+            'patients'          =>  $patients,
+            'start_date'        =>  $this->start_date,
+            'end_date'          =>  $this->end_date,
+            'i'                 =>  '1'
+        );
+
+        return view('home')->with($data);
+    }
     public function saveRejoin(Request $request)
+    {
+        if (!$request->check || !$request->cre) {
+           return "Error : Select User or Leads";
+        }
+        $checks = $request->check;
+        
+        foreach ($checks as $check) {
+            
+            $lead = Lead::find($check);
+
+            if(date('Y/m/d', strtotime($request->end_date[$check])) > date('Y/m/d'))
+            {
+                echo "<b>" . $lead->name . "</b>: Program not finished yet<p>";
+                continue;
+            }
+
+            if(LeadCre::ifMultipleCreOnSameDate($lead))
+            {
+                echo "<b>" . $lead->name . "</b>: Unable to add Multiple CREs on same day<p>";
+                continue;
+            }
+            
+            if(!LeadCre::ifSameCre($lead, $request->cre))
+            {
+                LeadCre::saveCre($lead, $request->cre);
+                echo "<b>" . $lead->name . "</b>: <b>CRE</b> :  Yes";
+            }
+            else {
+                echo "<b>" . $lead->name . "</b>: <b>CRE</b> : Duplicate ";
+            }
+
+            //if(!LeadSource::ifSameSource($lead, 23))
+            {
+                LeadSource::saveSource($lead, $request);
+                echo " <b>Source</b> : Added<p>";
+            }
+            /*else {
+                echo " <b>Source</b> :Duplicate<p>";
+            }*/
+
+            if(!LeadStatus::ifSameStatus($lead, 1))
+            {
+                LeadStatus::saveStatus($lead, 1);
+            }
+        }
+    }
+    public function saveAMP(Request $request)
     {
         if (!$request->check || !$request->cre) {
            return "Error : Select User or Leads";
