@@ -28,15 +28,15 @@ class EmailController extends Controller
                     ->with('attachments')->get();
 
         $data = array(
-'menu' => 'lead',
-'section' => 'partials.email',
-'lead'          =>  $lead,
-'templates'     =>  $templates,
-'emails'        =>  $emails,
-'i'             =>  '1'
-);
+                    'menu' => 'lead',
+                    'section' => 'partials.email',
+                    'lead'          =>  $lead,
+                    'templates'     =>  $templates,
+                    'emails'        =>  $emails,
+                    'i'             =>  '1'
+                    );
 
-return view('home')->with($data);
+        return view('home')->with($data);
     }
 
     public function send(Request $request, $id)
@@ -46,6 +46,7 @@ return view('home')->with($data);
         $lead = Lead::find($id);
         $template = EmailTemplate::find($request->template_id);
         $rtodetails = $request->rtodetails;
+       
         $status = '';
 
         if ($lead->country == "IN" && $template->sms <> "") {
@@ -76,10 +77,11 @@ return view('home')->with($data);
     private function sendEmail($lead, $template,$rtostring,$sms)
     {
         //dd($rtostring);
+        $rtodetails = json_decode($rtostring);
         $body = $template->email;
         if($template->id==77)
         {
-            $rtodetails = explode(",",$rtostring);
+            //$rtodetails = explode(",",$rtostring);
             $body = str_replace('$invoice', $rtodetails[0], $body);
             $body = str_replace('$tracking', $rtodetails[1], $body);
             $body = str_replace('$courier', $rtodetails[2], $body);
