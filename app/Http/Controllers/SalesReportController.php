@@ -323,7 +323,7 @@ class SalesReportController extends Controller
            
             $cnt2 = 0;
             $converted_c = 0;
-            $channel_leads = array_fill(0, 7, 0);
+            $channel_leads = array_fill(0, 8, 0);
             $leadsrcs = [];
             foreach ($leads as $lead) {
                 $i = 0;
@@ -366,7 +366,7 @@ class SalesReportController extends Controller
 
             $fees = $fees->get();
            
-            $channel_conversion = array_fill(0, 7, 0);
+            $channel_conversion = array_fill(0, 8, 0);
            
             foreach($fees as $fee)
             {    $i = 0;
@@ -556,15 +556,15 @@ class SalesReportController extends Controller
                            'Unknown'                       
                     ));
 
-                    $channelLeads = array_fill(0, 7, 0);
-                    $channelConverted = array_fill(0, 7, 0);
-                    $channelPerc = array_fill(0, 7, 0);
+                    $channelLeads = array_fill(0, 8, 0);
+                    $channelConverted = array_fill(0, 8, 0);
+                    $channelPerc = array_fill(0, 8, 0);
                     $total_leads = 0;
                     $total_converted = 0;
                     $total_conversion = 0;
                     foreach ($cres as $cre) 
                     {
-                        for ($i = 0; $i < 7; $i++) 
+                        for ($i = 0; $i < 8; $i++) 
                             {   
                                 
                                 $channelLeads[$i] = $channelLeads[$i] + $cre->channels[$i];

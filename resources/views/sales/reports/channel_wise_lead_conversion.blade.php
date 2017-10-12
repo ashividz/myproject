@@ -50,6 +50,7 @@
                                 <th>Upgrade </th>
                                 <th>Corporate </th>
                                 <th>Events </th>
+                                <th>AMP </th>
                                 <th>Unknown </th>
                             </tr>
                         </thead>
@@ -59,7 +60,7 @@
                                     @{{ cre.name }}
                                 </td>
                                 <td>
-                                    <a href="/cre/@{{ cre.id }}/leads/includeChurned?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
+                                    <a href="/cre/@{{ cre.id }}/leads/includeChurned?start_date=@{{ encodeURIComponent(start_date) }}&end_date=@{{ encodeURIComponent(end_date) }}&create_assign=@{{ encodeURIComponent(createAssign) }}" class="dropdown-toggle" data-toggle="modal" data-target="#modal">
                                         <b>@{{ cre.leads }}</b>
                                     </a>
                                 </td>
@@ -103,6 +104,11 @@
                                     <span class='chnl_data'>@{{ cre.channels[5] }} </span>
                                     <span class='chnl_data'>@{{ cre.channel_conversions[5] }}</span>
                                     <em>(@{{ cre.channels[5] > 0 ?(cre.channel_conversions[5]/cre.channels[5]*100).toFixed(2): 0 }}%)</em>
+                                </td>
+                                <td>
+                                    <span class='chnl_data'>@{{ cre.channels[7] }} </span>
+                                    <span class='chnl_data'>@{{ cre.channel_conversions[7] }}</span>
+                                    <em>(@{{ cre.channels[6] > 0 ?(cre.channel_conversions[7]/cre.channels[7]*100).toFixed(2): 0 }}%)</em>
                                 </td>
                                  <td>
                                     <span class='chnl_data'>@{{ cre.channels[6] }} </span>
@@ -164,6 +170,13 @@
                                     <td>(@{{ channelPerc[5] }}%)</td>
                                     </tr></table>
                                 </td>
+                                <td>
+                                <table class='chnl_ttl'><tr>
+                                    <td>@{{ channelLeads[7] }}</td>
+                                    <td>@{{ channelConverted[7] }}</td>
+                                    <td>(@{{ channelPerc[7] }}%)</td>
+                                    </tr></table>
+                                </td>
 
                                 <td>
                                 <table class='chnl_ttl'><tr>
@@ -189,6 +202,7 @@
                                 <th>Upgrade </th>
                                 <th>Corporate </th>
                                 <th>Events </th>
+                                <th>AMP </th>
                                 <th>Unknown </th>
                             </tr>
                         </thead>
@@ -273,7 +287,7 @@
                 this.channelConverted = [];
                 this.channelPerc = [];
 
-              for (var i = 0; i < 7; i++) 
+              for (var i = 0; i < 8; i++) 
                 {
                     this.channelLeads.push(0);
                     this.channelConverted.push(0);
@@ -283,7 +297,7 @@
              
               for (var j = 0; j < this.cres.length; j++) 
               {
-                for (var i = 0; i < 7; i++) 
+                for (var i = 0; i < 8; i++) 
                     {   
                         
                         this.channelLeads[i] = this.channelLeads[i] + this.cres[j].channels[i];
