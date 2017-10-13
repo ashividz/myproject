@@ -12,6 +12,7 @@ use App\Models\YuWoW\Healthtrack;
 use App\Models\YuWoW\Fitness;
 use App\Models\YuWoW\Deviation;
 use App\Models\YuWoW\Diary;
+use App\Models\YuWoW\GlucoOne;
 use GuzzleHttp\Client;
 
 use DB;
@@ -130,7 +131,11 @@ class YuWoWController extends Controller
                     $diary = Diary::where('dch_cust_id', $user->Id)
                                     ->where('dch_date', $date)
                                     ->select('dch_health_diary')
-                                    ->first();
+                                    ->first();    
+                                    
+                    $glucodata = GlucoOne::where('email', $patient->lead->email)
+                                        ->where('date',$date)
+                                        ->first();                
 
                     if(isset($htrack)){
                         $day->weight      = $htrack->dch_weight ? $htrack->dch_weight : '';
@@ -142,6 +147,7 @@ class YuWoWController extends Controller
                     $day->fitness = isset($fitness->dcf_fitness_brief) ? $fitness->dcf_fitness_brief : '';
                     $day->deviation = isset($deviation->dcd_deviation_notes) ? $deviation->dcd_deviation_notes : '';
                     $day->diary = isset($diary->dch_health_diary) ? $diary->dch_health_diary : '';
+                    $day->sugar = isset($glucodata->value) ? $glucodata->value :'';
                 }
 
                 //dd($days);

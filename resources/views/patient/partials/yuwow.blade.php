@@ -20,17 +20,37 @@
         </div>
     </div>
 </div>
+
+<div class="container1">  
+    <div class="panel panel-default">
+        <div class="panel-heading1">
+        </div>
+        <div class="panel-body">
+            <div id='glucocontainer' style="max-height:400px"></div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 $(function () {
 
     var weight = [
-@foreach($days as $day)
-    @if($day->weight)
-            [Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($day->date)))}}), {{$day->weight}}],
-    @endif
-@endforeach
+        @foreach($days as $day)
+            @if($day->weight)
+                    [Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($day->date)))}}), {{$day->weight}}],
+                    
+            @endif
+        @endforeach
     ];
 
+    var sugar = [
+        @foreach($days as $day)
+            @if($day->sugar)
+                    [Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($day->date)))}}), {{$day->sugar}}],
+                    
+            @endif
+        @endforeach
+    ];
 
     $('#container').highcharts({
         global: {
@@ -71,6 +91,46 @@ $(function () {
         }]
 
     });
+
+    $('#glucocontainer').highcharts({
+        global: {
+            useUTC: false
+        },
+        chart: {
+            type: 'line',
+            height: '250'
+        },
+        
+        title: {
+            text: 'Blood Sugar(mg/dl)'
+        },
+
+        xAxis: {
+            type: 'datetime',
+            min: Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($days->first()->date)))}}),
+            max: Date.UTC({{date('Y, m, d', strtotime('-1 month', strtotime($days->last()->date)))}}),
+        },
+
+        yAxis: {
+            title: {
+                text: null
+            }
+        },
+
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+
+        legend: {
+        },
+
+        series: [{
+            name: 'BloodSugar',
+            data: sugar
+        }]
+
+    });
 });
 </script>
 @endsection
@@ -86,6 +146,7 @@ $(function () {
 				<tr>
 					<th>Date</th>
 					<th>Weight</th>
+                    <th>Blood-Sugar(mg/dl)</th>
 					<th>Diary</th>
 					<th>Fitness</th>
 					<th>Deviation</th>
@@ -101,6 +162,7 @@ $(function () {
 				<tr>
 					<td>{{date('jS M, Y', strtotime($day->date))}}</td>
 					<td>{{$day->weight}}</td>
+                    <td>{{$day->sugar}}</td>
 					<td>{{$day->diary}}</td>
 					<td>{{$day->fitness}}</td>
 					<td>{{$day->deviation}}</td>
