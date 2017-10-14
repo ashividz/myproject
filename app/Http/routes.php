@@ -321,6 +321,8 @@ Route::group([
         Route::post('marketing/viewChannelPerformance', 'MarketingController@viewChannelPerformance');
         Route::get('marketing/uploadLead', 'MarketingController@uploadLead');
         Route::post('marketing/uploadLead', 'LeadController@uploadLead');
+        Route::get('marketing/salesReport', 'MarketingController@salesReport');
+        Route::post('marketing/salesReport', 'LeadController@salesReport');
 
         Route::get('marketing/referral', 'ReferralController@index');
         Route::post('marketing/referral', 'ReferralController@index');
