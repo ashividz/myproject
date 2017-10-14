@@ -21,6 +21,7 @@ use App\Models\DialerPush;
 use App\Models\Status;
 use App\Models\LeadProgram;
 use App\Models\Cart;
+use App\Models\CreRevenue;
 
 use DB;
 use Auth;
@@ -676,6 +677,19 @@ class MarketingController extends Controller
         $data = array(
             'menu'              =>  $this->menu,
             'section'           =>  'upload'
+        );
+
+        return view('home')->with($data);
+    }
+
+    public function salesReport()
+    {
+
+        $leads = CreRevenue::limit(15)->orderBy('id', 'desc')->get();
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'revenue',
+            'users'             =>  $leads
         );
 
         return view('home')->with($data);

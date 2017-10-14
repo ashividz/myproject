@@ -490,6 +490,9 @@
                         <li>
                             <a href="/download/sourceLeads" id="menu_leads">Download Leads</a>
                         </li>
+                        <li>
+                            <a href="/marketing/salesReport" id="menu_sales">Cre Revenue</a>
+                        </li>
                         </ul>
                 </li> 
                     

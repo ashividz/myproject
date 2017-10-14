@@ -27,6 +27,7 @@ use App\Models\LeadAddress;
 use App\Models\Country;
 use App\Models\Region;
 use App\Models\Cart;
+use App\Models\CreRevenue;
 
 use DB;
 use Auth;
@@ -1074,6 +1075,41 @@ class LeadController extends Controller
 
         }
     }
+
+    public function salesReport(Request $request)
+    {
+       $filename = $_FILES["file"]["tmp_name"];
+        $header = true;
+
+        if($_FILES["file"]["size"] > 0)
+        {
+            $fields = array();
+
+            $file = fopen($filename, "r");
+
+            echo "<thead>". PHP_EOL;
+
+            while (($data = fgetcsv($file, 10000, ",")) !== FALSE)
+            {                
+                $status = "<i class='fa fa-check-square green' title='Lead Added'></i>";
+                $lead = isset($data[0]) ? $data[0] : '';
+                $cart = isset($data[1]) ? $data[1] : '';
+                $amount = isset($data[2]) ? $data[2] : '';
+                $date = isset($data[3]) ? $data[3] : '';
+
+            $user = Lead::find($lead);
+            $id = DB::table('cre_revenue')->insertGetId(
+            ['lead_id' => $lead, 'cre_name' => $user->cre_name , 'amount' => $amount ,  'source' => $user->source_id , 'cart_id' => $cart , 'created_by' => Auth::user()->employee->name , 'created_at' => $date ]
+              );
+            }
+
+        }
+
+       
+
+        return redirect('marketing/salesReport');
+    }
+
 
     public function delete(Request $request, $id)
     {
