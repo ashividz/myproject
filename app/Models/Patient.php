@@ -285,6 +285,29 @@ class Patient extends Model
                 ->get();
     }
 
+    public static function getRejoin($start_date, $end_date, $followUpDays , $nutritionist =NULL) {
+
+        $query = Patient::select('patient_details.*')
+                ->with('lead', 'lead.disposition', 'lead.status', 'lead.cre', 'lead.source')
+                ->with('fee','cfee','doctor')
+                ->has('lead.dnc', '<', 1)
+                ->whereHas('lead.dispositions',function($query) {
+                        $query->whereNotNull('callback')
+                        ->where('callback','>=',DB::raw('curdate()'));
+                    },'<',1)
+                    ->whereHas('lead.dispositions',function($query)  use ($followUpDays){
+                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -'.$followUpDays.' DAY)'));
+                    },'<',1)
+                ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                        $join->on('patient_details.id', '=', 'f.patient_id');
+                    })
+                ->whereBetween('f.end_date', array($start_date, $end_date));    
+        if($nutritionist)
+            $query = $query->where('nutritionist',$nutritionist);
+        return $query->limit(env('DB_LIMIT'))
+                ->get();
+    }
+
     //Marketing Upgrade Leads
     public static function getUpgradeList($days = NULL, $nutritionist = NULL, $programDuration=NULL)
     {
