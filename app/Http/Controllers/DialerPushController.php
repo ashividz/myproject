@@ -49,11 +49,15 @@ class DialerPushController extends Controller
         $this->skillname      = $request->skillname;
         $this->lastFollowUp   = $request->lastFollowUp;
         $this->onlyNotInt     = $request->onlyNotInt;
-        /*dd($this->list_id,$this->dialerUserName,$this->dialerPassword,$this->campname,$this->skillname,$this->lastFollowUp, $this->onlyNotInt);*/
+        $this->rejoin         = $request->rejoin;
+        $this->new            = $request->new;
+        /*dd($this->list_id,$this->dialerUserName,$this->dialerPassword,$this->campname,$this->skillname,$this->lastFollowUp, $this->onlyNotInt, $this->new , $this->rejoin);*/
     }
 
     public function PredictiveQueue(Request $request)
     {
+
+     // dd($request);
       $job = null;
       $msg = null;
       if(isset($this->daterange) && $this->daterange!="")
@@ -76,7 +80,7 @@ class DialerPushController extends Controller
                 //Dispatch dialer push queue jobs over sync driver for now
                 $defaultDriver = app('queue')->getDefaultDriver();
                 app('queue')->setDefaultDriver('sync');
-                $this->dispatch(new PredictiveDialer(Auth::id(),$this->list_id,$this->dialerUserName,$this->dialerPassword,$this->campname,$this->skillname,$this->lastFollowUp, $this->onlyNotInt));
+                $this->dispatch(new PredictiveDialer(Auth::id(),$this->list_id,$this->dialerUserName,$this->dialerPassword,$this->campname,$this->skillname,$this->lastFollowUp, $this->onlyNotInt ,$this->rejoin,$this->new));
                 app('queue')->setDefaultDriver($defaultDriver);
                 //Done dispatching dialer push jobs
 

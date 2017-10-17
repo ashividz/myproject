@@ -12,6 +12,7 @@ use App\Models\PredictiveJobRange;
 use App\Models\DialerPushNew;
 use App\Models\DialerPush;
 use App\Models\PredictiveCount;
+use App\Models\Patient;
 use DB;
 use Auth;
 use Log;
@@ -30,12 +31,14 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
     protected $skillname;
     protected $followUpDays;
     protected $onlyNotInt;
+   // protected $rejoin;
+    protected $new;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($uid, $list_id,$dialerUserName,$dialerPassword,$campname,$skillname,$followUpDays,$onlyNotInt)
+    public function __construct($uid, $list_id,$dialerUserName,$dialerPassword,$campname,$skillname,$followUpDays,$onlyNotInt,$new)
     {    
        $this->uid             =   $uid;
        $this->list_id         =   $list_id;
@@ -44,7 +47,9 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        $this->campname        =   $campname;
        $this->skillname       =   $skillname;
        $this->followUpDays    =   $followUpDays;
-       $this->onlyNotInt      =   $onlyNotInt;       
+       $this->onlyNotInt      =   $onlyNotInt;  
+     //  $this->region          =   $rejoin;
+       $this->new             =   $new;
       //sudo nohup php artisan queue:work --daemon --tries=3 --timeout=0
        //sudo nohup php artisan queue:listen --tries=3 --timeout=0
     }
@@ -107,6 +112,8 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
 
   public function handle()
     {
+      if($this->new)
+      {
        $cre = ['Avadesh Kumar' , 'Shadhvi Srivastava' , 'Shivam Rohilla' , 'Manoj Kumar Rastogi' , 'Shashank Maheshwari' , 'Harshil Sharma' , 'Rohit Arora(NW580)'];
        Log::info("Job Started ". $this->uid);
        $leads = null;
@@ -177,7 +184,44 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
               $end_limit = $end_date;
           $predictiveJobRange->last_step_date = $end_limit;
           $predictiveJobRange->save();
-        }        
+       }
+      }
+      else
+      {
+        Log::info("Job Started ". $this->uid);
+       $leads = null;
+       $predictiveJobRange = PredictiveJobRange::get()->first();
+       $end_date    = $predictiveJobRange->end_date;
+       $start_limit = $predictiveJobRange->last_step_date;
+       $end_limit   = date('Y-m-d 23:59:59', strtotime('+9 days',strtotime($start_limit)));
+       //$end_limit = date('Y-m-d 23:59:59',strtotime('+10 days',strtotime($start_limit)));
+       $predictiveJobRange->last_step_date = $end_limit;
+       $predictiveJobRange->save();
+       $cur_date = 'Y-m-d';
+       Log::info("Job range saved");
+       // $dispo_date = date('2016-11-10 23:59:59');
+       //$callback_date = date('2016-11-1009 23:59:59');
+       //$dispo_date = $this->dispo_date;
+       while($end_limit <= $end_date && $start_limit<=$end_date)
+       {
+          
+         if(isset($start_limit) && $start_limit!="")
+          {
+              $patients = Patient::getRejoin($start_limit, $end_limit , $this->followUpDays);
+              $this->regiondat($patients);
+                    
+          }
+
+         $predictiveJobRange = PredictiveJobRange::get()->first();
+        
+         $start_limit = date('Y-m-d 0:0:0', strtotime('+1 days',strtotime($predictiveJobRange->last_step_date)));
+         $end_limit   = date('Y-m-d 23:59:59', strtotime('+9 days',strtotime($start_limit)));
+          if ($end_limit > $end_date)
+              $end_limit = $end_date;
+          $predictiveJobRange->last_step_date = $end_limit;
+          $predictiveJobRange->save();
+        } 
+      }        
     }
 
 
@@ -345,5 +389,76 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                 $dialer_push->save();
             }
       }
+    }
+    public function regiondat($patients)
+    {
+        foreach($patients as $patient)
+        {
+          if($patient->lead)
+          {
+            $output= 'false2';
+            $lead_id = $patient->lead->id;
+            $phone = $patient->lead->phone;
+            $lead_date = $patient->lead->created_at;
+            $phone = Helper::properMobile($phone);
+            $pin1 = substr(trim($phone), 0, 2);
+            $pin2 = substr(trim($phone), 0, 3);
+            
+            if($patient->lead->cre)  
+            $cre_name = $patient->lead->cre->cre;
+         
+             //dd($username);
+            //$cre_name = $request->cre_name[$i];
+            //$dispo_date = $request->dispo_date[$i];
+            //$dispo_remark = $request->dispo_remark[$i];
+            //$callback = $request->callback[$i];
+            //$username = $request->username[$i];
+            //$push = $request->push[$i];
+            //$cre_assign_date = $request->cre_assign_date[$i];
+            //$lead_name = $request->lead_name[$i];
+            //$lead_status = $request->lead_status[$i];
+            //$source = $request->source[$i];
+            
+           
+            //if($push==1)
+            //{
+            //$ch = curl_init("http://192.168.1.203/test.ajax");
+            $encoded_params = "do=manualUpload&username=".$this->dialerUserName."&password=".$this->dialerPassword."&campname=".$this->campname."&skillname=".$this->skillname."&listname=".$this->list_id."&phone1=".$phone;
+            
+
+
+            /*curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $output = curl_exec($ch);
+            curl_close($ch);*/
+            //}
+
+
+
+            if($pin1 != "11" && $pin2 != "011")
+              $output = file_get_contents("http://192.168.1.200/test.ajax?".$encoded_params);
+            else
+            $output = "Landline-No. Skipped";
+            
+            //$output = "Number added successfully.";  
+            //dd($output);
+            if($output == "Number added successfully.")
+            {
+                //$lead = Lead::find($lead_id);
+                $dialer_push = New DialerPush;
+                $dialer_push->lead_id = $lead_id;
+                //$dialer_push->user = $username;
+                //$dialer_push->name = $cre_name;
+               
+                $dialer_push->phone = $phone;
+                $dialer_push->list_id =  $list_id;
+                $dialer_push->created_by = $this->uid;
+                $dialer_push->lead_date = $lead_date;
+                $dialer_push->status = $output;
+                $dialer_push->save();
+            }
+        }   }
     }
 }

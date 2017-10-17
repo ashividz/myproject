@@ -12,9 +12,15 @@
                 <div class="form-group">
                     <input type="text" name="daterange" id="daterange" size="25" value="{{ date('M j, Y', strtotime($start_date)) }} - {{ date('M j, Y', strtotime($end_date)) }}" readonly/>
                 </div>                   
-               
+               <div class="form-group">
+                    <label for="list_id" class="col-sm-2">Data Type</label>
+                    <div class="col-sm-5">
+                      <input type="checkbox" name="new" value="female"> new
+                      
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label for="list_id" class="col-sm-2">list id</label>
+                    <label for="list_id" class="col-sm-2">List Id</label>
                     <div class="col-sm-5">
                       <input type="text" name="list_id" value="SALES16082016" />
                     </div>
