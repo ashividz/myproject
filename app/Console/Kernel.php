@@ -43,8 +43,8 @@ class Kernel extends ConsoleKernel
                 exec('echo "'.$status.'" >> '.' /var/www/html/cron/emaillog');
         });
 
-        $schedule->command('product_reminder:send')
-        ->weekly()->sundays()->at('9:30')
+        $schedule->command('product_reminder:send')->dailyAt('13:00')
+        //->weekly()->sundays()->at('9:30')
 
         ->appendOutputTo('/var/www/html/cron/emaillog')
         ->before(function () {

@@ -39,7 +39,7 @@
   	    			<tr>
   	    				<td>{{$i}}</td>
   	    				<td>{{date('d-m-Y', strtotime($lead->sourced_date))}}</td>
-  	    				<td>{{$lead->sourced_by}}</td>
+  	    				<td>{{$lead->patient->nutritionist}}</td>
   	    				<td><a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{$lead->name}}</a></td>
   	    				<td>{{$lead->cre->cre or ""}}</td>
   	    				<td>
