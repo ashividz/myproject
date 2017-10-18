@@ -60,8 +60,8 @@ class ProductReminderMail extends Command
         $queuedLeadCount = 0;
         $leads = $this->getLeads();
         foreach ($leads as $lead) {                        
-            $lastEmail =  Email::where('lead_id',$lead->id)
-                        ->where('template_id',$this->emailTemplateId)
+            $lastEmail =  Email::where('template_id',$this->emailTemplateId)
+                        ->where('lead_id',$lead->id)
                         ->where('created_at','>=',$lead->lastCart->updated_at)
                         ->orderBy('created_at','desc')
                         ->first();
