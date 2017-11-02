@@ -21,6 +21,9 @@ use App\Models\Lead;
 use Mail;
 use Auth;
 use DB;
+use App\Models\Patient;
+use Carbon;
+use DateTime;
 
 class ReferenceBenefitController extends Controller
 {
@@ -45,11 +48,31 @@ class ReferenceBenefitController extends Controller
      */
     public function getBenefits(Request $request)
     {
-        $references = $request->ids;
-        $count = sizeof($references);
-        $benefits = Benefit::where('references', $count) ->get();
 
+        $references = $request->ids;
+        $count = 30;
+        $lead_details = Lead::where('id',$references)
+                            ->with('patient', 'patient.cfee')
+                            ->first();
+        $datetime1 = $lead_details->patient->cfee->end_date;
+        $datetime2 = $lead_details->patient->cfee->start_date;
+        $interval = $datetime1->diffInDays($datetime2);
+        if($interval >= 180 || $interval < 360)
+            $count = 180;
+        else if($interval >= 90 || $interval < 180)
+            $count = 90; 
+        else if($interval >= 365)
+            $count = 365;     
+        $benefits = Benefit::where('duration', $count)
+                            ->where('isactive', 1)
+                            ->get();
         return $benefits;
+   
+        //$references = $request->ids;
+        //$count = sizeof($references);
+        //$benefits = Benefit::where('references', $count) ->get();
+
+        //return $benefits;
     }
 
     public function applyBenefit(Request $request)
