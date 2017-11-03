@@ -57,9 +57,9 @@ class ReferenceBenefitController extends Controller
         $datetime1 = $lead_details->patient->cfee->end_date;
         $datetime2 = $lead_details->patient->cfee->start_date;
         $interval = $datetime1->diffInDays($datetime2);
-        if($interval >= 180 || $interval < 360)
+        if($interval >= 180 && $interval < 360)
             $count = 180;
-        else if($interval >= 90 || $interval < 180)
+        else if($interval >= 90 && $interval < 180)
             $count = 90; 
         else if($interval >= 365)
             $count = 365;     
