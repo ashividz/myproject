@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
         });
 
         $schedule->command('product_reminder:send')
-        ->weekly()->saturdays()->at('13:30')
+        ->weekly()->sundays()->at('9:10')
 
         ->appendOutputTo('/var/www/html/cron/emaillog')
         ->before(function () {
