@@ -318,7 +318,7 @@ class PatientFABController extends Controller
 
         $dietbody .= "<tr><td colspan='2' style='background: #ddd;padding: 15px'><h3 style='margin: 0px'> 7 DAYS COMPLEMENTARY DIET PLAN</h3></td></tr>";
         foreach ($diets as $diet) {
-                $dietbody .= Diet::emailBody($diet);
+                $dietbody .= Diet::fabemailBody($diet);
             }
         $dietbody .= "</table>";
         $eatingTips = PatientEatingtip::where('patient_id', $request->patient_id)->get();
@@ -352,7 +352,7 @@ class PatientFABController extends Controller
 
         if (trim($patient->lead->email) <> '') {
               foreach ($diets as $diet) {
-                $dietbody .= Diet::emailBody($diet);
+                $dietbody .= Diet::fabemailBody($diet);
             }  
             $dietbody .= "</table>";              
             //dd($body);

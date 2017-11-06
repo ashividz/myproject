@@ -231,6 +231,28 @@ class Diet extends Model
         return $body;
     }
 
+    public static function fabemailBody($diet)
+    {
+        $patient = Patient::find($diet->patient_id);
+
+        $body = Storage::get('templates/diets/fabcontent.php'); 
+        $body = str_replace('$date', date('D, jS M, Y', strtotime($diet->date_assign)), $body); 
+        $body = str_replace('$nutritionist', $patient->nutritionist, $body); 
+        //$body = str_replace('$early_morning', $diet->early_morning, $body);
+        $body = str_replace('$breakfast', $diet->breakfast, $body);
+        $body = str_replace('$mid_morning', $diet->mid_morning, $body);
+        $body = str_replace('$lunch', $diet->lunch, $body);
+        $body = str_replace('$evening', $diet->evening, $body);
+        $body = str_replace('$dinner', $diet->dinner, $body);
+        //$hrbs = Diet::nl2list($diet->herbs);
+        //$hrbs =  '<li>' . str_replace("\n", '</li><li>', $diet->herbs) . '</li>';
+        //$hrbs = str_replace('\r\n', '<br>', $hrbs);
+        //$body = str_replace('$herbs', $hrbs, $body);
+        $body = str_replace('$remarks', $diet->rem_dev, $body);
+
+        return $body;
+    }
+
     public static function herbsBody($herbs ,$doctor)
     {
         
