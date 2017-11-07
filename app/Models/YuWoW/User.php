@@ -3,6 +3,7 @@
 namespace App\Models\YuWoW;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Lead;
 
 class User extends Model
 {
@@ -72,4 +73,9 @@ class User extends Model
     {
         return $this->deviation->count() + $this->healthtrack->count() + $this->diary->count() + $this->fitness->count();
     }
+
+    public function CRMLeads()
+   {
+              return $this->hasOne('App\Models\Lead', 'email', 'user_email');
+   }
 }

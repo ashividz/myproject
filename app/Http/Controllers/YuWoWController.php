@@ -23,6 +23,7 @@ use App\Models\Days365;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+use Carbon;
 
 class YuWoWController extends Controller
 {
@@ -503,5 +504,21 @@ class YuWoWController extends Controller
         return redirect('yuwow/sendNotification');
     }
 
-    
+    public function YuwowLeads()
+    {
+        
+        $yuwowleads  = User::with('CRMLeads')
+                            ->where('user_email','<>',"")
+                            ->whereBetween('user_registered',[$this->start_date, $this->end_date])
+                            ->get();
+        $data = array(
+                    'menu'         => 'marketing',
+                    'section'      => 'YuwowLeads',
+                    'start_date'   => $this->start_date,
+                    'end_date'     => $this->end_date,
+                    'users'        =>  $yuwowleads,
+                    'i'            => 1
+                    );        
+        return view('home')->with($data);
+    }
 }

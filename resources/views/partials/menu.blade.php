@@ -494,8 +494,7 @@
                             <a href="/marketing/salesReport" id="menu_sales">Cre Revenue</a>
                         </li>
                         </ul>
-                </li> 
-                    
+                </li>  
                 <li>
                     <a href="#" id="menu_cre_end">Reports</a>
                     <ul>
@@ -540,6 +539,9 @@
                         <li>
                             <a href="/reports/products/repeat_orders" id="menu_reports_products_repeat_orders">Repeat Orders</a>
                         </li>
+                        <li>
+                         <a href="/marketing/YuwowLeads" id="menu_reports_yuwow">Yuwow Leads</a>  
+                        </li>   
                     </ul>
                 </li>
 
