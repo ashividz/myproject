@@ -230,6 +230,7 @@
                 <li><a href="/nutritionist/patients" id="menu_nutritionist_patients">Patients</a></li>
                 <li><a href="/nutritionist/programEnd" id="menu_nutritionist_program-end">Program End</a></li>
                 <li><a href="/nutritionist/audit" id="menu_nutritionist_audit">Audit</a></li>
+                <li><a href="/nutritionist/performance" id="menu_nutritionist_performance">Performance</a></li>
                 <li>
                     <a href="https://drive.google.com/a/drshikha.com/file/d/0B4HO0bxQ6qePT0haRVo3X0M4RTA/view?usp=sharing" target="_blank"id="menu_cre_knowledge">Knowledge bank</a>
                 </li>

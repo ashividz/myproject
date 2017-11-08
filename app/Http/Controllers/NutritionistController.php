@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\User;
 use App\Models\Lead;
+use App\Models\PatientWeight;
 use Auth;
 use DB;
 use Carbon;
@@ -147,6 +148,38 @@ class NutritionistController extends Controller
             'name'              =>  $this->nutritionist,
             'i'                 =>  '1',
             'patients'          =>  $patients
+        );
+        return view('home')->with($data);   
+    }
+
+    public function performance()
+    {
+        $users = User::getUsersByRole('nutritionist');
+
+        //$patients = Patient::getActivePatients($this->nutritionist);
+
+        
+
+        $weightLoss = Patient::where('nutritionist' , $this->nutritionist)
+        ->whereHas('fees',function($query) {
+            $query->where('end_date','>=',DB::raw('curdate()'));
+        })
+        ->with('fees','lead','lead.programs')
+        ->whereHas('lead.programs', function($q) {
+                        $q->where('programs.id', 1);
+                    })
+        ->limit(env('DB_LIMIT'))
+        ->get();
+
+        $weightLoss = PatientWeight::weightLoss($weightLoss);
+
+        $data = array(            
+            'menu'              =>  $this->menu,
+            'section'           =>  'performance',
+            'users'             =>  $users,
+            'name'              =>  $this->nutritionist,
+            'i'                 =>  '1',
+            'patients'          =>  $weightLoss
         );
         return view('home')->with($data);   
     }
