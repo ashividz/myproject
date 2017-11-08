@@ -245,6 +245,37 @@ class CREController extends Controller
     }
 
     /**
+     * Cre active client so that they can call them on every 15th day for feedback.
+     *
+     * @return Response
+     */
+
+    public function creActiveClient()
+    {
+        $cre = $this->cre;
+        $patients = Lead::has('patient.cfee')
+                    ->with('patient.cfee')
+                    ->where('cre_name' , $cre)
+                    ->get();
+
+        $users = User::getUsersByRole('cre');
+
+       // return $patients;
+
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'activeClient',
+            'start_date'        =>  $this->start_date,
+            'end_date'          =>  $this->end_date,
+            'users'             =>  $users,
+            'name'              =>  $this->cre,
+            'patients'          =>  $patients
+        );
+         return view('home')->with($data);
+    }
+
+
+    /**
      * Display Dispositions
      *
      * @return Response
