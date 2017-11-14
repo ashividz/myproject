@@ -159,6 +159,25 @@
 						</table>
 					</td>
 				</tr>
+
+		<!--Count break days of Client-->		
+		<?php
+			if ($fee->end_date < date('Y-m-d')) {
+				$break = floor((strtotime($fee->end_date) - strtotime($fee->start_date))/(60*60*24));
+			}
+			else
+				$break = floor((strtotime(date('Y-m-d')) - strtotime($fee->start_date))/(60*60*24));
+
+			if (($break - $diet) < 0) {
+				$totalbreak = 0;
+			}
+			else
+				$totalbreak = $break - $diet;
+		?>			
+				<tr>
+					<td><h6 align="left">Total break days : {{$totalbreak}}</h6></td>
+				</tr>	
+
 				<tr>
 					<td colspan="3">Diet sent : {{$diet}} days</td>				
 				</tr>

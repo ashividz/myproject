@@ -18,6 +18,7 @@
                 <li role="presentation"><a href="#second" aria-controls="profile" role="tab" data-toggle="tab">31 - 60 days</a></li>
                 <li role="presentation"><a href="#third" aria-controls="messages" role="tab" data-toggle="tab">61 - 365 days</a></li>
                 <li role="presentation"><a href="#fourth" aria-controls="messages" role="tab" data-toggle="tab">0 - 365 days</a></li>
+                <li role="presentation"><a href="#fifth" aria-controls="messages" role="tab" data-toggle="tab">Today</a></li>
             </ul>
               <!-- Tab panes -->
             <div class="tab-content">
@@ -260,6 +261,65 @@
                         </tfoot>
                     </table>
                 </div>
+
+                <div role="tabpanel" class="tab-pane" id="fifth">
+                    <table class="table table-bordered lead_status">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Leads</th> 
+                                <th v-for="status in statuses">@{{ status.name }}</th>
+                                <th>Not Attempted</th>                        
+                                <th>Leads not called for last 4 days</th>
+                                <th>Less than 4 dispositions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="cre in cres5">
+                                <td>
+                                    <a href="/cre/@{{ cre.id }}/leads" target="_blank">@{{ cre.name }}</a>
+                                </td>
+                                <td>
+                                    <b>@{{ cre.leads }}</b>
+                                </td>
+                                <td v-for="count in cre.counts">
+                                    @{{ count.cnt }}
+                                    <small class="pull-right">
+                                        <em>(@{{ cre.leads > 0 ? (count.cnt/cre.leads*100).toFixed(2) : 0 }}%)</em>
+                                    </small>
+                                </td>
+                                <td>
+                                    @{{ cre.never }}
+                                    <small class="pull-right">
+                                        <em>(@{{ cre.leads > 0 ? (cre.never/cre.leads*100).toFixed(2) : 0 }}%)</em>
+                                    </small>
+                                </td>
+                                <td>
+                                    @{{ cre.last }}
+                                    <small class="pull-right">
+                                        <em>(@{{ cre.leads > 0 ? (cre.last/cre.leads*100).toFixed(2) : 0 }}%)</em>
+                                    </small>
+                                </td>
+                                <td>
+                                    @{{ cre.calls }}
+                                    <small class="pull-right">
+                                        <em>(@{{ cre.leads > 0 ? (cre.calls/cre.leads*100).toFixed(2) : 0 }}%)</em>
+                                    </small>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td>@{{ cres5 | total 'leads' }}</td>
+                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                <td>@{{ cres5 | total 'never' }}</td>
+                                <td>@{{ cres5 | total 'last' }}</td>
+                                <td>@{{ cres5 | total 'calls' }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -277,7 +337,8 @@
             cres1: [],
             cres2: [],
             cres3: [],
-            cres4: []
+            cres4: [],
+            cres5: []
         },
 
         ready: function(){
@@ -319,6 +380,10 @@
 
                 $.getJSON("/api/leadStatusReport", {'start_date': '{{ Carbon::now()->subdays(365)->format('Y-m-d') }}', 'end_date' : '{{ Carbon::now() }}', 'user_id' : this.user }, function(cres){
                     this.cres4 = cres;
+                }.bind(this));
+
+                $.getJSON("/api/leadStatusReport", {'start_date': '{{ Carbon::now()->format('Y-m-d') }}', 'end_date' : '{{ Carbon::now() }}', 'user_id' : this.user }, function(cres){
+                    this.cres5 = cres;
                 }.bind(this));
 
             }
