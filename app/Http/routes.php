@@ -1303,4 +1303,12 @@ Route::group([
     Route::get('getCarriers', function(){
         return \App\Models\Carrier::get();
     });
+
+    Route::group([
+    'middleware' => ['auth', 'roles','checkip'], 
+    'roles' => ['admin','service','yuwow_support','service_tl']], 
+    function() {
+        Route::get('/patient/{id}/preference', 'PatientController@preferences');
+        Route::post('/patient/{id}/preference', 'PatientController@preferences');
+});
 });

@@ -415,5 +415,21 @@ class PatientController extends Controller
         return true;    
     }
 
-
+    public function preferences(Request $request)
+    {
+        $patient = Patient::find($request->id);
+        if(isset($request->sms)||isset($request->app)||isset($request->email))
+        {
+            $patient->sms = ($request->sms=='on'?1:0);
+            $patient->email = ($request->email=='on'?1:0);
+            $patient->app = ($request->app=='on'?1:0);
+            $patient->save();  
+        }
+        $data = array(
+            'menu' => 'patient',
+            'section' => 'partials.preference',
+            'patient' => $patient
+       );
+       return view('home')->with($data);
+    }
 }
