@@ -305,7 +305,7 @@
 						<th width="12%">Weight</th>
 						<th width="12%">Remarks/Deviations</th>
 						<th>Email</th>
-						<th>SMS</th>
+						<th>App</th>
 						<th></th>
 						@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('service') || Auth::user()->hasRole('service_tl'))
 							<th>Delete</th>
@@ -367,7 +367,7 @@
 						@endif
 						</td>
 						<td style="text-align:center">
-						@if($diet->created_at >= '2016-02-03')
+						@if($diet->created_at >= '2017-11-15')
 							<i class="fa {{$diet->sms_response?'fa-check-square-o green':'fa-close red'}}" title="{{$diet->sms_response}}"></i>
 						@endif
 						</td>
@@ -391,15 +391,7 @@
 			</table>
 
 			<div class="form-group">
-				<button class="btn btn-primary" name="email">Send Email</button>
-			</div>
-			<div class="form-group">
-				Send SMS
-				<input type="checkbox" name="sms" checked>
-			</div>
-			<div class="form-group">
-				App
-				<input type="checkbox" name="app" checked>
+				<button class="btn btn-primary" name="senddiet">Send Diet</button>
 			</div>
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<div class="form-group pull-right">

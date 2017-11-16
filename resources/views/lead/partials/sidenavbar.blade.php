@@ -29,10 +29,12 @@
     <li{!! (($section == "partials.symptoms") ? " class='selected'" : "") !!}><a href="/patient/symptoms/{{ $patient->id or $lead->patient->id }}">Symptoms</a></li>
     <li{!! (($section == "partials.fab") ? " class='selected'" : "") !!}><a href="/patientFab/{{ $patient->id or $lead->patient->id }}">Fab</a></li> 
     
+    <li{!! (($section == "partials.preference") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/preference">Preference</a></li> 
 </ul>
 @endif
 @if(Auth::user()->hasRole('yuwow_support') && (isset($lead->patient) || isset($patient) ) )
 	<ul id="sidenav">
 		<li{!! (($section == "partials.yuwow") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/yuwow">YuWoW</a></li>		
+		<li{!! (($section == "partials.preference") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/preference">Preference</a></li>
 	</ul>
 @endif

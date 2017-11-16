@@ -9,6 +9,7 @@ use Auth;
 use DB;
 
 use App\Support\SMS;
+use GuzzleHttp\Client;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -116,7 +117,27 @@ class Diet extends Model
 
         $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
 
-        if($request->sms && $patient->lead->country == 'IN')
+        if($patient->app)
+        {         
+            foreach ($diets as $diet) {
+                $user = Patient::find($diet->patient_id) ;
+                $email = $user->lead->email;
+                break;
+            }
+            $client = new Client();
+            $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
+                    'form_params' => [
+                    'diet' => json_encode($diets),
+                    'email' => json_encode($email)]
+                    ]);
+            
+            $message .= '<li>Diet sent on YuWoW</li>';
+            $status  = 'success'; 
+            Diet::setAppResponse($diets,$app_response);
+                  
+        }
+
+        if($patient->sms && $patient->lead->country == 'IN')
         {
             foreach ($diets as $diet) {
 
@@ -125,12 +146,11 @@ class Diet extends Model
                 if ($sms_response) {
                     $message .= '<li>Diet SMS Sent</li>';
                     $status = 'success';
-                    Diet::setSMSResponse($diet, $sms_response);
+                    //Diet::setSMSResponse($diet, $sms_response);
                 }
             }                
         }
-
-        if (trim($patient->lead->email) <> '') {
+        if ($patient->email && trim($patient->lead->email) <> '') {
             $body = Diet::emailHeader($patient);
         
             foreach ($diets as $diet) {
@@ -334,11 +354,11 @@ class Diet extends Model
         return true;
     }
 
-    private static function setSMSResponse($diet, $sms_response)
+    /*private static function setSMSResponse($diet, $sms_response)
     {
         $diet->sms_response = $sms_response;
         $diet->save();
-    }
+    }*/
 
     private static function setEmailStatus($diets)
     {   
@@ -346,5 +366,17 @@ class Diet extends Model
             $diet->email = true;
             $diet->save();
         }            
+    }
+
+    private static function setAppResponse($diets,$response)
+    {   
+        $app_response = 0;
+        $status = $response->getStatusCode();
+        if($status ==200)
+            $app_response = 1;
+        foreach($diets as $diet){
+            $diet->sms_response = $status;
+            $diet->save();
+        }
     }
 }
