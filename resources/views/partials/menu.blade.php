@@ -189,6 +189,10 @@
                 <li>
                     <a href="/cre/interested" id="menu_Intrested">Interested </a>
                 </li>   
+
+                <li>
+                    <a href="/cre/activeClient" id="menu_feedback">Feedback</a>
+                </li> 
                     
                 <li>
                     <a href="/cre/callbacks" id="menu_cre_callbacks">Callbacks</a>
