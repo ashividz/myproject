@@ -16,7 +16,10 @@ use App\Models\Source;
 use App\Models\Channel;
 use App\Models\Patient;
 use App\Models\Fee;
+use App\Models\CreSurveyQuestion;
 use App\Models\CallDisposition;
+use App\Models\CrePatientSurvey;
+use App\Models\CrePatientSurveyAnswer;
 use Auth;
 use DB;
 use Carbon;
@@ -274,6 +277,36 @@ class CREController extends Controller
          return view('home')->with($data);
     }
 
+    public function survey($id)
+    {
+        $patient = Patient::find($id);
+        $questions = CreSurveyQuestion::get();
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'survey',
+            'patient'       =>  $patient,
+            'questions'     =>  $questions
+        );
+
+        return view('home')->with($data);
+    }
+
+    public function saveCreSurvey(Request $request)
+    {
+        $survey = CrePatientSurvey::saveSurvey($request);
+
+        
+            $size = count($request->comment);
+            
+            for ($i=1; $i <= $size; $i++) { 
+                if(!empty($request->answer[$i]))
+                {
+                    $answer = CrePatientSurveyAnswer::saveAnswer($survey->id, $i, $request->answer[$i], $request->comment[$i]);
+                    
+                }                    
+            }
+          return redirect('cre/activeClient');
+    }
 
     /**
      * Display Dispositions

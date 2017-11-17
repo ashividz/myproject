@@ -13,6 +13,8 @@
                 <tr>
                     <th>#</th>
                     <th>Lead Name</th>
+                    <th>Cre</th>
+                    <th>Nutritionist</th>
                     <th>Start Date</th>
                     <th>Days</th>
                 </tr>
@@ -30,7 +32,9 @@
                 @if($daycount % 15 == 0)
                     <tr>
                         <td>{{$i++}}</td>
-                        <td><a href="/lead/{{$l->id}}/viewDispositions" target="_blank">{{$l->name or ' '}}</a></td>
+                        <td><a href="/cre/{{$l->patient->id}}/survey" target="_blank">{{$l->name or ' '}}</a></td>
+                        <td>{{$l->cre_name}}</td>
+                        <td>{{$l->patient->nutritionist}}</td>
                         <td>{{$l->patient->cfee->start_date}}</td>
                        
                         <td>{{ $daycount }}</td>

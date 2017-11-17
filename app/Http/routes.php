@@ -605,6 +605,8 @@ Route::group([
         Route::post('cre/interested', 'CREController@interested');
         Route::get('cre/activeClient', 'CREController@creActiveClient');
         Route::post('cre/activeClient', 'CREController@creActiveClient');
+        Route::get('cre/{id}/survey',    'CREController@survey');
+        Route::post('cre/{id}/survey',   'CREController@saveCreSurvey');
         Route::get('cre/viewDispositions', 'CallDispositionController@viewDispositions');
         Route::post('cre/dispositions', 'CREController@saveCallDisposition');
         Route::get('cre/callbacks', 'CREController@viewCallbacks');
