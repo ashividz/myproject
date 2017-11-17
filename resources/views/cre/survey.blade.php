@@ -49,7 +49,7 @@
 		<table class='question-wrapper'>
 			<tr>
 				<td class='questiontext'>Name</td>
-				<td class='answer'>{{$patient->lead->name or ""}}</td>
+				<td class='answer'> <a href='/lead/{{ $patient->lead->id }}/viewDispositions' target="_blank">{{$patient->lead->name or ""}}</td>
 				<td class='questiontext'>Nutritionist</td>
 				<td class='answer'>{{$patient->nutritionist or ""}}</td>
 			</tr>

@@ -9,6 +9,9 @@
 				<tr>
 					<th>#</th>		
 					<th>Name</th>
+					<th>Lead id</th>
+					<th>State</th>
+					<th>Country</th>
 					<th>Lead Assign Date</th>
 					<th>CRE</th>
 					<th>Lead Source</th>
@@ -23,6 +26,9 @@
 				<tr>
 					<td>{{ $i++ }}</td>
 					<td><a href='/lead/{{ $lead->id }}/viewDetails' target="_blank">{{ trim($lead->name) <> "" ? $lead->name : "No Name"}}</a></td>
+					<td>{{$lead->id or ""}}</td>
+					<td>{{$lead->state or ""}}</td>
+					<td>{{$lead->country or ""}}</td>
 					<td style="width: 130px;">{{ $lead->cre->created_at or "" }}</td>
 					<td>{{ $lead->cre->cre or "" }}</td>
 
