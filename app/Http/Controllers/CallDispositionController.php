@@ -142,9 +142,11 @@ class CallDispositionController extends Controller
         }
         elseif(Auth::user()->hasRole('sales') || Auth::user()->hasRole('cre'))
         {
-            $message = $this->getRNRMessage();
+
+            return false;
+            /*$message = $this->getRNRMessage();
             $sms = new SMS();
-            return $sms->send($mobile, $message);
+            return $sms->send($mobile, $message);*/
         }
         
         
