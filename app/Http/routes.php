@@ -1311,6 +1311,6 @@ Route::group([
     'roles' => ['admin','service','yuwow_support','service_tl']], 
     function() {
         Route::get('/patient/{id}/preference', 'PatientController@preferences');
-        Route::post('/patient/{id}/preference', 'PatientController@preferences');
+        //Route::post('/patient/{id}/preference', 'PatientController@preferences');
 });
 });
