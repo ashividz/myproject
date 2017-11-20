@@ -308,6 +308,41 @@ class CREController extends Controller
           return redirect('cre/activeClient');
     }
 
+
+    public function creSurvey()
+    {
+        $questions = CreSurveyQuestion::with('answers')->get();
+
+        
+
+        foreach ($questions as $question) {
+            $answers = CrePatientSurveyAnswer::with('answer')
+                        ->where('question_id', $question->id)
+                        ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                        ->get();
+
+            foreach ($question->answers as $answer) {
+                $answer->count = $answers->where('answer_id', $answer->id)->count();
+            }
+            $question->total_answers_count = $answers->count();
+            $question->comments = $answers;
+
+            //dd($answers);
+        }
+
+        //dd($questions);
+
+        $data = array(
+            'menu'          =>  'sales',
+            'section'       =>  'cresurvey',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'questions'     =>  $questions
+        );
+
+        return view('home')->with($data);
+    }
+
     /**
      * Display Dispositions
      *

@@ -346,7 +346,10 @@
                             <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
                         </li>
                     </ul>
-                </li>   
+                </li> 
+                <li>
+                    <a href="/sales/quality/survey" id="menu_sales_payments">Survey</a>
+                </li>  
                             
             </ul> <!-- second level -->                        
         </li>

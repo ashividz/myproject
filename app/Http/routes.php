@@ -555,6 +555,8 @@ Route::group([
         Route::post('sales/viewProgramEnd', 'SalesController@viewProgramEnd');
         Route::get('sales/leads', 'MarketingController@viewLeads');
         Route::POST('sales/leads', 'MarketingController@viewLeads');
+        Route::get('sales/quality/survey', 'CREController@creSurvey');
+        Route::post('sales/quality/survey', 'CREController@creSurvey');
 
 
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');
