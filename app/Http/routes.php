@@ -1308,9 +1308,9 @@ Route::group([
 
     Route::group([
     'middleware' => ['auth', 'roles','checkip'], 
-    'roles' => ['admin','service','yuwow_support','service_tl']], 
+    'roles' => ['admin','service']], 
     function() {
         Route::get('/patient/{id}/preference', 'PatientController@preferences');
-        //Route::post('/patient/{id}/preference', 'PatientController@preferences');
+        Route::post('/patient/{id}/preference', 'PatientController@preferences');
 });
 });
