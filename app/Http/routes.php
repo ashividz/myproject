@@ -557,6 +557,8 @@ Route::group([
         Route::POST('sales/leads', 'MarketingController@viewLeads');
         Route::get('sales/quality/survey', 'CREController@creSurvey');
         Route::post('sales/quality/survey', 'CREController@creSurvey');
+        Route::get('sales/quality/viewSurveyResults', 'CREController@viewCreWiseSurvey');
+        Route::post('sales/quality/viewSurveyResults', 'CREController@viewCreWiseSurvey');
 
 
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');
