@@ -346,10 +346,15 @@
                             <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
                         </li>
                     </ul>
-                </li> 
+                </li>
                 <li>
-                    <a href="/sales/quality/survey" id="menu_sales_payments">Survey</a>
-                </li>  
+                   <a href="/sales/quality/survey" id="menu_sales_payments">Survey</a>
+                    <ul>
+                        <li>
+                            <a href="/sales/quality/viewSurveyResults" id="menu_sales_quality">Cre Wise Survey</a>
+                        </li>
+                    </ul>
+                </li> 
                             
             </ul> <!-- second level -->                        
         </li>

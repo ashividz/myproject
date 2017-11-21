@@ -348,6 +348,33 @@ class CREController extends Controller
      *
      * @return Response
      */
+    public function viewCreWiseSurvey()
+    {
+        $surveys = CrePatientSurvey::whereBetween('created_at', array($this->start_date, $this->end_date))
+                    ->orderBy('id', 'desc')
+                    ->limit(env('DB_LIMIT'))
+                    ->get();  
+        //dd($surveys);                          
+
+        $summaries = CrePatientSurvey::select(DB::RAW('created_by, count(*) AS total'))
+                    ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                    ->groupBy('created_by')
+                    ->get();
+
+       // dd($summaries);
+
+        $data = array(
+            'menu'          =>  'sales',
+            'section'       =>  'viewSurveyResult',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'surveys'       =>  $surveys,
+            'summaries'     =>  $summaries,
+            'i'             => '1'
+        );
+
+        return view('home')->with($data);
+    }
     public function showCallDispositions()
     {
 
