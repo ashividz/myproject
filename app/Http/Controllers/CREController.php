@@ -256,10 +256,25 @@ class CREController extends Controller
     public function creActiveClient()
     {
         $cre = $this->cre;
+
+        //dd($cre);
+        $nutritionists = DB::table('cre_nutritionist')->where('cre', $cre)->get();
+
+        $nutri = [] ;
+        foreach ($nutritionists as $nutritionist) {
+            $nutri[] = $nutritionist->nutritionist;
+        }
+
+
         $patients = Lead::has('patient.cfee')
                     ->with('patient.cfee')
-                    ->where('cre_name' , $cre)
-                    ->get();
+                    // ->with(['patient'=> function($q) use($nutri){
+                    //     $q->whereIn('nutritionist', $nutri);
+                    // }])
+                    ->whereHas('patient', function ($query) use($nutri){
+                        $query->wherein('nutritionist', $nutri);
+                    })->get();
+                    
 
         $users = User::getUsersByRole('cre');
 
