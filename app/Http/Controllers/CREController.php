@@ -259,21 +259,22 @@ class CREController extends Controller
 
         //dd($cre);
         $nutritionists = DB::table('cre_nutritionist')->where('cre', $cre)->get();
+        $cre1 = ['Manoj Kumar Rastogi' , 'Shashank Maheshwari' , 'Harshil Sharma' , 'Shivam Rohilla' , 'Avadesh Kumar' , 'Shadhvi Srivastava '];
 
         $nutri = [] ;
         foreach ($nutritionists as $nutritionist) {
             $nutri[] = $nutritionist->nutritionist;
         }
 
-
-        $patients = Lead::has('patient.cfee')
+       // dd($nutri);
+        $patients = Lead::whereNotIn('cre_name' , $cre1)
+                    ->has('patient.cfee')
                     ->with('patient.cfee')
-                    // ->with(['patient'=> function($q) use($nutri){
-                    //     $q->whereIn('nutritionist', $nutri);
-                    // }])
+                    
                     ->whereHas('patient', function ($query) use($nutri){
                         $query->wherein('nutritionist', $nutri);
                     })->get();
+           // dd($patients);
                     
 
         $users = User::getUsersByRole('cre');
