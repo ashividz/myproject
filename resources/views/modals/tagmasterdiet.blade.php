@@ -19,7 +19,7 @@
 				<table width="100%">
 					<tr>
 						<th colspan="4">
-							<h2 style="margin:0px 20px 20px 30px;">Diet Edit</h2>
+							<h2 style="margin:0px 20px 20px 30px;">Add Non Veg Diet</h2>
 						</th>
 					</tr>
 					<tr>
@@ -28,33 +28,30 @@
 						<th>Lunch</th>
 					</tr>
 					<tr>			
-						<td><textarea name="breakfast" id="breakfast" cols="30">{{ $diet->Breakfast}}</textarea></td>					
-						<td><textarea name="mid_morning" id="mid_morning" cols="30">{{ $diet->MidMorning}}</textarea></td>				
-						<td><textarea name="lunch" id="lunch" cols="30">{{ $diet->Lunch}}</textarea></td>	
+						<td><textarea name="breakfast" id="breakfast" cols="30"></textarea></td>					
+						<td><textarea name="mid_morning" id="mid_morning" cols="30"></textarea></td>				
+						<td><textarea name="lunch" id="lunch" cols="30"></textarea></td>	
 					</tr>
 					<tr>
 						<th>Evening</th>
 						<th>Dinner</th>
+						<th>Preference<th>
 					</tr>
 					<tr>				
-						<td><textarea name="evening" id="evening" cols="30">{{ $diet->Evening}}</textarea></td>
-						<td><textarea name="dinner" id="dinner" cols="30">{{ $diet->Dinner}}</textarea></td>
+						<td><textarea name="evening" id="evening" cols="30"></textarea></td>
+						<td><textarea name="dinner" id="dinner" cols="30"></textarea></td>
 						<td>
 							<select name="isveg" id="isveg" required>
-							@if($diet->isveg==1)
-								<option value="1" selected>Veg</option>
-								<option value="0">NonVeg</option>
-							@else
-								<option value="0">NonVeg</option>
-								<option value="1">Veg</option>
-							@endif	
+							<option></option>
+							<option value="1">Veg</option>
+							<option value="0">NonVeg</option>
 						</td>
 					</tr>
 					
 				</table>
 
 				<div style="text-align:center; margin-top:10px;">
-					<button type="submit" class='modal-send modal-button'>Approve</button>
+					<button type="submit" class='modal-send modal-button'>save</button>
 					<input type='hidden' name='id' value='{{ $id }}'/>
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 				</div>

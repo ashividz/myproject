@@ -716,6 +716,9 @@ Route::group([
         Route::get('masterdiet/{id}/edit', 'ServiceController@editMasterDiet');
         Route::post('/service/masterdiet/update', 'ServiceController@updateMasterDiet');
 
+        Route::get('masterdiet/{id}/tag', 'ServiceController@tagMasterDiet');
+        Route::post('/service/masterdiet/tagdiet','ServiceController@tagMasterDiet');
+
         Route::get('/service/reports/weightLoss', 'ServiceController@weightLoss');
         Route::post('service/{id}/approved', 'ServiceController@approveDiet');         
         Route::get('service/{id}/approved', 'ServiceController@approveDiet');

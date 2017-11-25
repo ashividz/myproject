@@ -91,6 +91,7 @@
                             <th>BloodGroup</th>
                             <th>Prakriti</th>
                             <th>DayCount</th>
+                            <th>Preference</th>
                             <th>BreakFast</th>
                             <th>MidMorning</th>
                             <th>Lunch</th>
@@ -108,6 +109,8 @@
                             <td>{{ $diet->Blood_Group}}{{$diet->Rh_Factor}}</td>
                             <td>{{ $diet->Body_Prakriti}}</td>
                             <td>{{ $diet->Day_Count }}</td> 
+                            <td> <?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
+                            <div id="circle" class="circle <?php echo $colorClass; ?>"></div></td>
                             <td>
                                 <div class="breakfast">{{$diet->Breakfast}}</div>
                             </td>    
@@ -139,6 +142,22 @@
                 </table>
             </form>
         </div>
+<style>
+.circle {
+      width: 10px;
+      height: 10px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+    }
+.redbox{
+    background: red;
+}   
+.greenbox{
+    background: green;
+} 
+</style>
+
 <script>
 $(document).ready(function () {
 	$("form.form-inline").submit(function (e) {
