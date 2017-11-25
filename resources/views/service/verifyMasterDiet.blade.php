@@ -20,7 +20,6 @@
                     <tbody>
             @if($diets <> NULL)
                 @foreach($diets as $diet)
-                        @if($diet->isapproved==0)
                         <tr>
                             <td>{{ $diet->name}}</td>
                             <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
@@ -52,8 +51,7 @@
                             <td> 					
                                 <i class="fa fa-edit diet" id="{{$diet->id}}"></i>  
 						    </td>
-                        </tr>  
-                        @endif      
+                        </tr>       
                 @endforeach
             @endif
 
@@ -87,5 +85,4 @@ caption {
 .greenbox{
     background: green;
 } 
-</style>
 </style>

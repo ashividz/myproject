@@ -581,13 +581,10 @@ class ServiceController extends Controller
     public function verifyMasterDiet()
     {
         $diets = DB::table('master_diet AS md')
-                    //->
                     ->join('programs','md.Program_ID','=','programs.id')
                     ->join('MasterDietCondition','md.Condition_ID','=','MasterDietCondition.CID')
-                    
-                    //->where('isapproved',0)
+                    ->where('isapproved',0)
                     ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner','isveg','isapproved')
-                    ->groupby('Program_ID','Condition_ID','Day_Count')
                     ->get();          
 
         $data = array(
