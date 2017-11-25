@@ -410,7 +410,7 @@ class ServiceController extends Controller
                         ->join('programs','md.Program_ID','=','programs.id')
                         ->join('MasterDietCondition','md.Condition_ID','=','MasterDietCondition.CID')
                         ->where('isapproved',0)
-                        ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner')
+                        ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner','isveg')
                         ->orderBy('md.created_at','desc')
                         ->limit(15)
                         ->get();
@@ -455,7 +455,8 @@ class ServiceController extends Controller
             $diet->Dinner = trim($request->dinner);
             $diet->Condition_ID = $Condition->CID;
             $diet->Program_ID = $program;
-            $diet->Day_Count = $DayCount+1;  
+            $diet->Day_Count = $DayCount+1; 
+            $diet->isveg = 1; 
             $diet->Added_by = Auth::user()->employee->name;   
             $diet->save();
         } catch (Illuminate\Database\QueryException $e) {
@@ -489,7 +490,8 @@ class ServiceController extends Controller
             $diet = DB::table('master_diet')
                         ->where('Condition_ID',$Condition->CID)
                         ->where('Program_ID',$programs)
-                        ->where('isapproved',1)
+                        //->where('isapproved',1)
+                        ->orderby('Day_Count')
                         ->get();
 
             $program_name =  Program::where('id',$programs)->first();           
@@ -521,6 +523,40 @@ class ServiceController extends Controller
             );
             return view('modals.masterdiet')->with($data);                                 
     }
+    public function tagMasterDiet(Request $request)
+    {       
+            
+            $diet = null;
+            $olddiet =  Master_Diet::find($request->id);
+            $condition = $olddiet->Condition_ID;
+            $daycount = $olddiet->Day_Count;
+            $program = $olddiet->Program_ID;
+            if($request->breakfast && $request->mid_morning && $request->lunch && $request->evening && $request->dinner)
+            {
+                
+                $diet = new Master_Diet;
+                $diet->Breakfast = trim($request->breakfast);
+                $diet->MidMorning = trim($request->mid_morning);
+                $diet->Lunch = trim($request->lunch);
+                $diet->Evening = trim($request->evening);
+                $diet->Dinner = trim($request->dinner);
+                $diet->Condition_ID = $condition;
+                $diet->Program_ID = $program;
+                $diet->Day_Count = $daycount;  
+                $diet->isveg = 0;
+                $diet->Added_by = Auth::user()->employee->name;
+                $diet->save(); 
+            }
+            $data = array(
+                        'diet' => $diet,
+                        'condition' => $condition,
+                        'id'   => $request->id,
+                        'day' => $daycount,
+                        'program' => $program
+
+            );
+            return view('modals.tagmasterdiet')->with($data);                                 
+    }
 
     public function updateMasterDiet(Request $request)
     {
@@ -531,7 +567,11 @@ class ServiceController extends Controller
             $diet->Lunch      = $request->lunch;
             $diet->Evening    = $request->evening;
             $diet->Dinner     = $request->dinner;
-            $diet->isapproved = 1;
+            $diet->isveg      = $request->isveg;
+            if(Auth::user()->hasRole('service')||(Auth::user()->hasRole('service_tl') && $diet->isapproved==1))
+                $diet->isapproved = 1;
+            else
+                $diet->isapproved = 0;    
             $diet->save();
 
             return "Master Diet Updated";
@@ -541,10 +581,13 @@ class ServiceController extends Controller
     public function verifyMasterDiet()
     {
         $diets = DB::table('master_diet AS md')
+                    //->
                     ->join('programs','md.Program_ID','=','programs.id')
                     ->join('MasterDietCondition','md.Condition_ID','=','MasterDietCondition.CID')
-                    ->where('isapproved',0)
-                    ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner')
+                    
+                    //->where('isapproved',0)
+                    ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner','isveg','isapproved')
+                    ->groupby('Program_ID','Condition_ID','Day_Count')
                     ->get();          
 
         $data = array(

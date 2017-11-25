@@ -4,6 +4,7 @@
                     <thead>
                         <tr>
                             <th>Program</th>
+                            <th>Preference</th>
                             <th>BloodGroup</th>
                             <th>Prakriti</th>
                             <th>DayCount</th>
@@ -19,9 +20,11 @@
                     <tbody>
             @if($diets <> NULL)
                 @foreach($diets as $diet)
-                    
+                        @if($diet->isapproved==0)
                         <tr>
                             <td>{{ $diet->name}}</td>
+                            <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
+                            <div id="circle" class="circle <?php echo $colorClass; ?>"></div></td>
                             <td>{{ $diet->Blood_Group}}{{$diet->Rh_Factor}}</td>
                             <td>{{ $diet->Body_Prakriti}}</td>
                             <td>{{ $diet->Day_Count }}</td> 
@@ -49,7 +52,8 @@
                             <td> 					
                                 <i class="fa fa-edit diet" id="{{$diet->id}}"></i>  
 						    </td>
-                        </tr>        
+                        </tr>  
+                        @endif      
                 @endforeach
             @endif
 
@@ -70,7 +74,18 @@ caption {
   text-align: center;
   font-size: large;
 }
+.circle {
+      width: 10px;
+      height: 10px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+    }
+.redbox{
+    background: red;
+}   
+.greenbox{
+    background: green;
+} 
 </style>
-
-
-<script type="text/javascript" src="/js/modals/masterdiet.js"></script>
+</style>

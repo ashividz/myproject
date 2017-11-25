@@ -65,21 +65,28 @@
                 <caption>{{$headings}}</caption>
                     <thead>
                         <tr>
-                            <th>DayCount</th>
+                            <th>Day</th>
+                            <th>#</th>
+                            <th>Tag</th>
                             <th>BreakFast</th>
                             <th>MidMorning</th>
                             <th>Lunch</th>
                             <th>Evening</th>
                             <th>Dinner</th>
+                            <th>Add New Diet</th>
                         </tr>
                     </thead>
-                        
                     <tbody>
             @if($diets <> NULL)
                 @foreach($diets as $diet)
                     
                         <tr>
-                            <td>{{ $diet->Day_Count }}</td> 
+                            <td>{{ $diet->Day_Count }}</td>
+                            <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
+                            <div id="circle" class="circle <?php echo $colorClass; ?>"></div></td>
+                            <td>					
+                                <i class="fa fa-edit diet" id="{{$diet->id}}"></i>  
+						    </td>
                             <td>
                                 <div class="breakfast">{{$diet->Breakfast}}</div>
 							    <i class="fa" title="Breakfast"></i>
@@ -98,9 +105,11 @@
                             </td>
                             <td>
                                 <div class="Dinner">{{ $diet->Dinner }}</div>
-                                <i class="fa" title="Dinner">
-                                
+                                <i class="fa" title="Dinner"> 
                             </td>
+                            <td>					
+                                <i class="fa fa-edit tagdiet" id="{{$diet->id}}"></i>  
+						    </td>
                         </tr>        
                 @endforeach
             @endif
@@ -124,4 +133,19 @@ caption {
   text-align: center;
   font-size: large;
 }
+.circle {
+      width: 10px;
+      height: 10px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+    }
+.redbox{
+    background: red;
+}   
+.greenbox{
+    background: green;
+} 
 </style>
+<script type="text/javascript" src="/js/modals/tagmasterdiet.js"></script>  
+<script type="text/javascript" src="/js/modals/masterdiet.js"></script> 
