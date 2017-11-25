@@ -8,9 +8,14 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use FedEx;
 use Carbon;
+use Auth;
+use Mail;
 
+use App\Models\Lead;
 use App\Models\Cart;
 use App\Models\Shipping;
+use App\Models\EmailTemplate;
+use App\Models\Email;
 use App\Models\FedExTracking;
 use App\Models\ShippingIntimation as Intimation;
 use App\Support\SMS;
@@ -95,12 +100,17 @@ class ShippingController extends Controller
     {
         $cart = Cart::find($id);
 
+       
+
         $shipping = $cart->shippings()->create($request->all());
         //$shipping = $this->updateTracking($shipping);
 
         if ($request->carrier_id == 1) {
             $tracking = FedExTracking::store($shipping);
+            $this->sendEmail($request, $id);
         }
+
+         
 
         return $cart->shippings()->with('carrier')->get();
     }
@@ -111,5 +121,37 @@ class ShippingController extends Controller
         $shipping->update($request->all());
 
         //return $shipping;
+    }
+
+    public function sendEmail($request , $id)
+    {
+        
+       
+         $cart = Cart::find($id);
+
+         $lead = Lead::find($cart->lead_id);
+
+        $data = array(
+                'docket' => $request->tracking_id,
+                'customer'  => $lead->name,
+                'courier'   => 'FedEx',                
+            );
+
+        Mail::send('templates.emails.dispatch', $data, function($message) use ($lead)
+        {
+            $from = 'logistics@nutrihealthsystems.com';
+            
+            $message->to($lead->email, $lead->name)
+            ->subject("Dr Shikha's NutriHealth : Shipment update")
+            ->from($from, 'Nutri-Health Systems');
+            
+            //Add CC
+            if (trim($lead->email_alt) <> '') {
+                $message->cc($lead->email_alt, $name = null);
+            }
+        });
+
+        return true;
+
     }
 }
