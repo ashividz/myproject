@@ -19,7 +19,7 @@
 				<table width="100%">
 					<tr>
 						<th colspan="4">
-							<h2 style="margin:0px 20px 20px 30px;">Add Non Veg Diet</h2>
+							<h2 style="margin:0px 20px 20px 30px;">Add Diet</h2>
 						</th>
 					</tr>
 					<tr>
