@@ -543,9 +543,10 @@ class ServiceController extends Controller
                 $diet->Condition_ID = $condition;
                 $diet->Program_ID = $program;
                 $diet->Day_Count = $daycount;  
-                $diet->isveg = 0;
+                $diet->isveg = $request->isveg;
                 $diet->Added_by = Auth::user()->employee->name;
                 $diet->save(); 
+                return "Master Diet Added";
             }
             $data = array(
                         'diet' => $diet,
@@ -555,7 +556,7 @@ class ServiceController extends Controller
                         'program' => $program
 
             );
-            return view('modals.tagmasterdiet')->with($data);                                 
+            return view('modals.tagmasterdiet')->with($data);                               
     }
 
     public function updateMasterDiet(Request $request)

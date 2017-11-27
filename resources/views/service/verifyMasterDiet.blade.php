@@ -86,3 +86,4 @@ caption {
     background: green;
 } 
 </style>
+<script type="text/javascript" src="/js/modals/masterdiet.js"></script> 
