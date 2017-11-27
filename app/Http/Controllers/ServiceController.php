@@ -490,7 +490,7 @@ class ServiceController extends Controller
             $diet = DB::table('master_diet')
                         ->where('Condition_ID',$Condition->CID)
                         ->where('Program_ID',$programs)
-                        //->where('isapproved',1)
+                        ->where('isapproved',1)
                         ->orderby('Day_Count')
                         ->get();
 
