@@ -85,6 +85,23 @@ class SurveyController extends Controller
         return view('home')->with($data);
     }
 
+    public function viewCrePatientSurvey($id)
+    {
+        $patient = Patient::with('cresurveys')->find($id);
+
+        //dd($patient);
+
+        //$surveys = PatientSurvey::where('patient_id', $id)->get();
+        
+        $data = array(
+            'menu'          =>  'reports',
+            'section'       =>  'patients.survey',
+            'patient'       =>  $patient
+        );
+
+        return view('home')->with($data);
+    }
+
     public function savePatientSurvey(Request $request)
     {
         //DB::transaction(function () use ($request){

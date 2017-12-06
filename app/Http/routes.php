@@ -958,6 +958,7 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
     Route::post('patient/herb/{id}/update', 'PatientController@updateHerb');
     Route::get('patient/{id}/survey', 'SurveyController@viewPatientSurvey');
+    Route::get('lead/{id}/survey', 'SurveyController@viewCrePatientSurvey');
     
 
     Route::get('quality', 'QualityController@index');

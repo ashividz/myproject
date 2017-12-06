@@ -33,7 +33,7 @@
 				@foreach($surveys AS $survey)
 							<tr>
 								<td>{{$i++}}</td>
-								<td><a href="/patient/{{$survey->patient->id}}/survey" target="_blank">{{$survey->patient->lead->name or ""}}</a></td>
+								<td><a href="/lead/{{$survey->patient->id}}/survey" target="_blank">{{$survey->patient->lead->name or ""}}</a></td>
 								<td>{{$survey->created_by}}</td>
 								<td>{{$survey->nutritionist}}</td>
 								<td>{{$survey->source}}</td>
