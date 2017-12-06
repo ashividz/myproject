@@ -142,6 +142,11 @@ class Patient extends Model
         return $this->hasMany(PatientSurvey::class)->orderBy('id', 'desc');
     }
 
+    public function cresurveys() 
+    {
+        return $this->hasMany(CrePatientSurvey::class)->orderBy('id', 'desc');
+    }
+
     public function tags() 
     {
         return $this->belongsToMany(Tag::class);

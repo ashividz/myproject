@@ -19,7 +19,7 @@ class CrePatientSurvey extends Model
 
 	public function answers()
 	{
-		return $this->hasMany(CrePatientSurveyAnswer::class);
+		return $this->hasMany(CrePatientSurveyAnswer::class  , 'patient_survey_id');
 	}
 
 	public static function saveSurvey($request)
