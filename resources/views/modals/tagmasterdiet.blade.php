@@ -45,6 +45,7 @@
 							<option></option>
 							<option value="1">Veg</option>
 							<option value="0">NonVeg</option>
+							<option value="-1">Eggetarian</option>
 						</td>
 					</tr>
 					
