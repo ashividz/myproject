@@ -82,7 +82,7 @@
                     
                         <tr>
                             <td>{{ $diet->Day_Count }}</td>
-                            <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
+                            <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";elseif($diet->isveg==-1) $colorClass="yellowbox";?> 
                             <div id="circle" class="circle <?php echo $colorClass; ?>"></div></td>
                             <td>					
                                 <i class="fa fa-edit diet" id="{{$diet->id}}"></i>  
@@ -146,6 +146,9 @@ caption {
 .greenbox{
     background: green;
 } 
+.yellowbox{
+    background: yellow;
+}
 </style>
 <script type="text/javascript" src="/js/modals/tagmasterdiet.js"></script>  
 <script type="text/javascript" src="/js/modals/masterdiet.js"></script> 

@@ -44,9 +44,15 @@
 							@if($diet->isveg==1)
 								<option value="1" selected>Veg</option>
 								<option value="0">NonVeg</option>
-							@else
-								<option value="0">NonVeg</option>
+								<option value="-1">Eggetarian</option>
+							@elseif($diet->isveg==0)
 								<option value="1">Veg</option>
+								<option value="0" selected>NonVeg</option>
+								<option value="-1">Eggetarian</option>
+							@else
+								<option value="1">Veg</option>
+								<option value="0">NonVeg</option>
+								<option value="-1" selected>Eggetarian</option>
 							@endif	
 						</td>
 					</tr>
