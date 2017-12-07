@@ -23,7 +23,7 @@
         @foreach($sources AS $source)
                 <tr>
                     <td>
-                    @if(Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales'))
+                    @if(Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl'))
                         <a class='source_links' href="/report/source/{{$source->source_id}}/leads">{{$source->master->source_name or ""}}</a>
                     @else
                         {{$source->master->source_name or ""}}
