@@ -10,6 +10,8 @@
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Phone</th>
+                  <th>Email</th>
                   <th>References</th>
                   <th>Conversions</th>
                   <th>Percentage</th>
@@ -20,6 +22,8 @@
             @foreach($platinums AS $platinum)  
                 <tr>
                   <td><a href="/lead/{{$platinum->id}}/viewReferences" target="_blank">{{$platinum->name}}</a></td>
+                  <td>{{$platinum->phone}}</td>
+                  <td>{{$platinum->email}}</td>
                   <td>{{$platinum->leads}}</td>
                   <td>{{$platinum->conversions}}</td>
 
