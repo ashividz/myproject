@@ -732,6 +732,9 @@
                         <li>
                             <a href="/sales/report/balancepayments">Balance Payments</a>
                         </li>
+                         <li>
+                            <a href="/report/viewChannelConversion" id="menu_channel_conversion" class="arrow">Channel Conversion</a>
+                        </li>
                     </ul>
                 </li>
             @endif
