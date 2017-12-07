@@ -151,7 +151,7 @@ class ReferenceController extends Controller
     public function platinum()
     {
         $platinums = DB::table('lead_sources AS s')
-                    ->select('m.id', 'm.name', 'referrer_id', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
+                    ->select('m.id', 'm.name', 'm.phone' , 'm.email', 'referrer_id', DB::RAW('COUNT(*) AS leads, COUNT(CASE WHEN f.entry_date >= s.created_at THEN f.entry_date END) AS conversions'))
                     ->leftjoin('patient_details AS p', 'p.lead_id', '=', 's.lead_id')
 
                     ->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id = B.patient_id)) AS f'), function($join) {
