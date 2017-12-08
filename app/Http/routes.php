@@ -663,7 +663,9 @@ Route::group([
         Route::post('herb/template/add', 'HerbController@templateSave');
         
         Route::get('service/reports/appointments', 'ServiceController@appointments');   
-        Route::post('service/reports/appointments', 'ServiceController@appointments');   
+        Route::post('service/reports/appointments', 'ServiceController@appointments'); 
+        Route::get('/service/kd','KnowledgedbController@show');
+        Route::post('/service/kd/save','KnowledgedbController@save');  
 
         
         /** APIs **/
