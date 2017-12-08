@@ -435,6 +435,9 @@
                             <a href="/service/reports/verifySentDiet" id="menu_service_verifysentDiet">Verify SentDiet</a>
                         </li>                   
                     </ul>
+                </li>
+                <li>
+                    <a href="/service/kd" id="menu_service_createkd">KD</a>
                 </li>               
             </ul> <!-- second level -->                        
         </li>  
