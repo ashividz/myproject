@@ -72,7 +72,8 @@ class PatientDietController extends Controller
             $no_of_diet = DB::table('master_diet')
                     ->where('program_id' , $program_id)
                     ->where('Condition_ID' , $user->CID)
-                    ->count();
+                    ->distinct('Day_Count')
+                    ->count('Day_Count');
 
             if($no_of_diet!=0)
             {
@@ -97,7 +98,7 @@ class PatientDietController extends Controller
                      ->count();
         }
         
-    
+        //dd($mdiets);
 
         $data = array(
             'menu'          => 'patient',
