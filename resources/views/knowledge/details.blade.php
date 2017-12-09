@@ -31,11 +31,11 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
     <div class="w3-container">
       <p>{{$detail->Description}}</p>
-      <div class="w3-row">
+      <!--<div class="w3-row">
         <div class="w3-col m8 s12">
           <p><button class="w3-button w3-padding-large w3-white w3-border"><b>Edit</b></button></p>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
   @endforeach
