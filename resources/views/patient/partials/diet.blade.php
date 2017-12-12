@@ -65,7 +65,44 @@
 		</form>
 	</div>
 </div>
+<div class="panel panel-default">
+	<div class="panel-heading">
+	</div>
+	<div class="panel-body">
+		<form id="form" method="post" action="/patient/{{$patient->id or ''}}/dietpreference">
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td>
+							<label> Diet Preference : </label> 
+							<select name="isveg" id="isveg" required>
+							@if($patient->isveg==1)
+								<option value="1" selected>Veg</option>
+								<option value="0">NonVeg</option>
+								<option value="-1">Eggetarian</option>
+							@elseif($patient->isveg==0)
+								<option value="1">Veg</option>
+								<option value="0" selected>NonVeg</option>
+								<option value="-1">Eggetarian</option>
+							@else
+								<option value="1">Veg</option>
+								<option value="0">NonVeg</option>
+								<option value="-1" selected>Eggetarian</option>
+							@endif
+						</td>
+						<td>
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<button type="submit" class="btn btn-primary">Save</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
 @endsection
+
+
 
 @section('main')
 @if($patient->fee)

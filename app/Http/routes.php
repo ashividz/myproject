@@ -827,6 +827,7 @@ Route::group([
 
         Route::get('patient/{id}/medicalTest', 'PatientBTController@showMedicalTest');
         Route::post('patient/{id}/medicalTest', 'PatientBTController@storeMedicalTest');
+        Route::post('/patient/{id}/dietpreference','PatientDietController@savePreferece');
         
                 
 });
