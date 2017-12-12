@@ -45,6 +45,7 @@ class PatientDietController extends Controller
         $days = floor((strtotime($diet_date) - strtotime($fee->start_date))/(60*60*24));
 
         $mdiets = null;
+        $updateddiet = null;
         foreach ($programs->lead->programs as $program) 
         {  
             $program_id = $program->id;
