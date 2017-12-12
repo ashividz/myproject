@@ -22,7 +22,7 @@
                 @foreach($diets as $diet)
                         <tr>
                             <td>{{ $diet->name}}</td>
-                            <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
+                            <td><?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";elseif($diet->isveg==-1) $colorClass="yellowbox";?> 
                             <div id="circle" class="circle <?php echo $colorClass; ?>"></div></td>
                             <td>{{ $diet->Blood_Group}}{{$diet->Rh_Factor}}</td>
                             <td>{{ $diet->Body_Prakriti}}</td>
@@ -85,5 +85,8 @@ caption {
 .greenbox{
     background: green;
 } 
+.yellowbox{
+    background: yellow;
+}
 </style>
 <script type="text/javascript" src="/js/modals/masterdiet.js"></script> 

@@ -58,14 +58,14 @@ class PatientDietController extends Controller
 
         $patientprakriti = PatientPrakriti::prakriti($id);
 
-        $blood_grouop = Patient::where('id' , $id) 
+        $blood_group = Patient::where('id' , $id) 
                    ->with('blood_type' , 'rh_factor')
                    ->first();
-        if($blood_grouop->blood_type && $patientprakriti->first_dominant_name)
+        if($blood_group->blood_type && $patientprakriti->first_dominant_name)
         {
             $user = DB::table('MasterDietCondition')
-                    ->where('Blood_Group', $blood_grouop->blood_type->name)
-                    ->where('Rh_Factor' , $blood_grouop->rh_factor->code)
+                    ->where('Blood_Group', $blood_group->blood_type->name)
+                    ->where('Rh_Factor' , $blood_group->rh_factor->code)
                     ->where('Body_Prakriti' , $patientprakriti->first_dominant_name)
                     ->first();
                     
@@ -91,26 +91,31 @@ class PatientDietController extends Controller
                      ->where('Day_Count' , $days)
                      ->where('Program_ID' , $program_id)  
                      ->where('isapproved' , 1)
-                     ->first();
-
-            $count  =  DB::table('master_diet')
-                     ->where('Condition_ID' , $user->CID)
-                     ->count();
+                     ->orderby('isveg','desc')
+                     ->get();
         }
-        
-        //dd($mdiets);
 
+            foreach($mdiets as $mdiet)
+            {
+
+                if($mdiet->isveg==1 && ($patient->isveg==1 ||$patient->isveg==0|| $patient->isveg==-1 ))
+                    $updateddiet = $mdiet;
+                elseif($mdiet->isveg==-1 && ($patient->isveg==0|| $patient->isveg==-1) )
+                    $updateddiet = $mdiet;
+                elseif($mdiet->isveg==0 && $patient->isveg==0)
+                    $updateddiet = $mdiet;
+            }
         $data = array(
             'menu'          => 'patient',
             'section'       => 'partials.diet',
             'patient'       =>  $patient,
-            'mdiet'         =>  $mdiets,
+            'mdiet'         =>  $updateddiet,
             'programs'      =>  $programs,
             'diets'         =>  $diets,
             'program_id'    =>  $program_id
         );
 
-        return view('home')->with($data);   
+        return view('home')->with($data);
     }
 
 
@@ -133,5 +138,13 @@ class PatientDietController extends Controller
         );
 
         return view('home')->with($data);   
+    }
+
+    public function savePreferece(Request $request)
+    {
+        $patient = Patient::find($request->id);
+        $patient->isveg = $request->isveg;
+        $patient->save();
+        return redirect('patient/'.$request->id.'/diet');
     }
 }
