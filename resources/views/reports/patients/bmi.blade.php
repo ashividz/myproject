@@ -24,6 +24,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>LeadId</th>
                             <th>Patients Id</th>
                             <th>Patients Name</th>
                             <th>Country</th>
@@ -49,6 +50,7 @@
                     ?>
                         <tr>
                             <td>{{$i++}}</td>
+                            <td>{{$patient->lead_id}}</td>
                              <td>{{$patient->id}}</td>
                             <td><a href="/lead/{{$patient->lead_id}}/viewPersonalDetails" target="_blank">{{$patient->lead->name or ""}}</a></td>
                             <td>{{$patient->lead->country or ""}}</td>
