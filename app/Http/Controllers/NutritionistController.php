@@ -68,6 +68,9 @@ class NutritionistController extends Controller
 
         $patients = Patient::getActivePatients($this->nutritionist);
 
+        //return $patients;
+        
+
         $secondaryPatients = Patient::select('patient_details.*')
                     ->with('diets', 'fee','cfee','suit')                    
                     /*->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {

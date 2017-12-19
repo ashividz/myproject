@@ -102,6 +102,11 @@ class Patient extends Model
         return $this->hasOne(Doctor::class)->latest();
     }
 
+     public function break() 
+    {
+        return $this->hasOne(PatientBreak::class)->latest();
+    }
+
     public function doctors() 
     {
         return $this->hasMany(Doctor::class, 'patient_id')->orderBy('created_at', 'DESC');
@@ -215,7 +220,7 @@ class Patient extends Model
     public static function getActivePatients($nutritionist = NULL)
     {
         $query =  Patient::select('patient_details.*')
-                ->with('lead', 'cfee', 'doctor','suit' , 'fee')
+                ->with('lead', 'cfee', 'doctor','suit' , 'fee' , 'break')
                 /*->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                     $join->on('patient_details.id', '=', 'f.patient_id');
                 })
