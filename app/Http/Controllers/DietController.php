@@ -14,11 +14,13 @@ use Auth;
 use DB;
 use Storage;
 use Mail;
+use Carbon;
 use App\Models\Patient;
 use App\Models\Diet;
 use App\Models\User;
 use App\Models\MasterDietCopy;
 use App\Models\PatientPrakriti;
+use App\Models\PatientBreak;
 
 use App\Support\SMS;
 
@@ -85,6 +87,20 @@ class DietController extends Controller
         {
             return redirect('patient/'.$id.'/diet')->with('status', 'Diet already added for '. $date);
         }
+
+        $break = PatientBreak::where('patient_id' , $id)
+                               ->where('start_date', '<=' , $date)
+                               ->where('end_date' ,'>=' , $date)
+                               ->first();
+
+
+        
+
+        if($break)
+        {
+            return redirect('patient/'.$id.'/diet')->with('message', 'Client is on break');
+        }
+
 
         // add diet in master diet table 
         if($request->adddiet)

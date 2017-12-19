@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf_token" content="{{ csrf_token() }}">
-        
+
         <!-- CSS -->
         <link rel="stylesheet" href="/plugins/font-awesome/font-awesome.min.css">
         <link rel="stylesheet" href="/plugins/bootstrap/bootstrap.min.css">
@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="/css/theme/mws-theme.css">
         <link rel="stylesheet" type="text/css" href="/css/fonts/icomoon/style.css" media="screen">
 
-        
+
   		<script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/plugins/bootstrap/bootstrap.min.js"></script>
 
@@ -31,34 +31,34 @@
 		<script src="/js/angular/angular-route.js"></script>
 		<script src="/js/angular/angular-resource.js"></script> -->
 
-        
+
         <script src="/js/core/mws.js"></script>
 
         <!-- -->
 
-  		<script src="/js/moment.min.js"></script> 
-  		
+  		<script src="/js/moment.min.js"></script>
+
   		<script src="/js/daterangepicker.js"></script>
   		<link rel="stylesheet" type="text/css" href="/css/daterangepicker.css">
 
   		<!-- dataTable -->
-  		<script src="/js/jquery/jquery.dataTables.js"></script> 
+  		<script src="/js/jquery/jquery.dataTables.js"></script>
   		<link rel="stylesheet" type="text/css" href="/css/jquery/jquery.dataTables.css">
 
   		<link rel="stylesheet" href="/css/main.css">
   		<link rel="stylesheet" href="/css/menu.css">
 
   		<!-- jQuery Raty A Star Rating Plugin-->
-        <script src="/js/jquery/jquery.raty.js"></script> 
+        <script src="/js/jquery/jquery.raty.js"></script>
         <link rel="stylesheet" href="/css/jquery/jquery.raty.css">
 
         <!-- jQuery DateTime Picker Plugin-->
-        <script src="/js/jquery/jquery.datetimepicker.js"></script> 
+        <script src="/js/jquery/jquery.datetimepicker.js"></script>
         <link rel="stylesheet" href="/css/jquery/jquery.datetimepicker.css">
 
         <!-- jQuery JEditable Plugin-->
         <script src="/js/jquery/jquery.jeditable.js"></script>
-        <script src="/js/jquery/jquery.jeditable.datepicker.js"></script> 
+        <script src="/js/jquery/jquery.jeditable.datepicker.js"></script>
 
         <!-- jQuery SimpleModal Plugin-->
         <script type="text/javascript" src="/js/jquery/jquery.simplemodal.js"></script>
@@ -69,7 +69,7 @@
 		<script type="text/javascript" src="/js/jquery.webui-popover.js"></script>
 
 		<!-- HTML Table to CSV Plugin-->
-		<script src="/js/table2CSV.js"></script> 
+		<script src="/js/table2CSV.js"></script>
 
 		<!-- HighCharts Plugin-->
 		<script type="text/javascript" src="/js/highcharts/highcharts.js"></script>
@@ -79,7 +79,7 @@
 		<script type="text/javascript" src="/js/highcharts/modules/funnel.js"></script>
 
 
-		<!-- Jquery Player 
+		<!-- Jquery Player
 
 		<script type="text/javascript" src="/js/jquery.jplayer.js"></script>
 		<link rel="stylesheet" type="text/css" href="/css/jplayer.blue.monday.min.css">-->
@@ -116,9 +116,9 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.3/css/buttons.dataTables.min.css">
 
         <!-- Sparkline -->
-        <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  --> 
+        <!--<script src="/plugins/sparkline/jquery.sparkline.min.js"></script>  -->
 
-        <!-- Vue Chart -->   
+        <!-- Vue Chart -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 
         <!-- Latest compiled and minified JavaScript -->
@@ -133,7 +133,7 @@
         <div id="alert" class="alert alert-{{Session::get('status')=='success'?'success':'danger'}}">
 
             <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-            @if(Session::has('message')) 
+            @if(Session::has('message'))
                 <h5>{!! Session::get('message') !!}</h5>
             @elseif(count($errors) > 0)
                 <ul>
@@ -154,6 +154,15 @@
         text-align: center;
     }
 </style>
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#aaa;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#aaa;color:#333;background-color:#fff;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#aaa;color:#fff;background-color:#f38630;}
+.tg .tg-rzfx{font-weight:bold;font-style:italic;background-color:#3330f3;text-align:right;vertical-align:top}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-0ev8{background-color:#3330f3;text-align:center;vertical-align:top}
+.tg .tg-yw4l{vertical-align:top}
+</style>
 <script type="text/javascript">
     @if (Session::has('message') || count($errors) > 0)
         $('#alert').show();
@@ -163,7 +172,7 @@
             $('#alert').slideUp('slow').fadeOut(function(){});
         }, 3000);
     @endif
-        
+
     @else
         $("#alert").hide();
     @endif
@@ -178,20 +187,20 @@
 				</div>
 			</div>
 
-			
-		 
+
+
 			<!-- User Tools (notifications, logout, profile, change password) -->
 			<div id="mws-user-tools" class="clearfix">
-		 
+
 				<!-- Notifications -->
 				<div id="mws-user-notif" class="mws-dropdown-menu">
 					<a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-exclamation-sign"></i></a>
-		 
+
 					<!-- Unread notification count -->
 					<span class="mws-dropdown-notif">
-                        @{{ notifications.length }}               
+                        @{{ notifications.length }}
                     </span>
-		 
+
 					<!-- Notifications dropdown -->
 					<div class="mws-dropdown-box">
 						<div class="mws-dropdown-content">
@@ -199,11 +208,11 @@
 								<!-- Here goes all the messages -->
 							</ul>
 							<div class="mws-dropdown-viewall">
-                                <div style="background-color: #f9f9f9; border: 1px solid #ddd"> 
+                                <div style="background-color: #f9f9f9; border: 1px solid #ddd">
                                     <table class="table table-condensed table-hover">
                                         <tr v-for="notification in notifications">
                                             <td>
-                                                @{{ notification.type.message }} 
+                                                @{{ notification.type.message }}
                                                 <small>by</small>
                                                 <em>@{{ notification.creator.employee.name }} </em>
                                             </td>
@@ -214,12 +223,12 @@
                                                 <input type="checkbox" checked="@{{ notification.action_at }}" v-on:click='setReadNotification(notification.id)'/>
                                             </td>
                                         </tr>
-                                    </table>   
+                                    </table>
                                     <div class="col-md-12">
                                         @{{ notification.type.object.message }}
                                         <em>
-                                            
-                                        </em>                                    
+
+                                        </em>
                                     </div>
                                 </div>
 								<a href="/notifications">View All Notifications</a>
@@ -227,20 +236,20 @@
 						</div>
 					</div>
 				</div>
-		 
+
 				<!-- Messages -->
 				<div id="mws-user-message" class="mws-dropdown-menu">
 					<a href="#" data-toggle="dropdown" class="mws-dropdown-trigger"><i class="icon-envelope"></i></a>
-		 
+
 					<!-- Unred messages count -->
 					<span class="mws-dropdown-notif">@{{ messages.length }}</span>
-		 
+
 					<!-- Messages dropdown -->
 					<div class="mws-dropdown-box">
 						<div class="mws-dropdown-content">
 							<ul class="mws-messages">
 								<!-- Here goes all the messages -->
-								
+
 							</ul>
 							<div class="mws-dropdown-viewall">
 								<a href="/message/inbox">Inbox</a>
@@ -249,15 +258,15 @@
 						</div>
 					</div>
 				</div>
-		 
+
 				<!-- User Information and functions section -->
 				<div id="mws-user-info" class="mws-inset">
-		 
+
 					<!-- User Photo -->
 					<div id="mws-user-photo">
 						<img src="/images/profile.jpg" alt="User Photo" />
 					</div>
-		 
+
 					<!-- Username and Functions -->
 					<div id="mws-user-functions">
 						<div id="mws-username">Hello, {{ Auth::user()->employee->name }}</div>
@@ -270,7 +279,7 @@
 				</div>
 			</div>
 		</div>
-			@include('partials/menu')		
+			@include('partials/menu')
     </div>
 <script>
 @if (count($errors) > 0 || Session::has('status'))

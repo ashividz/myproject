@@ -1323,5 +1323,8 @@ Route::group([
     function() {
         Route::get('/patient/{id}/preference', 'PatientController@preferences');
         Route::post('/patient/{id}/preference', 'PatientController@preferences');
+        Route::get('/patient/{id}/break', 'PatientController@break');
+        Route::post('/patient/{id}/break', 'PatientController@breakAdjustment');
+
 });
 });
