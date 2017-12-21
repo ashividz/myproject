@@ -39,7 +39,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
      * @return void
      */
     public function __construct($uid, $list_id,$dialerUserName,$dialerPassword,$campname,$skillname,$followUpDays,$onlyNotInt,$new)
-    {    
+    {
        $this->uid             =   $uid;
        $this->list_id         =   $list_id;
        $this->dialerUserName  =   $dialerUserName;
@@ -47,8 +47,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        $this->campname        =   $campname;
        $this->skillname       =   $skillname;
        $this->followUpDays    =   $followUpDays;
-       $this->onlyNotInt      =   $onlyNotInt;  
-     //  $this->region          =   $rejoin;
+       $this->onlyNotInt      =   $onlyNotInt;
        $this->new             =   $new;
       //sudo nohup php artisan queue:work --daemon --tries=3 --timeout=0
        //sudo nohup php artisan queue:listen --tries=3 --timeout=0
@@ -74,7 +73,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        Log::info("Job range saved");
        while($end_limit < $end_date)
        {
-          
+
          if(isset($start_limit) && $start_limit!="")
           {
             $dispo_date = date('2016-10-16 23:59:59');
@@ -82,27 +81,27 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             //dd( $this->end_date );
             $leads_qry = Lead::select('marketing_details.*')
                 ->with('cre', 'disposition');
-                
-            $leads_qry->has('patient', '<', 1);        
-            $leads_qry->has('dnc', '<', 1);  
-             
-           
+
+            $leads_qry->has('patient', '<', 1);
+            $leads_qry->has('dnc', '<', 1);
+
+
             $leads_qry->whereBetween('marketing_details.created_at', array($start_limit, $end_limit))
                         ->where(function($q)  {
                                 $q->where('marketing_details.country','=','IN')
                                   ->orWhereNull('marketing_details.country')
                                   ->orWhere('marketing_details.country','=', '');
                          });
-              
-                
+
+
              $leads = $leads_qry->orderBy('marketing_details.created_at')->get();
 
              $this->executex($leads);
-                
+
           }
 
                $predictiveJobRange = PredictiveJobRange::get()->first();
-              
+
                $start_limit = $predictiveJobRange->last_step_date;
                $predictiveJobRange->last_step_date = $end_limit;
                $predictiveJobRange->save();
@@ -112,6 +111,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
 
   public function handle()
     {
+
       if($this->new)
       {
        $cre = ['Avadesh Kumar' , 'Shadhvi Srivastava' , 'Shivam Rohilla' , 'Manoj Kumar Rastogi' , 'Shashank Maheshwari' , 'Harshil Sharma' , 'Rohit Arora(NW580)'];
@@ -131,7 +131,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        //$dispo_date = $this->dispo_date;
        while($end_limit <= $end_date && $start_limit<=$end_date)
        {
-          
+
          if(isset($start_limit) && $start_limit!="")
           {
              $leads = Lead::whereBetween('created_at',array($start_limit , $end_limit))
@@ -159,14 +159,14 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                             $q->where('channels.id','=',5);
                         });
                     },'=',0);
-                    
+
                     //include only not interested data if user has checked only not interested data
                     if ($this->onlyNotInt) {
-                        $leads = $leads->whereHas('status',function($query) {                        
+                        $leads = $leads->whereHas('status',function($query) {
                             $query->where('m_lead_status.id','=',6);
-                        }); 
+                        });
                     }
-                    
+
                     $leads = $leads->whereHas('patient',function($query) {
                         $query->whereHas('fees',function($q) {
                             $q->where('end_date','>=',DB::raw('curdate()'));
@@ -177,7 +177,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
           }
 
          $predictiveJobRange = PredictiveJobRange::get()->first();
-        
+
          $start_limit = date('Y-m-d 0:0:0', strtotime('+1 days',strtotime($predictiveJobRange->last_step_date)));
          $end_limit   = date('Y-m-d 23:59:59', strtotime('+9 days',strtotime($start_limit)));
           if ($end_limit > $end_date)
@@ -204,24 +204,24 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        //$dispo_date = $this->dispo_date;
        while($end_limit <= $end_date && $start_limit<=$end_date)
        {
-          
+
          if(isset($start_limit) && $start_limit!="")
           {
               $patients = Patient::getRejoin($start_limit, $end_limit , $this->followUpDays);
               $this->regiondat($patients);
-                    
+
           }
 
          $predictiveJobRange = PredictiveJobRange::get()->first();
-        
+
          $start_limit = date('Y-m-d 0:0:0', strtotime('+1 days',strtotime($predictiveJobRange->last_step_date)));
          $end_limit   = date('Y-m-d 23:59:59', strtotime('+9 days',strtotime($start_limit)));
           if ($end_limit > $end_date)
               $end_limit = $end_date;
           $predictiveJobRange->last_step_date = $end_limit;
           $predictiveJobRange->save();
-        } 
-      }        
+        }
+      }
     }
 
 
@@ -238,7 +238,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
        Log::info("Job range saved");
        while($end_limit < $end_date)
        {
-          
+
          if(isset($start_limit) && $start_limit!="")
           {
           $dispo_date = date('2016-10-16 23:59:59');
@@ -266,8 +266,8 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                                  ->where(function($c) use($cur_date) {
                                         $c->whereRaw("cd.dispo_date < '$dispo_date'")
                                         ->orWhereNull('cd.callback');
-                                      }); 
-                                  }); 
+                                      });
+                                  });
                                 });
 
            $leads_qry->leftJoin('patient_details as p', 'p.lead_id', '=', 'marketing_details.id')
@@ -280,10 +280,10 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                                                 ->orWhere('f.end_date', '<',  date('Y-m-d'));
                                             });
                                       });
-             
+
 
               $leads_qry->leftJoin('lead_dncs as d', 'd.lead_id', '=', 'marketing_details.id');
-             
+
               //$leads_qry->leftJoin('dialer_push as dp', 'dp.lead_id', '=', 'marketing_details.id');
               $leads_qry->whereBetween('marketing_details.created_at', array($start_limit, $end_limit))
                           //->whereNull('p.id')
@@ -301,10 +301,10 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                                     ->orWhere('marketing_details.country','=', '');
                            });
 
-            
+
               //->whereNotNull('marketing_details.source_id')
-              
-              
+
+
                $leads = $leads_qry->orderBy('marketing_details.created_at')->get();
 
               /* $PredictiveCount = PredictiveCount::get()->first();
@@ -313,11 +313,11 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                $PredictiveCount->save(); */
 
                $this->executex($leads);
-                
+
                 }
 
                $predictiveJobRange = PredictiveJobRange::get()->first();
-              
+
                $start_limit = $predictiveJobRange->last_step_date;
                $end_limit = date('Y-m-d 23:59:59', strtotime('+10 days',strtotime($start_limit)));
                $predictiveJobRange->last_step_date = $end_limit;
@@ -326,7 +326,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
      }
 
       public function executex($leads)
-      {   
+      {
         foreach($leads as $lead)
         {
             $output= 'false2';
@@ -336,10 +336,10 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             $phone = Helper::properMobile($phone);
             $pin1 = substr(trim($phone), 0, 2);
             $pin2 = substr(trim($phone), 0, 3);
-            
-            if($lead->cre)  
+
+            if($lead->cre)
             $cre_name = $lead->cre->cre;
-         
+
              //dd($username);
             //$cre_name = $request->cre_name[$i];
             //$dispo_date = $request->dispo_date[$i];
@@ -351,13 +351,13 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             //$lead_name = $request->lead_name[$i];
             //$lead_status = $request->lead_status[$i];
             //$source = $request->source[$i];
-            
-           
+
+
             //if($push==1)
             //{
             //$ch = curl_init("http://192.168.1.203/test.ajax");
             $encoded_params = "do=manualUpload&username=".$this->dialerUserName."&password=".$this->dialerPassword."&campname=".$this->campname."&skillname=".$this->skillname."&listname=".$this->list_id."&phone1=".$phone;
-            
+
             /*curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
             curl_setopt($ch, CURLOPT_HEADER, 0);
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -370,9 +370,9 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             $output = file_get_contents("http://192.168.1.200/test.ajax?".$encoded_params);
           else
             $output = "Landline-No. Skipped";
-            
-            //$output = "Number added successfully.";  
-            
+
+            //$output = "Number added successfully.";
+
             if($output)
             {
                 //$lead = Lead::find($lead_id);
@@ -380,7 +380,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                 $dialer_push->lead_id = $lead_id;
                 //$dialer_push->user = $username;
                 //$dialer_push->name = $cre_name;
-               
+
                 $dialer_push->phone = $phone;
                 $dialer_push->list_id =  1;
                 $dialer_push->created_by = $this->uid;
@@ -403,10 +403,10 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             $phone = Helper::properMobile($phone);
             $pin1 = substr(trim($phone), 0, 2);
             $pin2 = substr(trim($phone), 0, 3);
-            
-            if($patient->lead->cre)  
+
+            if($patient->lead->cre)
             $cre_name = $patient->lead->cre->cre;
-         
+
              //dd($username);
             //$cre_name = $request->cre_name[$i];
             //$dispo_date = $request->dispo_date[$i];
@@ -418,13 +418,13 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
             //$lead_name = $request->lead_name[$i];
             //$lead_status = $request->lead_status[$i];
             //$source = $request->source[$i];
-            
-           
+
+
             //if($push==1)
             //{
             //$ch = curl_init("http://192.168.1.203/test.ajax");
             $encoded_params = "do=manualUpload&username=".$this->dialerUserName."&password=".$this->dialerPassword."&campname=".$this->campname."&skillname=".$this->skillname."&listname=".$this->list_id."&phone1=".$phone;
-            
+
 
 
             /*curl_setopt($ch, CURLOPT_POSTFIELDS,  $encoded_params);
@@ -441,19 +441,19 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
               $output = file_get_contents("http://192.168.1.200/test.ajax?".$encoded_params);
             else
             $output = "Landline-No. Skipped";
-            
-            //$output = "Number added successfully.";  
+
+            //$output = "Number added successfully.";
             //dd($output);
-            if($output == "Number added successfully.")
+            if($output)
             {
                 //$lead = Lead::find($lead_id);
                 $dialer_push = New DialerPush;
                 $dialer_push->lead_id = $lead_id;
                 //$dialer_push->user = $username;
                 //$dialer_push->name = $cre_name;
-               
+
                 $dialer_push->phone = $phone;
-                $dialer_push->list_id =  $list_id;
+                $dialer_push->list_id =  2;
                 $dialer_push->created_by = $this->uid;
                 $dialer_push->lead_date = $lead_date;
                 $dialer_push->status = $output;
