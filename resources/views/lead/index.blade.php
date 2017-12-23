@@ -1,5 +1,5 @@
-@if(Auth::user()->hasRole('cre'))
-                
+<!-- @if(Auth::user()->hasRole('cre'))
+
     @if(isset($lead->dialer))
         @if(($lead->cre && $lead->cre->cre != Auth::user()->employee->name && $lead->cre->cre != $lead->cre->created_by))
                  <div class= "row">
@@ -11,10 +11,10 @@
                          <button  id="self_assign" type='submit' class='btn btn-info active' style="margin-left: 400px"> Self Assign</button>
                         </form>
                     </div>
-                </div>       
+                </div>
         @endif
     @endif
-@endif
+@endif -->
 
 
 @if($lead->cre && Auth::user()->hasRole('cre') && !(Auth::user()->roles->count()>1) && trim($lead->cre->cre) <> trim(Auth::user()->employee->name) && (!$lead->dialer || $lead->hideDisposition))
@@ -24,7 +24,7 @@
 					<h4><b>{{ $lead->name }} ({{ $lead->id }})</b> belongs to </h4><strong><h2>{{$lead->cre->cre}}</h2></strong>
                     from {{$lead->cre->created_at->format('jS M, Y')}}
                     <h5>Please contact your Senior or the Marketing Department. </h5>
-                    
+
                     <a href="/modal/{{ $lead->id }}/message" data-toggle="modal" data-target="#modal" title="Send Message">
                         <i class=" fa fa-envelope-o fa-2x"></i>
                     </a>
@@ -36,9 +36,9 @@
 <div id="dispositions">
     <div class="col-md-7">
         <div class="panel panel-default">
-            <div class="panel-heading">                
+            <div class="panel-heading">
                 <h5>CRM Dispositions</h5>
-            </div>  
+            </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
                     <thead>
@@ -57,12 +57,12 @@
                         <tr>
                             <td>{{ $i }}</td>
                             <td>{{ date('jS-M-y h:i A', strtotime($disposition->created_at)) }}</td>
-                            <td><b>{{ $disposition->master->disposition_code or "" }}</b>  : 
+                            <td><b>{{ $disposition->master->disposition_code or "" }}</b>  :
                                 {{ $disposition->remarks }}
                                 <small class="pull-right">{!! $disposition->callback ? "Callback On : " . date('jS-M-Y h:i A', strtotime($disposition->callback)) : "" !!}</small>
                             </td>
                             <td>{{ $disposition->name }}</td>
-                            <td> 
+                            <td>
                                 {!! $disposition->email ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='Email Sent'></span></span>" : "" !!}
                                 {!! $disposition->sms ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='" . $disposition->sms . "'></span></span>" : "" !!}
                             </td>
@@ -71,14 +71,14 @@
                     </tbody>
                 </table>
             </div>
-        </div>      
+        </div>
     </div>
 @if(isset($dialer_dispositions))
     <div class="col-md-5">
         <div class="panel panel-default">
-            <div class="panel-heading">                
+            <div class="panel-heading">
                 <h5>Dialer Dispositions</h5>
-            </div>  
+            </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
                     <thead>
@@ -99,7 +99,7 @@
                             <td>{{ $i }}</td>
                             <td>{{ date('jS-M-y h:i A', strtotime($disposition->eventdate)) }}</td>
                             <td><b>{{ $disposition->disposition or "" }}</b>
-                                
+
                             </td>
                             <td>{{ $disposition->duration or "" }}</td>
                             <td>{{ $disposition->userfullname or "" }}</td>
@@ -109,7 +109,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>      
+        </div>
     </div>
 @endif
 </div>
@@ -139,13 +139,13 @@
 		$countryAlert['country_alert_lead_id'] = $lead->id;
 		Session::put($countryAlert);
 	}
-?>	
+?>
 @if($alert)
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
 			<div class="alert alert-danger warning">
 				<a class="close" data-dismiss="alert">×</a>
-				<strong><h5>This is a foreign client. Please check local time before calling</h5></strong> 
+				<strong><h5>This is a foreign client. Please check local time before calling</h5></strong>
 			</div>
 		</div>
 	</div>
@@ -158,7 +158,7 @@
 			min-height: 100px;
 			text-align: center;
 		}
-	</style>	
+	</style>
 @endif
 @endif
 <?php
@@ -185,12 +185,12 @@
 		  		<div class="panel-title pull-right" data-html="true" data-toggle="popover" title="Lead Details" data-content="{!! $data !!}"><i class="fa fa-info-circle"></i></div>
 		    	<h1 class="panel-title"><?php echo $lead->name;?></h1>
 		  	</div>
-		  	<div class="panel-body">	
-            <?php $lead->getInternationalLocalTime(); ?> 
-                		  	
+		  	<div class="panel-body">
+            <?php $lead->getInternationalLocalTime(); ?>
+
 		  		<label class="form-control">Lead Id : <?php echo $lead->id;?></label>
 
-		  		<label class="form-control">Patient Id :   				
+		  		<label class="form-control">Patient Id :
 				@if($lead->patient)
 					<a href="/patient/{{$lead->patient->id}}/diet">{{$lead->patient->id}}</a>
 					<div class="pull-right">
@@ -201,10 +201,10 @@
 					</div>
 				@else
 						<a href="/lead/{{$lead->id}}/register">Click</a>
-				@endif  					
+				@endif
 					</label>
 
-					<label class="form-control">Age : {{trim($lead->dob)<>''?$lead->dob->diff(Carbon::now())->format('%y years, %m months and %d days') : ''}}  					 
+					<label class="form-control">Age : {{trim($lead->dob)<>''?$lead->dob->diff(Carbon::now())->format('%y years, %m months and %d days') : ''}}
 					</label>
 		  	@if($lead->patient && $lead->patient->hasTag('VIP'))
 		  		<label class="form-control">VIP Client
@@ -212,7 +212,7 @@
 			@elseif($lead->dnc)
 				<label class="form-control">DNC
 				</label>
-		  	@elseif($lead->maskPhone) 
+		  	@elseif($lead->maskPhone)
                 <p class="form-control redtime" style=''>Local Time:  {{($lead->current_time)? date("h:i:s a", strtotime($lead->current_time)): ''}}</p>
             @else
                 @if(isset($lead->current_time))
@@ -230,11 +230,11 @@
 				<label class="form-control" id="status">
 				</label>
 
-             
-                   
-                   
 
-                
+
+
+
+
 		  	</div>
 		</div>
 	</div>
@@ -253,17 +253,17 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#status').raty({ 
+	$('#status').raty({
 		readOnly: true,
 		score: {{$lead->status_id ? $lead->status_id : 1}},
 		hints : ['New', 'Explanined', 'Follow Up', 'Hot', 'Converted', 'Dead'],
 
-	@if($lead->status_id == 6) 
+	@if($lead->status_id == 6)
 		number : {{$lead->status_id}},
 	@endif
 	});
 
-	$('[data-toggle="popover"]').popover({trigger : 'hover'}); 
+	$('[data-toggle="popover"]').popover({trigger : 'hover'});
 });
 </script>
 <style type="text/css">
@@ -278,7 +278,7 @@ $(document).ready(function(){
         color: #ffffff;
     }
      .greentime
-    {   
+    {
         background: #2d8659;
         background: #9fdfbf;
         color: #333;

@@ -167,11 +167,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                         });
                     }
 
-                    $leads = $leads->whereHas('patient',function($query) {
-                        $query->whereHas('fees',function($q) {
-                            $q->where('end_date','>=',DB::raw('curdate()'));
-                        });
-                    },'=',0)
+                    $leads = $leads->doesnthave('patient')
                     ->get();
                 $this->executex($leads);
           }
