@@ -16,11 +16,14 @@ class KnowledgedbController extends Controller{
         $recent_blog = Ayurvedic_Info::orderBy('created_at')
                                 ->limit(10)
                                 ->get();
+
+        $tags = DB::table('test.Tags')->get();
         $data = array(
             'menu' => 'knowledge',
             'section' => 'details',
             'details' => $details,
-            'blogs' => $recent_blog
+            'blogs' => $recent_blog,
+            'tags'  => $tags
         );
         return view('home')->with($data);
     }
@@ -30,6 +33,7 @@ class KnowledgedbController extends Controller{
         $blog->Title = $request->Title;
         $blog->Author = Auth::user()->employee->name;
         $blog->Description = $request->Description;
+        $blog->tag = $request->tagging;
         $blog->created_at = Carbon::now();
         $blog->updated_at = Carbon::now();
         $blog->save();
