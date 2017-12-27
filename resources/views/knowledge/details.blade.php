@@ -26,7 +26,7 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   <div class="w3-card-4 w3-margin w3-white">
     <div class="w3-container">
       <h3 align="center"><b>{{$detail->Title}}</b></h3>
-      <h5><b>Author: </b>{{$detail->Author}}</h5>
+      <h5><b>Tag: </b>{{$detail->tag}}</h5>
     </div>
 
     <div class="w3-container">
@@ -63,7 +63,15 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
                 <label>Description</label>
                 <textarea rows="7" cols="20" name="Description"></textarea>
             </p>
-            <p><button class="w3-button w3-padding-large w3-white w3-border"><b>Save</b></button></p>
+                <label>Tags :</label>
+                <select name="tagging">
+                  <option></option>
+                @foreach($tags as $tag)
+                  <!--<option  value="{{$tag->id}}">{{$tag->tag_name}}</option>-->
+                  <option  value="{{$tag->tag_name}}">{{$tag->tag_name}}</option>
+                @endforeach
+                </select>
+            <button class="w3-button w3-padding-large w3-white w3-border"><b>Save</b></button></p>
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
     </form>
   </div>
