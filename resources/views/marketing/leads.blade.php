@@ -13,6 +13,7 @@
 					<th>State</th>
 					<th>Country</th>
 					<th>Lead Assign Date</th>
+					<th>Lead Created_at</th>
 					<th>CRE</th>
 					<th>Lead Source</th>
 					<th>Status</th>
@@ -30,6 +31,7 @@
 					<td>{{$lead->state or ""}}</td>
 					<td>{{$lead->country or ""}}</td>
 					<td style="width: 130px;">{{ $lead->cre->created_at or "" }}</td>
+					<td>{{$lead->created_at or " "}}</td>
 					<td>{{ $lead->cre->cre or "" }}</td>
 
 					<td style="min-width: 100px;">{{ $lead->source->master->source_name or "" }}</td>
