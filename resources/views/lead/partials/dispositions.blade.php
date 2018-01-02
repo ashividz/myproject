@@ -10,7 +10,7 @@
         <div class="panel panel-default">
             <div class="panel-heading"><span class="panel-title">Add Disposition</span></div>
             <div class="panel-body">
-             @if(!$lead->dnc)   
+             @if(!$lead->dnc)
                 <form method="POST" action="/lead/{{ $lead->id }}/disposition" role="form" class="form-inline" id="form">
                     <div class="row" style="padding-top:20px;">
                         <div class="col-md-6 col-sm-6">
@@ -19,9 +19,9 @@
                                     <span>CONNECTED : </span><input type="radio" name="status" value="1" checked onclick="selectDisposition(1)">
                                     <br><span>NOT CONNECTED : </span><input type="radio" name="status" value="2" onclick="selectDisposition(2)">
                                 </div>
-                            </div> 
-                            <hr> 
-                            <p>&nbsp;</p>                        
+                            </div>
+                            <hr>
+                            <p>&nbsp;</p>
                             <div class="form-group col-md-12">
                                 <div class="input-group">
                                     <label class="input-group-addon"></label>
@@ -32,30 +32,30 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6"> 
-                            <div class="row">     
+                        <div class="col-md-6 col-sm-6">
+                            <div class="row">
                                 <div class="form-group col-md-12">
                                     <div class="input-group col-md-12">
                                         <div class="input-group-addon">Remarks *</div>
                                         <textarea class="form-control" type="textarea" rows="2" id="remarks" name="remarks" required></textarea>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                             <hr>
-                            <div class="row">     
+                            <div class="row">
 
                                 <div class="form-group col-md-12">
                                     <div class="input-group col-md-8">
                                         <div class="input-group-addon">Callback</div>
                                         <input class="form-control" type="text" id="callback" name="callback" value="">
                                     </div>
-                                </div>     
+                                </div>
                             </div>
                             <hr>
-                            <div class="row">     
+                            <div class="row">
 
                                 <div class="form-group col-md-12">
-                                    
+
                                         <div><strong>Program Explain</strong></div>
                                          <table class="table table-condensed table-bordered">
                                             <tr>
@@ -69,10 +69,10 @@
                                                 </select>
                                             </tr>
                                         </table>
-                                    
-                                </div>     
+
+                                </div>
                             </div>
-                            <div class="row">     
+                            <div class="row">
 
                                 <div class="form-group col-md-12">
                                     <table class="table table-condensed table-bordered">
@@ -81,9 +81,9 @@
                                                 <td>{{$lead->patient->suit->trial_plan or ""}}</td>
                                             <tr>
                                     </table>
-                                </div>     
+                                </div>
                             </div>
-                            <div class="row">     
+                            <div class="row">
 
                                 <div class="form-group col-md-12">
                                     <table class="table table-condensed table-bordered">
@@ -92,63 +92,63 @@
                                             <td>{{$remark->source->remarks or ""}}</td>
                                         </tr>
                                     </table>
-                                </div>     
+                                </div>
                             </div>
-                            <div class="row">     
+                            <div class="row">
 
                                 <div class="form-group col-md-12">
                                     @if($medical->patient)
                                         <div><strong>Medical History</strong></div>
                                          <table class="table table-condensed table-bordered">
                                             <tr>
-                                               <td><strong>Dignosis</strong></td> 
+                                               <td><strong>Dignosis</strong></td>
                                                <td><strong>Medical Problem</strong></td>
                                                <td><strong>Medical History</strong></td>
                                             </tr>
                                             <tr>
-                                               <td>{{$medical->patient->diagnosis  or ""}}</td> 
+                                               <td>{{$medical->patient->diagnosis  or ""}}</td>
                                                <td>{{$medical->patient->medical_problem  or ""}}</td>
                                                <td>{{$medical->patient->medical_history  or ""}}</td>
                                             </tr>
                                         </table>
                                     @endif
-                                </div>     
+                                </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <p></p>
-                    <div class="row">                       
+                    <div class="row">
                         <div class="col-md-12 col-sm-12" align="center">
                             <button id="save" type="submit" name="save" class="btn btn-success"> Save Disposition</button>
-                        </div>                          
-                    </div>          
+                        </div>
+                    </div>
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 </form>
            @if(Auth::user()->hasRole('cre'))
-                
+
                  @if(isset($lead->dialer) && $lead->dialer->created_at->format('Y-m-d') <= date('Y-m-d'))
                      @if(isset($lead->disposition))
                          @if(($lead->cre && $lead->cre->cre != Auth::user()->employee->name && $lead->cre->cre != $lead->cre->created_by) || !$lead->cre)
-                                         <div>
+                                         <!-- <div>
                                             <form method="POST" action="/lead/{{ $lead->id }}/selfAssign" role="form" class="form-inline" id="form_selfassign">
                                              <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                              <button  id="self_assign" type='submit' class='btn btn-info active' > Self Assign</button>
                                             </form>
-                                        </div>
-                                
+                                        </div> -->
+
                          @endif
 
                     @endif
                 @endif
             @endif
-            
+
 			@else
 				<div class="blacklisted"></div>
 			@endif
 			</div>
 		</div>
-	</div>	
+	</div>
 	<div class="col-md-2">
 		<div class="panel panel-default">
 			<div class="panel-heading"><span class="panel-title">Quick Links</span></div>
@@ -170,7 +170,7 @@
                 </ul>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 @include('partials.modal')
 @endsection
@@ -178,9 +178,9 @@
 <div id="dispositions">
     <div class="col-md-7">
         <div class="panel panel-default">
-            <div class="panel-heading">                
+            <div class="panel-heading">
                 <h5>CRM Dispositions</h5>
-            </div>  
+            </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
                     <thead>
@@ -199,12 +199,12 @@
                         <tr>
                             <td>{{ $i }}</td>
                             <td>{{ date('jS-M-y h:i A', strtotime($disposition->created_at)) }}</td>
-                            <td><b>{{ $disposition->master->disposition_code or "" }}</b>  : 
+                            <td><b>{{ $disposition->master->disposition_code or "" }}</b>  :
                                 {{ $disposition->remarks }}
                                 <small class="pull-right">{!! $disposition->callback ? "Callback On : " . date('jS-M-Y h:i A', strtotime($disposition->callback)) : "" !!}</small>
                             </td>
                             <td>{{ $disposition->name }}</td>
-                            <td> 
+                            <td>
                                 {!! $disposition->email ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='Email Sent'></span></span>" : "" !!}
                                 {!! $disposition->sms ? "<span class='label label-success'><span class='glyphicon glyphicon-ok' aria-hidden='true' title='" . $disposition->sms . "'></span></span>" : "" !!}
                             </td>
@@ -213,13 +213,13 @@
                     </tbody>
                 </table>
             </div>
-        </div>      
+        </div>
     </div>
     <div class="col-md-5">
         <div class="panel panel-default">
-            <div class="panel-heading">                
+            <div class="panel-heading">
                 <h5>Dialer Dispositions</h5>
-            </div>  
+            </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
                     <thead>
@@ -229,7 +229,7 @@
                             <th>Call type</th>
                             <th>Disposition</th>
                             <th>Duration</th>
-                            <th>Name</th>                            
+                            <th>Name</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -241,16 +241,16 @@
                             <td>{{ date('jS-M-y h:i A', strtotime($disposition->recordentrydate))}}</td>
                             <td><b>{{ $disposition->calltype }}</b></td>
                             <td><b>{{ $disposition->disposition or "" }}</b>
-                                
+
                             </td>
                             <td>{{gmdate('H:i:s',$disposition->callduration) }}</td>
-                            <td>{{ $disposition->userfullname    }}</td>                            
+                            <td>{{ $disposition->userfullname    }}</td>
                         </tr>
             @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>      
+        </div>
     </div>
 </div>
 <style type="text/css">
@@ -263,9 +263,9 @@
 </style>
 
 <script type="text/javascript">
-$(document).ready(function() 
-{    
-    
+$(document).ready(function()
+{
+
     var form = $("#form");
 
     getDispositionList(1); //Connected Calls Disposition List
@@ -276,10 +276,10 @@ $(document).ready(function()
         minDate:0
     });
 
-    
+
      $('#self_assign').click(function(e){
             e.preventDefault();
-           
+
             var url = $("#form_selfassign").attr('action'); // the script where you handle the form input.
             $.ajax(
             {
@@ -292,7 +292,7 @@ $(document).ready(function()
                    $('#alert').empty().append(data);
                    setTimeout(function()
                     {
-                        $('#alert').slideUp('slow').fadeOut(function() 
+                        $('#alert').slideUp('slow').fadeOut(function()
                         {
                             location.reload();
                          });
@@ -303,17 +303,17 @@ $(document).ready(function()
 
 
     $("#form").submit(function(event) {
-        
+
         /* stop form from submitting normally */
         event.preventDefault();
 
-        if (($("#disposition").val() == 8 || $("#disposition").val() == 15) && $("#callback").val().trim() == "") 
+        if (($("#disposition").val() == 8 || $("#disposition").val() == 15) && $("#callback").val().trim() == "")
         {
             $('#alert').show();
             $('#alert').empty().append('Callback Date/Time Required');
             setTimeout(function()
             {
-                $('#alert').slideUp('slow').fadeOut(function() 
+                $('#alert').slideUp('slow').fadeOut(function()
                 {
                     //location.reload();
                  });
@@ -323,7 +323,7 @@ $(document).ready(function()
         };
 
 
-        
+
         var url = $("#form").attr('action'); // the script where you handle the form input.
         $.ajax(
         {
@@ -336,31 +336,31 @@ $(document).ready(function()
                $('#alert').empty().append(data);
                setTimeout(function()
                 {
-                    $('#alert').slideUp('slow').fadeOut(function() 
+                    $('#alert').slideUp('slow').fadeOut(function()
                     {
                         location.reload();
                      });
                 }, 3000);
            }
         });
-        form.find(':enabled').each(function() 
+        form.find(':enabled').each(function()
         {
             $(this).attr("disabled", "disabled");
         });
         $('#edit').prop("disabled", false);
         $('#alert').hide();
         return false; // avoid to execute the actual submit of the form.
-    });         
+    });
 });
 
-function getDispositionList(status) 
+function getDispositionList(status)
 {
     $.getJSON("/master/dispositions", { status: status, dept: {{ $dept }} }, function(result){
         $("#disposition").empty();
         $.each(result, function(i, field) {
             $("#disposition").append("<option value='" + field.id + "'> " + field.disposition + "</option>");
         });
-    });  
+    });
 }
 
 function selectDisposition(status)
