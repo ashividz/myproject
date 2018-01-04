@@ -443,48 +443,64 @@ class PatientController extends Controller
         $patient = Patient::
                    with('cfee' ,'lead')
                     ->find($id);
+        if($patient->cfee)
+        {
 
-        $start_date = $patient->cfee->start_date;
-        $end_date   = $patient->cfee->end_date;
-        $today = Carbon::now();
+            $start_date = $patient->cfee->start_date;
+            $end_date   = $patient->cfee->end_date;
+            $today = Carbon::now();
 
-        $totalDietSend = Diet::where('patient_id' , $patient->id)
-                         ->whereBetween('date_assign', [$start_date, $end_date])
-                         ->count();
-        $difference = $start_date->diff($today)->days - $totalDietSend;
+            $totalDietSend = Diet::where('patient_id' , $patient->id)
+                             ->whereBetween('date_assign', [$start_date, $end_date])
+                             ->count();
+            $difference = $start_date->diff($today)->days - $totalDietSend;
 
-        $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)
-                  ->sum('break_days');
+            $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)
+                      ->sum('break_days');
 
-        $difference = $difference - $totalBreakDay;
-
-
-        /*$break = BreakAdjustment::where('duration' , $patient->cfee->duration)
-                ->first();*/
-
-        $break = BreakAdjustment::where('from_duration' , '<=' , $patient->cfee->duration)
-                                ->where('to_duration' , '>=' , $patient->cfee->duration )
-                                ->first();
-        $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)  // toatl break taken by patient  ;
-                  ->sum('break_days');
-
-        $break->remaing = $break->break_allow - $totalBreakDay ;
-
-        $breaks = PatientBreak::with('lead')
-                  ->where('cart_id' , $patient->cfee->cart_id)
-                  ->get();
+            $difference = $difference - $totalBreakDay;
 
 
-        $data = array(
-            'menu' => 'patient',
-            'section' => 'partials.break',
-            'patient' => $patient,
-            'i'       => 1,
-            'difference' => $difference,
-            'breaks'    => $breaks,
-            'break'     => $break
-       );
-       return view('home')->with($data);
+            /*$break = BreakAdjustment::where('duration' , $patient->cfee->duration)
+                    ->first();*/
+
+            $break = BreakAdjustment::where('from_duration' , '<=' , $patient->cfee->duration)
+                                    ->where('to_duration' , '>=' , $patient->cfee->duration )
+                                    ->first();
+
+            
+            $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)  // toatl break taken by patient  ;
+                      ->sum('break_days');
+
+            if($break)
+            {
+                $break->remaing = $break->break_allow - $totalBreakDay ;
+            }
+            else{
+                return "Patient has register for less than three month program";
+            }
+            $breaks = PatientBreak::with('lead')
+                      ->where('cart_id' , $patient->cfee->cart_id)
+                      ->get();
+        
+
+
+            $data = array(
+                'menu' => 'patient',
+                'section' => 'partials.break',
+                'patient' => $patient,
+                'i'       => 1,
+                'difference' => $difference,
+                'breaks'    => $breaks,
+                'break'     => $break
+           );
+           return view('home')->with($data);
+        }
+
+        else 
+        {
+            return "This client is not active client";
+        }
     }
 
     public function saveBreakAdjustment($break_days , $patient , $fdate , $tdate)
@@ -512,71 +528,90 @@ class PatientController extends Controller
         $patient->lead->start_date = Carbon::parse($tdate)->addDays(1)->toDateTimeString();
 
         
-        $this->sendEmail($patient->lead);
+        $this->sendEmail($patient->lead , 2);
 
         return "Break Adjusted";
     }
 
     public function breakAdjustment($id  , Request $request)
     {
-        $time = strtotime($request->start_date);
-        $fdate = date("Y-m-d",$time);
-        $time = strtotime($request->end_date);
-        $tdate = date("Y-m-d",$time);
-        $datetime1 = new DateTime($fdate);
-        $datetime2 = new DateTime($tdate);
-        $interval = $datetime1->diff($datetime2)->days + 1;
-
-      // dd($interval);
-
-        $patient = Patient::
-                   with('cfee' ,'lead')
-                    ->find($id);
-
-        $start_date = $patient->cfee->start_date;
-        $end_date   = $patient->cfee->end_date;
-        $today = Carbon::now();
-
-        $totalDietSend = Diet::where('patient_id' , $patient->id)
-                         ->whereBetween('date_assign', [$start_date, $end_date])     ///toatal diet sent  ;
-                         ->count();
-
-        $difference = $start_date->diff($today)->days - $totalDietSend;           // total break days ;
-
-        $break = BreakAdjustment::where('from_duration' , '<=' , $patient->cfee->duration)
-                                ->where('to_duration' , '>=' , $patient->cfee->duration )
-                                ->first();
-
-        $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)  // toatl break taken by patient  ;
-                  ->sum('break_days');
-
-        $count = PatientBreak::where('cart_id' , $patient->cfee->cart_id)         // How many times client taken the break ;
-                  ->count();
-
-        $patient->break = $break;
-        $patient->count = $count;
-
-        if($break->turn > $count  && $break->break_allow > $totalBreakDay)
+        if($request->break)
         {
-            $left_days = $break->break_allow - $totalBreakDay;
-            $difference = $interval;
+            $time = strtotime($request->start_date);
+            $fdate = date("Y-m-d",$time);
+            $time = strtotime($request->end_date);
+            $tdate = date("Y-m-d",$time);
+            $datetime1 = new DateTime($fdate);
+            $datetime2 = new DateTime($tdate);
+            $interval = $datetime1->diff($datetime2)->days + 1;
 
-            if($left_days < $difference)
+          // dd($interval);
+
+            $patient = Patient::
+                       with('cfee' ,'lead')
+                        ->find($id);
+
+            $start_date = $patient->cfee->start_date;
+            $end_date   = $patient->cfee->end_date;
+            $today = Carbon::now();
+
+            $totalDietSend = Diet::where('patient_id' , $patient->id)
+                             ->whereBetween('date_assign', [$start_date, $end_date])     ///toatal diet sent  ;
+                             ->count();
+
+            $difference = $start_date->diff($today)->days - $totalDietSend;           // total break days ;
+
+            $break = BreakAdjustment::where('from_duration' , '<=' , $patient->cfee->duration)
+                                    ->where('to_duration' , '>=' , $patient->cfee->duration )
+                                    ->first();
+
+            $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)  // toatl break taken by patient  ;
+                      ->sum('break_days');
+
+            $count = PatientBreak::where('cart_id' , $patient->cfee->cart_id)         // How many times client taken the break ;
+                      ->count();
+
+            $patient->break = $break;
+            $patient->count = $count;
+
+            if($break->turn > $count  && $break->break_allow > $totalBreakDay)
             {
-                $tdate = Carbon::parse($fdate)->addDays($left_days-1)->toDateTimeString();
-                $this->saveBreakAdjustment($left_days , $patient , $fdate , $tdate );
+                $left_days = $break->break_allow - $totalBreakDay;
+                $difference = $interval;
+
+                if($left_days < $difference)
+                {
+                    $tdate = Carbon::parse($fdate)->addDays($left_days-1)->toDateTimeString();
+                    $this->saveBreakAdjustment($left_days , $patient , $fdate , $tdate );
+                }
+                else
+                {
+                    $tdate = Carbon::parse($fdate)->addDays($difference-1)->toDateTimeString();
+                    $this->saveBreakAdjustment($difference , $patient ,$fdate , $tdate);
+                }
+
             }
-            else
-            {
-                $tdate = Carbon::parse($fdate)->addDays($difference-1)->toDateTimeString();
-                $this->saveBreakAdjustment($difference , $patient ,$fdate , $tdate);
-            }
+            return $this->break($id);
+        }
+        elseif ($request->mail)
+        {
+            $time = strtotime($request->start_date);
+            $fdate = date("Y-m-d",$time);
+            $time = strtotime($request->end_date);
+            $tdate = date("Y-m-d",$time);
+            $patient = Patient::
+                       with('cfee' ,'lead')
+                        ->find($id);
+
+            $patient->lead->fdate = $fdate;
+            $patient->lead->tdate = $tdate;
+            $this->sendEmail($patient->lead , 1);
+            return $this->break($id);
 
         }
-        return $this->break($id);
     }
 
-    public function sendEmail($lead)
+    public function sendEmail($lead , $mailid)
     {
         if(trim($lead->email) == '')
         {
@@ -588,19 +623,38 @@ class PatientController extends Controller
                 'lead'      => $lead,
             );
 
-        Mail::send('templates.emails.break', $data, function($message) use ($lead)
+        if($mailid === 2)
         {
-            $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'dietplan@nutrihealthsystems.co.in' : 'sales@nutrihealthsystems.com';
+            Mail::send('templates.emails.break', $data, function($message) use ($lead)
+            {
+                $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'dietplan@nutrihealthsystems.co.in' : 'dietplan@nutrihealthsystems.co.in';
 
-            $message->to($lead->email, $lead->name)
-            ->subject('Break Adjustment')
-            ->from($from, 'Nutri-Health Systems');
+                $message->to($lead->email, $lead->name)
+                ->subject('Break Adjustment')
+                ->from($from, 'Nutri-Health Systems');
 
-            //Add CC
-            /*if (trim($lead->email_alt) <> '') {
-                $message->cc($lead->email_alt, $name = null);
-            }*/
-        });
+                //Add CC
+                /*if (trim($lead->email_alt) <> '') {
+                    $message->cc($lead->email_alt, $name = null);
+                }*/
+            });
+        }
+        else
+        {
+            Mail::send('templates.emails.breakmail', $data, function($message) use ($lead)
+            {
+                $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'dietplan@nutrihealthsystems.co.in' : 'dietplan@nutrihealthsystems.co.in';
+
+                $message->to($lead->email, $lead->name)
+                ->subject('Confirmation of break adjustment')
+                ->from($from, 'Nutri-Health Systems');
+
+                //Add CC
+                /*if (trim($lead->email_alt) <> '') {
+                    $message->cc($lead->email_alt, $name = null);
+                }*/
+            });
+        }
 
         return true;
 
