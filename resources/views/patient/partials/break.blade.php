@@ -8,6 +8,20 @@
         <div class="panel-body">
 			<div align="center">
             <form action="/patient/{{$patient->id}}/break"   method="post"  class="form-horizontal" role="form">
+            	<div class="form-check">
+				  <label class="form-check-label">
+				    <input class="form-check-input" type="checkbox" name="mail" id="exampleRadios1" value="option1" >
+				    Conformation mail
+				  </label>
+				</div>
+				<div class="form-check">
+				  <label class="form-check-label">
+				    <input class="form-check-input" type="checkbox" name="break" id="exampleRadios2" value="option2">
+				    Break Adjustment
+				  </label>
+				</div>
+				<br>
+				<br>
                	<label for="Break">Start Date </label><input type="text" id="dt1" name="start_date">
 		        <label for="Break">End Date </label> <input type="text" id="dt2" name="end_date">
 		        <br> <br>
