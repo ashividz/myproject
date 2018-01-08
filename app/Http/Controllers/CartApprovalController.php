@@ -17,7 +17,15 @@ use App\Models\OrderPatient;
 use App\Models\ApproverPayment;
 use App\Models\ApproverDiscount;
 use App\Models\User;
+use App\Models\Lead;
+use App\Models\CartProduct;
+
+
+use App\Models\Email;
+use App\Models\EmailTemplate;
 use App\Support\Helper;
+
+use Mail;
 
 use Redirect;
 use Auth;
@@ -27,6 +35,16 @@ class CartApprovalController extends Controller
     protected $daterange;
     protected $start_date;
     protected $end_date;
+    protected $template_1w ;
+    protected $template_1 ;
+    protected $template_2w ;
+    protected $template_2 ;
+    protected $template_3w ;
+    protected $template_3 ;
+    protected $template_6w ;
+    protected $template_6 ;
+    protected $template_12w ;
+    protected $template_12 ;
 
     public function __construct(Request $request)
     {
@@ -34,7 +52,18 @@ class CartApprovalController extends Controller
         $this->daterange = isset($_POST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y-m-d 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y-m-d 23:59:59');
-        
+
+        $this->template_1w = 86;
+        $this->template_1 = 87;
+        $this->template_2w = 88;
+        $this->template_2 = 89;
+        $this->template_3w = 90;
+        $this->template_3 = 91;
+        $this->template_6w = 92;
+        $this->template_6 = 93;
+        $this->template_12w = 94;
+        $this->template_12 = 95;
+       
     } 
 
     public function index()
@@ -374,7 +403,12 @@ class CartApprovalController extends Controller
 
             } elseif ($cart->status_id == 4) {
                     //Patient Registration
+
                     $patient = Patient::register($cart);
+                    if ($cart->hasProductCategories([1])) {
+                        $this->sendserviceCatalogue($cart); 
+                    }
+
 
                     //Place order
                     Order::store($cart, $patient);
@@ -390,5 +424,72 @@ class CartApprovalController extends Controller
         return ['message' => 'Cart Rejected', 'status' => 'Success!'];
     }
 
-    
+   public  function  sendserviceCatalogue($cart)
+    {
+        $products_id = [];
+        $products = CartProduct::where('cart_id' , $cart->id)->get();
+        foreach ($products as $product) {
+            $products_id[] = $product->product_id;
+        }
+        
+        
+        if(in_array(73, $products_id)){
+            $this->sendEmail($this->template_1,$cart->lead_id);
+        } //without free herbs
+        elseif(in_array(64, $products_id)){
+            $this->sendEmail($this->template_1w,$cart->lead_id);
+        }
+        elseif(in_array(93, $products_id)){
+            $this->sendEmail($this->template_2,$cart->lead_id);
+        } //without free herbs
+        elseif(in_array(92, $products_id)){
+            $this->sendEmail($this->template_1w,$cart->lead_id);
+        } //with free herbs   
+        elseif(in_array(5, $products_id)){
+            $this->sendEmail($this->template_3,$cart->lead_id);
+        } //without free herbs
+        elseif(in_array(52, $products_id)){
+            $this->sendEmail($this->template_3w,$cart->lead_id);
+        } //with free herbs
+        elseif(in_array(6, $products_id)){
+            $this->sendEmail($this->template_6,$cart->lead_id);
+        } //without free herbs
+        elseif(in_array(53, $products_id)){
+            $this->sendEmail($this->template_6w,$cart->lead_id);
+        } //with free herbs
+        else if(in_array(7, $products_id)){
+            $this->sendEmail($this->template_12,$cart->lead_id);
+        } //without free herbs
+        elseif(in_array(54, $products_id)){
+            $this->sendEmail($this->template_12w,$cart->lead_id);
+        } //with free herbs*/
+
+}
+    public function  sendEmail($template_id , $user)
+    {
+        $template = EmailTemplate::find($template_id);
+        $subject = $template->subject;
+        $from = $template->from;
+        $email = new Email;
+        $email->user_id = Auth::user()->id;
+        $email->lead_id = $user;
+        $email->template_id = $template_id;
+        $body = $template->email;
+
+
+        $user = Lead::where('id' , $user)->first();
+
+        if($user->email) {
+        $body = $template->email;
+        Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($subject, $from)
+        {
+        $message->to('akriti.kumari@drshikhasnutriwel.com', 'Akriti')
+        ->subject($subject)
+        ->from($from, 'Nutri-Health Systems');
+        });
+        $email->email = $body;
+        $email->save();
+        }   
+
+    }
 }
