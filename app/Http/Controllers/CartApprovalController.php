@@ -405,9 +405,9 @@ class CartApprovalController extends Controller
                     //Patient Registration
 
                     $patient = Patient::register($cart);
-                    if ($cart->hasProductCategories([1])) {
+                    /*if ($cart->hasProductCategories([1])) {
                         $this->sendserviceCatalogue($cart); 
-                    }
+                    }*/
 
 
                     //Place order
