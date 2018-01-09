@@ -405,9 +405,9 @@ class CartApprovalController extends Controller
                     //Patient Registration
 
                     $patient = Patient::register($cart);
-                    /*if ($cart->hasProductCategories([1])) {
+                    if ($cart->hasProductCategories([1])) {
                         $this->sendserviceCatalogue($cart); 
-                    }*/
+                    }
 
 
                     //Place order
@@ -469,7 +469,7 @@ class CartApprovalController extends Controller
     {
         $template = EmailTemplate::find($template_id);
         $subject = $template->subject;
-        $from =  'diet@nutrihealthsystems.co.in';
+        $from =  $template->from;//'service@nutrihealthsystems.com';
         $email = new Email;
         $email->user_id = Auth::user()->id;
         $email->lead_id = $user;
