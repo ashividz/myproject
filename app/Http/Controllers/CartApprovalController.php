@@ -469,7 +469,7 @@ class CartApprovalController extends Controller
     {
         $template = EmailTemplate::find($template_id);
         $subject = $template->subject;
-        $from = $template->from;
+        $from =  'diet@nutrihealthsystems.co.in';
         $email = new Email;
         $email->user_id = Auth::user()->id;
         $email->lead_id = $user;
