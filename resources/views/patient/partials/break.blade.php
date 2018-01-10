@@ -11,7 +11,7 @@
             	<div class="form-check">
 				  <label class="form-check-label">
 				    <input class="form-check-input" type="checkbox" name="mail" id="exampleRadios1" value="option1" >
-				    Conformation mail
+				    Confirmation mail
 				  </label>
 				</div>
 				<div class="form-check">
@@ -26,12 +26,12 @@
 		        <label for="Break">End Date </label> <input type="text" id="dt2" name="end_date">
 		        <br> <br>
                 <input type="submit" class="btn btn-primary" value="Submit">
-                {{csrf_field()}} 
+                {{csrf_field()}}
             </form>
-               
-            </div>    
-        </div>    
-    </div> 
+
+            </div>
+        </div>
+    </div>
 
     <div class="panel panel-default">
 		<div class="panel-heading">
@@ -42,7 +42,7 @@
                	<table id="table-age" class="table table-bordered">
                     <thead>
                         <tr>
-                            
+
                             <th>Patients Name</th>
                             <th>Days</th>
                             <th>Break Start Date</th>
@@ -50,13 +50,13 @@
                             <th>Created By</th>
                             <th>Break Created at</th>
 
-                            
+
                         </tr>
                     </thead>
                     <tbody>
                     	@foreach($breaks AS $break)
 		                    <tr>
-		                    	
+
 		                    	<td>{{$break->lead->name}}</td>
 		                    	<td>{{$break->break_days}}</td>
 		                    	<td>{{$break->start_date}}</td>
@@ -68,10 +68,10 @@
                     </tbody>
                 </table>
             </form>
-               
-            </div>    
-        </div>    
-    </div> 
+
+            </div>
+        </div>
+    </div>
 @endsection
 
 <style>
