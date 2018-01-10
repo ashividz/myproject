@@ -481,7 +481,7 @@ class CartApprovalController extends Controller
 
         if($lead->email) {
         $body = $template->email;
-        Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($subject, $from)
+        Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($subject, $from,$lead)
         {
         $message->to($lead->email,$lead->name)
         ->subject($subject)
