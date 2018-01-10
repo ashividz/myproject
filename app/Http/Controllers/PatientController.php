@@ -468,7 +468,7 @@ class PatientController extends Controller
                                     ->where('to_duration' , '>=' , $patient->cfee->duration )
                                     ->first();
 
-            
+
             $totalBreakDay = PatientBreak::where('cart_id' , $patient->cfee->cart_id)  // toatl break taken by patient  ;
                       ->sum('break_days');
 
@@ -482,7 +482,7 @@ class PatientController extends Controller
             $breaks = PatientBreak::with('lead')
                       ->where('cart_id' , $patient->cfee->cart_id)
                       ->get();
-        
+
 
 
             $data = array(
@@ -497,7 +497,7 @@ class PatientController extends Controller
            return view('home')->with($data);
         }
 
-        else 
+        else
         {
             return "This client is not active client";
         }
@@ -520,14 +520,14 @@ class PatientController extends Controller
         $break->end_date = $tdate;
         $break->created_by = Auth::user()->employee->name;
         $break->save();
-         
+
         $patient->lead->month = $patient->break->months;
         $patient->lead->count = $patient->count + 1 ;
         $patient->lead->fdate = $fdate;
         $patient->lead->tdate = $tdate;
         $patient->lead->start_date = Carbon::parse($tdate)->addDays(1)->toDateTimeString();
 
-        
+
         $this->sendEmail($patient->lead , 2);
 
         return "Break Adjusted";
@@ -627,7 +627,7 @@ class PatientController extends Controller
         {
             Mail::send('templates.emails.break', $data, function($message) use ($lead)
             {
-                $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'dietplan@nutrihealthsystems.co.in' : 'dietplan@nutrihealthsystems.co.in';
+                $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'service@nutrihealthsystems.com ' : 'service@nutrihealthsystems.com ';
 
                 $message->to($lead->email, $lead->name)
                 ->subject('Break Adjustment')
@@ -643,7 +643,7 @@ class PatientController extends Controller
         {
             Mail::send('templates.emails.breakmail', $data, function($message) use ($lead)
             {
-                $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'dietplan@nutrihealthsystems.co.in' : 'dietplan@nutrihealthsystems.co.in';
+                $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'service@nutrihealthsystems.com ' : 'service@nutrihealthsystems.com';
 
                 $message->to($lead->email, $lead->name)
                 ->subject('Confirmation of break adjustment')

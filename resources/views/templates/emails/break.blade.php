@@ -20,9 +20,13 @@
         </tr>
         <tr>
             <td>
-                As per your discussion with Nutritionist we are putting your program on hold from {{Carbon\Carbon::parse($lead->fdate)->toFormattedDateString()}} to {{Carbon\Carbon::parse($lead->tdate)->toFormattedDateString()}} . <p>You are request to resume the diet on {{Carbon\Carbon::parse($lead->start_date)->toFormattedDateString()}}.
+                As per your discussion with Nutritionist we are putting your program on hold from {{Carbon\Carbon::parse($lead->fdate)->toFormattedDateString()}} to {{Carbon\Carbon::parse($lead->tdate)->toFormattedDateString()}} . <p>You are  requested to resume the diet on {{Carbon\Carbon::parse($lead->start_date)->toFormattedDateString()}}.
                 </p>
                 <p>For {{$lead->month}} months : This is your {{$lead->count}} Break in the program.</p>
+                <p>Note:</p>
+                <p>For 3 months plan: Maximum 15 days breaks are allowed & which could be availed in 2 times.</p>
+                <p>For 6 months plan: Maximum 30 days breaks are allowed & which could be availed in 3 times.</p>
+                <p>For 12 months plan: Maximum 45 days breaks are allowed & which could be availed in 4 times.</p>
 
                     <table class="tg" border="1">
                       <tr>

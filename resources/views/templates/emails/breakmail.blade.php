@@ -22,7 +22,10 @@
             <td>
                 We have received your break request from {{Carbon\Carbon::parse($lead->fdate)->toFormattedDateString()}} to {{Carbon\Carbon::parse($lead->tdate)->toFormattedDateString()}}  Kindly provide your confirmation for it.
                 <p> Note: No breaks will be adjusted without your confirmation.</p>
-    
+                <p>For 3 months plan: Maximum 15 days breaks are allowed & which could be availed in 2 times.</p>
+                <p>For 6 months plan: Maximum 30 days breaks are allowed & which could be availed in 3 times.</p>
+                <p>For 12 months plan: Maximum 45 days breaks are allowed & which could be availed in 4 times.</p>
+
                 Warm Regards,<br>
                 {{$name}},<p>
                 Nutri-Health
