@@ -476,14 +476,14 @@ class CartApprovalController extends Controller
         $email->template_id = $template_id;
         $body = $template->email;
 
+        $lead = null;
+        $lead = Lead::where('id' , $user)->first();
 
-        $user = Lead::where('id' , $user)->first();
-
-        if($user->email) {
+        if($lead->email) {
         $body = $template->email;
         Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($subject, $from)
         {
-        $message->to($user->email, $user->name)
+        $message->to($lead->email,$lead->name)
         ->subject($subject)
         ->from($from, 'Nutri-Health Systems');
         });
