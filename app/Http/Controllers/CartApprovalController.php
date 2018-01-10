@@ -483,7 +483,7 @@ class CartApprovalController extends Controller
         $body = $template->email;
         Mail::send('templates.emails.empty', array('body' => $body), function($message) use ($subject, $from)
         {
-        $message->to('akriti.kumari@drshikhasnutriwel.com', 'Akriti')
+        $message->to($user->email, $user->name)
         ->subject($subject)
         ->from($from, 'Nutri-Health Systems');
         });
