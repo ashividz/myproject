@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Fee;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\LeadSource;
 
 use DB;
 use Auth;
@@ -608,7 +609,8 @@ class Patient extends Model
 
     public static function register($cart)
     {
-        if($cart->lead->patient) {            
+        if($cart->lead->patient) {   
+            Patient::setDietPreference($cart->lead_id,$cart->lead->patient);         
             return $patient = $cart->lead->patient;
         }
 
@@ -628,5 +630,24 @@ class Patient extends Model
         $patient->save();
 
         return $patient;
+    }
+
+
+    public static function setDietPreference($lead_id,$patient=null)
+    {
+        $id = $patient->id;
+        $patient_details = Patient::where('id' , $id)->first();
+        //rejoin clients
+        if(LeadSource::isExistingSource($lead_id,23))
+        {
+            $patient->email = 0 ;
+            $patient->save();
+        }//reference clients 
+        /*else if(LeadSource::isExistingSource($lead_id,10))
+        {
+            $patient->email = 0 ;
+            $patient->save();
+        }*/
+        return true;
     }
 }
