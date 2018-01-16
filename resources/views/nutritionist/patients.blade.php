@@ -48,7 +48,7 @@
 	$date = $date->addDay(1)->format('Y-m-d');
 	//$diet = $patient->diets->where('date_assign', $date)->where('email', '1')->first();
 	$diet = $patient->diets->filter(function ($item) use ($date) {
-    	return ( ($item->date_assign == $date) && ($item->email==1) );
+    	return ( ($item->date_assign == $date) && (($item->email == 1) || ($item->sms_response == 200)) );
 	})->first();	
 	$fee  = $patient->cfee ? $patient->cfee : $patient->fee;
 ?>
