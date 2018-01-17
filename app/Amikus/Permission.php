@@ -24,6 +24,14 @@ Trait Permission {
         return false;
     }
 
+    public function canEditLeadPhone()
+    {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') ) {
+            return true;
+        }
+        return false;
+    }
+
     public function canViewContactDetails()
     {
         return true;
