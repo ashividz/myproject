@@ -33,7 +33,7 @@
 						</li>
 						<li>
 							<label>Phone *</label>
-                        @if(Auth::user()->canEditLeadContact() || $lead->phone == '')
+                        @if(Auth::user()->canEditLeadPhone() || $lead->phone == '')
 							<input type="text" id="phone" name="phone" value="{{ $lead->phone }}">
                         @else
                             {{ $lead->phone }}
