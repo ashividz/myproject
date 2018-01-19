@@ -443,7 +443,7 @@ class CartApprovalController extends Controller
             $this->sendEmail($this->template_2,$cart->lead_id);
         } //without free herbs
         elseif(in_array(92, $products_id)){
-            $this->sendEmail($this->template_1w,$cart->lead_id);
+            $this->sendEmail($this->template_2w,$cart->lead_id);
         } //with free herbs   
         elseif(in_array(5, $products_id)){
             $this->sendEmail($this->template_3,$cart->lead_id);
