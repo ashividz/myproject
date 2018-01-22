@@ -828,6 +828,9 @@ Route::group([
         Route::get('patient/{id}/medicalTest', 'PatientBTController@showMedicalTest');
         Route::post('patient/{id}/medicalTest', 'PatientBTController@storeMedicalTest');
         Route::post('/patient/{id}/dietpreference','PatientDietController@savePreferece');
+
+        Route::get('/patient/{id}/break', 'PatientController@break');
+        Route::post('/patient/{id}/break', 'PatientController@breakAdjustment');
         
                 
 });
@@ -1323,8 +1326,7 @@ Route::group([
     function() {
         Route::get('/patient/{id}/preference', 'PatientController@preferences');
         Route::post('/patient/{id}/preference', 'PatientController@preferences');
-        Route::get('/patient/{id}/break', 'PatientController@break');
-        Route::post('/patient/{id}/break', 'PatientController@breakAdjustment');
+        
 
 });
 });
