@@ -34,18 +34,20 @@
 	@endif
 
 	@if(!$lead->patient->doctors->isEmpty())
-		<?php  $doctor = $lead->patient->doctors->sortByDesc('id')->first();?>
-		<div class="col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h2 class="panel-title">Doctor</h2>
-				</div>
-				<div class="panel-body">
+	<?php  $doctor = $lead->patient->doctors->sortByDesc('id')->first();?>
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">Doctor</h2>
+			</div>
+			<div class="panel-body">
+				@foreach($lead->patient->doctors as $doctor)
 					<label>Dr. {{$doctor->name or ""}}</label><br>
-                    <em class='pull-right'><small>since {{date('jS M, Y', strtotime($doctor->created_at))}}</small></em>
-				</div>
+				<em class='pull-right'><small>since {{date('jS M, Y', strtotime($doctor->created_at))}}</small></em>
+				@endforeach
 			</div>
 		</div>
+	</div>
 	@endif	
 @endif
 @if(!$lead->sources->isEmpty())
