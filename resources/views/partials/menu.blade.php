@@ -672,7 +672,39 @@
                             <a href="/quality/viewSurveyResults" id="menu_survey_results">Survey Results</a>
                         </li>                          
                     </ul>                    
-                </li>                                  
+                </li>   
+                <li>
+                    <a href="#" id="menu_quality_csat">Service Reports</a>  
+                    <ul>
+                        <li>
+                            <a href="/service/reports/diet_not_started" id="menu_service_diet-not-started">Diet Not Started</a>
+                        </li> 
+                        <li>
+                            <a href="/service/break" id="menu_break">Break Adjustment</a>
+                        </li> 
+                        <li>
+                            <a href="/service/diets" id="menu_diets">Diets</a>
+                        </li>
+                        <li>
+                            <a href="/service/audit" id="menu_service_audit">Audit Report</a>
+                        </li> 
+                        <li>
+                            <a href="/service/viewSurveys" id="menu_survey_results">Survey Results</a>
+                        </li>
+                        <li>
+                            <a href="/service/reports/appointments" id="menu_service_appointments">Nutritionist Appointments</a>
+                        </li>
+                        <li>
+                            <a href="/service/reports/yuwow/feedback" id="menu_service_diet-not-started">Yuwow Feedback</a>
+                        </li>
+                        <li>
+                            <a href="/service/reports/fabReport" id="menu_service_fab_report">FAB Report</a>
+                        </li>
+                        <li>
+                            <a href="/service/reports/weightLoss" id="menu_service_weight_loss">Weight Loss</a>
+                        </li>                         
+                    </ul>                    
+                </li>                               
                 
             </ul> <!-- second level -->                        
         </li>
