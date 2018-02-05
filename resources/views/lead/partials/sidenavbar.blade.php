@@ -7,8 +7,7 @@
 
     <li{!! (($section == "partials.program") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/program">Program</a></li> 
     <li{!! (($section == "partials.cart") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/cart">Cart</a></li> 
- 	<li{!! (($section == "partials.email") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/email">Email</a></li> 
-	<!--<li{!! (($section == "partials.weight") ? " class='selected'" : "") !!}><a href="/lead/{{$patient->id or $lead->patient->id}}/weight">Weight</a></li>-->
+ 	<li{!! (($section == "partials.email") ? " class='selected'" : "") !!}><a href="/lead/{{ $lead->id or $patient->lead_id }}/email">Email</a></li>
 
 </ul>
 
