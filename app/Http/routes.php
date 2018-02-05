@@ -94,8 +94,7 @@ Route::group([
 
     
     Route::get('download/sourceLeads', 'LeadController@sourceLeads');
-
-    
+    Route::get('lead/{id}/weight', 'PatientWeightController@getweight');
 });
 
 

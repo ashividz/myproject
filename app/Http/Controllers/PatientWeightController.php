@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PatientWeightRequest;
 
 use App\Models\Patient;
+use App\Models\Lead;
 use App\Models\Days365;
 use App\Models\PatientWeight;
 use App\Models\YuWoW\Healthtrack;
@@ -333,4 +334,19 @@ class PatientWeightController extends Controller
         return back()->with($data);
     }
 
+    public function getweight($id)
+    {
+        
+        $patient = Patient::with('fees','fee','cfee','lead')->find($id);   
+        $lead =  Lead::find($patient->lead_id);
+        $data = array(
+            'menu'          => 'lead',
+            'section'       => 'partials.weight',
+            'patient'       => $patient,
+            'lead'          =>  $lead,
+
+        );
+
+        return view('home')->with($data);
+    }
 }
