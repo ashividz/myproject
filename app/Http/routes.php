@@ -870,6 +870,8 @@ Route::group([
     function() {
         Route::get('service', 'ServiceController@index');
         Route::get('service/audit', 'ServiceController@audit');
+        Route::get('service/leave', 'ServiceController@leave');
+        Route::POST('service/{id}/leave' , 'ServiceController@leaveapprove');
         Route::get('service/assignNutritionist', 'ServiceController@viewAssginedNutritionist');
         
         Route::POST('service/saveNutritionist', 'ServiceController@saveNutritionist');
@@ -881,6 +883,9 @@ Route::group([
 
         Route::get('service/bulk', 'ServiceController@bulk');
         Route::post('service/bulk', 'ServiceController@bulk');
+
+        Route::get('jai', 'MarketingController@test');
+        Route::post('jai', 'MarketingController@test');
 
         Route::post('service/bulk/send', 'ServiceController@sendBulk');
 

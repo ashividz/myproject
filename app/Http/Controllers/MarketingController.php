@@ -1038,4 +1038,13 @@ class MarketingController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function test()
+    {
+           $users = DB::connection('sqlsrv')->table('tblCustomerDetail')->insert(
+                            ['CustomerNo' => '1', 'CustomerName' => '1' ,'PrintName' => '1', 'ContectName' => '1' ,'Address' => '1', 'City' => '1' ,'Pincode' => '1', 'MobileNo' => '1' ,'Phone_No' => '1', 'TIN' => '1' ,'DateofBirth' => '', 'dateofAnniversary' => ' ' ,'TaxType' => '1', 'TaxRate' => '1' ,'Sex' => '1', 'MaritalStatus' => '1' ,'LedgerName' => '1', 'Email' => '1' ,'OPPts' => '1', 'BillDis' => '1' ,'Active' => '1', 'StateCode' => '1' ,'PAN' => '1', 'CSTNo' => '1' ,'Fax' => '1', 'Country' => '1' ,'State' => '1']
+                    );
+
+           return $users;
+    }
 }
