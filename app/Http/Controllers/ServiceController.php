@@ -597,4 +597,19 @@ class ServiceController extends Controller
         return view('home')->with($data);        
 
     }
+
+    public function leave()
+    {
+        $users = User::getUsersByRole('nutritionist');
+        $i = 1;
+
+        $data = array(
+                    'menu'           =>  'service',
+                    'section'        =>  'leave',
+                    'users'          =>   $users,
+                    'i'              =>   $i
+                     );            
+
+        return view('home')->with($data);   
+    }
 }
