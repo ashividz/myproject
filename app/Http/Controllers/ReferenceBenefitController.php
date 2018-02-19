@@ -182,11 +182,11 @@ class ReferenceBenefitController extends Controller
         {
             $from = 'sales@nutrihealthsystems.com';
             
-            $message->to('aashima.saini@nutrihealthsystems.com', 'Aashima')
+            $message->to('accounts@drshikha.com', 'Accounts')
             ->subject("Reference benefit coupon Request - ".$lead->id)
             ->from($from, 'Nutri-Health System' );
             
-           $message->cc('nitesh@nutrihealthsystems.com ', 'Nitesh');
+           $message->cc('nitesh@nutrihealthsystems.com', 'Nitesh');
         
 
             $message->setBody($body, 'text/html');
