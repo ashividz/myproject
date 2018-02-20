@@ -24,6 +24,7 @@ use App\Models\RhFactor;
 use App\Models\Program;
 use App\Models\Prakriti;
 use App\Models\Master_Diet;
+use App\Models\NutritionistLeave;
 
 use DB;
 use Auth;
@@ -612,4 +613,17 @@ class ServiceController extends Controller
 
         return view('home')->with($data);   
     }
-}
+
+    public function leaveapprove($id)
+    {
+        
+        $leave = new NutritionistLeave;
+
+        $leave->nutritionist_id = $id;
+        $leave->created_by = Auth::user()->employee->name;
+
+        $leave->save();
+
+        return $this->leave();
+
+    } }

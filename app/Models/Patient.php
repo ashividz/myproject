@@ -248,6 +248,30 @@ class Patient extends Model
                 ->get();
     }
 
+    public static function getSecondryActivePatients($nutritionist)
+    {
+        $query =  Patient::select('patient_details.*')
+                ->with('lead', 'cfee', 'doctor','suit' , 'fee' , 'break')
+                /*->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
+                    $join->on('patient_details.id', '=', 'f.patient_id');
+                })
+                ->where('f.end_date', '>=', DB::RAW('CURDATE()'));*/
+                ->whereHas('fee', function($query){
+                    $query->where('end_date', '>=', DB::RAW('CURDATE()'));
+                })
+                ->join('marketing_details as m', 'm.id', '=', 'patient_details.lead_id');
+
+        if($nutritionist) {
+            $query = $query->where('secondary_nutritionist', $nutritionist);  
+        }
+        
+        //$query .= $query->orderBy('f.end_date', 'DESC');
+
+        return $query
+                ->orderBy('name')
+                ->get();
+    }
+
     public static function getUpgradeListByNtr($nutritionist, $all = NULL)
     {
         $query = Patient::select("patient_details.*", DB::RAW("DATEDIFF(f.end_date, CURDATE()) AS days"))
