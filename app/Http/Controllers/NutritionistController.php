@@ -89,6 +89,7 @@ class NutritionistController extends Controller
                     ->where('secondary_nutritionist', $this->nutritionist)
                     ->orderBy('name')
                     ->get();
+        $secondaryActivePatient = Patient::getSecondryActivePatients($this->nutritionist);
         //dd($days);
         $users = DB::select('SELECT id , name, dob  FROM marketing_details WHERE DATE(CONCAT(YEAR(CURDATE()), RIGHT(dob, 6))) BETWEEN  DATE_SUB(CURDATE(), INTERVAL 0 DAY) AND  DATE_ADD(CURDATE(), INTERVAL 7 DAY) ;');
 
@@ -99,18 +100,19 @@ class NutritionistController extends Controller
         $users = User::getUsersByRole('nutritionist');
 
         $data = array(            
-            'menu'              =>  $this->menu,
-            'section'           =>  'patients',
-            'users'             =>  $users,
-            'name'              =>  $this->nutritionist,
-            'start_date'        =>  $this->start_date,
-            'end_date'          =>  $this->end_date,
-            'patients'          =>  $patients,
-            'secondaryPatients' =>  $secondaryPatients,
-            'days'              =>  $days,
-            'x'                 =>  '1',
-            'y'                 =>  '1',
-            'dob'               =>  $DOB,
+            'menu'                      =>  $this->menu,
+            'section'                   =>  'patients',
+            'users'                     =>  $users,
+            'name'                      =>  $this->nutritionist,
+            'start_date'                =>  $this->start_date,
+            'end_date'                  =>  $this->end_date,
+            'patients'                  =>  $patients,
+            'secondaryPatients'         =>  $secondaryPatients,
+            'secondaryActivePatient'    => $secondaryActivePatient,
+            'days'                      =>  $days,
+            'x'                         =>  '1',
+            'y'                         =>  '1',
+            'dob'                       =>  $DOB,
            
         );
         return view('home')->with($data);
