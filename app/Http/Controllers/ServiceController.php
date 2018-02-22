@@ -616,10 +616,14 @@ class ServiceController extends Controller
 
     public function leaveapprove($id)
     {
-        
+
+
+        $nutritionist_name = User::where('id' , $id)
+                             ->with('employee')
+                             ->first();
         $leave = new NutritionistLeave;
 
-        $leave->nutritionist_id = $id;
+        $leave->nutritionist_id = $nutritionist_name->employee->id;
         $leave->created_by = Auth::user()->employee->name;
 
         $leave->save();
