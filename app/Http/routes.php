@@ -1320,8 +1320,6 @@ Route::group([
     Route::get('notifications', 'NotificationController@index');
     Route::patch('notification/{id}/read', 'NotificationController@read');
 
-    Route::get('jairam', 'CartApprovalController@inventryDatabase');
-
     Route::get('getCarriers', function(){
         return \App\Models\Carrier::get();
     });
