@@ -384,6 +384,9 @@
                             <a href="/service/diets" id="menu_diets">Diets</a>
                         </li>
                         <li>
+                            <a href="/service/leave" id="menu_leave">Leave</a>
+                        </li>
+                        <li>
                             <a href="/service/audit" id="menu_service_audit">Audit Report</a>
                         </li> 
                         <li>

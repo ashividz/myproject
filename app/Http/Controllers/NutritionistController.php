@@ -10,6 +10,8 @@ use App\Models\Patient;
 use App\Models\User;
 use App\Models\Lead;
 use App\Models\PatientWeight;
+use App\Models\NutritionistLeave;
+use App\Models\Employee;
 use Auth;
 use DB;
 use Carbon;
@@ -90,7 +92,27 @@ class NutritionistController extends Controller
                     ->orderBy('name')
                     ->get();
         $secondaryActivePatient = Patient::getSecondryActivePatients($this->nutritionist);
-        //dd($days);
+
+        $nutritionistid = [] ;
+
+        $nutritionistIds =  NutritionistLeave::getNutritionistId();
+
+        foreach ( $nutritionistIds as $nid) {
+            # code...
+            $nutritionistid[] = $nid->nutritionist_id;
+        }
+
+
+        $names = Employee::whereIn('id' , $nutritionistid)->get();
+
+       $nutritionistName = [] ;
+
+        foreach ($names as $name) {
+            $nutritionistName[] = $name->name;
+        }
+        
+       // return $nutritionistName;
+        
         $users = DB::select('SELECT id , name, dob  FROM marketing_details WHERE DATE(CONCAT(YEAR(CURDATE()), RIGHT(dob, 6))) BETWEEN  DATE_SUB(CURDATE(), INTERVAL 0 DAY) AND  DATE_ADD(CURDATE(), INTERVAL 7 DAY) ;');
 
         $DOB = [] ;
@@ -110,6 +132,7 @@ class NutritionistController extends Controller
             'secondaryPatients'         =>  $secondaryPatients,
             'secondaryActivePatient'    => $secondaryActivePatient,
             'days'                      =>  $days,
+            'names'                     =>  $nutritionistName,
             'x'                         =>  '1',
             'y'                         =>  '1',
             'dob'                       =>  $DOB,

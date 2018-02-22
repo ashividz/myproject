@@ -661,6 +661,7 @@
 							<th>#</th>
 							<th width="13%">Name</th>
 							<th width="10%">Upcoming Birthday</th>
+							<th>Nutrinist</th>
 							<th>Tags</th>										
 							<th>Doctor</th>
 							<th>Herbs (&#8478;)</th>
@@ -677,7 +678,14 @@
 					<tbody>
 
 @foreach($secondaryActivePatient as $patient)	
-
+<?php
+	$name = false;
+	if(in_array($patient->nutritionist, $names))
+	{
+		$name = true;
+	} 
+?>
+@if($name)
 <?php 
 	$carbon = new Carbon();
 	$date = $patient->advance_diet ? $carbon->today()->addDays($patient->advance_diet) : $carbon->today();
@@ -690,24 +698,26 @@
 ?>
 
 	@if(!$diet)				
-<?php
-	$herbs = "";
-	$tags = ""	;	
-	$notes = "";
-	foreach($patient->herbs AS $herb)
-	{
-		$herbs .= "<p>".$herb->herb->name." : ".$herb->quantity." ";
-        $herbs .= $herb->unit ? $herb->unit->name : '';
-        $herbs .= " ".$herb->remark." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
-	}
-	foreach($patient->tags as $tag) {
-		$tags .= $tag->name . "<p>";
-	}
-	foreach($patient->notes as $note) {
-		$notes .= $note->text . " : <b>". $note->created_by."</b><em> (".$note->created_at.")</em><p>";
-	}
-	
-?>	
+		<?php
+			$herbs = "";
+			$tags = ""	;	
+			$notes = "";
+		
+			foreach($patient->herbs AS $herb)
+			{
+				$herbs .= "<p>".$herb->herb->name." : ".$herb->quantity." ";
+		        $herbs .= $herb->unit ? $herb->unit->name : '';
+		        $herbs .= " ".$herb->remark." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
+			}
+			foreach($patient->tags as $tag) {
+				$tags .= $tag->name . "<p>";
+			}
+			foreach($patient->notes as $note) {
+				$notes .= $note->text . " : <b>". $note->created_by."</b><em> (".$note->created_at.")</em><p>";
+			}	
+		?>	
+		
+		
 			@if($patient->lead->source_id == 99)
 				<?php 
 							$now = time(); // or your date as well
@@ -736,7 +746,7 @@
 								@else
 									<td></td>
 								@endif
-
+								<td>{{$patient->nutritionist}}</td>
 								<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
 
@@ -812,7 +822,7 @@
 								@else
 									<td></td>
 								@endif
-
+								<td>{{$patient->nutritionist}}</td>
 								<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
 
@@ -889,7 +899,7 @@
 							@else
 								<td></td>
 							@endif
-
+							<td>{{$patient->nutritionist}}</td>
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
 
@@ -967,7 +977,7 @@
 							@else
 								<td></td>
 							@endif
-
+							<td>{{$patient->nutritionist}}</td>
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
 
@@ -1023,8 +1033,10 @@
 
 				@endfor
 				</tr>
+		
 		@endif
 	@endif	
+  @endif
 @endforeach
 
 					</tbody>
