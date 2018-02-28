@@ -317,6 +317,9 @@
                             <li>
                                 <a href="/sales/viewProgramEnd" id="menu_program-end">Program End</a>
                             </li>
+                            <li>
+                            <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
+                            </li>
                        @endif
                         <li>
                             <a href="/sales/pipelineStatus" id="menu_sales_pipeline_status">Pipeline Status</a>
@@ -341,9 +344,6 @@
                         </li>
                         <li>
                             <a href="/report/patients/bmi" id="menu_patients_weight" class="arrow">Patient Weight </a>
-                        </li>
-                        <li>
-                            <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
                         </li>
                     </ul>
                 </li>
