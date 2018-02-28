@@ -967,6 +967,17 @@
         </li>
         @endif  
 
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('reference_team'))                
+        <li class="{{ $menu == 'settings' ? 'current' : '' }}">
+            <a href="/settings" id="menu_settings" class="firstLevelMenu"><b>Reference Tracker</b></a>
+            
+            <ul>
+                <li>
+                    <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
+                </li>  
+            </ul>
+        </li>
+        @endif
         
 
                     
