@@ -44,7 +44,7 @@ class AutoAdjustStartDate extends Command
         ]);
         $this->totalChanges = 0;
         //as old email status are not reliable and fee was adjusted manullay before Sep 10,2016, adjust fees started after this date only
-        $this->minStartDate = Carbon::parse('2016-09-10'); 
+        $this->minStartDate = Carbon::parse('2017-12-01'); 
     }
 
     /**
@@ -72,7 +72,7 @@ class AutoAdjustStartDate extends Command
                 
                 $diet = Diet::where('date_assign','>=',$patient->cfee->start_date)
                         ->where('patient_id',$patient->id) 
-                        ->whereRaw('IFNULL(diets.email,0) = 1')
+                        ->whereRaw('IFNULL(diets.sms_response,0) = "200"')
                         ->orderBy('date_assign')
                         ->first();
                 
