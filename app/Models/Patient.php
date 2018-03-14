@@ -483,7 +483,7 @@ class Patient extends Model
         ->leftJoin(DB::raw("(select * from diets where date_assign > '$date' ) as diets"),function($join) use($date,$start_day_time){
             $join->on('patient_details.id','=','diets.patient_id')                
             ->on('diets.date_assign','=',DB::raw("date_add('$date',interval 1 + IFNULL(advance_diet,0) day)"))
-            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
+            ->on(DB::raw('IFNULL(diets.sms_response,0)'),'=',DB::raw("200"))
             ->on('diets.updated_at','<',DB::raw("'$start_day_time'"));
         })
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
@@ -499,7 +499,7 @@ class Patient extends Model
         ->leftJoin(DB::raw("(select * from diets where date_assign >'$date' ) as diets"),function($join) use ($date,$end_day_time){
             $join->on('patient_details.id','=','diets.patient_id')                
             ->on('diets.date_assign','=',DB::raw("date_add('$date',interval 1 + IFNULL(advance_diet,0) day)"))
-            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
+            ->on(DB::raw('IFNULL(diets.sms_response,0)'),'=',DB::raw("200"))
             ->on('diets.updated_at','<=',DB::raw("'$end_day_time'"));
         })
         ->groupBy(DB::raw('ifnull(patient_details.nutritionist,"")'))
@@ -515,7 +515,7 @@ class Patient extends Model
         ->leftJoin(DB::raw("(select * from diets where date_assign >'$date') as diets"),function($join) use ($date,$start_day_time,$end_day_time){
             $join->on('patient_details.id','=','diets.patient_id')                
             ->on('diets.date_assign','=',DB::raw("date_add('$date',interval 1 + IFNULL(advance_diet,0) day)"))
-            ->on(DB::raw('IFNULL(diets.email,0)'),'=',DB::raw('1'))
+            ->on(DB::raw('IFNULL(diets.sms_response,0)'),'=',DB::raw("200"))
             ->on('diets.updated_at','>=',DB::raw("'$start_day_time'"))
             ->on('diets.updated_at','<=',DB::raw("'$end_day_time'"));
         })
@@ -532,7 +532,7 @@ class Patient extends Model
             ->on('start_date', '<', DB::raw("date_sub('$date',interval 7 day)"));
         })
         ->join('marketing_details','marketing_details.id','=','patient_details.lead_id')        
-        ->leftJoin(DB::raw("( select distinct (patient_id ) from diets where (email=1 and date_assign > date_sub('$date',interval 7 day))  group by patient_id) as diets"),function($join){
+        ->leftJoin(DB::raw("( select distinct (patient_id ) from diets where (sms_response='200' and date_assign > date_sub('$date',interval 7 day))  group by patient_id) as diets"),function($join){
             $join->on('patient_details.id','=','diets.patient_id');
         })
         ->whereNull('diets.patient_id')
@@ -541,7 +541,7 @@ class Patient extends Model
         ->select(DB::raw('ifnull(patient_details.nutritionist,"") as nutritionist,count(distinct(patient_details.id)) as breaks'))
         ->get(); 
 
-         $dietNotStarted = DB::table('patient_details')
+        $dietNotStarted = DB::table('patient_details')
         ->join('fees_details',function($join) use ($date){
             $join->on('fees_details.patient_id', '=', 'patient_details.id')
             ->on('end_date','>=',DB::raw("'$date'"));
