@@ -896,7 +896,8 @@ Route::group([
 
         Route::post('service/diets/send', 'ServiceController@sendDiets');
 
-        
+        Route::get('sales/upgradeLeads', 'SalesController@viewLeads');
+        Route::post('sales/upgradeLeads', 'SalesController@viewLeads');
         Route::get('service/reports/diet_not_started', 'ServiceController@dietNotStarted');
 
         Route::get('service/messages', 'ServiceController@showMessages');
