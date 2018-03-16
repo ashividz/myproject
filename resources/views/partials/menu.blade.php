@@ -404,6 +404,9 @@
                         <li>
                             <a href="/service/reports/weightLoss" id="menu_service_weight_loss">Weight Loss</a>
                         </li>
+                        <li>
+                            <a href="/sales/upgradeLeads" id="menu_service_upgradeLeads">UpgradeLeads</a>
+                        </li>
                         
                     </ul>
                 </li>
