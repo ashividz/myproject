@@ -66,24 +66,7 @@
 
                 <div class="container">
 
-                @foreach($templates AS $template)
-                    <div id="{{$template->id}}" class="template" style="display:none;">
-                        <div style="border:1px solid #aaa;padding:5px">
-                            <div>
-                                {!!str_replace('$customer', $lead->name, Helper::nl2p($template->email))!!}
-                            </div>
-                            <ul>
-                            @foreach($template->attachments AS $attachment)
-                                <li><img class="attachment" src="/images/cleardot.gif"> {{$attachment->name}}</li>
-                            @endforeach
-                            </ul>
-                        </div>
-                        <hr>
-                        <div style="border:1px solid #aaa;padding:5px;background-color:#f9f9f9" title="SMS Content">
-                            {{$template->sms}}
-                        </div>
-                    </div>
-                @endforeach
+                
 
                 </div>
                 <input type="hidden" id="rtodetails" name="rtodetails"/>
