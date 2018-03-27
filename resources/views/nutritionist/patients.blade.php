@@ -560,6 +560,7 @@
 	$notes = "";
 	foreach($patient->herbs AS $herb)
 	{
+		if($herb->unit)
 		$herbs .= "<p>".$herb->herb->name." : ".$herb->quantity." ".$herb->unit->name." ".$herb->remark." - <small><em>[".date('jS M, Y', strtotime($herb->created_at))."]</em></small><p>";
 	}
 	foreach($patient->tags as $tag) {
