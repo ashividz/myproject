@@ -30,6 +30,7 @@
                         <tr>
                             <th>SNo</th>
                             <th>LeadID</th>
+                            <th>PatientID</th>
                             <th>UserName</th>
                             <th>UserEmail</th>
                             <th>Contact No</th>
@@ -56,6 +57,7 @@
                         <tr class="{{$filter}}">
                            <td>{{$i++}}</td>
                            <td><a href="/lead/{{$user->CRMLeads->id or ""}}/viewDetails" target="_blank">{{$user->CRMLeads->id or ""}}</a></td>
+                           <td>{{$user->CRMLeads->patient->id or ""}}</td>
                            <td>{{$user->user_first_name}} {{$user->user_last_name}}</td>
                            <td>{{$user->user_email}}</td>
                            <td>{{$user->mobile}}</td>

@@ -507,7 +507,7 @@ class YuWoWController extends Controller
     public function YuwowLeads()
     {
         
-        $yuwowleads  = User::with('CRMLeads')
+        $yuwowleads  = User::with('CRMLeads.patient')
                             ->where('user_email','<>',"")
                             ->whereBetween('user_registered',[$this->start_date, $this->end_date])
                             ->get();
