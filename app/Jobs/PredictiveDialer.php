@@ -148,6 +148,9 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
                     },'<',1)
                     //remove times jobs data
                     ->where('source_id','<>','57')
+                    ->whereHas('status',function($query) {
+                            $query->where('m_lead_status.id','<>',6);
+                        })
                     //remove VIP Client
                     ->whereHas('patient',function($query) {
                         $query->whereHas('tags',function($q) {
