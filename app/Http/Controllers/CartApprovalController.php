@@ -542,11 +542,27 @@ class CartApprovalController extends Controller
                   
         }
 
+        //$findcartid = DB::connection('sqlsrv')->table('tblSaleOrderMaster')->where('VoucherNo', $cart->id)->get();
+
+        //if($findcartid != null){
+
+            DB::connection('sqlsrv')->table('tblSaleOrderMaster')->where('VoucherNo', $cart->id)->delete();
+
+       // }
         
-        
+            
+
         $users = DB::connection('sqlsrv')->table('tblSaleOrderMaster')->insert(
-                        ['VoucherNo' => $cart->id, 'OrderDate' => $cart->created_at ,'BillNo' => $cart->currency_id , 'DeliveryDate' => ' ' ,'LrNo' => ' ', 'LrDate' => date('Y-m-d H:i:s') ,'CustomerNumber' => $cart->lead->id, 'CompanyLocation' => ' ' ,'BillDiscRt' =>  0 , 'BillDiscAmt' => 0 ,'GrossAmount' =>  $cart->amount, 'totalAmt' => $cart->amount ,'totalQty' => $cart->products->count() , 'totalDiscAmt' => 0 ,'Remarks' => ' ', 'UserName' => $cart->lead->name ,'RefNo' => '', 'TotalTaxAmt' => ' ' ,'TotalExcise' => ' ', 'NetAmount' =>  $cart->amount ,'Active' => ' ', 'AdvanceAmt' => ' ' , 'CrName' => $crename , 'CartPayment' => $cart->payment , 'Source' => $source , 'ShippingAddress' => $shippingAddress , 'PaymentMode' => $ModeOfPayment ]
-                );
+                    ['VoucherNo' => $cart->id, 'OrderDate' => $cart->created_at ,'BillNo' => $cart->currency_id , 'DeliveryDate' => ' ' ,'LrNo' => ' ', 'LrDate' => date('Y-m-d H:i:s') ,'CustomerNumber' => $cart->lead->id, 'CompanyLocation' => ' ' ,'BillDiscRt' =>  0 , 'BillDiscAmt' => 0 ,'GrossAmount' =>  $cart->amount, 'totalAmt' => $cart->amount ,'totalQty' => $cart->products->count() , 'totalDiscAmt' => 0 ,'Remarks' => ' ', 'UserName' => $cart->lead->name ,'RefNo' => '', 'TotalTaxAmt' => ' ' ,'TotalExcise' => ' ', 'NetAmount' =>  $cart->amount ,'Active' => ' ', 'AdvanceAmt' => ' ' , 'CrName' => $crename , 'CartPayment' => $cart->payment , 'Source' => $source , 'ShippingAddress' => $shippingAddress , 'PaymentMode' => $ModeOfPayment ]
+            );
+
+        
+
+       
+        
+            DB::connection('sqlsrv')->table('tblSaleOrderDetail')->where('VoucherNo', $cart->id)->delete();
+        
+        
 
         foreach ($cart->products as $product) {
             
@@ -556,7 +572,7 @@ class CartApprovalController extends Controller
             }
             else
             {
-                $discount = $product->pivot->amount;
+                $discount = $product->pivot->discount;
             }
             $users = DB::connection('sqlsrv')->table('tblSaleOrderDetail')->insert(
                         ['VoucherNo' => $cart->id , 'ItemCode' => $product->id ,'ItemName' => $product->name , 'ColorName' => ' ' ,'Size' => ' ', 'Quantity' => $product->pivot->quantity , 'Unit' => 'Pcs' , 'SaleRate' => $product->pivot->price ,'MRP' =>  $product->pivot->price , 'PurRate' => 0 ,'ItemDiscRate' => $discount , 'ItemDiscAmt' => ($product->pivot->price - $product->pivot->amount ) ,'TaxRate' => 0 , 'TaxAmt' => 0 ,'Amount' => $product->pivot->amount , 'Excise' => 0 ,'Barcode' => ' ', 'SerialNo' => ' ' ,'DisplayOrd' => ' ', 'TaxType' => 0,'OtherTaxRate' =>  0 , 'OtherTaxAmt' => 0 ]
