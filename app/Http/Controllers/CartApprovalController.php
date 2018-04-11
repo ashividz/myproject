@@ -29,6 +29,7 @@ use Mail;
 
 use Redirect;
 use Auth;
+use DB;
 
 class CartApprovalController extends Controller
 {
@@ -356,6 +357,8 @@ class CartApprovalController extends Controller
         if ($request->state == 1) {
 
             if($cart->status_id == 2) {
+
+            	$this->inventryDatabase($cart);
                 
                 if (!Auth::user()->canApproveDiscount($cart)) {
                     abort('500', 'Cannot Approve Discount');
@@ -464,7 +467,7 @@ class CartApprovalController extends Controller
             $this->sendEmail($this->template_12w,$cart->lead_id);
         } //with free herbs*/
 
-}
+    }
     public function  sendEmail($template_id , $user)
     {
         $template = EmailTemplate::find($template_id);
@@ -491,5 +494,77 @@ class CartApprovalController extends Controller
         $email->save();
         }   
 
+    }
+
+     public function inventryDatabase($cart)
+    {
+        $cart = Cart::
+                with('address' ,'lead' , 'products' , 'payments.method' , 'cre' , 'source')
+                ->where('id' , $cart->id)
+                ->first();
+
+
+        
+
+        $crename = $cart->cre->username;
+        $source = $cart->source->source;
+        $discount;
+        $shippingAddress;
+        $ModeOfPayment = " ";
+        if($cart->address == null)
+        {
+            $shippingAddress = $cart->lead->address .'/'.$cart->lead->city . '/' . $cart->lead->zip . '/' . $cart->lead->state . '/' . $cart->lead->country;
+        }
+        else
+        {
+            $shippingAddress = $cart->address->address;
+        }
+
+        foreach ($cart->payments as $payment) {
+                
+            $ModeOfPayment = $ModeOfPayment.'/'.$payment->method->name;
+        }
+
+       
+
+         $users = DB::connection('sqlsrv')->table('tblCustomerDetail')->where('CustomerNo', $cart->lead->id)->first();
+
+        if($users == null)
+        {
+            $users = DB::connection('sqlsrv')->table('tblCustomerDetail')->insert(
+                            ['CustomerNo' => $cart->lead->id, 'CustomerName' => $cart->lead->name ,'PrintName' => ' ', 'ContectName' => $cart->lead->name ,'Address' => $cart->lead->address, 'City' => $cart->lead->city ,'Pincode' => $cart->lead->zip, 'MobileNo' => $cart->lead->mobile ,'Phone_No' =>  $cart->lead->phone, 'TIN' => ' ' ,'DateofBirth' => $cart->lead->dob, 'dateofAnniversary' => ' ' ,'TaxType' => ' ', 'TaxRate' => ' ' ,'Sex' => $cart->lead->gender, 'MaritalStatus' => '' ,'LedgerName' => $cart->lead->name.'-'. $cart->lead->id, 'Email' => $cart->lead->email ,'OPPts' => ' ', 'BillDis' => ' ' ,'Active' => ' ', 'StateCode' => $cart->lead->state ,'PAN' => '', 'CSTNo' => '1' ,'Fax' => '1', 'Country' => $cart->lead->country ,'State' => $cart->lead->state]);
+
+
+            $users = DB::connection('sqlsrv')->table('tblLedgers')->insert(
+                            ['LedgerName ' => $cart->lead->name.'-'. $cart->lead->id, 'Description' => ' ' ,'GroupName' => 'sundry debtors', 'Street' => $cart->lead->address ,'City' => $cart->lead->city, 'PhNo' =>$cart->lead->mobile ,'DROpening' => 0 , 'CROpening' => 0  ,'OpeningType' =>  'DR', 'AccountDate' => date('Y-m-d H:i:s') ,'Email' => $cart->lead->email, 'companylocation' => ' ' ,'InventoryFlag' => '1']);
+
+
+                  
+        }
+
+        
+        
+        $users = DB::connection('sqlsrv')->table('tblSaleOrderMaster')->insert(
+                        ['VoucherNo' => $cart->id, 'OrderDate' => $cart->created_at ,'BillNo' => $cart->currency_id , 'DeliveryDate' => ' ' ,'LrNo' => ' ', 'LrDate' => date('Y-m-d H:i:s') ,'CustomerNumber' => $cart->lead->id, 'CompanyLocation' => ' ' ,'BillDiscRt' =>  0 , 'BillDiscAmt' => 0 ,'GrossAmount' =>  $cart->amount, 'totalAmt' => $cart->amount ,'totalQty' => $cart->products->count() , 'totalDiscAmt' => 0 ,'Remarks' => ' ', 'UserName' => $cart->lead->name ,'RefNo' => '', 'TotalTaxAmt' => ' ' ,'TotalExcise' => ' ', 'NetAmount' =>  $cart->amount ,'Active' => ' ', 'AdvanceAmt' => ' ' , 'CrName' => $crename , 'CartPayment' => $cart->payment , 'Source' => $source , 'ShippingAddress' => $shippingAddress , 'PaymentMode' => $ModeOfPayment ]
+                );
+
+        foreach ($cart->products as $product) {
+            
+            if($product->pivot->discount == null)
+            {
+                $discount = 0;
+            }
+            else
+            {
+                $discount = $product->pivot->amount;
+            }
+            $users = DB::connection('sqlsrv')->table('tblSaleOrderDetail')->insert(
+                        ['VoucherNo' => $cart->id , 'ItemCode' => $product->id ,'ItemName' => $product->name , 'ColorName' => ' ' ,'Size' => ' ', 'Quantity' => $product->pivot->quantity , 'Unit' => 'Pcs' , 'SaleRate' => $product->pivot->price ,'MRP' =>  $product->pivot->price , 'PurRate' => 0 ,'ItemDiscRate' => $discount , 'ItemDiscAmt' => ($product->pivot->price - $product->pivot->amount ) ,'TaxRate' => 0 , 'TaxAmt' => 0 ,'Amount' => $product->pivot->amount , 'Excise' => 0 ,'Barcode' => ' ', 'SerialNo' => ' ' ,'DisplayOrd' => ' ', 'TaxType' => 0,'OtherTaxRate' =>  0 , 'OtherTaxAmt' => 0 ]
+                );
+
+        }
+        
+
+      return true ; 
     }
 }
