@@ -117,7 +117,7 @@ class Diet extends Model
 
         $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
 
-        if($patient->app)
+        /*if($patient->app)
         {         
             foreach ($diets as $diet) {
                 $user = Patient::find($diet->patient_id) ;
@@ -135,7 +135,7 @@ class Diet extends Model
             $status  = 'success'; 
             Diet::setAppResponse($diets,$app_response);
                   
-        }
+        }*/
 
         if($patient->sms && $patient->lead->country == 'IN')
         {
@@ -150,7 +150,8 @@ class Diet extends Model
                 }
             }                
         }
-        if ($patient->email && trim($patient->lead->email) <> '') {
+        //if (/*$patient->email && */trim($patient->lead->email) <> '') {
+        if (trim($patient->lead->email) <> '') {
             $body = Diet::emailHeader($patient);
         
             foreach ($diets as $diet) {
