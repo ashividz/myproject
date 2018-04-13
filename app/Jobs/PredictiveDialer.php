@@ -136,6 +136,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
           {
              $leads = Lead::whereBetween('created_at',array($start_limit , $end_limit))
                     ->whereNotIn('cre_name', $cre)
+                    ->where('source_id', '<>' , 10)
                     //->has('dispositions','<',4)
                     ->has('dnc', '<', 1)
                     ->whereRaw( "(country ='IN' or country is null or country ='')")
