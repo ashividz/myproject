@@ -150,8 +150,8 @@ class Diet extends Model
                 }
             }                
         }
-        //if (/*$patient->email && */trim($patient->lead->email) <> '') {
-        if (trim($patient->lead->email) <> '') {
+        if ($patient->email && trim($patient->lead->email) <> '') {
+       
             $body = Diet::emailHeader($patient);
         
             foreach ($diets as $diet) {
