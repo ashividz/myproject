@@ -65,7 +65,10 @@
                         <tr>
                             <th>#</th>
                             <th>Patients Id</th>
+                            <th>Lead Id</th>
                             <th>Patients Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
                             <th>Mobile</th>
                             <th>Phone</th>
                             <th>Email ID</th>
@@ -82,7 +85,10 @@
                         <tr>
                             <td>{{$i++}}</td>
                              <td>{{$patient->id}}</td>
+                             <td>{{$patient->lead->id}}</td>
                             <td><a href="/lead/{{$patient->lead_id}}/viewPersonalDetails" target="_blank">{{$patient->lead->name or ""}}</a></td>
+                            <td>{{$patient->cfee->start_date or " "}}</td>
+                            <td>{{$patient->cfee->end_date or " "}}</td>
                             <td>{{$patient->lead->mobile or ""}}</td>
                             <td>{{$patient->lead->phone or ""}}</td>
                             <td>{{$patient->lead->email or ""}}</td>
