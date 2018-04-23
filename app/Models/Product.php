@@ -30,6 +30,7 @@ class Product extends Model
                     5 => 90,
                     6 => 180,
                     7 => 365, 
+                    93 => 60,
             );
 
     public function category()

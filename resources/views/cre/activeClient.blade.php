@@ -25,20 +25,24 @@
                  <?php  
                         $now = time(); // or your date as well
                         $your_date = strtotime($l->patient->cfee->start_date);
+                        $enddate = strtotime($l->patient->cfee->end_date);
                         $datediff = $now - $your_date;
-
+                        $daydiff = $enddate - $now ;
+                        $dayrem  =  floor($daydiff / (60 * 60 * 24));
                         $daycount  = floor($datediff / (60 * 60 * 24));
                     ?>
-                @if($daycount % 15 == 0)
-                    <tr>
-                        <td>{{$i++}}</td>
-                        <td><a href="/cre/{{$l->patient->id}}/survey" target="_blank">{{$l->name or ' '}}</a></td>
-                        <td>{{$l->cre_name}}</td>
-                        <td>{{$l->patient->nutritionist}}</td>
-                        <td>{{$l->patient->cfee->start_date}}</td>
-                       
-                        <td>{{ $daycount }}</td>
-                    </tr>
+                @if($daycount >= 20 &&  $dayrem >= 10)
+                    @if($daycount % 10 == 0)
+                        <tr>
+                            <td>{{$i++}}</td>
+                            <td><a href="/cre/{{$l->patient->id}}/survey" target="_blank">{{$l->name or ' '}}</a></td>
+                            <td>{{$l->cre_name}}</td>
+                            <td>{{$l->patient->nutritionist}}</td>
+                            <td>{{$l->patient->cfee->start_date}}</td>
+                           
+                            <td>{{ $daycount }}</td>
+                        </tr>
+                    @endif
                 @endif
             @endforeach
 
