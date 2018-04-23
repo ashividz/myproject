@@ -30,8 +30,29 @@
                         $daydiff = $enddate - $now ;
                         $dayrem  =  floor($daydiff / (60 * 60 * 24));
                         $daycount  = floor($datediff / (60 * 60 * 24));
+                        $totaldays = $enddate - $your_date;
+                        $totaldaycount =  floor($totaldays / (60 * 60 * 24));
+                        $x ;
+
+                        if($totaldaycount >= 60 && $totaldaycount < 90)
+                        {
+                            $x = 20;
+                        }
+                        elseif($totaldaycount >= 90 && $totaldaycount < 180)
+                        {
+                            $x = 45;
+                        }
+                        elseif($totaldaycount >= 180 && $totaldaycount < 365)
+                        {
+                            $x = 60;
+                        }
+                        else
+                        {
+                            $x = 120;
+                        }
+
                     ?>
-                @if($daycount >= 20 &&  $dayrem >= 10)
+                @if($daycount > 20 &&  $dayrem >= $x)
                     @if($daycount % 10 == 0)
                         <tr>
                             <td>{{$i++}}</td>
