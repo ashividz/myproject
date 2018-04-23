@@ -224,13 +224,14 @@ class Cart extends Model
         $paid = $cart->getDietPaidAmount();
         $oneMonthPlanPrice  =   CartProduct::getPlanPriceByDuration($cart,30);
         $threeMonthPlanPrice    =   CartProduct::getPlanPriceByDuration($cart,90);
+        $twoMonthPlanPrice  =       CartProduct::getPlanPriceByDuration($cart,60);
         
         if ( !$oneMonthPlanPrice || $threeMonthPlanPrice ) {
             Session::flash("message", "Base plan not found");
             Session::flash("status", "error");
         }
         
-        $twoMonthPlanPrice  =   2*$oneMonthPlanPrice;
+        //$twoMonthPlanPrice  =   2*$oneMonthPlanPrice;
         
 
         $duration = CartProduct::getDietDuration($cart);
