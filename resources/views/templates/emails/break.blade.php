@@ -94,7 +94,7 @@
                             <tr>
                                 <td><b>Website : </b></td>
                                 <td>
-                                    <a href='http://www.nutrihealthsystems.com' style="color:inherit">http://www.nutrihealthsystems.com</a>
+                                    <a href='https://www.drshikhasharma.com' style="color:inherit">https://www.drshikhasharma.com</a>
                                 </td>
                             </tr>
                             <tr>
@@ -102,8 +102,8 @@
                                 <td>0930 hrs - 1830 hrs.( Mon- Sat) / 0930 hrs - 1700 hrs ( Sun)</td>
                             </tr>
                             <tr>
-                                <td><b>Sales number :</b></td>
-                                <td><a href="tel:911146666000" style="color:inherit">011 - 46666 000</a></td>
+                                <td><b> Service number :</b></td>
+                                <td><a href="tel:911149945900" style="color:inherit">011 - 49945900</a></td>
                             </tr>
                             <tr>
                                 <td><b>Service Timings :</b></td>
@@ -115,7 +115,7 @@
                             </tr>
                             <tr>
                                 <td><b>For Feedback or complaint :</b></td>
-                                <td><a href="mailto:customer.care@drshikha.com" style="color:inherit">customer.care@drshikha.com</a></td>
+                                <td><a href="mailto:service@nutrihealthsystems.com " style="color:inherit">service@nutrihealthsystems.com </a></td>
                             </tr>
                         </tbody>
                     </table>
