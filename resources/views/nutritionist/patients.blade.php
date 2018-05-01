@@ -1219,3 +1219,35 @@ $(document).ready(function(){
 	});
 });
 </script>
+
+<script type="text/javascript" src = "https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src = "https://cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src = "//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.print.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#appointment_table').DataTable( {
+        "iDisplayLength": 200,
+        dom: 'Bfrtip',
+        buttons: [
+            'csv'
+        ]
+    } );
+} );
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#primary_table').DataTable( {
+        "iDisplayLength": 200,
+        dom: 'Bfrtip',
+        buttons: [
+             'csv'
+        ]
+    } );
+} );
+</script>
