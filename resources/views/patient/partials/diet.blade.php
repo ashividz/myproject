@@ -16,7 +16,10 @@
 	}
 </style>
 <div class="panel panel-default">
-	<div class="panel-heading">
+	<div class="panel-heading tags">
+	@foreach($patient->lead->programs as $tag)
+		<li><div class="tag">{{$tag->name}}</div></li>	
+	@endforeach	
 	</div>
 	<div class="panel-body">
 		<form id="form" method="post" action="/patient/{{$patient->id or ''}}/suit">
