@@ -1231,17 +1231,6 @@ $(document).ready(function(){
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $('#appointment_table').DataTable( {
-        "iDisplayLength": 200,
-        dom: 'Bfrtip',
-        buttons: [
-            'csv'
-        ]
-    } );
-} );
-</script>
-<script type="text/javascript">
-  $(document).ready(function() {
     $('#primary_table').DataTable( {
         "iDisplayLength": 200,
         dom: 'Bfrtip',
