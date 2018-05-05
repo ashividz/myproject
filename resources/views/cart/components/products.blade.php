@@ -33,8 +33,8 @@
                                     <div class="col-md-3">FREE Offers</div>
                                 </div>
 
-                                <div v-for="pdt in category.products" class="@{{ pdt|exists }} col-md-12" style="padding:5px;border-bottom: 1px solid silver">
-                                    <product
+                                <div v-for="pdt in category.products"  v-if="pdt.isactive" class="@{{ pdt|exists }} col-md-12" style="padding:5px;border-bottom: 1px solid silver">
+                                    <product 
                                         :product.sync="pdt"
                                         :cart.sync="cart"
                                     > 
