@@ -26,6 +26,7 @@
 							<th>#</th>
 							<th width="13%">Name</th>
 							<th width="10%">Upcoming Birthday</th>
+							<th>Secondry Nutritionist</th>
 							<th>Tags</th>										
 							<th>Doctor</th>
 							<th>Herbs (&#8478;)</th>
@@ -101,6 +102,7 @@
 								@else
 									<td></td>
 								@endif
+								<td>{{$patient->secondary_nutritionist or " "}}</td>
 
 								<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
@@ -177,6 +179,7 @@
 								@else
 									<td></td>
 								@endif
+								<td>{{$patient->secondary_nutritionist or " "}}</td>
 
 								<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
@@ -254,7 +257,7 @@
 							@else
 								<td></td>
 							@endif
-
+							<td>{{$patient->secondary_nutritionist or " "}}</td>
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
 
@@ -319,6 +322,7 @@
 			
 							<td>{{$x++}}</td>
 							<td><a href="/patient/{{$patient->id}}/diet" target="_blank">{{$patient->lead->name}}</a></td>
+							
 							<?php
 								$Birthday = false;
 								if(in_array($patient->lead->id, $dob))
@@ -332,6 +336,7 @@
 							@else
 								<td></td>
 							@endif
+							<td>{{$patient->secondary_nutritionist or " "}}</td>
 
 							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
 
