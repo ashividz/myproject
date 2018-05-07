@@ -394,7 +394,7 @@ class PredictiveDialer extends Job implements SelfHandling, ShouldQueue
     {
         foreach($patients as $patient)
         {
-          if($patient->lead)
+          if($patient->lead && $patient->lead->country == "IN")
           {
             $output= 'false2';
             $lead_id = $patient->lead->id;
