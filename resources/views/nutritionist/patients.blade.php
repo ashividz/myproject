@@ -577,7 +577,7 @@
 	$fee  = $patient->cfee ? $patient->cfee : $patient->fee;
 ?>
 						<tr>
-							<td></td>
+							<td>{{$i++}}</td>
 							<td><a href="/lead/{{$patient->lead->id}}/viewDetails" target="_blank">{{$patient->lead->name}}</a></td>
 							<?php
 								$Birthday = false;
