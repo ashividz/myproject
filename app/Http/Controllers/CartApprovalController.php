@@ -511,13 +511,13 @@ class CartApprovalController extends Controller
         $discount;
         $shippingAddress;
         $ModeOfPayment = " ";
-        if($cart->address == null)
+        if($cart->address)
         {
-            $shippingAddress = $cart->lead->address .'/'.$cart->lead->city . '/' . $cart->lead->zip . '/' . $cart->lead->state . '/' . $cart->lead->country;
+            $shippingAddress = $cart->address->address .','.$cart->address->city . ',' . $cart->address->region->region_name . ',' . $cart->address->zip . ',' . $cart->address->country;
         }
         else
         {
-            $shippingAddress = $cart->address->address;
+             $shippingAddress = $cart->lead->address .','.$cart->lead->city . ',' . $cart->lead->zip . ',' . $cart->lead->state . ',' . $cart->lead->country;
         }
 
         foreach ($cart->payments as $payment) {
