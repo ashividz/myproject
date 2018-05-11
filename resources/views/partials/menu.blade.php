@@ -678,7 +678,10 @@
                             <a href="/quality/viewSurveyResults" id="menu_survey_results">Survey Results</a>
                         </li>                          
                     </ul>                    
-                </li>   
+                </li> 
+                <li>
+                    <a href="/marketing/dialer_push" id="menu_quality_dialer">Dialer</a>
+                </li>  
                 <li>
                     <a href="#" id="menu_quality_csat">Service Reports</a>  
                     <ul>
