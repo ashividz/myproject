@@ -195,6 +195,7 @@ Route::group([
         Route::get('canApprovePayment', 'CartApprovalController@canApprovePayment');
         Route::get('canApproveDiscount', 'CartApprovalController@canApproveDiscount');
         Route::post('cart/{id}/approve', 'CartApprovalController@approve');
+        Route::get('jairam', 'CartApprovalController@inventryDatabase');
 
         /** Old **/
         Route::get('cart/approval', 'CartApprovalController@show');
@@ -980,6 +981,9 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
     Route::get('quality/patients', 'SurveyController@patients');
     Route::post('quality/patients', 'SurveyController@patients');
+
+     Route::get('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
+     Route::post('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
 
     Route::get('quality/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
     Route::post('quality/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
