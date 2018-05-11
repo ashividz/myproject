@@ -195,8 +195,7 @@ Route::group([
         Route::get('canApprovePayment', 'CartApprovalController@canApprovePayment');
         Route::get('canApproveDiscount', 'CartApprovalController@canApproveDiscount');
         Route::post('cart/{id}/approve', 'CartApprovalController@approve');
-        Route::get('jairam', 'CartApprovalController@inventryDatabase');
-
+       
         /** Old **/
         Route::get('cart/approval', 'CartApprovalController@show');
         Route::post('cart/approval', 'CartApprovalController@show');
