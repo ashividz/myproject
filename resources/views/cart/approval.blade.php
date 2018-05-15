@@ -44,8 +44,29 @@
                 <span>
                     BT : <input type="checkbox" v-model="categories" value="3" debounce="5000" checked>
                 </span> 
+                
                 <span>
                     Books : <input type="checkbox" v-model="categories" value="4" debounce="5000" checked>
+                </span>  
+
+                <span>
+                   Weight Management Solution in A box : <input type="checkbox" v-model="categories" value="5" debounce="5000" checked>
+                </span>  
+
+                <span>
+                    Anti Pollution Kit : <input type="checkbox" v-model="categories" value="6" debounce="5000" checked>
+                </span>  
+                <span>
+                    Skin Nourishment (Anti-Aging) Kit : <input type="checkbox" v-model="categories" value="7" debounce="5000" checked>
+                </span>  
+                <span>
+                    Cholesterol Management Kit: <input type="checkbox" v-model="categories" value="8" debounce="5000" checked>
+                </span>  
+                <span>
+                    Diabetes Management Kit : <input type="checkbox" v-model="categories" value="9" debounce="5000" checked>
+                </span>  
+                <span>
+                    Detoxification Kit : <input type="checkbox" v-model="categories" value="10" debounce="5000" checked>
                 </span>  
                 <span><button class="btn btn-primary" @click="getCarts">Search</button></span>
             </div>
