@@ -982,8 +982,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('quality/patients', 'SurveyController@patients');
     Route::post('quality/patients', 'SurveyController@patients');
 
-     Route::get('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
-     Route::post('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
+    Route::get('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
+    Route::post('marketing/dialer_push', 'DialerPushController@PredictiveQueue');
 
     Route::get('quality/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
     Route::post('quality/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
