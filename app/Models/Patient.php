@@ -635,8 +635,8 @@ class Patient extends Model
     public static function register($cart)
     {
         if($cart->lead->patient) {  
-            if($cart->hasProductCategories([1])){ 
-            Patient::setDietPreference($cart->id,$cart->lead_id,$cart->lead->patient);}         
+            //if($cart->hasProductCategories([1])){ 
+            //Patient::setDietPreference($cart->id,$cart->lead_id,$cart->lead->patient);}         
             return $patient = $cart->lead->patient;
         }
 
@@ -659,7 +659,7 @@ class Patient extends Model
     }
 
 
-    public static function setDietPreference($cart_id,$lead_id,$patient=null)
+    /*public static function setDietPreference($cart_id,$lead_id,$patient=null)
     {
         $id = $patient->id;
         $patient_details = Patient::where('id' , $id)->first();
@@ -681,5 +681,5 @@ class Patient extends Model
             }
         }
         return true;
-    }
+    }*/
 }
