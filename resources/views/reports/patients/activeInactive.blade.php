@@ -67,6 +67,7 @@
                             <th>Patients Id</th>
                             <th>Lead Id</th>
                             <th>Patients Name</th>
+                            <th>Cre</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Mobile</th>
@@ -87,6 +88,7 @@
                              <td>{{$patient->id}}</td>
                              <td>{{$patient->lead->id}}</td>
                             <td><a href="/lead/{{$patient->lead_id}}/viewPersonalDetails" target="_blank">{{$patient->lead->name or ""}}</a></td>
+                            <td>{{$patient->lead->cre->cre or " "}}</td>
                             <td>{{$patient->cfee->start_date or " "}}</td>
                             <td>{{$patient->cfee->end_date or " "}}</td>
                             <td>{{$patient->lead->mobile or ""}}</td>
