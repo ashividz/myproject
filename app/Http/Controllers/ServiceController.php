@@ -411,7 +411,7 @@ class ServiceController extends Controller
                         ->join('programs','md.Program_ID','=','programs.id')
                         ->join('MasterDietCondition','md.Condition_ID','=','MasterDietCondition.CID')
                         ->where('isapproved',0)
-                        ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner','isveg')
+                        ->select('md.id','name','Blood_Group','Rh_Factor','Body_Prakriti','Day_Count','Breakfast','MidMorning','Lunch','Evening','Dinner','isveg','AfterDinner','EarlyMorning')
                         ->orderBy('md.created_at','desc')
                         ->limit(15)
                         ->get();
@@ -454,6 +454,8 @@ class ServiceController extends Controller
             $diet->Lunch = trim($request->lunch);
             $diet->Evening = trim($request->evening);
             $diet->Dinner = trim($request->dinner);
+            $diet->AfterDinner = trim($request->afterdinner);
+            $diet->EarlyMorning = trim($request->earlymorning);
             $diet->Condition_ID = $Condition->CID;
             $diet->Program_ID = $program;
             $diet->Day_Count = $DayCount+1; 

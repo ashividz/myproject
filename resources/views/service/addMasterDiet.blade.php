@@ -45,7 +45,10 @@
                             @endforeach
                             </select>
 						</li>
-
+                        <li>
+							<label>Early-Morning</label>
+							<textarea size="3" class="form-control" type="text" id="earlymorning" name="earlymorning" style="width:390px"></textarea>
+						</li>
 						<li>
 							<label>Breakfast *</label>
 							<textarea size="3" class="form-control" type="text" id="breakfast" name="breakfast" style="width:390px" required></textarea>
@@ -65,6 +68,10 @@
                         <li>
 							<label>Dinner *</label>
 							<textarea size="3" class="form-control" type="text" id="dinner" name="dinner" style="width:390px" required></textarea>
+						</li>
+                        <li>
+							<label>After Dinner</label>
+							<textarea size="3" class="form-control" type="text" id="afterdinner" name="afterdinner" style="width:390px"></textarea>
 						</li>
 					</ol>
 				</fieldset>				
@@ -92,11 +99,13 @@
                             <th>Prakriti</th>
                             <th>DayCount</th>
                             <th>Preference</th>
+                            <th>Early-Morning</th>
                             <th>BreakFast</th>
                             <th>MidMorning</th>
                             <th>Lunch</th>
                             <th>Evening</th>
                             <th>Dinner</th>
+                            <th>After Dinner</th>
                         </tr>
                     </thead>
                         
@@ -112,6 +121,9 @@
                             <td> <?php $colorClass="redbox"; if($diet->isveg==1) $colorClass="greenbox";?> 
                             <div id="circle" class="circle <?php echo $colorClass; ?>"></div></td>
                             <td>
+                                <div class="earlymorning">{{$diet->EarlyMorning}}</div>
+                            </td>
+                            <td>
                                 <div class="breakfast">{{$diet->Breakfast}}</div>
                             </td>    
                             <td>
@@ -126,6 +138,9 @@
                             <td>
                                 <div class="Dinner">{{ $diet->Dinner }}</div>
                                 
+                            </td>
+                            <td>
+                                <div class="afterdinner">{{ $diet->AfterDinner}}</div>
                             </td>
                             
                         </tr>        
