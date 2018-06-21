@@ -47,10 +47,10 @@ class CartApprovalController extends Controller
     protected $template_12w ;
     protected $template_12 ;
 
-     $list = array(
+     /*$list = array(
                     90 => 90,139 => 90,132 => 90,126 =>90,105 => 105,118 => 105,136 => 105,141 => 105,102 => 102,120 => 102,128 =>102,135 =>102,140 =>102,91  => 91 ,130 => 91,138 =>91,81  => 81,137 => 81,133 => 81,129 => 81,125 => 81,115 => 81,85 => 85,134 =>85,117 => 85,84 => 84,
                     131 => 84,116 => 84,109 => 109,123 => 109,110 => 110,124 => 110,95  => 95,127 => 95,119 => 95,
-                 );
+                 );*/
 
             
 
@@ -583,14 +583,14 @@ class CartApprovalController extends Controller
             }
 
             $product_id = $product->id;
-            if(array_key_exists($product_id, $list))
+            /*if(array_key_exists($product_id, $list))
             {
                  $product_id =  $list[$product_id];
             }
             else
             {
                $product_id = $product->id;
-            }
+            }*/
 
             $users = DB::connection('sqlsrv')->table('tblSaleOrderDetail')->insert(
                         ['VoucherNo' => $cart->id , 'ItemCode' =>  $product_id ,'ItemName' => $product->name , 'ColorName' => ' ' ,'Size' => ' ', 'Quantity' => $product->pivot->quantity , 'Unit' => 'Pcs' , 'SaleRate' => $product->pivot->price ,'MRP' =>  $product->pivot->price , 'PurRate' => 0 ,'ItemDiscRate' => $discount , 'ItemDiscAmt' => ($product->pivot->price - $product->pivot->amount ) ,'TaxRate' => 0 , 'TaxAmt' => 0 ,'Amount' => $product->pivot->amount , 'Excise' => 0 ,'Barcode' => ' ', 'SerialNo' => ' ' ,'DisplayOrd' => ' ', 'TaxType' => 0,'OtherTaxRate' =>  0 , 'OtherTaxAmt' => 0 ]
