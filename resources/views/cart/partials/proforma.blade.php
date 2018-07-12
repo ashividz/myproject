@@ -19,7 +19,7 @@
                         <img src="{{ url('/')}}/images/logo.jpg" width="300px">
                         <div>
                             <h3>Nutriwel Health (India) Private Limited</h3>
-                            232 B, 2nd Floor, Okhla Industrial Area, Phase III, New Delhi - 110020
+                            227, 1st Floor, Okhla Industrial Area, Phase III, New Delhi - 110020
                             <p>
                             Phone No: 011-41343500, 011-79411250
                             <p>
@@ -181,7 +181,7 @@
                                 To:
                                 <div style="margin-left:20px">
                                     Nutriwel Health (India) Pvt. Ltd<br>
-                                    232B, 2nd Floor<br>
+                                    227, 1st Floor<br>
                                     Okhla Industrial Area<br>
                                     Phase III<br>
                                     New Delhi - 110020<br>
