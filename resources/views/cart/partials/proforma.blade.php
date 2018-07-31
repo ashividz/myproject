@@ -23,7 +23,10 @@
                             <p>
                             Phone No: 011-41343500, 011-79411250
                             <p>
-                            nutrihealthsystems.com 
+                             <p>
+                            Gst NO: 07AACCN9773G1Z3
+                            <p>
+                            drshikhasharma.com
                             <h3>Proforma Invoice</h3>
                         </div>
                     </div>
