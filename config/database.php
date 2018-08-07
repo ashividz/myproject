@@ -80,6 +80,21 @@ return [
             'strict'    => false,
         ],
 
+        //Google cloud database for app (VediqueDiet)
+
+        'VediqueDiet' => [
+            'driver'    => 'mysql',
+            'host'      => '35.193.47.135',
+            'port'      => '3306',
+            'database'  => 'VediqueDiet',
+            'username'  => 'root',
+            'password'  => 'yuwowdb',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+
         
         'mysql4' => [
             'driver'    => 'mysql',

@@ -461,6 +461,9 @@
                         <li>
                             <a href="/marketing/shs_lead_distribution" id="menu_leads">SHA Lead Distribution</a>
                         </li>
+                        <li>
+                            <a href="/marketing/vediqueDietLeads" id="menu_vediqueDiet">VediqueDiet Leads</a>
+                        </li>
                         </ul>
                 </li>
 
