@@ -135,12 +135,12 @@ class Diet extends Model
             $status  = 'success'; 
             Diet::setAppResponse($diets,$app_response);
 
-             $client = new Client();
-            $app_response = $client->request('POST', 'https://myapplication-47c35.appspot.com/api/user/storeDiets?api_token=LbJdWrcNoF4pFTUJs0DaqKt33lpLDEReFT5oFzZQUy4pUNxl3B30dgzfFCgjIeKR', [
-                    'form_params' => [
-                    'diet' => json_encode($diets),
-                    'email' => json_encode($email)]
-                    ]);
+            //  $client = new Client();
+            // $app_response = $client->request('POST', 'https://myapplication-47c35.appspot.com/api/user/storeDiets?api_token=LbJdWrcNoF4pFTUJs0DaqKt33lpLDEReFT5oFzZQUy4pUNxl3B30dgzfFCgjIeKR', [
+            //         'form_params' => [
+            //         'diet' => json_encode($diets),
+            //         'email' => json_encode($email)]
+            //         ]);
                   
         }
 
