@@ -167,6 +167,11 @@
                         </li>
                     </ul>
                 </li>
+                @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('logistics')) 
+                <li>
+                    <a href="/carts/getdetails">Search Carts</a>
+                </li>
+                @endif
             </ul>
         </li> 
 

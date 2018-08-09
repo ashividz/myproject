@@ -1308,6 +1308,8 @@ Route::group([
 
 
     Route::get('cart/{id}', 'CartController@show');
+    Route::get('carts/getdetails','CartController@getdetails');
+    Route::post('carts/getdetails','CartController@getdetails');
 
     Route::get('cart/{id}/approval/update', 'CartApprovalController@modal');
     Route::post('cart/{id}/approval/update', 'CartApprovalController@update');

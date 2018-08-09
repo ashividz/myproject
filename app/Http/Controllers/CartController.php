@@ -579,4 +579,47 @@ class CartController extends Controller
         return $shipping;
     }
 
+public function getdetails(Request $request)
+{
+    $cart = null;
+    $pin = null;
+    $city = null;
+    $ModeOfPayment = null;
+    $shippingAddress = null;
+    $id = $request->cart_id;
+    if($id){
+
+        $cart = Cart::with('address' ,'lead' , 'products' , 'payments.method' , 'cre' , 'source')
+        ->where('id',$id)
+        ->first();
+
+        if($cart->address)
+        {
+            $pin = $cart->address->zip;
+            $city = $cart->address->city;
+            $shippingAddress = $cart->address->address .','.$cart->address->city . ',' . $cart->address->region->region_name . ',' . $cart->address->zip . ',' . $cart->address->country;
+        }
+        else
+        {
+            $city = $cart->lead->city;
+            $pin = $cart->lead->zip;
+            $shippingAddress = $cart->lead->address .','.$cart->lead->city . ',' . $cart->lead->zip . ',' . $cart->lead->state . ',' . $cart->lead->country;
+        }
+        $ModeOfPayment = "";
+        foreach ($cart->payments as $payment) {
+            $ModeOfPayment = $ModeOfPayment.'/'.$payment->method->name;
+        }
+    }
+        $data = array(
+        'menu' => 'cart',
+        'section' => 'search',
+        'cart' => $cart,
+        'shippingAddress' => $shippingAddress,
+        'pin' => $pin,
+        'city' => $city,
+        'paymentmode' => $ModeOfPayment
+        );
+    return view('home')->with($data); 
+    }
+
 }
