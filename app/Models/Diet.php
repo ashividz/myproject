@@ -125,6 +125,7 @@ class Diet extends Model
                 $email = $user->lead->email;
                 break;
             }
+
             $client = new Client();
             $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
                     'form_params' => [
@@ -132,18 +133,12 @@ class Diet extends Model
                     'email' => json_encode($email)]
                     ]);
             
+            
+
             $message .= '<li>Diet sent on YuWoW</li>';
             $status  = 'success'; 
             Diet::setAppResponse($diets,$app_response);
-
-            // $client = new Client();
-            // $app_response = $client->request('POST', 'https://myapplication-47c35.appspot.com/api/user/storeDiets', [
-            //         'form_params' => [
-            //         'api_token'=>$code,
-            //         'diet' => json_encode($diets),
-            //         'email' => json_encode($email)]
-            //         ]);
-                  
+            Diet::sendDietOnVediqueDiet($code , $diets , $email);
         }
 
         if($patient->sms && $patient->lead->country == 'IN')
@@ -388,5 +383,18 @@ class Diet extends Model
             $diet->sms_response = $status;
             $diet->save();
         }
+    }
+
+    public static function sendDietOnVediqueDiet($code , $diets , $email)
+    {
+            $client = new Client();
+            $app_response = $client->request('POST', 'https://myapplication-47c35.appspot.com/api/user/storeDiets', [
+                    'form_params' => [
+                    'api_token'=>$code,
+                    'diet' => json_encode($diets),
+                    'email' => json_encode($email)]
+                    ]);
+
+            return "Diet sended on Vedique Diet APP";
     }
 }
