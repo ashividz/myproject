@@ -138,7 +138,7 @@ class Diet extends Model
             $message .= '<li>Diet sent on YuWoW</li>';
             $status  = 'success'; 
             Diet::setAppResponse($diets,$app_response);
-            Diet::sendDietOnVediqueDiet($code , $diets , $email);
+           // Diet::sendDietOnVediqueDiet($code , $diets , $email);
         }
 
         if($patient->sms && $patient->lead->country == 'IN')
