@@ -1,3 +1,46 @@
+<?php
+/*Block authored by Sunil*/
+//updated on 2016-07-01 to handle upgrade cases
+
+    $initialWeight = null;
+    $latestWeight  = null ;
+    if($medical->patient)
+    {
+        $upgradeDuration = \App\Models\Fee::getUpgradeDuration();
+        $endFee          = $medical->patient->fees->sortByDesc('end_date')->first();
+        $startFee        = $endFee; 
+        $fees            = $medical->patient->fees->sortByDesc('end_date');
+
+        foreach ($fees as $f ) {
+            $diffInDays = $f->end_date->diffInDays($startFee->start_date,false);
+            if ( ($diffInDays <= $upgradeDuration))
+                $startFee = $f;
+            else
+                break;
+        }
+        $initialWeight =  \App\Models\PatientWeight::where('patient_id',$medical->patient->id)
+                                 ->where('weight','>',0)
+                                 ->where('date','>=',$startFee->start_date)
+                                 ->orderBy('date')
+                                 ->first();
+
+        $latestWeight  =  \App\Models\PatientWeight::where('patient_id',$medical->patient->id)
+                                 ->where('weight','>',0)
+                                 ->where('date','>=',$startFee->start_date)
+                                 ->orderBy('date','desc')
+                                 ->first();
+    }
+    // $initialBMI = null;
+    // $latestBMI  = null;
+    
+    // if ( $patient->lead->height >0 ) {
+    //     $initialBMI = $initialWeight ? number_format($initialWeight->weight*100*100/pow($patient->lead->height,2) ,2):null ;
+    //     $latestBMI = $latestWeight ? number_format($latestWeight->weight*100*100/pow($patient->lead->height,2) ,2):null ;
+    // }   
+        
+/*end of the Block authored by Sunil*/
+?>
+
 @extends('lead.index')
 
 @section('top')
@@ -104,11 +147,15 @@
                                                <td><strong>Dignosis</strong></td>
                                                <td><strong>Medical Problem</strong></td>
                                                <td><strong>Medical History</strong></td>
+                                               <td><strong>Initial Weight</strong></td>
+                                               <td><strong>Final weight</strong></td>
                                             </tr>
                                             <tr>
                                                <td>{{$medical->patient->diagnosis  or ""}}</td>
                                                <td>{{$medical->patient->medical_problem  or ""}}</td>
                                                <td>{{$medical->patient->medical_history  or ""}}</td>
+                                               <td>{{$initialWeight->weight or ""}}</td>
+                                               <td>{{$latestWeight->weight or ""}}</td>
                                             </tr>
                                         </table>
                                     @endif
