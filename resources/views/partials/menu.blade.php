@@ -570,6 +570,9 @@
                             <a href="/reports/products/repeat_orders" id="menu_reports_products_repeat_orders">Repeat Orders</a>
                         </li>
                         <li>
+                            <a href="/marketing/vediqueDietUsers" id="vedique_diet">VediqueDiet User</a>
+                        </li>
+                        <li>
                          <a href="/marketing/YuwowLeads" id="menu_reports_yuwow">Yuwow Leads</a>  
                         </li>   
                     </ul>

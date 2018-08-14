@@ -273,6 +273,7 @@ Route::group([
         Route::get('marketing/leads', 'MarketingController@viewLeads');
         Route::POST('marketing/leads', 'MarketingController@viewLeads');
         Route::get('marketing/vediqueDietLeads', 'VediqueDietLeadController@viewLeads');
+        Route::get('marketing/vediqueDietUsers', 'VediqueDietLeadController@vediqueDietUser');
 });
 
 Route::group([

@@ -35,4 +35,20 @@ class VediqueDietLeadController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function vediqueDietUser()
+    {
+          $users = DB::connection('VediqueDiet')->table('users')->get();
+
+          //dd($users);
+
+          $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'user',
+            'users'        =>  $users,
+            'i'             =>  '1'
+        );
+
+        return view('home')->with($data);
+    }
 }
