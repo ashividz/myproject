@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\VediqueDietPaidDiet;
 use Storage;
 use Mail;
 use Auth;
@@ -117,7 +118,7 @@ class Diet extends Model
         $code = 'LbJdWrcNoF4pFTUJs0DaqKt33lpLDEReFT5oFzZQUy4pUNxl3B30dgzfFCgjIeKR';
 
         $diets = Diet::whereIn('id',$request->checkbox)->orderBy('date_assign')->get();
-
+       
         if($patient->app)
         {         
             foreach ($diets as $diet) {
@@ -126,6 +127,7 @@ class Diet extends Model
                 break;
             }
 
+            Diet::AddVediqueDiet($diets , $email);
             $client = new Client();
             $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
                     'form_params' => [
@@ -396,5 +398,39 @@ class Diet extends Model
                     ]);
 
             return "Diet sended on Vedique Diet APP";
+    }
+
+    private static function AddVediqueDiet($diets, $email)
+    {
+
+        
+        $email = $email;
+        Diet::deletDiet($email);
+        //dd($diets);
+        foreach ($diets as $diet) {
+
+            $vdiet = new VediqueDietPaidDiet;
+            $vdiet->date_assign = date('Y-m-d', strtotime($diet->date_assign));
+            $vdiet->email = $email;
+            $vdiet->breakfast = trim($diet->breakfast);
+            $vdiet->mid_morning = trim($diet->mid_morning);
+            $vdiet->lunch = trim($diet->lunch);
+            $vdiet->evening = trim($diet->evening);
+            $vdiet->dinner = trim($diet->dinner);
+            $vdiet->herbs   = $diet->herbs;
+            $vdiet->date =  date("Y/m/d") ;
+            $vdiet->save();
+        }
+       
+
+        return "master Diet Added";
+       
+    }
+
+    public static function deletDiet($email)
+    {
+        $dd = VediqueDietPaidDiet::where('email' , $email)
+                    ->where('date_assign' , '!=' , date("Y/m/d"))
+                    ->delete();
     }
 }
