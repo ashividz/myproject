@@ -7,15 +7,6 @@
         <div class="panel-body">
         <div class='panel panel-default fabheader'>
           <div class='container'>
-              
-             <div class ='panel-body'>
-                <p>Dear @{{patient.lead.name}} </p>
-                <p>Thank you for choosing “Dr. Shikha’s Nutrihealth” </p>
-                <p>We hope that you thoroughly enjoyed the experience and we are able to enlighten/ educate you with the concept of Ayurveda & Body type based Nutrition advisory and plans. We hope that we are able to establish trust with you and add you in our satisfied clientele.
-                <p>We are constantly trying to improve the service we offer and we would be grateful if you could take a couple of minutes to send a feedback with your thoughts. </p>
-                <p>We work really hard to provide the best experience to our customers and are always looking for ways to improve. If you have any feedback please reply to this email directly. We read every email we get and appreciate your help in improving our customer experience.</p>
-                <p>As your program is completed, we would like to share the final analysis brochure with you mentioned below.</p>
-                <p>I look forward to hearing from you, and hopefully welcoming you back to Dr. Shikha’s NutriHealth family.</p><br></div>
              <div class='col-md-6'>
                  <label>NAME: @{{patient.lead.name}}</label> <br>
                  <label>PRAKRITI: @{{patient.prakriti.first_dominant_name}}</label> <br>

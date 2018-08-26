@@ -6,10 +6,22 @@
         <div>
           <div >
           <table width='100%'>
-              <tr><td colspan='2' style='text-align: center'>
-                 <img width='300' src='http://drshikhasnutriwelhealth.com/logo.jpg' />
-                 <h4>FINAL ANALYSIS BROCHURE</h4></td>
-               </tr>
+          <tr><td colspan='2' style='text-align: center'>
+                <img width='300' src='http://drshikhasnutriwelhealth.com/logo.jpg' /></td>
+              </tr>
+              <tr>
+                  <br/><br/>
+                  <td colspan='2'><label>Thank you for choosing “Dr. Shikha’s Nutrihealth”</label><br><br>
+                  <label>We hope that you thoroughly enjoyed the experience and we are able to enlighten/ educate you with the concept of Ayurveda & Body type based Nutrition advisory and plans. We hope that we are able to establish trust with you and add you in our satisfied clientele.</label><br><br>
+                  <label>We are constantly trying to improve the service we offer and we would be grateful if you could take a couple of minutes to send a feedback with your thoughts.</label><br><br>
+                  <label>We work really hard to provide the best experience to our customers and are always looking for ways to improve. If you have any feedback please reply to this email directly. We read every email we get and appreciate your help in improving our customer experience.</label><br><br>
+                  <label>As your program is completed, we would like to share the final analysis brochure with you mentioned below.</label><br><br>
+                  <label>I look forward to hearing from you, and hopefully welcoming you back to Dr. Shikha’s NutriHealth family.</label><br><br>
+                  </td>
+              </tr>
+            <tr><td colspan='2' style='text-align: center'>
+               <h4>FINAL ANALYSIS BROCHURE</h4></td>
+             </tr>
                <tr><td width='50%'>
                  <br/><br/>
                  <label>NAME: {{$patient->lead->name}}</label> <br>
