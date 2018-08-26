@@ -12,7 +12,7 @@
               <tr>
                   <br/><br/>
                   <td colspan='2'>
-                  <label>Dear {{$patient->lead->name}}</label><br>
+                  <label>Dear {{$patient->lead->name}}</label><br><br>
                   <label>Thank you for choosing “Dr. Shikha’s Nutrihealth”</label><br><br>
                   <label>We hope that you thoroughly enjoyed the experience and we are able to enlighten/ educate you with the concept of Ayurveda & Body type based Nutrition advisory and plans. We hope that we are able to establish trust with you and add you in our satisfied clientele.</label><br><br>
                   <label>We are constantly trying to improve the service we offer and we would be grateful if you could take a couple of minutes to send a feedback with your thoughts.</label><br><br>
