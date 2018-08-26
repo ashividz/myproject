@@ -241,7 +241,7 @@
 
       <br />
       <br />
-      <p style="background-color: #fff4c5;border: 1px solid #e4c94b;padding: 10px 20px;text-align:center"> Manage your weight with our Weight Management Solution Box at Rs.1865 per month. The solution includes 6 products – 5 herbs + 1 Protein Meal Replacer. Order your Maintenance Kit Now: <a href="https://goo.gl/vXoc04" target="_blank">https://goo.gl/vXoc04</a> or Call 011-49945920.
+      <p style="background-color: #fff4c5;border: 1px solid #e4c94b;padding: 10px 20px;text-align:center"> Manage your weight with our Weight Management Solution Box at Rs.2885 per month. The solution includes 6 products – 5 herbs + 1 Protein Meal Replacer. Order your Maintenance Kit Now: <a href="https://bit.ly/2NjfzjS" target="_blank">https://goo.gl/vXoc04</a> or Call 011-49945920.
       </p><br>
      <p style='font-weight: bold'> Living Light….!!!!</p>
       <p style='font-weight: bold'>Warm Regards<br>
