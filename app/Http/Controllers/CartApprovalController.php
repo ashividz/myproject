@@ -413,7 +413,8 @@ class CartApprovalController extends Controller
 
                     $patient = Patient::register($cart);
                     if ($cart->hasProductCategories([1])) {
-                        $this->sendserviceCatalogue($cart); 
+                        $this->sendserviceCatalogue($cart);
+                        $this->sendMedicalForm($cart); 
                     }
 
 
@@ -431,6 +432,23 @@ class CartApprovalController extends Controller
         return ['message' => 'Cart Rejected', 'status' => 'Success!'];
     }
 
+    public function sendMedicalForm($cart)
+    {
+        $products_id = [];
+        $lead = Lead::where('id' , $cart->lead_id)->first();
+        $products = CartProduct::where('cart_id' , $cart->id)->get();
+        foreach ($products as $product) {
+            $products_id[] = $product->product_id;
+        }
+        $product_list = array(73 , 64 , 93 , 92 , 5 , 52 ,6 , 53, 7 , 54);
+
+        if( count(array_intersect($product_list,  $products_id)) > 0 && $lead->source_id != 22)
+        {
+            $this->sendEmail(105 , $cart->lead->id);
+        }
+
+    }
+
    public  function  sendserviceCatalogue($cart)
     {
         $products_id = [];
@@ -438,7 +456,6 @@ class CartApprovalController extends Controller
         foreach ($products as $product) {
             $products_id[] = $product->product_id;
         }
-        
         
         if(in_array(73, $products_id)){
             $this->sendEmail($this->template_1,$cart->lead_id);
