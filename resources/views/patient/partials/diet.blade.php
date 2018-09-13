@@ -522,12 +522,23 @@ $(document).ready(function()
 	    }
 	  }
 	);
-	
-	//Product alert for nutritionist
-	@if($patient->productCart && ( $patient->productCart->created_at->diffInDays() >25 ) )
+	//references alert for nutritionist
+	@if( count($patient->references->references) ==  0 )
 		swal({
-			title: "Product Alert!",
-			text: "It's been {{$patient->productCart->created_at->diffInDays()}} days since client ordered herbs.",
+			title: "Reference Alert!",
+			text: "Patient have Not Given any reference.",
+			width: 450,
+			height: 300,
+			imageWidth: 200,
+			imageUrl: "/images/product_kit.jpg",
+			imageSize : "25x25"
+		});
+	@endif
+	//references alert for nutritionist
+	@if( count($patient->references->references) > 0 && ( $patient->references->references[0]->created_at->diffInDays() >25 ) )
+		swal({
+			title: "Reference Alert!",
+			text: "It's been {{$patient->references->references[0]->created_at->diffInDays()}} days since client given references.",
 			width: 450,
 			height: 300,
 			imageWidth: 200,
