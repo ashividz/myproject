@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Database\QueryException;
 
 use App\Models\Patient;
+use App\Models\Lead;
 use App\Models\Diet;
 use App\Models\Product;
 use App\Models\PatientPrakriti;
@@ -30,7 +31,13 @@ class PatientDietController extends Controller
                     $query->whereIn('products.id',Product::getHerbIds());
                })
                ->orderBy('created_at','desc')
-               ->first();        
+               ->first();  
+
+        $patient->references = Lead::with('references.patient')
+                              ->find($patient->lead->id);
+
+       // return $patient->references;
+
 
         $diets = Diet::where('patient_id', $id)
                     ->orderBy('date_assign', 'desc')
