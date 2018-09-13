@@ -530,7 +530,7 @@ $(document).ready(function()
 			width: 450,
 			height: 300,
 			imageWidth: 200,
-			imageUrl: "/images/product_kit.jpg",
+			imageUrl: "/images/reference.jpg",
 			imageSize : "25x25"
 		});
 	@endif
@@ -542,7 +542,7 @@ $(document).ready(function()
 			width: 450,
 			height: 300,
 			imageWidth: 200,
-			imageUrl: "/images/product_kit.jpg",
+			imageUrl: "/images/reference.jpg",
 			imageSize : "25x25"
 		});
 	@endif
