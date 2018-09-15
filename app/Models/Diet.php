@@ -128,20 +128,18 @@ class Diet extends Model
             }
 
             Diet::AddVediqueDiet($diets , $email);
-            // $client = new Client();
-            // $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
-            //         'form_params' => [
-            //         'diet' => json_encode($diets),
-            //         'email' => json_encode($email)]
-            //         ]);
+            $client = new Client();
+            $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', [
+                    'form_params' => [
+                    'diet' => json_encode($diets),
+                    'email' => json_encode($email)]
+                    ]);
             
             
 
             $message .= '<li>Diet sent on YuWoW</li>';
             $status  = 'success'; 
-            //Diet::setAppResponse($diets,$app_response);
-
-             Diet::setAppResponse($diets);
+            Diet::setAppResponse($diets,$app_response);
            // Diet::sendDietOnVediqueDiet($code , $diets , $email);
         }
 
@@ -377,11 +375,10 @@ class Diet extends Model
         }            
     }
 
-    private static function setAppResponse($diets)
+    private static function setAppResponse($diets,$response)
     {   
         $app_response = 0;
-       // $status = $response->getStatusCode();
-        $status = 200;
+        $status = $response->getStatusCode();
         if($status ==200)
             $app_response = 1;
         foreach($diets as $diet){
