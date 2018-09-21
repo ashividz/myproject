@@ -339,6 +339,11 @@ class Patient extends Model
                     ->whereHas('lead.dispositions',function($query)  use ($followUpDays){
                         $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -'.$followUpDays.' DAY)'));
                     },'<',1)
+                     ->whereHas('lead.patient',function($query) {
+                        $query->whereHas('tags',function($q) {
+                            $q->where('tags.id','=',9);;
+                        });
+                    },'=',0)
                 ->join(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                         $join->on('patient_details.id', '=', 'f.patient_id');
                     })
@@ -347,6 +352,8 @@ class Patient extends Model
             $query = $query->where('nutritionist',$nutritionist);
         return $query->limit(env('DB_LIMIT'))
                 ->get();
+
+
     }
 
     //Marketing Upgrade Leads
