@@ -673,10 +673,14 @@ class LeadController extends Controller
         $countries = Country::all();        
         
         foreach ($lead->addresses as $key => $value) {
-            $lead->addresses[$key]->cod = Cod::checkAvailability($value->zip);
+            $lead->addresses[$key]->cod = $this->cod($lead->zip);
         }        
 
         $cod = Cod::checkAvailability($lead->zip);
+
+        $cod = $this->cod($lead->zip);
+        
+
         
         $data = array(
             'menu'          =>  'lead',
@@ -1447,6 +1451,63 @@ class LeadController extends Controller
                 ->where('state_id', 3)
                 ->orderby('id', 'desc')
                 ->get();
+    }
+
+    public function cod($zip)
+    {
+      $deliverys = DB::table('cod')
+                    ->where('pincode' , $zip)
+                    ->get();
+        $message = "Invalid Pin";
+        if($deliverys)
+        {
+          $message = '';
+          foreach ($deliverys as $delivery) {
+            if($delivery->courier_id == 1)
+            {
+              $message .= '<u>Fedex</u><br/>';
+              $message .= "<b>Delivery : </b>";
+              if($delivery->cod == 'No')
+              {
+                $message .= "<b>Yes</b><br/>";
+                 $message .= "<b>COD : </b>";
+                 $message .= "<b>No</b><br/>";
+              }
+              else if($delivery->cod == 'Yes')
+              {
+                $message .= "<b>Yes</b><br/>";
+                 $message .= "<b>COD : </b>";
+                 $message .= "<b>Yes</b><br/>";
+                
+              }
+
+            }
+            else if($delivery->courier_id == 2)
+            {
+              if($delivery->city == "Delhi" || $delivery->city == "Faridabad"  || $delivery->city == "Gurgaon" || $delivery->city == "Ghaziabad" || $delivery->city == "Noida"  || $delivery->city == "Gautam Buddha Nagar" )
+              {
+                $message .= '<u>BMP</u><br/>';
+                $message .= "<b>Delivery : </b>";
+                if($delivery->cod == 'No')
+                {
+                  $message .= "<b>Yes</b><br/>";
+                   $message .= "<b>COD : </b>";
+                   $message .= "<b>No</b><br/>";
+                }
+                else if($delivery->cod == 'Yes')
+                {
+                   $message .= "<b>Yes</b><br/>";
+                   $message .= "<b>COD : </b>";
+                   $message .= "<b>Yes</b><br/>";
+                }
+              }
+
+            }
+          }
+        }
+
+        return $message;
+
     }
     
 }
