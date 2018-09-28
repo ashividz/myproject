@@ -661,7 +661,7 @@ Route::group([
         Route::post('herb/update', 'HerbController@update');
 
         Route::get('herb/template/add', 'HerbController@templateForm');
-        Route::get('herb/template/edit/{id}', 'HerbController@templateEdit');
+        
         Route::post('herb/template/add', 'HerbController@templateSave');
         Route::post('herb/template/update', 'HerbController@templateUpdate');
         

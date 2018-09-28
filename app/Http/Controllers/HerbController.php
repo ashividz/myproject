@@ -84,20 +84,11 @@ class HerbController extends Controller
         return view('home')->with($data);
 	}
 
-    public function templateEdit(Request $request,$id)
-    {
-        return view('herp_edit');
-        //return "Sucessfully redirect";
-        die;
-    }
+    
 
 	public function templateSave(HerbTemplateRequest $request)
 	{
-		/*$herb = HerbTemplate::find($request->herb);
-
-        if($herb) {
-            return "Herb already added";
-        }*/
+		
 
         $herb = new HerbTemplate;
 
@@ -109,7 +100,7 @@ class HerbController extends Controller
         $herb->save();
 
         foreach ($request->mealtimes as $mealtime) {
-            //var_dump($mealtime);
+            
             HerbTemplateMealtime::saveMealtime($herb->id, $mealtime);
         }
 
@@ -155,7 +146,7 @@ class HerbController extends Controller
         if($herb) {
             return "Error: Duplicate Name";
         }
-        //return $request;
+        
 
         $herb = Herb::find($request->id);
         $herb->name =  $request->value;
@@ -199,7 +190,7 @@ class HerbController extends Controller
             
             'unit_id' =>  $unitEdit,
             'quantity'  => $quantityEdit,
-            'herb_id' => $herbEdit,
+            
             'remark' => $remarkEdit
         ));
         $count = count($request->mealtimesEdit);
