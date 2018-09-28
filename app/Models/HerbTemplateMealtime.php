@@ -26,4 +26,5 @@ class HerbTemplateMealtime extends Model
         $mealtime->mealtime_id = $mealtime_id;
         $mealtime->save();
     }
+    
 }

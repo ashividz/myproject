@@ -8,18 +8,19 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HerbRequest;
 use App\Http\Requests\HerbTemplateRequest;
-
+use Illuminate\Support\Facades\Validator;
 use App\Models\Lead;
 use App\Models\Patient;
-
+use Illuminate\Support\Facades\Input;
 use App\Models\Herb;
 use App\Models\HerbTemplate;
 use App\Models\HerbTemplateMealtime;
 use App\Models\Mealtime;
-
+use Illuminate\Support\Facades\Redirect;
 use App\Models\Unit;
 use Auth;
 use DB;
+use Session;
 
 class HerbController extends Controller
 {
@@ -66,6 +67,9 @@ class HerbController extends Controller
 		$mealtimes = Mealtime::where('herb', 1)->get();
 
 		$templates = HerbTemplate::with('mealtimes.mealtime')->get();
+        // print '<pre>';
+        // print_r($templates);
+        // die;
 
 		$data = array(
             'menu'          =>  'doctor',
@@ -79,6 +83,13 @@ class HerbController extends Controller
 
         return view('home')->with($data);
 	}
+
+    public function templateEdit(Request $request,$id)
+    {
+        return view('herp_edit');
+        //return "Sucessfully redirect";
+        die;
+    }
 
 	public function templateSave(HerbTemplateRequest $request)
 	{
@@ -109,6 +120,7 @@ class HerbController extends Controller
     {
         $herbs = Herb::orderBy('name')->get();
 
+
         $data = array(
             'menu'          =>  'doctor',
             'section'       =>  'herbs.herb',
@@ -132,6 +144,7 @@ class HerbController extends Controller
 
     public function update(Request $request)
     {
+
         if (trim($request->value) == '') {
             return "Error: Cannot be Null";
         }
@@ -150,5 +163,58 @@ class HerbController extends Controller
 
         return $request->value;
 
+    }
+
+    public function templateUpdate(Request $request)
+    {
+        
+
+        $validation = Validator::make(Input::all(), 
+        array(
+            'mealtimesEdit'     => 'required',
+            'unitEdit'          => 'required',
+            'quantityEdit'      => 'required|min:3',
+            'herbEdit'          => 'required',
+            'remarkEdit'        => 'required|max:100'
+            
+        )
+    ); 
+
+    
+    if($validation->fails()) {
+        return Redirect::back()->withInput()->withErrors($validation->messages());
+    } else {
+
+        
+
+        $herbs = Input::get('id');
+       
+        $mealtimesEdit[] = Input::get('mealtimesEdit');
+        $unitEdit =  Input::get('unitEdit');
+        $quantityEdit   = Input::get('quantityEdit');
+        $herbEdit = Input::get('herbEdit');
+        $remarkEdit = Input::get('remarkEdit');
+
+        HerbTemplate::where('id', $herbs)->update(array(
+            
+            'unit_id' =>  $unitEdit,
+            'quantity'  => $quantityEdit,
+            'herb_id' => $herbEdit,
+            'remark' => $remarkEdit
+        ));
+        $count = count($request->mealtimesEdit);
+        
+        for ($x = 0; $x < $count; $x++) {
+            HerbTemplateMealtime::where('herb_template_id', $herbs)->delete();
+            foreach ($request->mealtimesEdit as $mealtime) {
+                
+                HerbTemplateMealtime::saveMealtime($herbs, $mealtime);
+            }
+            
+        } 
+        Session::flash('message2', "Herb Updated Successfully");
+        return Redirect::back();
+        
+    }
     }
 }
