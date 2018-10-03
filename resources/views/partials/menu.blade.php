@@ -404,6 +404,9 @@
                             <a href="/service/reports/yuwow/feedback" id="menu_service_diet-not-started">Yuwow Feedback</a>
                         </li>
                         <li>
+                            <a href="/service/reports/vediquediet/feedback" id="vedique_diet">Vediquediet Feedback</a>
+                        </li>
+                        <li>
                             <a href="/service/reports/fabReport" id="menu_service_fab_report">FAB Report</a>
                         </li>
                         <li>

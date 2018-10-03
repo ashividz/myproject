@@ -13,6 +13,7 @@ use App\Models\YuWoW\Fitness;
 use App\Models\YuWoW\Deviation;
 use App\Models\YuWoW\Diary;
 use App\Models\YuWoW\GlucoOne;
+use App\Models\VediqueDiet\Feedback;
 use GuzzleHttp\Client;
 
 use DB;
@@ -519,6 +520,31 @@ class YuWoWController extends Controller
                     'users'        =>  $yuwowleads,
                     'i'            => 1
                     );        
+        return view('home')->with($data);
+    }
+
+
+    public function vediqueDietFeedback()
+    {
+        $start_date = $this->start_date;
+        $end_date  = $this->end_date;
+
+        // $feedback = Feedback::with('lead')
+        // ->whereBetween('craeted_at' , [$start_date , $end_date])
+        // ->get();
+
+        $feedbacks = Feedback::with('lead' , 'lead.patient')
+        ->whereBetween('craeted_at' , [$start_date , $end_date])
+        ->get();
+
+        $data = array(
+            'menu'          =>  'service',
+            'section'       =>  'reports.vediquediet_feedback',
+            'feedbacks'     =>  $feedbacks,
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,            
+            );
+
         return view('home')->with($data);
     }
 }
