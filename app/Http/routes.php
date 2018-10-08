@@ -712,6 +712,8 @@ Route::group([
         Route::post('/service/addMasterDiet', 'ServiceController@saveMasterDiet');
         Route::get('/service/viewMasterDiet', 'ServiceController@showMasterDiet');
         Route::post('/service/viewMasterDiet', 'ServiceController@showMasterDiet');
+        Route::get('service/addFood', 'VediqueDietController@addFood');
+        Route::post('service/addFood', 'VediqueDietController@addFood');
 
         Route::get('/service/verifyMasterDiet','ServiceController@verifyMasterDiet');
         Route::post('/service/verifyMasterDiet','ServiceController@verifyMasterDiet');

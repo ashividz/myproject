@@ -451,6 +451,14 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="#" id="VediqueDiet">Vedique Diet</a>
+                     <ul>
+                        <li>
+                            <a href="/service/addFood" id="food_compair">Add Food</a>
+                        </li>                 
+                    </ul>
+                </li>
+                <li>
                     <a href="/service/kd" id="menu_service_createkd">KD</a>
                 </li>               
             </ul> <!-- second level -->                        
