@@ -682,6 +682,8 @@ Route::group([
 
         Route::get('patient/{id}/yuwow', 'YuWoWController@progress');
         Route::post('patient/{id}/yuwow', 'YuWoWController@progress');
+        Route::get('patient/{id}/vediquediet', 'VediqueDietController@progress');
+        Route::post('patient/{id}/vediquediet', 'VediqueDietController@progress');
 
         Route::get('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');
         Route::post('yuwow/yuwowUsageReport' , 'YuWoWController@yuwowUsageReport');

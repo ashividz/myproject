@@ -20,14 +20,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($feedbacks as $key=>$feedback)
-                        <tr>
-                            <td>{{$key+1}}</td>
-                            <td>{{$feedback->date}}</td>
-                            <td><a href="{{url('patient/'.$feedback->lead->patient->id.'/diet')}}" target="blank">{{$feedback->lead->name}}</a></td>
-                            <td>{{$feedback->lead->patient->nutritionist}}</td>
-                            <td>{{$feedback->feedback}}</td>
-                        </tr>
+                        <?php 
+                            $i = 0;
+                        ?>
+                    @foreach($feedbacks as $feedback)
+                       @if($feedback->lead)
+                            <tr>
+                                <td>{{++$i}}</td>
+                                <td>{{$feedback->date or " "}}</td>
+                                <td><a href="{{url('patient/'.$feedback->lead->patient->id.'/diet')}}" target="blank">{{$feedback->lead->name or " "}}</a></td>
+                                <td>{{$feedback->lead->patient->nutritionist or " "}}</td>
+                                <td>{{$feedback->feedback or " "}}</td>
+                            </tr>
+                        @endif
                     @endforeach
 
                     </tbody>
