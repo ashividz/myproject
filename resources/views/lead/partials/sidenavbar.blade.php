@@ -19,6 +19,7 @@
 	<li{!! (($section == "partials.weight") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/weight">Weight</a></li> 
     <li{!! (($section == "partials.measurements") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/measurements">Measurements</a></li> 
 	<li{!! (($section == "partials.yuwow") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/yuwow">YuWoW</a></li> 
+	<li{!! (($section == "partials.vediquediet") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/vediquediet">Vediquediet</a></li> 
 	<li{!! (($section == "partials.prakriti") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/prakriti">Prakriti</a></li> 
 	
 	<li{!! (($section == "partials.tag") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/tags">Tags</a></li> 
@@ -36,7 +37,8 @@
 @endif
 @if(Auth::user()->hasRole('yuwow_support') && (isset($lead->patient) || isset($patient) ) )
 	<ul id="sidenav">
-		<li{!! (($section == "partials.yuwow") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/yuwow">YuWoW</a></li>		
+		<li{!! (($section == "partials.yuwow") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/yuwow">YuWoW</a></li>
+		<li{!! (($section == "partials.vediquedietsupport") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id  }}/vediquediet">Vediquediet</a></li> 		
 		<!--<li{!! (($section == "partials.preference") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/preference">Preference</a></li>-->
 	</ul>
 @endif
