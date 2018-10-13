@@ -73,7 +73,7 @@ class HerbController extends Controller
 
 		$data = array(
             'menu'          =>  'doctor',
-            'section'       =>  'herbs.templates',
+            'section'       =>  'herbs.template',
             'herbs'			=>	$herbs,
             'units'			=>	$units,
             'mealtimes'		=>	$mealtimes,
@@ -83,6 +83,39 @@ class HerbController extends Controller
 
         return view('home')->with($data);
 	}
+
+    public function API_Test()
+    {
+        $data = array(
+            'menu'          =>  'doctor',
+            'section'       =>  'herbs.templateAPI',
+            'i'             =>  1
+        );
+
+        return view('testAPI')->with($data);
+    }
+
+    public function testApi(Request $req)
+    {
+        $txtOrder = $req->input('txtOrder');
+        
+        $abc= array();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type:application/json',
+            'Authorization:flewrfj8k23jnjwdfj23kkfe65fef'
+        ));
+        curl_setopt($curl, CURLOPT_URL, 'http://pp.bookmypacket.com/ERP/api/auth/v1/TrackCurrentStatus');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"Test",'awbNumber'=>"$txtOrder")));//Setting post data as xml
+        $result= curl_exec($curl);
+
+        curl_close($curl);
+        $abc=json_decode($result,true);
+        echo "<pre>";
+        print_r($abc);
+        die;
+    }
 
     
 

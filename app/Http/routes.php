@@ -655,6 +655,18 @@ Route::group([
         Route::post('patient/saveHerb', 'MedicalController@savePatientHerb');
 
         Route::post('patient/{id}/herb/add', 'MedicalController@addPatientHerb');
+        
+
+
+
+        // for testing perpose only
+        Route::get('/herb/new', 'HerbController@API_Test');
+        Route::post('/herb/test', 'HerbController@testApi');
+        Route::get('/service/addRecipe','RecipeAmikusController@index');
+        Route::post('/service/storeRecipe','RecipeAmikusController@store');
+        Route::post('/service/updatRecipe/{id}', 'RecipeAmikusController@update');
+        Route::get('/service/act/{id}', 'RecipeAmikusController@activateRecipe');
+        // testin end
 
         Route::get('herb/add', 'HerbController@show');
         Route::post('herb/add', 'HerbController@store');

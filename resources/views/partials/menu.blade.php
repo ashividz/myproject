@@ -444,6 +444,9 @@
                         </li> 
                         <li>
                             <a href="/service/reports/verifySentDiet" id="menu_service_verifysentDiet">Verify SentDiet</a>
+                        </li>
+                        <li>
+                            <a href="{{url('/service/addRecipe')}}" id="menu_service_addRecipe">Add Recipe</a>
                         </li>                   
                     </ul>
                 </li>

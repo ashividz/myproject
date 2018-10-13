@@ -24,4 +24,5 @@ class MedicalController extends Controller
 	{
 		return PatientHerb::saveHerb($request);
 	}
+
 }
