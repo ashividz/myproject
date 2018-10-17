@@ -147,6 +147,9 @@
                         <li>
                             <a href="/shipping/fedex">Fedex</a>
                         </li>
+                        <li>
+                            <a href="/shipping/bmp">BMP</a>
+                        </li>
                     </ul>
                 </li>     
             @endif                 

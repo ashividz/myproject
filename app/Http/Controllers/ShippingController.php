@@ -152,6 +152,46 @@ class ShippingController extends Controller
         });
 
         return true;
-
     }
+
+    // Kode Starts
+    public function API_Test()
+    {
+        $data = array(
+            'menu'          =>  'shipping',
+            'section'       =>  'templateAPI_Test',
+            'i'             =>  1
+        );
+        //die;
+
+        return view('testAPI')->with($data);
+    }
+
+    public function testApi(Request $req)
+    {
+        $txtOrder = $req->input('txtOrder');
+        
+        $abc= array();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type:application/json',
+            'Authorization:flewrfj8k23jnjwdfj23kkfe65fef'
+        ));
+        curl_setopt($curl, CURLOPT_URL, 'http://pp.bookmypacket.com/ERP/api/auth/v1/TrackCurrentStatus');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"Test",'awbNumber'=>"$txtOrder")));//Setting post data as xml
+        $result= curl_exec($curl);
+
+        curl_close($curl);
+        $abc=json_decode($result,true);
+        $data = array(
+            'menu'          =>  'shipping',
+            'section'       =>  'templateAPI',
+            'abc'           =>  $abc,
+            'i'             =>  1
+        );
+
+        return view('testAPI')->with($data);
+    }
+    // Kode Ends
 }

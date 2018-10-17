@@ -34,6 +34,10 @@ setlocale(LC_MONETARY, "en_IN");
 Route::group([
     'middleware' => ['auth', 'roles', 'checkip']],
     function() { 
+    // Kode Start
+    Route::get('/shipping/bmp', 'ShippingController@API_Test');
+    Route::post('/shipping/test', 'ShippingController@testApi');
+    // Kode Ends
     /** Tracking**/
     Route::get('shippings','ShippingController@index');
     Route::get('api/getShippings','ShippingController@get');
@@ -660,8 +664,7 @@ Route::group([
 
 
         // for testing perpose only
-        Route::get('/herb/new', 'HerbController@API_Test');
-        Route::post('/herb/test', 'HerbController@testApi');
+        
         Route::get('/service/addRecipe','RecipeAmikusController@index');
         Route::post('/service/storeRecipe','RecipeAmikusController@store');
         Route::post('/service/updatRecipe/{id}', 'RecipeAmikusController@update');
