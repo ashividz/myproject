@@ -35,8 +35,8 @@ Route::group([
     'middleware' => ['auth', 'roles', 'checkip']],
     function() { 
     // Kode Start
-    Route::get('/shipping/bmp', 'ShippingController@API_Test');
-    Route::post('/shipping/test', 'ShippingController@testApi');
+    Route::get('/shipping/trackOrder', 'ShippingController@trackOrder');
+    Route::post('/shipping/orderStatus', 'ShippingController@orderStatus');
     // Kode Ends
     /** Tracking**/
     Route::get('shippings','ShippingController@index');
@@ -665,10 +665,10 @@ Route::group([
 
         // for testing perpose only
         
-        Route::get('/service/addRecipe','RecipeAmikusController@index');
-        Route::post('/service/storeRecipe','RecipeAmikusController@store');
-        Route::post('/service/updatRecipe/{id}', 'RecipeAmikusController@update');
-        Route::get('/service/act/{id}', 'RecipeAmikusController@activateRecipe');
+        Route::get('/service/addVediqueDietRecipe','VediqueDietRecipeController@index');
+        Route::post('/service/storeVediqueDietRecipe','VediqueDietRecipeController@store');
+        //Route::post('/service/updatRecipe/{id}', 'VediqueDietRecipeController@update');
+        Route::get('/service/act/{id}', 'VediqueDietRecipeController@activateRecipe');
         // testin end
 
         Route::get('herb/add', 'HerbController@show');

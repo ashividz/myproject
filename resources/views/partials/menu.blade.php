@@ -148,7 +148,7 @@
                             <a href="/shipping/fedex">Fedex</a>
                         </li>
                         <li>
-                            <a href="/shipping/bmp">BMP</a>
+                            <a href="/shipping/trackOrder">BMP</a>
                         </li>
                     </ul>
                 </li>     
@@ -449,7 +449,7 @@
                             <a href="/service/reports/verifySentDiet" id="menu_service_verifysentDiet">Verify SentDiet</a>
                         </li>
                         <li>
-                            <a href="{{url('/service/addRecipe')}}" id="menu_service_addRecipe">Add Recipe</a>
+                            <a href="{{url('/service/addVediqueDietRecipe')}}" id="menu_service_addRecipe">Add Vedique Diet Recipe</a>
                         </li>                   
                     </ul>
                 </li>

@@ -155,23 +155,23 @@ class ShippingController extends Controller
     }
 
     // Kode Starts
-    public function API_Test()
+    public function trackOrder()
     {
         $data = array(
             'menu'          =>  'shipping',
-            'section'       =>  'templateAPI_Test',
+            //'section'       =>  'trackOrderForm',
             'i'             =>  1
         );
         //die;
 
-        return view('testAPI')->with($data);
+        return view('trackOrder')->with($data);
     }
 
-    public function testApi(Request $req)
+    public function orderStatus(Request $req)
     {
-        $txtOrder = $req->input('txtOrder');
+        $txtOrderNo = $req->input('txtOrderNo');
         
-        $abc= array();
+        $orderData= array();
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Content-Type:application/json',
@@ -179,19 +179,19 @@ class ShippingController extends Controller
         ));
         curl_setopt($curl, CURLOPT_URL, 'http://pp.bookmypacket.com/ERP/api/auth/v1/TrackCurrentStatus');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"Test",'awbNumber'=>"$txtOrder")));//Setting post data as xml
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"Test",'awbNumber'=>"$txtOrderNo")));//Setting post data as xml
         $result= curl_exec($curl);
 
         curl_close($curl);
-        $abc=json_decode($result,true);
+        $orderData=json_decode($result,true);
+        //dd($orderData);
         $data = array(
             'menu'          =>  'shipping',
-            'section'       =>  'templateAPI',
-            'abc'           =>  $abc,
+            'orderData'           =>  $orderData,
             'i'             =>  1
         );
 
-        return view('testAPI')->with($data);
+        return view('shipping/template')->with($data);
     }
     // Kode Ends
 }
