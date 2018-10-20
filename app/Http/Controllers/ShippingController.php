@@ -155,13 +155,35 @@ class ShippingController extends Controller
     }
 
     // Kode Starts
-    public function trackOrder()
+    public function trackOrder(Request $req)
     {
+        $txtOrderNo = $req->input('txtOrderNo');
+        
+        $orderData= array();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type:application/json',
+            'Authorization:flewrfj8k23jnjwdfj23kkfe65fef'
+        ));
+        curl_setopt($curl, CURLOPT_URL, 'http://pp.bookmypacket.com/ERP/api/auth/v1/TrackCurrentStatus');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"Test",'awbNumber'=>"$txtOrderNo")));//Setting post data as xml
+        $result= curl_exec($curl);
+
+        curl_close($curl);
+        $orderData=json_decode($result,true);
+        //dd($orderData);
         $data = array(
             'menu'          =>  'shipping',
-            //'section'       =>  'trackOrderForm',
+            'orderData'     =>  $orderData,
+            'section'       =>  'trackOrderForm',
             'i'             =>  1
         );
+        // $data = array(
+        //     'menu'          =>  'shipping',
+        //     'section'       =>  'trackOrderForm',
+        //     'i'             =>  1
+        // );
         //die;
 
         return view('trackOrder')->with($data);

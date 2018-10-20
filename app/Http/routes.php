@@ -36,7 +36,8 @@ Route::group([
     function() { 
     // Kode Start
     Route::get('/shipping/trackOrder', 'ShippingController@trackOrder');
-    Route::post('/shipping/orderStatus', 'ShippingController@orderStatus');
+    Route::post('/shipping/trackOrder', 'ShippingController@trackOrder');
+    //Route::post('/shipping/orderStatus', 'ShippingController@orderStatus');
     // Kode Ends
     /** Tracking**/
     Route::get('shippings','ShippingController@index');
