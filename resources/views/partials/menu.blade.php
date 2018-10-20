@@ -147,9 +147,6 @@
                         <li>
                             <a href="/shipping/fedex">Fedex</a>
                         </li>
-                        <li>
-                            <a href="/shipping/trackOrder">BMP</a>
-                        </li>
                     </ul>
                 </li>     
             @endif                 
@@ -450,9 +447,6 @@
                         </li> 
                         <li>
                             <a href="/service/reports/verifySentDiet" id="menu_service_verifysentDiet">Verify SentDiet</a>
-                        </li>
-                        <li>
-                            <a href="{{url('/service/addVediqueDietRecipe')}}" id="menu_service_addRecipe">Add Vedique Diet Recipe</a>
                         </li>                   
                     </ul>
                 </li>
