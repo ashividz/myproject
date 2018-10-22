@@ -283,7 +283,7 @@ class Cart extends Model
             ->sum('amount');
 
         $other_amount = $this->products()
-            ->whereIn('product_category_id', [2,3,4])
+            ->whereIn('product_category_id', [2,3,4,5,6,7,8,9,10,11])
             ->sum('amount');
 
         $payment = $this->payments()

@@ -278,7 +278,21 @@ class Fee extends Model
         $fee->cre = $cart->cre->employee->name;
         $fee->cre_id = $cart->cre_id;
         $fee->source_id = $cart->source_id;
-        $fee->total_amount = $cart->getDietPaidAmount();
+        if($cart->hasProductCategories([11]))
+        {
+            if($cart->hasProductCategories([1]))
+            {
+                $fee->total_amount = $cart->getDietPaidAmount();
+            }
+            else
+            {
+                $fee->total_amount = 0;
+            }    
+        }
+        else
+        {
+            $fee->total_amount = $cart->getDietPaidAmount();
+        }
         //$fee->valid_months = 
         $fee->duration = $cart->duration;
         $fee->created_by = Auth::id();

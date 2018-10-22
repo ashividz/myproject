@@ -352,6 +352,10 @@ class CartApprovalController extends Controller
     {
         $cart = Cart::find($request->cart_id);
 
+        //dd($cart);
+
+        // dd($cart);
+
         if (!$cart) {
             return ['message' => 'Cart Not Found', 'status' => 'Error!'];
         }
@@ -408,25 +412,32 @@ class CartApprovalController extends Controller
 
                 CartStep::nextStatus($cart->id);
 
-            } elseif ($cart->status_id == 4) {
+            } else if ($cart->status_id == 4) {
+                    
+                    // check the Total amount 
+                    $amount = 0;
+                    if ($cart->hasProductCategories([11])) {
+                        $amount = $this->checkcartAmount($cart);
+                    }
+                   
+                    
                     //Patient Registration
-
-                    $patient = Patient::register($cart);
+                    $patient = Patient::register($cart , $amount);
                     if ($cart->hasProductCategories([1])) {
                         $this->sendserviceCatalogue($cart);
                         $this->sendMedicalForm($cart); 
                     }
-
+                    //dd($amount);
 
                     //Place order
-                    Order::store($cart, $patient);
-                    CartStep::store($request->cart_id, $cart->status_id, 3, $request->remark, $discount_id); 
+                    Order::store($cart, $patient , $amount);
+                    CartStep::store( $request->cart_id , $cart->status_id, 3, $request->remark, $discount_id); 
             } 
 
             return ['message' => 'Cart Approved', 'status' => 'Success!'];
             
         } 
-        //Request State = 2 ie. Cart Rejected
+       // Request State = 2 ie. Cart Rejected
         CartStep::store($request->cart_id, $cart->status_id, 2, $request->remark);
 
         return ['message' => 'Cart Rejected', 'status' => 'Success!'];
@@ -515,6 +526,18 @@ class CartApprovalController extends Controller
         $email->save();
         }   
 
+    }
+
+    public function checkcartAmount($cart)
+    {
+        $amount = 0;
+        foreach ($cart->products as $product) {
+
+           $amount = $amount + $product->pivot->price;
+           
+        }
+
+        return $amount;
     }
 
      public function inventryDatabase($cart)

@@ -639,7 +639,7 @@ class Patient extends Model
         return $yuwowPatients;
     }
 
-    public static function register($cart)
+    public static function register($cart , $amount = null)
     {
         if($cart->lead->patient) {  
             //if($cart->hasProductCategories([1])){ 
@@ -648,6 +648,10 @@ class Patient extends Model
         }
 
         if ($cart->hasProductCategories([1])) {
+            return Patient::store($cart->lead_id);
+        }
+        else if ($cart->hasProductCategories([11]) && $amount >= 1599)
+        {
             return Patient::store($cart->lead_id);
         }
 
