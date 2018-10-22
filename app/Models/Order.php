@@ -45,7 +45,7 @@ class Order extends Model
         )->where('orders.product_category_id','=','products.product_category_id');
     }
 
-    public static function store($cart, $patient = null)
+    public static function store($cart, $patient = null , $amount = null)
     {
         /*if (!$cart->orders->isEmpty()) {
             return $cart;
@@ -68,6 +68,21 @@ class Order extends Model
         {
             $cart->duration = CartProduct::getDietDuration($cart);
             $category_id = 1;
+        }
+
+        else if($cart->hasProductCategories([11]) && $amount >= 1599)
+        {
+            if($cart->duration)
+            {
+                $cart->duration = $cart->duration; 
+                $category_id = 1;
+            }
+            else
+            {
+                 $cart->duration = 5;
+                $category_id = 1;
+            }
+                 
         }
 
         if ($cart->duration > 0) {
@@ -99,10 +114,11 @@ class Order extends Model
             }
         }*/
 
-
+       // dd($cart->hasProductCategories([11]));
         //Update old Fee tables for now
-        if ($cart->duration > 0 && $cart->hasProductCategories([1])) {
+        if (($cart->duration > 0 && $cart->hasProductCategories([1])) || ($cart->duration > 0 && $cart->hasProductCategories([11]))) {
             Fee::store($cart, $patient);
         } 
+        
     }
 }
