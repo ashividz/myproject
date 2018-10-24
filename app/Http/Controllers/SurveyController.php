@@ -153,9 +153,9 @@ class SurveyController extends Controller
 
     		$survey['title'] = $question->title;
     		$survey['question'] = $question->question;
-    		$survey['count'] = $this->getCount($question->title);
-    		$survey['answers'] = $this->getResponses($question->id, $question->title);
-            $survey['comments'] = $this->getComments($question->id, $question->title);
+    		$survey['count'] = $this->getCount($question->id);
+    		$survey['answers'] = $this->getResponses($question->id);
+            //$survey['comments'] = $this->getComments($question->id);
     		array_push($surveys, $survey);
     	}
 
@@ -179,14 +179,13 @@ class SurveyController extends Controller
         $surveys = array();
 
         $questions = SurveyQuestion::get();
-
         foreach ($questions as $question) {
-
+            
             $survey['title'] = $question->title;
             $survey['question'] = $question->question;
-            $survey['count'] = $this->getCount($question->title);
-            $survey['answers'] = $this->getResponses($question->id, $question->title);
-            $survey['comments'] = $this->getComments($question->id, $question->title);
+            $survey['count'] = $this->getCount($question->id);
+            $survey['answers'] = $this->getResponses($question->id);
+            $survey['comments'] = $this->getComments($question->id);
             array_push($surveys, $survey);
         }
 
@@ -206,42 +205,36 @@ class SurveyController extends Controller
         return view('home')->with($data);
     }
 
-    private function getCount($title){
-        
-        return Survey::where($title, '>=', '1')
+    private function getCount($id){
+       
+        return PatientSurveyAnswer::where('question_id',$id)
                     ->whereBetween('created_at', array($this->start_date, $this->end_date))
                     ->count();
     }
 
-    private function getResponses($id, $title)
-    {
-    	return DB::table('survey_answers AS a')
-    			->select(DB::RAW('a.id, answer, COUNT(s.id) AS count'))
-    			->leftJoin('surveys AS s', $title, '=', 'a.id')
-    			->where('question_id', $id)
-                ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
-    			->groupBy('s.'.$title, 'answer')
-    			->orderBy('a.id')
-    			->get();
+    private function getResponses($id)
+    {        
+        return DB::table('survey_answers AS a')
+                    ->select(DB::RAW('a.id, answer, COUNT(s.id) AS count'))
+                    ->Join('patient_survey_answers AS s', 's.answer_id', '=', 'a.id')
+                    ->where('s.question_id', $id)
+                    ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
+                    ->groupBy('a.id', 'answer')
+                    ->orderBy('a.id')
+                    ->get();
     }
 
-    private function getComments($id, $title)
+    private function getComments($id)
     {
-        return DB::table('surveys AS s')
-                ->select(DB::RAW('s.id, patient_id, m.name, m.clinic, m.enquiry_no, p.registration_no, p.nutritionist, ' . $title . 'comment AS comment, s.created_at'))
-                
-                ->leftjoin('patient_details AS p',  function($join)
+        return DB::table('patient_survey AS s')
+                ->select(DB::RAW('s.id, patient_id, s.nutritionist,comment AS comment, s.created_at'))
+                ->leftjoin('patient_survey_answers AS psa',  function($join)
                     {
-                        $join->on('s.clinic', '=', 'p.clinic');
-                        $join->on('s.registration_no', '=', 'p.registration_no');
-                    }) 
-                ->leftjoin('marketing_details AS m',  function($join)
-                    {
-                        $join->on('m.clinic', '=', 'p.clinic');
-                        $join->on('m.enquiry_no', '=', 'p.enquiry_no');
-                    })
-                ->where($title . 'comment', '<>', '')  
-                ->whereBetween('s.created_at', array($this->start_date, $this->end_date)) 
+                        $join->on('s.id', '=', 'psa.patient_survey_id');
+                    })  
+                ->where('comment', '<>', '')
+                ->where('psa.question_id', $id)  
+                ->whereBetween('psa.created_at', array($this->start_date, $this->end_date)) 
                 ->get();
     }
 

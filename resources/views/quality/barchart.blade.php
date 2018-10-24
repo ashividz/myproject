@@ -8,7 +8,7 @@ $(function () {
             text: '{!!$question!!}'
         },
         subtitle: {
-            text: 'Answered: {{$count}}'
+            text: 'Answered: {!!$count!!}'
         },
         xAxis: {
             categories: [
@@ -55,7 +55,7 @@ $(function () {
             enabled: false
         },
         series: [{
-            name: 'Patient Feedbacks',
+            name: 'Survey Result',
             colorByPoint: true,
             data: [
                 @foreach($survey AS $item)
