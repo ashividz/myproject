@@ -19,6 +19,9 @@ use App\Models\Fee;
 use App\Models\CreSurveyQuestion;
 use App\Models\CallDisposition;
 use App\Models\CrePatientSurvey;
+use App\Models\SurveyQuestion;
+use App\Models\PatientSurvey;
+use App\Models\PatientSurveyAnswer;
 use App\Models\CrePatientSurveyAnswer;
 use Auth;
 use DB;
@@ -257,29 +260,23 @@ class CREController extends Controller
     {
         $cre = $this->cre;
 
-        //dd($cre);
-        $nutritionists = DB::table('cre_nutritionist')->where('cre', $cre)->get();
-        $cre1 = ['Manoj Kumar Rastogi' , 'Shashank Maheshwari' , 'Harshil Sharma' , 'Shivam Rohilla' , 'Avadesh Kumar' , 'Shadhvi Srivastava '];
+        $isupgrade = 0; 
+        $mapped_data = DB::table('cre_nutritionist')->where('cre', $cre)->get();
 
         $nutri = [] ;
-        foreach ($nutritionists as $nutritionist) {
-            $nutri[] = $nutritionist->nutritionist;
+        foreach ($mapped_data as $data) {
+            $nutri[] = $data->nutritionist;
+            $isupgrade = $data->is_upgrade;
         }
+        
+            $patients = Lead::has('patient.cfee')
+                         ->with('patient.cfee')   
+                         ->whereHas('patient', function ($query) use($nutri){
+                            $query->wherein('nutritionist', $nutri); })
+                         ->get();
 
-       // dd($nutri);
-        $patients = Lead::whereNotIn('cre_name' , $cre1)
-                    ->has('patient.cfee')
-                    ->with('patient.cfee')
-                    
-                    ->whereHas('patient', function ($query) use($nutri){
-                        $query->wherein('nutritionist', $nutri);
-                    })->get();
-           // dd($patients);
-                    
 
         $users = User::getUsersByRole('cre');
-
-       // return $patients;
 
         $data = array(
             'menu'              =>  $this->menu,
@@ -288,15 +285,16 @@ class CREController extends Controller
             'end_date'          =>  $this->end_date,
             'users'             =>  $users,
             'name'              =>  $this->cre,
-            'patients'          =>  $patients
+            'patients'          =>  $patients,
+            'isupgrade'         =>  $isupgrade
         );
          return view('home')->with($data);
-    }
+    }   
 
     public function survey($id)
     {
         $patient = Patient::find($id);
-        $questions = CreSurveyQuestion::get();
+        $questions = SurveyQuestion::get();
         $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'survey',
@@ -309,19 +307,23 @@ class CREController extends Controller
 
     public function saveCreSurvey(Request $request)
     {
-        $survey = CrePatientSurvey::saveSurvey($request);
+        $survey = PatientSurvey::saveSurvey($request);
 
         
             $size = count($request->comment);
-            
+            $score = 0;
             for ($i=1; $i <= $size; $i++) { 
                 if(!empty($request->answer[$i]))
                 {
-                    $answer = CrePatientSurveyAnswer::saveAnswer($survey->id, $i, $request->answer[$i], $request->comment[$i]);
+                    $answer = PatientSurveyAnswer::saveAnswer($survey->id, $i, $request->answer[$i], $request->comment[$i]);
+                    $score += $answer->answer->assessment_value;
                     
                 }                    
             }
-          return redirect('cre/activeClient');
+
+            $survey->score = $score;
+            $survey->save();
+            return redirect('cre/activeClient');
     }
 
 

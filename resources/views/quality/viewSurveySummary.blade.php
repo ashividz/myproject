@@ -50,14 +50,13 @@
 							<tr>
 								<th>Answer Choices</th>
 								<th>Responses</th>
-								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							@foreach($survey->answers AS $answer)
 							<tr>								
 								<td>{{$answer->answer}}</td>
-								<td>{{$survey->count ? round($answer->count*100/$survey->count, 2) . "%": "0"}}</td>
+								<!--<td>{{$survey->count ? round($answer->count*100/$survey->count, 2) . "%": "0"}}</td> -->
 								<td>{{$answer->count}}</td>
 							</tr>
 							@endforeach
@@ -65,14 +64,13 @@
 						<tfoot>
 							<tr>
 								<th>Total</th>
-								<th></th>
 								<th>{{$survey->count}}</th>
 							</tr>
 						</tfoot>
 					</table>
 				</div>
 			
-			@if(!empty($survey->comments))
+			<!--@if(!empty($survey->comments))
 
 				<div class="container">
 					<a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapse{{$survey->title}}" aria-expanded="false" aria-controls="collapse{{$survey->title}}">
@@ -83,7 +81,8 @@
 						  	<div class="comment well">
 								@foreach($survey->comments AS $comment) 
 									<div class="comment-header">
-										<a href="http://crm/patient.php?clinic={{$comment->clinic}}&registration_no={{$comment->registration_no}}" target="_blank">{{$comment->name}}</a><span class="pull-right">Nutritionist: {{$comment->nutritionist}}</span>
+										<a href="http://crm/patient.php?clinic={{$comment->clinic}}&registration_no={{$comment->registration_no}}" target="_blank">{{$comment->name}}</a> -->
+										<!--<span class="pull-right">Nutritionist: {{$comment->nutritionist}}</span> 
 									</div>								  
 									<div class="comment-body">
 										{{$comment->comment}}
@@ -94,36 +93,11 @@
 								@endforeach
 						  	</div>
 						</div>
-				</div>
+				</div> -->
 
-			@endif
-
+			<!--@endif  -->
 			</div>
-			@if(!empty($answers->comments))
-
-				<div class="container">
-					<a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapse{{$survey->title}}" aria-expanded="false" aria-controls="collapse{{$survey->title}}">
-					  Read Comments
-					</a>
-					
-						<div class="collapse" id="collapse{{$survey->title}}">
-						  	<div class="comment well">
-								@foreach($survey->comments AS $comment) 
-									<div class="comment-header">
-										<a href="http://crm/patient.php?clinic={{$comment->clinic}}&registration_no={{$comment->registration_no}}" target="_blank">{{$comment->name}}</a><span class="pull-right">Nutritionist: {{$comment->nutritionist}}</span>
-									</div>								  
-									<div class="comment-body">
-										{{$comment->comment}}
-									</div>
-									<div class="comment-footer">
-										{{date('D d M Y, h:i A', strtotime($comment->created_at))}}
-									</div> 
-								@endforeach
-						  	</div>
-						</div>
-				</div>
-
-			@endif
+			
 		@include('quality/barchart', array('id' => $survey->title, 'question' => $survey->question, 'count' => $survey->count, 'survey' => $survey->answers))
 
 		</div>	

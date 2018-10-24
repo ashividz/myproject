@@ -17,6 +17,8 @@
                     <th>Nutritionist</th>
                     <th>Start Date</th>
                     <th>Days</th>
+                    <th>Duration</th>
+                    <th>Score</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,46 +26,58 @@
             @foreach($patients AS $l)
                  <?php  
                         $now = time(); // or your date as well
-                        $your_date = strtotime($l->patient->cfee->start_date);
-                        $enddate = strtotime($l->patient->cfee->end_date);
-                        $datediff = $now - $your_date;
-                        $daydiff = $enddate - $now ;
-                        $dayrem  =  floor($daydiff / (60 * 60 * 24));
-                        $daycount  = floor($datediff / (60 * 60 * 24));
-                        $totaldays = $enddate - $your_date;
-                        $totaldaycount =  floor($totaldays / (60 * 60 * 24));
+                        $duration = $l->patient->cfee->duration;
+                        $day = floor((strtotime(date('Y-m-d')) - strtotime($l->patient->cfee->start_date))/(60*60*24));
+                        $day = $day < 0 ? 0 : $day;
+
                         $x ;
 
-                        if($totaldaycount >= 60 && $totaldaycount < 90)
+                        if($duration >= 30)
                         {
-                            $x = 20;
+                            $x = 15;
                         }
-                        elseif($totaldaycount >= 90 && $totaldaycount < 180)
+                        if($duration >= 90)
                         {
                             $x = 45;
                         }
-                        elseif($totaldaycount >= 180 && $totaldaycount < 365)
+                        if($duration >= 180)
                         {
-                            $x = 60;
+                            $x = 90;
                         }
-                        else
+                        if($duration >=365)
                         {
-                            $x = 120;
+                            $x = 240;
                         }
 
                     ?>
-                @if($daycount > 20 &&  $dayrem >= $x)
-                    @if($daycount % 10 == 0)
+                @if($day >= $x && $day%15==0 && $isupgrade==1)
                         <tr>
                             <td>{{$i++}}</td>
                             <td><a href="/cre/{{$l->patient->id}}/survey" target="_blank">{{$l->name or ' '}}</a></td>
                             <td>{{$l->cre_name}}</td>
                             <td>{{$l->patient->nutritionist}}</td>
                             <td>{{$l->patient->cfee->start_date}}</td>
-                           
-                            <td>{{ $daycount }}</td>
+                            <td>{{ $day }}</td>
+                            <td>{{ $duration }}</td>
+                            <td></td>
                         </tr>
-                    @endif
+                @elseif($isupgrade==0 && $day>=20 && $day<$x && $day%15==0)
+                       <tr>
+                            <td>{{$i++}}</td>
+                            <td><a href="/cre/{{$l->patient->id}}/survey" target="_blank">{{$l->name or ' '}}</a></td>
+                            <td>{{$l->cre_name}}</td>
+                            <td>{{$l->patient->nutritionist}}</td>
+                            <td>{{$l->patient->cfee->start_date}}</td>
+                            <td>{{ $day }}</td>
+                            <td>{{ $duration }}</td>
+                            <td><ul>
+                                    @foreach($l->patient->surveys as $survey)
+                                        <li><a href="/patient/{{$l->patient->id}}/survey" target="_blank">
+                                        {{$survey->score or ""}}
+                                        </a><small><em><span class="pull-right">[{{date('M j, Y h:i A',strtotime($survey->created_at))}}]</span></em></small></li>
+                                    @endforeach
+                            </ul></td>
+                        </tr>         
                 @endif
             @endforeach
 
