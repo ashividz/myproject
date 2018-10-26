@@ -59,7 +59,15 @@
                             <td>{{$l->patient->cfee->start_date}}</td>
                             <td>{{ $day }}</td>
                             <td>{{ $duration }}</td>
-                            <td></td>
+                            <td>
+                                <ul>
+                                    @foreach($l->patient->surveys as $survey)
+                                        <li><a href="/patient/{{$l->patient->id}}/survey" target="_blank">
+                                        {{$survey->score or ""}}
+                                        </a><small><em><span class="pull-right">[{{date('M j, Y h:i A',strtotime($survey->created_at))}}]</span></em></small></li>
+                                    @endforeach
+                                </ul>
+                            </td>
                         </tr>
                 @elseif($isupgrade==0 && $day>=20 && $day<$x && $day%15==0)
                        <tr>
