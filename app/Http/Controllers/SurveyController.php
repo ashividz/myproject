@@ -23,7 +23,7 @@ class SurveyController extends Controller
 
     public function __construct()
     {
-    	$this->menu = "quality";
+        $this->menu = "quality";
         $this->daterange = isset($_REQUEST['daterange']) ? explode("-", $_POST['daterange']) : "";
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
@@ -320,5 +320,41 @@ class SurveyController extends Controller
                 ->get();
 
         dd($surveys);
-    }    
+    }  
+    
+    public function viewcustomersatisfaction()
+    {
+        $surveys = array();
+
+        $answers = SurveyAnswer::where('question_id',3)->get();
+        foreach ($answers as $answer) {
+            
+            $survey['title'] = $answer->answer;
+            $survey['count'] = PatientSurveyAnswer::where('answer_id', $answer->id)
+                                                    ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                                    ->count();
+            $survey['patients'] = DB::table('patient_survey_answers AS psa')
+                                    ->select(DB::RAW('patient_id,comment,nutritionist'))
+                                    ->leftjoin('patient_survey AS ps',  function($join)
+                                    {
+                                        $join->on('ps.id', '=', 'psa.patient_survey_id');
+                                    }) 
+                                    ->where('answer_id', $answer->id)
+                                    ->whereBetween('psa.created_at', array($this->start_date, $this->end_date)) 
+                                    ->get();
+            array_push($surveys, $survey);
+        }
+
+        $surveys = json_encode($surveys);
+                
+        $data = array(
+            'menu'          =>  $this->menu,
+            'surveys'        =>  $surveys,
+            'section'       =>  'viewCustomerSatisfaction',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date
+        );
+
+        return view('home')->with($data);
+    }
 }

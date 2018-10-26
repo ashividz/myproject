@@ -704,7 +704,10 @@
                         </li> 
                         <li>
                             <a href="/quality/viewSurveyResults" id="menu_survey_results">Survey Results</a>
-                        </li>                          
+                        </li> 
+                        <li>
+                            <a href="/quality/viewscore" id="menu_survey_csat_score">Customer Satisfaction</a>
+                        </li>                         
                     </ul>                    
                 </li> 
                 <li>
