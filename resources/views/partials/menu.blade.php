@@ -354,16 +354,7 @@
                             <a href="/report/patients/bmi" id="menu_patients_weight" class="arrow">Patient Weight </a>
                         </li>
                     </ul>
-                </li>
-                <li>
-                   <a href="/sales/quality/survey" id="menu_sales_payments">Survey</a>
-                    <ul>
-                        <li>
-                            <a href="/sales/quality/viewSurveyResults" id="menu_sales_quality">Cre Wise Survey</a>
-                        </li>
-                    </ul>
-                </li> 
-                            
+                </li>                            
             </ul> <!-- second level -->                        
         </li>
     @endif
@@ -397,9 +388,6 @@
                         <li>
                             <a href="/service/audit" id="menu_service_audit">Audit Report</a>
                         </li> 
-                        <li>
-                            <a href="/service/viewSurveys" id="menu_survey_results">Survey Results</a>
-                        </li>
                         <li>
                             <a href="/service/reports/appointments" id="menu_service_appointments">Nutritionist Appointments</a>
                         </li>
@@ -463,10 +451,21 @@
                             <a href="/service/addFood" id="food_compair">Add Food</a>
                         </li>                 
                     </ul>
-                </li>
+                </li> 
                 <li>
-                    <a href="/service/kd" id="menu_service_createkd">KD</a>
-                </li>               
+                    <a href="#" id="csat">CSAT</a>
+                    <ul>
+                        <li>
+                            <a href="/service/viewSurveySummary" id="menu_quality_survey_summary">Survey Summary</a>
+                        </li>                          
+                        <li>
+                            <a href="/service/viewSurveyResults" id="menu_survey_results">Survey Results</a>
+                        </li>   
+                        <li>
+                            <a href="/service/viewscore" id="menu_survey_csat_score">Customer Satisfaction</a>
+                        </li>                       
+                    </ul>
+                </li>              
             </ul> <!-- second level -->                        
         </li>  
     @endif  

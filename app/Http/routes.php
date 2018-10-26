@@ -561,10 +561,6 @@ Route::group([
         Route::post('sales/viewProgramEnd', 'SalesController@viewProgramEnd');
         Route::get('sales/leads', 'MarketingController@viewLeads');
         Route::POST('sales/leads', 'MarketingController@viewLeads');
-        Route::get('sales/quality/survey', 'CREController@creSurvey');
-        Route::post('sales/quality/survey', 'CREController@creSurvey');
-        Route::get('sales/quality/viewSurveyResults', 'CREController@viewCreWiseSurvey');
-        Route::post('sales/quality/viewSurveyResults', 'CREController@viewCreWiseSurvey');
 
 
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');
@@ -683,8 +679,6 @@ Route::group([
         
         Route::get('service/reports/appointments', 'ServiceController@appointments');   
         Route::post('service/reports/appointments', 'ServiceController@appointments'); 
-        Route::get('/service/kd','KnowledgedbController@show');
-        Route::post('/service/kd/save','KnowledgedbController@save');  
 
         
         /** APIs **/
@@ -902,9 +896,12 @@ Route::group([
         
         Route::POST('service/saveNutritionist', 'ServiceController@saveNutritionist');
         Route::POST('service/saveDoctor', 'ServiceController@saveDoctor');
-        Route::get('service/viewSurveys', 'SurveyController@viewNutritionistWiseSurvey');
-        Route::post('service/viewSurveys', 'SurveyController@viewNutritionistWiseSurvey');
-
+        Route::get('service/viewSurveySummary', 'SurveyController@survey');
+        Route::post('service/viewSurveySummary', 'SurveyController@survey');
+        Route::get('service/viewscore', 'SurveyController@viewcustomersatisfaction');
+        Route::post('service/viewscore', 'SurveyController@viewcustomersatisfaction');
+        Route::get('service/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
+        Route::post('service/viewSurveyResults', 'SurveyController@viewNutritionistWiseSurvey');
         
 
         Route::get('service/bulk', 'ServiceController@bulk');
@@ -999,8 +996,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     
 
     Route::get('quality', 'QualityController@index');
-    Route::get('quality/viewSurveySummary', 'SurveyController@viewSurveySummary');
-    Route::post('quality/viewSurveySummary', 'SurveyController@viewSurveySummary');
+    Route::get('quality/viewSurveySummary', 'SurveyController@survey');
+    Route::post('quality/viewSurveySummary', 'SurveyController@survey');
     Route::get('quality/viewscore','SurveyController@viewcustomersatisfaction');
     Route::post('quality/viewscore','SurveyController@viewcustomersatisfaction');
     Route::get('quality/viewSurveys', 'SurveyController@viewSurveys');
