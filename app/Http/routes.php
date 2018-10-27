@@ -35,6 +35,9 @@ Route::group([
     'middleware' => ['auth', 'roles', 'checkip']],
     function() { 
     /** Tracking**/
+    Route::get('/shipping/trackOrder', 'ShippingController@trackOrder');
+    Route::post('/shipping/trackOrder', 'ShippingController@trackOrder');
+    
     Route::get('shippings','ShippingController@index');
     Route::get('api/getShippings','ShippingController@get');
 

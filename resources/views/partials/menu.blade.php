@@ -147,12 +147,9 @@
                         <li>
                             <a href="/shipping/fedex">Fedex</a>
                         </li>
-<<<<<<< HEAD
-=======
-                        <!--<li>
+                        <li>
                             <a href="/shipping/trackOrder">BMP</a>
-                        </li> -->
->>>>>>> bmp
+                        </li>
                     </ul>
                 </li>     
             @endif                 
