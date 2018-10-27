@@ -189,7 +189,7 @@ class ShippingController extends Controller
         return view('trackOrder')->with($data);
     }
 
-    public function orderStatus(Request $req)
+    /*public function orderStatus(Request $req)
     {
         $txtOrderNo = $req->input('txtOrderNo');
         
@@ -214,6 +214,6 @@ class ShippingController extends Controller
         );
 
         return view('shipping/template')->with($data);
-    }
+    } */
     // Kode Ends
 }
