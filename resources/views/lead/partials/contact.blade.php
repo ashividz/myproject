@@ -25,7 +25,7 @@
 					<ol>
 						<li>
 							<label>Mobile</label>
-                        @if(Auth::user()->canEditLeadContact() || $lead->mobile == '')
+                        @if(Auth::user()->canEditLeadAlternateContact() || $lead->mobile == '')
 							<input type="text" id="mobile" name="mobile" value="{{ $lead->mobile }}">
                         @else
                             {{ $lead->mobile }}
@@ -53,7 +53,7 @@
 						<li>
 							<label>Alternate Email</label>
 
-                        @if(Auth::user()->canEditLeadContact() || $lead->email_alt == '')
+                        @if(Auth::user()->canEditLeadAlternateContact() || $lead->email_alt == '')
 							<input type="email" id="email_alt" name="email_alt" value="{{ $lead->email_alt }}">
                         @else
                             {{ $lead->email_alt }}
