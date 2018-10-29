@@ -18,7 +18,15 @@ Trait Permission {
 
     public function canEditLeadContact()
     {
-        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('yuwow_support') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration')) {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('yuwow_support') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration')) {
+            return true;
+        }
+        return false;
+    }
+
+    public function canEditLeadAlternateContact()
+    {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('yuwow_support') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('service')|| Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('finance') || Auth::user()->hasRole('registration') || Auth::user()->hasRole('doctor')) {
             return true;
         }
         return false;
@@ -26,7 +34,7 @@ Trait Permission {
 
     public function canEditLeadPhone()
     {
-        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service_tl') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') ) {
+        if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service') || Auth::user()->hasRole('finance') ) {
             return true;
         }
         return false;
