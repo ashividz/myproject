@@ -418,6 +418,10 @@ class CartApprovalController extends Controller
                     $amount = 0;
                     if ($cart->hasProductCategories([11])) {
                         $amount = $this->checkcartAmount($cart);
+                        if(!$cart->hasProductCategories([1]) && $amount >= 1599)
+                        {
+                            $this->sendmail($cart , $cart->lead_id);
+                        }
                     }
                    
                     
@@ -531,10 +535,12 @@ class CartApprovalController extends Controller
     public function checkcartAmount($cart)
     {
         $amount = 0;
-        foreach ($cart->products as $product) {
-
-           $amount = $amount + $product->pivot->price;
-           
+        foreach ($cart->products as $product)
+        {
+            if($product->product_category_id == 11)
+            {
+               $amount = $amount + $product->pivot->price;
+            }    
         }
 
         return $amount;
@@ -642,5 +648,38 @@ class CartApprovalController extends Controller
         
 
       return true ; 
+    }
+
+    public function sendmail($cart , $lead)
+    {
+        $amount = 0;
+        foreach ($cart->products as $product)
+        {
+            if($product->product_category_id == 11)
+            {
+               $amount = $amount + $product->pivot->amount;            
+            }    
+        }
+        $lead = Lead::find($lead);
+
+        $data = array(
+                'amount'  => $amount,
+                'days'      => 5
+            );
+
+        Mail::send('templates.emails.organicindiaproduct', $data, function($message) use ($lead)
+        {
+        $from = Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service') || Auth::user()->hasRole('doctor') ? 'service@nutrihealthsystems.com ' : 'service@nutrihealthsystems.com ';
+
+        $message->to($lead->email, $lead->name)
+        ->subject('Congratulations! You have unlocked 5 Days')
+        ->from($from, 'Nutri-Health Systems');
+
+        //Add CC
+        /*if (trim($lead->email_alt) <> '') {
+        $message->cc($lead->email_alt, $name = null);
+        }*/
+        });
+        
     }
 }
