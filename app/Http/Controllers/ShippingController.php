@@ -163,11 +163,11 @@ class ShippingController extends Controller
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Content-Type:application/json',
-            'Authorization:flewrfj8k23jnjwdfj23kkfe65fef'
+            'Authorization:7gj4db7j60ycc96bnyr3qb'
         ));
-        curl_setopt($curl, CURLOPT_URL, 'http://pp.bookmypacket.com/ERP/api/auth/v1/TrackCurrentStatus');
+        curl_setopt($curl, CURLOPT_URL, 'https://tubelight.bookmypacket.com/ERP/api/auth/v1/TrackCurrentStatus');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"Test",'awbNumber'=>"$txtOrderNo")));//Setting post data as xml
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array('clientKey'=>"NutriwelHealth",'awbNumber'=>"$txtOrderNo")));//Setting post data as xml
         $result= curl_exec($curl);
 
         curl_close($curl);

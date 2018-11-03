@@ -1,12 +1,29 @@
 @extends('patient.index')
 @section('main')
+
+<script>
+function assignValueForMedicalHistory() {
+  var amh = document.getElementById("assignMedicalHistory");
+  amh.value = Array.prototype.filter.call( document.getElementById("medical_history").options, el => el.selected).map(el => el.id);
+}
+function assignValueForMedicalProblem() {
+  var amh = document.getElementById("assignMedicalProblem");
+  amh.value = Array.prototype.filter.call( document.getElementById("medical_problem").options, el => el.selected).map(el => el.id);
+}
+</script>
 <div class="container1">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title">Medical</h3>
 		</div>
+		@if(session()->has('message'))
+		<div class="alert alert-success alert-dismissible fade in">
+		    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		    <strong>Success!</strong> {{ session()->get('message') }}
+		  </div>
+		@endif
 		<div class="panel-body">
-			<form class="form-inline" method="post">
+			<form class="form-inline" method="post" action="/patient/{{$patient->id}}/updateDetail">
 				<table class="table table-bordered">
 					<tr>
 						<td>
@@ -107,10 +124,30 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="4">
+						<td colspan="0">
 							<label>Present Medical Problem	 : </label>
-							<input type="text" name="medical_problem" value="{{$patient->medical_problem}}" size="100">
+							
+							<select id="medical_problem" name="medical_problem[]" multiple="multiple" class="multiselectwithsearch" onchange="assignValueForMedicalProblem()">
+    						@foreach ($disease as $dis)
+							    <option id="{{ $dis->id }}"
+							     @foreach ($pd as $p) 
+							     	@if(($dis->id == $p->disease_id)&&($p->is_past == '0'))
+							     	 selected="selected"
+							     	@endif 
+							     @endforeach
+							     	 value="{{$dis->name}}">{{ $dis->name }}</option>
+							@endforeach
+							</select>
+							
 						</td>
+
+						@if(!empty($patient->medical_problem))
+						<td colspan="0">
+							
+							<input type="text" name="dmpoc" value="{{$patient->medical_problem}}" size="70" disabled="disabled">
+						</td>
+						@endif
+						
 					</tr>
 					<tr>
 						<td colspan="4">
@@ -119,10 +156,26 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan="4">
+						<td>
 							<label>Past Medical History	: </label>
-							<input type="text" name="medical_history" value="{{$patient->medical_history}}" size="100">
+							
+							<select id="medical_history" name="medical_history[]" multiple="multiple" class="form-control multiselectwithsearch" onchange="assignValueForMedicalHistory()">
+    						@foreach ($disease as $dis)
+							    <option id="{{ $dis->id }}" @foreach ($pd as $p) @if(($dis->id == $p->disease_id) && ($p->is_past == '1')) selected="selected" @endif @endforeach value="{{ $dis->name }}">{{ $dis->name }}</option>
+							@endforeach
+							</select>
+							
 						</td>
+						
+						@if(!empty($patient->medical_history))
+
+						<td>
+							
+							<input type="text" name="dmhoc" value="{{$patient->medical_history}}" size="70" disabled="disabled">
+						</td>
+
+						@endif
+
 					</tr>
 					<tr>
 						<td colspan="4">
@@ -142,9 +195,20 @@
 							<input type="text" name="special_food_remark" value="{{$patient->special_food_remark}}" size="100">
 						</td>
 					</tr>
+					<!-- TESTING STARTS HERE -->
+					<tr style="display: none">
+						<td colspan="4">
+							<input type="text" id="assignMedicalHistory" name="assignMedicalHistory" value=""  /> 
+							
+							<input type="text" id="assignMedicalProblem" name="assignMedicalProblem" value=""  />						  
+						</td>
+					</tr>
+					<!-- TESTING ENDS HERE -->
 					<tr>
 						<td colspan="4" align="center">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<input type="hidden" name="txtPatientId" value="{{ $patient->id }}">
+							<input type="hidden" name="is_past_active" value="1">
 							<button type="submit" class="btn btn-primary">Save</button>
 						</td>
 					</tr>

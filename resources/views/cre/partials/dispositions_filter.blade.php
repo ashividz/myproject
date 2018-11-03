@@ -56,9 +56,61 @@
     })
 
     $(".multiSelect h5 input[type='checkbox'").on('click', function(){
-        $("."+this.value).each(function () { 
-            this.checked = !this.checked; 
-            $('.'+this.value).toggleClass('hidden');
-        });
+        $("<div class="multiSelect">
+    @foreach($calls as $call)
+        <div class="col-md-{{$calls->count()?12/$calls->count():12}}">
+            <h5>{{$call->disposition}}
+                <input type="checkbox" value="c{{$call->id}}" checked /></h5>
+            <ul>
+            @foreach($call->dispositions as $disposition)
+                <li>
+                    <input type="checkbox" value="d{{$disposition->id}}" class="c{{$call->id}}" checked /> {{$disposition->disposition}}</li>
+                <li>
+            @endforeach  
+            </ul>
+        </div>
+    @endforeach () { 
+           <div class="multiSelect">
+    @foreach($calls as $call)
+        <div class="col-md-{{$calls->count()?12/$calls->count():12}}">
+            <h5>{{$call->disposition}}
+                <input type="checkbox" value="c{{$call->id}}" checked /></h5>
+            <ul>
+            @foreach($call->dispositions as $disposition)
+                <li>
+                    <input type="checkbox" value="d{{$disposition->id}}" class="c{{$call->id}}" checked /> {{$disposition->disposition}}</li>
+                <li>
+            @endforeach  
+            </ul>
+        </div>
+    @endforeachd; 
+           <div class="multiSelect">
+    @foreach($calls as $call)
+        <div class="col-md-{{$calls->count()?12/$calls->count():12}}">
+            <h5>{{$call->disposition}}
+                <input type="checkbox" value="c{{$call->id}}" checked /></h5>
+            <ul>
+            @foreach($call->dispositions as $disposition)
+                <li>
+                    <input type="checkbox" value="d{{$disposition->id}}" class="c{{$call->id}}" checked /> {{$disposition->disposition}}</li>
+                <li>
+            @endforeach  
+            </ul>
+        </div>
+    @endforeachss('hidden');
+        });<div class="multiSelect">
+    @foreach($calls as $call)
+        <div class="col-md-{{$calls->count()?12/$calls->count():12}}">
+            <h5>{{$call->disposition}}
+                <input type="checkbox" value="c{{$call->id}}" checked /></h5>
+            <ul>
+            @foreach($call->dispositions as $disposition)
+                <li>
+                    <input type="checkbox" value="d{{$disposition->id}}" class="c{{$call->id}}" checked /> {{$disposition->disposition}}</li>
+                <li>
+            @endforeach  
+            </ul>
+        </div>
+    @endforeach
     })
 </script>
