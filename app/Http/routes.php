@@ -1151,7 +1151,6 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
 
     Route::get('patient/{id}/medical', 'PatientMedicalController@show');
     Route::post('patient/{id}/medical', 'PatientMedicalController@store');
-
     Route::post('patient/{id}/updateDetail', 'PatientMedicalController@patientdetailsupdate');
     
     Route::get('patient/{id}/herbs', 'HerbController@herbs');

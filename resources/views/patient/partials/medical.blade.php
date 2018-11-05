@@ -143,7 +143,6 @@ function assignValueForMedicalProblem() {
 
 						@if(!empty($patient->medical_problem))
 						<td colspan="0">
-							
 							<input type="text" name="dmpoc" value="{{$patient->medical_problem}}" size="70" disabled="disabled">
 						</td>
 						@endif
@@ -158,24 +157,17 @@ function assignValueForMedicalProblem() {
 					<tr>
 						<td>
 							<label>Past Medical History	: </label>
-							
 							<select id="medical_history" name="medical_history[]" multiple="multiple" class="form-control multiselectwithsearch" onchange="assignValueForMedicalHistory()">
     						@foreach ($disease as $dis)
 							    <option id="{{ $dis->id }}" @foreach ($pd as $p) @if(($dis->id == $p->disease_id) && ($p->is_past == '1')) selected="selected" @endif @endforeach value="{{ $dis->name }}">{{ $dis->name }}</option>
 							@endforeach
-							</select>
-							
+							</select>	
 						</td>
-						
 						@if(!empty($patient->medical_history))
-
 						<td>
-							
 							<input type="text" name="dmhoc" value="{{$patient->medical_history}}" size="70" disabled="disabled">
 						</td>
-
 						@endif
-
 					</tr>
 					<tr>
 						<td colspan="4">
@@ -198,8 +190,7 @@ function assignValueForMedicalProblem() {
 					<!-- TESTING STARTS HERE -->
 					<tr style="display: none">
 						<td colspan="4">
-							<input type="text" id="assignMedicalHistory" name="assignMedicalHistory" value=""  /> 
-							
+							<input type="text" id="assignMedicalHistory" name="assignMedicalHistory" value=""  />
 							<input type="text" id="assignMedicalProblem" name="assignMedicalProblem" value=""  />						  
 						</td>
 					</tr>

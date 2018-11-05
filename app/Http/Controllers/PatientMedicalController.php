@@ -15,6 +15,7 @@ use App\Models\BloodGroup;
 use App\Models\RhFactor;
 use App\Models\PatientDisease;
 use App\Models\Disease;
+use Auth;
 
 class PatientMedicalController extends Controller
 {
@@ -23,7 +24,7 @@ class PatientMedicalController extends Controller
 		$patient = Patient::find($id);
 
 		$disease = Disease::all();
-		$pd = PatientDisease::where('patient_id',$id)->get();
+		$patient_disease = PatientDisease::where('patient_id',$id)->get();
 
 		$blood_groups = BloodGroup::get();
 
@@ -36,7 +37,7 @@ class PatientMedicalController extends Controller
 			'disease'		=>  $disease,
             'blood_groups'	=>	$blood_groups,
 			'rh_factors'	=>	$rh_factors,
-			'pd'			=>  $pd				
+			'pd'			=>  $patient_disease				
         );
 
         return view('home')->with($data);
@@ -51,9 +52,6 @@ class PatientMedicalController extends Controller
 
 	public function patientdetailsupdate(Request $request,$id)
 	{
-		// return $id;
-		// die;
-		//$patient = Patient::firstOrNew(array('id' => $id));
 		$patient = Patient::find($id);		
 		$patient->blood_group_id = $request->blood_group_id;
 		$patient->rh_factor_id = $request->rh_factor_id;
@@ -74,38 +72,44 @@ class PatientMedicalController extends Controller
 		$patient->sweet_tooth = $request->sweet_tooth;
 		$patient->routine_diet = $request->routine_diet;
 		$patient->special_food_remark = $request->special_food_remark;
-		
-		if(!empty($request->medical_history)){
-			$patient->medical_history = implode(',', $request->medical_history);
-		}else{
-			$patient->medical_history = $request->medical_history;
-		}
+				
 		if(!empty($request->medical_problem)){
 			$patient->medical_problem = implode(',', $request->medical_problem);
 		}else{
 			$patient->medical_problem = $request->medical_problem;
 		}
-		
+		if(!empty($request->medical_history)){
+			$patient->medical_history = implode(',', $request->medical_history);
+		}else{
+			$patient->medical_history = $request->medical_history;
+		}
 		$patient->save();
-		if (!empty($request->medical_history)){
-			$rcomh = explode(',', $request->assignMedicalHistory);
-            foreach ($rcomh as $key => $n){
-			    $patientDisease = new PatientDisease;
-			    $patientDisease->patient_id = $request->txtPatientId;
-			    $patientDisease->disease_id = $rcomh[$key];
-			    $patientDisease->is_past = $request->is_past_active;
-			    $patientDisease->save();
-			}
-   		}
-   		if (!empty($request->medical_problem)){
+		   
+		if (!empty($request->assignMedicalProblem)){
+			PatientDisease::where('patient_id',$id)->where('is_past',0)->delete();
    			$rcomp = explode(',', $request->assignMedicalProblem);
             foreach ($rcomp as $key => $n){
 			    $patientDisease = new PatientDisease;
 			    $patientDisease->patient_id = $request->txtPatientId;
-			    $patientDisease->disease_id = $rcomp[$key];
+				$patientDisease->disease_id = $rcomp[$key];
+				$patientDisease->created_by = Auth::id();
 			    $patientDisease->save();
 			}
-   		}
-		return redirect()->back()->with('message', 'DATA SUBMITTED SUCCESSFULLY!');
+		}
+
+		if (!empty($request->assignMedicalHistory)){
+			PatientDisease::where('patient_id',$id)->where('is_past',1)->delete();
+   			$rcomp = explode(',', $request->assignMedicalHistory);
+            foreach ($rcomp as $key => $n){
+			    $patientDisease = new PatientDisease;
+			    $patientDisease->patient_id = $request->txtPatientId;
+				$patientDisease->disease_id = $rcomp[$key];
+				$patientDisease->is_past = 1;
+				$patientDisease->created_by = Auth::id();
+			    $patientDisease->save();
+			}
+		}
+		   
+	    return redirect()->back()->with('message', 'DATA SUBMITTED SUCCESSFULLY!');
 	}
 }
