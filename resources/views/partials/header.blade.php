@@ -31,7 +31,8 @@
 		<script src="/js/angular/angular-route.js"></script>
 		<script src="/js/angular/angular-resource.js"></script> -->
 
-
+        <link rel="stylesheet" type="text/css" href="/css/multiSelect.css">
+        <script src="/js/multiSelect.js" type="text/javascript"></script>
         <script src="/js/core/mws.js"></script>
 
         <!-- -->
