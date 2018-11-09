@@ -12,6 +12,7 @@ use App\Models\PatientSurvey;
 use App\Models\PatientSurveyAnswer;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyAnswer;
+use App\Models\SurveyComment;
 use DB;
 
 class SurveyController extends Controller
@@ -57,12 +58,15 @@ class SurveyController extends Controller
         $patient = Patient::find($id);
 
         $questions = SurveyQuestion::get();
+
+        $comments = SurveyComment::where('question_id',3)->get();
         
         $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'survey',
             'patient'       =>  $patient,
-            'questions'     =>  $questions
+            'questions'     =>  $questions,
+            'reasons'       =>  $comments
         );
 
         return view('home')->with($data);
@@ -233,6 +237,7 @@ class SurveyController extends Controller
                         $join->on('s.id', '=', 'psa.patient_survey_id');
                     })  
                 ->where('comment', '<>', '')
+                ->where('comment','<>','None')
                 ->where('psa.question_id', $id)  
                 ->whereBetween('psa.created_at', array($this->start_date, $this->end_date)) 
                 ->get();
@@ -302,7 +307,7 @@ class SurveyController extends Controller
         return PatientSurveyAnswer::with('survey.patient.lead', 'answer', 'question')
                 ->where('question_id', $request->id)
                 ->whereBetween('created_at', array($request->start_date, $request->end_date))
-                //->where('comment', '<>', '')
+                ->where('comment', '<>', 'None')
                 ->get();
     }
 

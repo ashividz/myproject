@@ -17,4 +17,8 @@ class SurveyQuestion extends Model
 
     	return $this->hasMany(SurveyAnswer::class, 'question_id');
     }
+
+    public function comments(){
+        return $this->hasMany(SurveyCommment::class,'question_id');
+    }
 }
