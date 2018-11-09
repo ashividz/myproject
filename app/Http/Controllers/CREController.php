@@ -23,6 +23,7 @@ use App\Models\SurveyQuestion;
 use App\Models\PatientSurvey;
 use App\Models\PatientSurveyAnswer;
 use App\Models\CrePatientSurveyAnswer;
+use App\Models\SurveyComment;
 use Auth;
 use DB;
 use Carbon;
@@ -295,11 +296,14 @@ class CREController extends Controller
     {
         $patient = Patient::find($id);
         $questions = SurveyQuestion::get();
+        $comments = SurveyComment::where('question_id',3)->get();
+
         $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'survey',
             'patient'       =>  $patient,
-            'questions'     =>  $questions
+            'questions'     =>  $questions,
+            'reasons'       =>  $comments
         );
 
         return view('home')->with($data);
