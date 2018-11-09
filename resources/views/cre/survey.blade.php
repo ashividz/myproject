@@ -99,6 +99,15 @@
 				<label>Please enter your comment here:</label>
 				<textarea name='comment[{{$i}}]' rows='4' cols='30'></textarea>
 				</div>
+			@elseif($question->comment == "N")
+			<div class='comment'>
+				<label>Please enter your reason here:</label>
+				<select id="comment" name='comment[{{$i}}]' class="multiselectwithsearch">
+					@foreach($reasons as $reason)
+						<option id="{{ $reason->id }}" value="{{ $reason->name }}"> {{ $reason->name}}</option> 
+					@endforeach
+				</select>
+			</div>		
 			@endif
 			</td>
 		</tr>
