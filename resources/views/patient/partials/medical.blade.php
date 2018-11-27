@@ -119,7 +119,7 @@ function assignValueForMedicalProblem() {
 					</tr>
 					<tr>
 						<td colspan="4">
-							<label>Diagnosis : </label>
+							<label> Remarks : </label>
 							<input type="text" name="diagnosis" value="{{$patient->diagnosis}}" size="100">
 						</td>
 					</tr>
