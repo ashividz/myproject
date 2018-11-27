@@ -16,8 +16,8 @@
       		<!-- Tab panes -->
      		<div class="tab-content">
         		<div role="tabpanel" class="tab-pane active" id="home">
-          			<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Results Csv</a>
-          			<table id="table_survey" class="table table-striped table-bordered">
+          			<!--<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Results Csv</a> -->
+          			<table id="table" class="table">
 				        <thead>
 				            <tr>
 				                <th>#</th>
@@ -50,14 +50,14 @@
         	<!-- Nutritionist Summary Report -->
         	<div role="tabpanel" class="tab-pane fade" id="summary">        
           		<div class="container">
-          			<a name="download" id="downloadSummary" class="btn btn-primary pull-right" style="margin:10px" download="summary.csv">Download Summary Csv</a>
+          			<!--<a name="download" id="downloadSummary" class="btn btn-primary pull-right" style="margin:10px" download="summary.csv">Download Summary Csv</a>  -->
 					<table id="table_summary" class="table table-striped table-bordered">
 				        <thead>
 				            <tr>
-						        <th width="10%">Nutritionist</th>
-				                <th width="10%">Count</th>
-				                <th width="15%">Total Score</th>
-				                <th width="15%">Average</th>
+						        <th >Nutritionist</th>
+				                <th >Count</th>
+				                <th >Total Score</th>
+				                <th >Average</th>
 				           </tr>
 				        </thead>
 				        <tbody>
@@ -81,35 +81,17 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() 
+$(document).ready(function()
 {
-	
+  $('#table').dataTable({
+    "bPaginate": false,
+    "aaSorting": [[ 4, "desc" ]]
+  });
 
-  	$( "#downloadCSV" ).bind( "click", function() 
-  	{
-    	var csv_value = $('#table_survey').table2CSV({
-                delivery: 'value'
-            });
-    	downloadFile('survey.csv','data:text/csv;charset=UTF-8,' + encodeURIComponent(csv_value));
-    	$("#csv_text").val(csv_value);  
-  	});
-
-  	$( "#downloadSummary" ).bind( "click", function() 
-  	{
-    	var csv_value = $('#summary').table2CSV({
-                delivery: 'value'
-            });
-    	downloadFile('table_summary.csv','data:text/csv;charset=UTF-8,' + encodeURIComponent(csv_value));
-    	$("#csv_text").val(csv_value);  
-  	});
-
-  	function downloadFile(fileName, urlData){
-    	var aLink = document.createElement('a');
-    	var evt = document.createEvent("HTMLEvents");
-    	evt.initEvent("click");
-    	aLink.download = fileName;
-    	aLink.href = urlData ;
-    	aLink.dispatchEvent(evt);
-	}
+  $('#table_summary').dataTable({
+    "bPaginate": false,
+    "aaSorting": [[ 4, "desc" ]]
+  });
+  
 });
 </script>
