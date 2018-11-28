@@ -968,6 +968,22 @@
             </ul>
         </li>
         @endif
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales'))
+        <li>
+            <a href="#" id="CSAT">CSAT</a>
+            <ul>
+                <li>
+                    <a href="/quality/viewSurveySummary" id="menu_quality_survey_summary">Survey Summary</a>
+                </li> 
+                <li>
+                    <a href="/quality/viewSurveyResults" id="menu_survey_results">Survey Results</a>
+                </li> 
+                <li>
+                    <a href="/quality/viewscore" id="menu_survey_csat_score">Customer Satisfaction</a>
+                </li> 
+            </ul>
+        </li>
+        @endif
 
         </ul> <!-- second level -->  
         @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing'))                
