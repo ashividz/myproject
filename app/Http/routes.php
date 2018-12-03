@@ -659,6 +659,10 @@ Route::group([
         Route::post('herb/add', 'HerbController@store');
         Route::post('herb/update', 'HerbController@update');
 
+        Route::get('disease/add', 'DiseaseController@show');
+        Route::post('disease/add', 'DiseaseController@store');
+        Route::post('disease/update', 'DiseaseController@update');
+
         Route::get('herb/template/add', 'HerbController@templateForm');
         
         Route::post('herb/template/add', 'HerbController@templateSave');

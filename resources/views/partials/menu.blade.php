@@ -277,6 +277,7 @@
                         <li>
                             <a href="/herb/add" id="menu_herb_add">Herbs</a>
                             <a href="/herb/template/add" id="menu_herb_template_add">Herb Templates</a>
+                            <a href="/disease/add" id="menu_disease_add">Add Disease</a>
                         </li>
                     </ul>
                 </li>
