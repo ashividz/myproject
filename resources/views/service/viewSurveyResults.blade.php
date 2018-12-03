@@ -52,7 +52,8 @@
           		<div class="container">
           			<!--<a name="download" id="downloadSummary" class="btn btn-primary pull-right" style="margin:10px" download="summary.csv">Download Summary Csv</a>  -->
 					<table id="table_summary" class="table table-striped table-bordered">
-				        <thead>
+						<caption>Average Score: {{$average_csat}}</caption>
+						<thead>
 				            <tr>
 						        <th >Nutritionist</th>
 				                <th >Count</th>
@@ -95,3 +96,12 @@ $(document).ready(function()
   
 });
 </script>
+<style>
+caption {
+    text-align: center;
+    margin-bottom: 5px;
+    padding: 5px;
+	font-size: 160%;	
+    font-weight: bold;
+}
+</style>

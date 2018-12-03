@@ -255,7 +255,10 @@ class SurveyController extends Controller
                     ->whereBetween('created_at', array($this->start_date, $this->end_date))
                     ->groupBy('nutritionist')
                     ->get();
-
+        
+        $average_csat = PatientSurvey::whereBetween('created_at', array($this->start_date, $this->end_date))
+                        ->avg('score');
+                                               
         $data = array(
             'menu'          =>  'service',
             'section'       =>  'viewSurveyResults',
@@ -263,6 +266,7 @@ class SurveyController extends Controller
             'end_date'      =>  $this->end_date,
             'surveys'       =>  $surveys,
             'summaries'     =>  $summaries,
+            'average_csat'  =>  $average_csat,
             'i'             => '1'
         );
 
