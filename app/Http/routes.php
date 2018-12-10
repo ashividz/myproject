@@ -967,6 +967,8 @@ Route::group([
         Route::get('quality/viewSurveys', 'SurveyController@viewSurveys');
         Route::post('quality/viewSurveys', 'SurveyController@viewSurveys');
 
+        Route::get('quality/report/survey_result/download','SurveyController@download');
+
 });
 
 Route::group(['middleware' => ['auth', 'roles','checkip']], 
@@ -997,18 +999,15 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     
 
     Route::get('quality', 'QualityController@index');
-<<<<<<< HEAD
-    
-=======
-    Route::get('quality/viewSurveySummary', 'SurveyController@survey');
+    /*Route::get('quality/viewSurveySummary', 'SurveyController@survey');
     Route::post('quality/viewSurveySummary', 'SurveyController@survey');
     Route::get('quality/viewscore','SurveyController@viewcustomersatisfaction');
     Route::post('quality/viewscore','SurveyController@viewcustomersatisfaction');
-    Route::get('quality/report/survey_result/download','SurveyController@download');
+    
     Route::get('quality/viewSurveys', 'SurveyController@viewSurveys');
     Route::post('quality/viewSurveys', 'SurveyController@viewSurveys');
-
->>>>>>> report_download
+    */
+    
     Route::get('quality/patients', 'SurveyController@patients');
     Route::post('quality/patients', 'SurveyController@patients');
 
