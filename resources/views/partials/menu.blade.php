@@ -969,7 +969,7 @@
             </ul>
         </li>
         @endif
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('upgrade_team'))
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('upgrade_team') || Auth::user()->hasRole('sales_tl'))
         <li>
             <a href="#" id="CSAT">CSAT</a>
             <ul>
