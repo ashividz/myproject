@@ -991,6 +991,7 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::post('quality/viewSurveySummary', 'SurveyController@survey');
     Route::get('quality/viewscore','SurveyController@viewcustomersatisfaction');
     Route::post('quality/viewscore','SurveyController@viewcustomersatisfaction');
+    Route::get('quality/report/survey_result/download','SurveyController@download');
     Route::get('quality/viewSurveys', 'SurveyController@viewSurveys');
     Route::post('quality/viewSurveys', 'SurveyController@viewSurveys');
 

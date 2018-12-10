@@ -1,6 +1,9 @@
 <div class="container">	
 	<div class="panel panel-default">
 		<div class="panel-heading">
+			<span class="pull-right">
+                    <a href='/quality/report/survey_result/download?start_date={{$start_date}}&end_date={{$end_date}}' class="btn btn-primary" v-on:click="download">Download</a>
+            </span> 
 			<div class="pull-left">
 				@include('/partials/daterange') 
 			</div>
