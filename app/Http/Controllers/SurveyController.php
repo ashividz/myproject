@@ -13,6 +13,8 @@ use App\Models\PatientSurveyAnswer;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyAnswer;
 use App\Models\SurveyComment;
+use Redirect;
+use Excel;
 use DB;
 
 class SurveyController extends Controller
@@ -366,4 +368,50 @@ class SurveyController extends Controller
 
         return view('home')->with($data);
     }
+
+    public function download(Request $request)
+    {
+     
+        $start_date = $request->start_date; 
+        $end_date = $request->end_date ;
+
+        $surveys = DB::table('patient_survey_answers AS psa')
+                    ->select(DB::RAW('patient_id,answer,nutritionist'))
+                    ->leftjoin('patient_survey AS ps',  function($join)
+                    {
+                        $join->on('ps.id', '=', 'psa.patient_survey_id');
+                    }) 
+                    ->join('survey_answers AS a',function($join){
+                        $join->on('a.id', '=', 'psa.answer_id');
+                    })
+                    ->where('psa.question_id', 3)
+                    ->whereBetween('psa.created_at', array($start_date, $end_date)) 
+                    ->orderby('answer')
+                    ->get();
+
+        Excel::create('CSATReport', function($excel) use($surveys) {
+
+            $excel->sheet('csat', function($sheet) use($surveys) {
+                $sheet->appendRow(array(
+                       'PatientID', 
+                       'Answer',
+                       'Nutritionist',                         
+                ));
+                foreach ($surveys as $survey) {
+                    $id             = $survey->patient_id;
+                    $answer         = $survey->answer;
+                    $nutritionist   = $survey->nutritionist;
+
+
+                    $sheet->appendRow(array(
+                        $id,
+                        $answer,
+                        $nutritionist
+                    ));
+                }
+            });
+        })->download('xls');;
+
+    }
+
 }

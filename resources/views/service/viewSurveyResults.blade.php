@@ -17,7 +17,7 @@
      		<div class="tab-content">
         		<div role="tabpanel" class="tab-pane active" id="home">
           			<!--<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Results Csv</a> -->
-          			<table id="table" class="table">
+          			<table id="table" class="table table-bordered">
 				        <thead>
 				            <tr>
 				                <th>#</th>
@@ -81,21 +81,31 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-$(document).ready(function()
-{
-  $('#table').dataTable({
-    "bPaginate": false,
-    "aaSorting": [[ 4, "desc" ]]
-  });
+<script type="text/javascript" src = "https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src = "https://cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src = "//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.print.min.js"></script>
 
-  $('#table_summary').dataTable({
-    "bPaginate": false,
-    "aaSorting": [[ 4, "desc" ]]
-  });
-  
-});
-</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#table').DataTable( {
+        "iDisplayLength": 100,
+        dom: 'Bfrtip',
+        buttons: [
+            'csv'
+        ]
+    } );
+	$('#table_summary').DataTable({
+		"iDisplayLength": 100,
+		dom: 'Bfrtip',
+		buttons: ['csv']
+	});
+} );
+</script>  -->
 <style>
 caption {
     text-align: center;
