@@ -11,48 +11,48 @@
                     <ol> 
                          <li>
                             <label>Name*</label>
-                            <input type="text" name="name" style="width:390px">
+                            <input type="text" name="name" style="width:390px" required>
                         </li>
 
                         <li>
                             <label>Energy *</label>
-                            <input type="number" name="energy" step="0.01" style="width:390px">
+                            <input type="number" name="energy" step="0.01" style="width:390px" required>
                         </li>
                         <li>
                             <label>Carb *</label>
-                            <input type="number" name="carb" step="0.01" style="width:390px">
+                            <input type="number" name="carb" step="0.01" style="width:390px" required>
                         </li>
                         <li>
                             <label>Protein *</label>
-                            <input type="number" name="protein" step="0.01" style="width:390px">
+                            <input type="number" name="protein" step="0.01" style="width:390px" required>
                         </li>
                         <li>
                             <label>Fat *</label>
-                            <input type="number" name="fat" step="0.01"  style="width:390px">
+                            <input type="number" name="fat" step="0.01"  style="width:390px" required>
                         </li>
                         <li>
                             <label>Calcium *</label>
-                           <input type="number" name="calcium" step="0.01"  style="width:390px">
+                           <input type="number" name="calcium" step="0.01"  style="width:390px" required>
                         </li>
                         <li>
                             <label>Fiber</label>
-                            <input type="number" name="fiber" step="0.01" style="width:390px">
+                            <input type="number" name="fiber" step="0.01" style="width:390px" required>
                         </li>
                          <li>
                             <label>Vata *</label>
-                            <input type="number" name="vata"  style="width:390px">
+                            <input type="number" name="vata"  style="width:390px" required>
                         </li>
                         <li>
                             <label>Pitta *</label>
-                            <input type="number" name="pitta" style="width:390px">
+                            <input type="number" name="pitta" style="width:390px" required>
                         </li>
                         <li>
                             <label>Kapha *</label>
-                           <input type="number" name="kapha" style="width:390px">
+                           <input type="number" name="kapha" style="width:390px" required>
                         </li>
                          <li>
                             <label>Scale *</label>
-                           <input type="number" name="scale" style="width:390px">
+                           <input type="number" name="scale" style="width:390px" required>
                         </li>
                         
                         <li>
