@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\Lead;
 use App\Models\Days365;
 use DB;
 use Carbon;
@@ -115,6 +116,64 @@ class VediqueDietController extends Controller
     }
     return "Patient not found";
     
+  }
+
+  public function surveySummary()
+  {
+
+      $score = array("Always"=>20 , "Occasionally" => 10 , "Never"=> 0  , "Delighted"=>40 , "Satisfied" => 30 , "Not Satisfied" => 0 , "Yes" => 20 , "No" => 0 , "May be"=> 10);
+
+      $surveyanswers = DB::connection('VediqueDiet')
+                           ->table('survey_answers')
+                           ->whereBetween('created_at', array($this->start_date, $this->end_date))
+                           ->get();
+                          // dd($surveyanswers);
+
+      $email = [];
+      
+      foreach ($surveyanswers as $surveyanswer) {
+
+          $total_score = 0;
+
+          $total_score = $total_score + $score[$surveyanswer->q1];
+          $total_score = $total_score + $score[$surveyanswer->q2];
+          $total_score = $total_score + $score[$surveyanswer->q3];
+          $total_score = $total_score + $score[$surveyanswer->q4];
+        
+          $lead  = Lead::where('email' , $surveyanswer->email)
+                          ->has('patient.cfee')
+                          ->first();
+
+
+        if($lead)
+        {
+           $surveyanswer->patient_id = $lead->patient->id;
+           $surveyanswer->leadid = $lead->id;
+           $surveyanswer->score = $total_score;
+           $surveyanswer->doctor = $lead->patient->doctor;
+           $surveyanswer->name = $lead->name;
+           $surveyanswer->nutritionist = $lead->patient->nutritionist;
+        }
+        else
+        {
+          $surveyanswer->name = null;
+        }
+          
+      }
+
+         $data = array(
+
+                    'menu'          =>  'VediqueDiet',
+                    'section'       =>  'nutsurvey',
+                    'patients'       =>  $surveyanswers,
+                    'start_date'    =>  $this->start_date,
+                    'end_date'      =>  $this->end_date,
+                    'i'             =>   1
+                );
+
+                return view('home')->with($data);
+
+      
   }
 
 }
