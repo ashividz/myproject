@@ -56,6 +56,129 @@ class VediqueDietController extends Controller
         return view('home')->with($data);
   }
 
+  public function saveRecipe(Request $request)
+  {
+    if($request->name)
+    {
+       $id = DB::connection('VediqueDiet')->table('Recipe')->insertGetId(
+      ['name'=> $request->name , 
+      'cooking_time' => $request->cooking_time , 
+      'serving' => $request->serving , 
+      'calories' => $request->calories , 
+      'steps' =>$request->steps, 
+      'tips' =>$request->tips, 
+      'tag'=>$request->tag , 
+      'image'=>$request->image , 
+      'ingredients'=>$request->ingredients, 
+      'prakriti' =>$request->prakriti]
+      );
+    }
+    
+    return redirect("/marketing/addRecipe");
+  }
+
+  public function saveProducts(Request $request)
+  {
+
+    if($request->name)
+    {
+      $id = DB::connection('VediqueDiet')->table('Products')->insertGetId(
+        ['name'=> $request->name , 
+        'quantity' => $request->quantity , 
+        'price' => $request->price , 
+        'ingredients' => $request->ingredients , 
+        'description' =>$request->description, 
+        'benefit' =>$request->benefit, 
+        'buy_url'=>$request->buy_url , 
+        'is_active'=>$request->is_active,
+        'image' =>$request->image]
+        );
+
+      $vata_dosage = DB::connection('VediqueDiet')->table('Product_Dosage')->insertGetId(
+          ['product_id'=> $id,
+            'name' => $request->name ,
+            'prakriti'=> 'vata',
+            'dosage'  =>  $request->vata_dosage]
+          );
+
+      $pitta_dosage = DB::connection('VediqueDiet')->table('Product_Dosage')->insertGetId(
+            ['product_id'=> $id,
+              'name' => $request->name ,
+              'prakriti'=> 'pitta',
+              'dosage'  =>  $request->pitta_dosage]
+            );
+            
+      $kapha_dosage = DB::connection('VediqueDiet')->table('Product_Dosage')->insertGetId(
+              ['product_id'=> $id,
+                'name' => $request->name ,
+                'prakriti'=> 'kapha',
+                'dosage'  =>  $request->kapha_dosage]
+              );
+    }
+    return redirect("/marketing/addProducts");
+  }
+
+  public function saveBrunchArticle(Request $request)
+  {
+
+    if($request->article_title)
+    {
+      $id = DB::connection('VediqueDiet')->table('brunch_article')->insertGetId(
+        ['article_title'=> $request->article_title , 
+        'article_img' => $request->article_img , 
+        'article_desc' => $request->article_desc]
+        );
+
+      }
+      return redirect("/marketing/addBrunchArticle");
+    
+  }
+  
+  public function viewBrunchArticle()
+  {
+
+    $brunch_articles = DB::connection('VediqueDiet')->table('brunch_article')->get();
+
+    $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'addBrunchArticle',
+            'brunch_articles'      =>  $brunch_articles,
+            'i'             =>  '1'
+        );
+
+    return view('home')->with($data);
+  }
+
+  public function viewProducts()
+  {
+
+    $products = DB::connection('VediqueDiet')->table('Products')->get();
+
+    $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'addProducts',
+            'products'      =>  $products,
+            'i'             =>  '1'
+        );
+
+    return view('home')->with($data);
+  }
+
+  public function viewRecipe()
+  {
+
+    $recipes = DB::connection('VediqueDiet')->table('Recipe')->get();
+
+    $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'addRecipe',
+            'recipes'        =>  $recipes,
+            'i'             =>  '1'
+        );
+
+    return view('home')->with($data);
+  }
+
   public function progress(Request $request)
   {
 

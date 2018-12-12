@@ -441,14 +441,6 @@
                             <a href="/service/reports/verifySentDiet" id="menu_service_verifysentDiet">Verify SentDiet</a>
                         </li>                   
                     </ul>
-                </li>
-                <li>
-                    <a href="#" id="VediqueDiet">Vedique Diet</a>
-                     <ul>
-                        <li>
-                            <a href="/service/addFood" id="food_compair">Add Food</a>
-                        </li>                 
-                    </ul>
                 </li> 
                 <li>
                     <a href="#" id="csat">CSAT</a>
@@ -618,6 +610,24 @@
                         </li>
                         <li>
                             <a href="/marketing/notConverted">Not Converted Leads</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#">VediqueDiet</a>
+                    <ul>
+                        <li>
+                            <a href="/marketing/addRecipe">Add Recipe</a>
+                        </li>
+                        <li>
+                            <a href="/marketing/addFood">Food Comparison</a>
+                        </li>
+                        <li>
+                            <a href="/marketing/addProducts">Add Products</a>
+                        </li>
+                        <li>
+                            <a href="/marketing/addBrunchArticle">Add Brunch Articles</a>
                         </li>
                     </ul>
                 </li>

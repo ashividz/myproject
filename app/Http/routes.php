@@ -277,6 +277,14 @@ Route::group([
         Route::POST('marketing/leads', 'MarketingController@viewLeads');
         Route::get('marketing/vediqueDietLeads', 'VediqueDietLeadController@viewLeads');
         Route::get('marketing/vediqueDietUsers', 'VediqueDietLeadController@vediqueDietUser');
+        Route::get('marketing/addFood', 'VediqueDietController@addFood');
+        Route::post('marketing/addFood', 'VediqueDietController@addFood');
+        Route::get('marketing/addRecipe', 'VediqueDietController@viewRecipe');
+        Route::post('marketing/addRecipe', 'VediqueDietController@saveRecipe');
+        Route::get('marketing/addProducts', 'VediqueDietController@viewProducts');
+        Route::post('marketing/addProducts', 'VediqueDietController@saveProducts');
+        Route::get('marketing/addBrunchArticle', 'VediqueDietController@viewBrunchArticle');
+        Route::post('marketing/addBrunchArticle', 'VediqueDietController@saveBrunchArticle');
 });
 
 Route::group([
@@ -717,8 +725,6 @@ Route::group([
         Route::post('/service/addMasterDiet', 'ServiceController@saveMasterDiet');
         Route::get('/service/viewMasterDiet', 'ServiceController@showMasterDiet');
         Route::post('/service/viewMasterDiet', 'ServiceController@showMasterDiet');
-        Route::get('service/addFood', 'VediqueDietController@addFood');
-        Route::post('service/addFood', 'VediqueDietController@addFood');
 
         Route::get('/service/verifyMasterDiet','ServiceController@verifyMasterDiet');
         Route::post('/service/verifyMasterDiet','ServiceController@verifyMasterDiet');
