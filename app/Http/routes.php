@@ -801,10 +801,7 @@ Route::group([
         Route::post('patient/{id}/measurements', 'PatientMeasurementController@store');
         Route::post('patient/{id}/measurements/copy', 'PatientMeasurementController@copy');
 
-        Route::get('patient/{id}/recipes', 'RecipeController@show');
-        Route::post('patient/{id}/recipes', 'RecipeController@show');
-        Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
-        Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
+       
 
 });
 
@@ -847,6 +844,12 @@ Route::group([
 
         Route::get('/patient/{id}/break', 'PatientController@break');
         Route::post('/patient/{id}/break', 'PatientController@breakAdjustment');
+
+
+        Route::get('patient/{id}/recipes', 'RecipeController@show');
+        Route::post('patient/{id}/recipes', 'RecipeController@show');
+        Route::post('patient/{id}/recipe/send', 'RecipeController@sendRecipe');
+        Route::get('patient/{id}/sentRecipe/{id2}', 'RecipeController@sentRecipe');
         
                 
 });
