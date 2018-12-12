@@ -454,7 +454,7 @@
                     <a href="#" id="csat">CSAT</a>
                     <ul>
                         <li>
-                            <a href="/service/viewSurveySummary" id="menu_quality_survey_summary">Survey Summary</a>
+                            <a href="/service/viewSurveySummary" id="menu_survey_summary">Survey Summary</a>
                         </li>                          
                         <li>
                             <a href="/service/viewSurveyResults" id="menu_survey_results">Survey Results</a>
@@ -462,6 +462,20 @@
                         <li>
                             <a href="/service/viewscore" id="menu_survey_csat_score">Customer Satisfaction</a>
                         </li>                       
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" id="MasterDiet">VediqueDiet CSAT</a>
+                     <ul>
+                        <li>
+                            <a href="/vediqueDiet/service/surveySummary" id="menu_service_Survey Summary">Survey Summary</a>
+                        </li>
+                        <!-- <li>
+                            <a href="/vediqueDiet/service/surveyresult" id="menu_service_survey_results">Survey Results</a>
+                        </li>                            
+                        <li>
+                            <a href="/vediqueDiet/service/customerSatisfaction" id="menu_service_customer_satisfaction">Customer Satisfaction </a>
+                        </li>    -->                
                     </ul>
                 </li>              
             </ul> <!-- second level -->                        

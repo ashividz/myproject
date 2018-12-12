@@ -1370,4 +1370,21 @@ Route::group([
         
 
 });
+
+    Route::group([
+    'middleware' => ['auth', 'roles','checkip'], 
+    'roles' => ['admin','service']], 
+    function() {
+
+       Route::get('vediqueDiet/service/surveySummary', 'VediqueDietController@surveySummary');
+       Route::post('vediqueDiet/service/surveySummary', 'VediqueDietController@surveySummary');
+        
+       Route::get('vediqueDiet/service/surveyresult', 'VediqueDietController@viewNutritionistWiseSurvey');
+       Route::post('vediqueDiet/service/surveyresult', 'VediqueDietController@viewNutritionistWiseSurvey');
+
+       Route::get('vediqueDiet/service/customerSatisfaction', 'VediqueDietController@viewNutritionistWiseSurvey');
+       Route::post('vediqueDiet/service/customerSatisfaction', 'VediqueDietController@viewNutritionistWiseSurvey');
+
+});
+
 });
