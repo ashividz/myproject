@@ -700,6 +700,9 @@ Route::group([
         Route::get('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
         Route::post('yuwow/yuwowUsers' , 'YuWoWController@yuwowUsers');
 
+        Route::get('vediqueDiet/vediqueDietUsers' , 'VediqueDietController@vediqueDietUsers');
+        Route::post('vediqueDiet/vediqueDietUsers' , 'VediqueDietController@vediqueDietUsers');
+
         Route::get('patientFab/{id}', 'PatientFABController@patientFab');
         Route::post('patient/add/eatingTip' , 'PatientFABController@addEatingTip');
         Route::get('patient/eatingTips', 'PatientFABController@getAllEatingTips');
