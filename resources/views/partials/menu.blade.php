@@ -412,14 +412,17 @@
                 </li>
                 
                 <li>
-                    <a href="#" id="yuwow">YuWoW</a>
+                    <a href="#" id="yuwow">Mobile App Usage</a>
                     <ul>
                         <li>
                             <a href="/yuwow/yuwowUsageReport" id="menu_service_yuwow_usage_report">YuWoW Usage Report</a>
                         </li>                          
                         <li>
                             <a href="/yuwow/yuwowUsers" id="menu_service_yuwow">YuWoW Users</a>
-                        </li>                          
+                        </li> 
+                        <li>
+                            <a href="/vediqueDiet/vediqueDietUsers" id="menu_service_vediquediet">VediqueDiet Users</a>
+                        </li>                         
                     </ul>
                 </li>
                 <li>
@@ -968,14 +971,17 @@
 
         @if(Auth::user()->hasRole('admin')||Auth::user()->hasRole('yuwow_support'))                 
         <li>
-            <a href="#" id="yuwow">YuWoW</a>
+            <a href="#" id="yuwow">Mobile App Usage</a>
             <ul>
                 <li>
                     <a href="/yuwow/yuwowUsageReport" id="menu_service_yuwow_usage_report">YuWoW Usage Report</a>
                 </li>                          
                 <li>
                     <a href="/yuwow/yuwowUsers" id="menu_service_yuwow">YuWoW Users</a>
-                </li>                          
+                </li>
+                <li>
+                    <a href="/vediqueDiet/vediqueDietUsers" id="menu_service_vediquediet">VediqueDiet Users</a>
+                </li>                             
             </ul>
         </li>
         @endif

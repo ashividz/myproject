@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\Lead;
+use App\Models\User;
 use App\Models\Days365;
 use DB;
 use Carbon;
@@ -27,6 +28,7 @@ class VediqueDietController extends Controller
     $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/01 0:0:0");
     $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
     $this->menu = 'VediqueDiet';
+    $this->nutritionist = isset($request->user) ? $request->user : ''; 
   }
 
   public function addFood(Request $request)
@@ -297,6 +299,50 @@ class VediqueDietController extends Controller
                 return view('home')->with($data);
 
       
+  }
+
+  Public function vediqueDietUsers()
+  {
+    $users = DB::connection('VediqueDiet')->table('users')
+              ->select('users.email')
+              ->join('Diets','Diets.email','=','users.email')
+              ->groupBy('Diets.email')
+              ->get();
+              $email = [] ; 
+              foreach ($users as $user) {
+                  
+                  $email[] = $user->email;
+              }
+
+
+        $users = User::getUsersByRole('nutritionist');
+
+         if($this->nutritionist != '')
+        {
+            $patients = Patient::where('nutritionist' , $this->nutritionist)
+                    ->has('cfee')
+                    ->whereHas('lead', function ($query) use($email) {
+                        $query->whereIn('email', $email);
+                    })->get();
+        }
+        else
+        {
+             $patients = Patient::has('cfee')
+                    ->whereHas('lead', function ($query) use($email) {
+                        $query->whereIn('email', $email);
+                    })->get();
+        }
+
+        $data = array(
+            'menu'          =>      'marketing',
+            'section'       =>      'vediquedietuses',
+            'users'         =>      $users,
+            'patients'      =>      $patients,
+            'name'          =>      $this->nutritionist,
+            'i'             =>      1
+        );
+
+        return view('home')->with($data);
   }
 
 }
