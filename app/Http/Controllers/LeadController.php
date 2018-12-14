@@ -29,6 +29,8 @@ use App\Models\Region;
 use App\Models\Cart;
 use App\Models\CreRevenue;
 
+use App\Support\SMS;
+
 use DB;
 use Auth;
 use App\Support\Helper;
@@ -1508,6 +1510,31 @@ class LeadController extends Controller
 
         return $message;
 
+    }
+
+    public function showsms($id)
+    {
+      $lead = Lead::find($id);
+      $data = array(
+              'menu' => 'lead',
+              'section' => 'partials.sms',
+               'lead'          =>  $lead,
+              );
+
+      return view('home')->with($data);
+    }
+
+    public function sendsms(Request $request , $id)
+    {
+
+      if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('sales') || Auth::user()->hasRole('sales_tl'))
+      {
+        $lead = Lead::find($id);
+        $mobile = $lead->mobile;
+        $sms = new SMS();
+        $reply =  $sms->send($mobile, $request->sms);
+      }
+      return $this->showsms($id);
     }
     
 }

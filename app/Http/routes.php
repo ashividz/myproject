@@ -1073,6 +1073,9 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('lead/{id}/address/add','LeadController@addAddress');
     Route::post('lead/{id}/address/save','LeadController@storeAddress');
 
+    Route::get('lead/{id}/sms', 'LeadController@showsms');
+    Route::post('lead/{id}/sms', 'LeadController@sendsms');
+
     
     
     /** Hot Pipeline**/
