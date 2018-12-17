@@ -41,7 +41,7 @@ class Notification extends Model
         $notfication->save();
 
         $notfication->recipients()->create(['recipient_id' => $recipient]);
-        event(new NewNotification($recipient));
+      //  event(new NewNotification($recipient));
     }
     /*
     public static function getUnreadNotifications()
