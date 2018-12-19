@@ -2,11 +2,15 @@
 	<div class="col-md-6">
 		@include('partials/daterange')
 
+	<span class="pull-right">
+        <a href='/quality/report/survey_comments/download?start_date={{$start_date}}&end_date={{$end_date}}' class="btn btn-primary" v-on:click="download">Download</a>
+    </span>
 	@foreach($questions AS $question)
-		<div class="panel panel-default">
+		<div class="panel panel-default"> 
 			<div class="panel-heading">
 				<h4>{{$question->title}}</h4>
 			</div>
+
 
 			<div class="panel-body">
 				<div id="{{$question->title}}">			

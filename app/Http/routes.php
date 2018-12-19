@@ -980,6 +980,7 @@ Route::group([
         Route::post('quality/viewSurveys', 'SurveyController@viewSurveys');
 
         Route::get('quality/report/survey_result/download','SurveyController@download');
+        Route::get('quality/report/survey_comments/download','SurveyController@comments_download');
 
 });
 
