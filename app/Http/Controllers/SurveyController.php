@@ -414,4 +414,51 @@ class SurveyController extends Controller
 
     }
 
+    public function comments_download(Request $request)
+    {
+     
+
+        $start_date = $request->start_date; 
+        $end_date = $request->end_date ;
+        $surveys =  DB::table('patient_survey_answers AS psa')
+                        ->select(DB::RAW('patient_id,question,psa.comment,psa.created_at'))
+                        ->leftjoin('patient_survey AS ps',  function($join)
+                        {
+                            $join->on('ps.id', '=', 'psa.patient_survey_id');
+                        }) 
+                        ->join('survey_questions AS a',function($join){
+                            $join->on('a.id', '=', 'psa.question_id');
+                        })
+                        ->whereBetween('psa.created_at', array($start_date, $end_date)) 
+                        ->orderby('patient_id')
+                        ->get();
+
+                 
+        Excel::create('CSATReport', function($excel) use($surveys) {
+
+            $excel->sheet('csat', function($sheet) use($surveys) {
+                $sheet->appendRow(array(
+                       'PatientID',
+                       'question',
+                       'Comments',   
+                       'Date'                      
+                ));
+                foreach ($surveys as $survey) {
+                    $id             = $survey->patient_id;
+                    $question        = $survey->question;
+                    $comments   = $survey->comment;
+                    $date        = $survey->created_at;
+
+
+                    $sheet->appendRow(array(
+                        $id,
+                        $question,
+                        $comments,
+                        $date
+                    ));
+                }
+            });
+        })->download('xls');;
+
+    }
 }
