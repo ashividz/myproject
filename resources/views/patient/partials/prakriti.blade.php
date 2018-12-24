@@ -1,5 +1,40 @@
 @extends('patient.index')
 @section('top')
+<div class="container1">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Send Do's and Don'ts</h4>
+		</div>
+		<div class="panel-body">
+			<form id="form-template-select">
+				<select name="template" id=template-select>
+					<option>Select Template </option>
+					@foreach($templates as $template)
+						<option value="{{$template->program_id}}">{{$template->program_name}}</option>
+					@endforeach
+				</select>	
+			</form>
+			<form id="form-template" class="form-inline">
+				<div class="form-group">
+					<input type="hidden" name="id" value="{{ $patient->id }}">
+					<input type="hidden" id="template_id" name="template_id">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<button class="btn btn-primary">Send Now</button>
+				</div>
+			</form>
+				<!--<div class="col-md-12"> -->
+					<table id="comments" class="table table-bordered" align="center" style="width:80%; background-color:#fff4c5">
+						<!--<h3>Do's and Don't Guideline</h3> -->
+						<!--<div class="panel panel-default"> -->
+							<!--<div class="panel-body"> -->
+								<!--<div id="comments-body" class='comment well'></div> -->
+							<!--</div> -->
+						<!--</div> -->
+					</table>
+				<!--</div>-->
+		</div>
+	</div>
+</div>				
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4>Prakriti Analysis</h4>
@@ -102,7 +137,7 @@
 		cursor:pointer; 
 		font-weight:400; 
 		padding:10px 10px 10px 30px; 
-		margin-bottom:10px!important 
+		margin-bottom:10px!important
 	} 
 	label.radio-inline.checked, label.checkbox-inline.checked, label.radio.checked, label.checkbox.checked { 
 		background-color:#266c8e; 
@@ -118,7 +153,7 @@
 	});
 
 	@foreach($patient->prakritis as $prakriti)
-		$('#a-{{$prakriti->question_id}}-{{$prakriti->prakriti_id}}').closest('.radio-inline, .radio').addClass('checked');
+	$('#a-{{$prakriti->question_id}}-{{$prakriti->prakriti_id}}').closest('.radio-inline, .radio').addClass('checked');
 	@endforeach
 </script>
 <script type="text/javascript">
@@ -165,6 +200,81 @@ $(document).ready(function()
            }
         });
 	});
-});
+
+	$("#form-template").hide();
+
+	$("#template-select").on('change', function() {
+		event.preventDefault();
+	    /* stop form from submitting normally */
+	    var url = "/api/guideline/"+$(this).val();
+	    $.ajax(
+        {
+           	type: "get",
+           	url: url,
+           	success: function(data)
+           	{
+				$("#form-template").show();
+				var temp = $('#template-select').val();
+				$("#template_id").val(temp);
+				var i = 1;
+				$("#comments").empty();
+				$('#comments').append("<tr><td class='Bold'>" + "Food Group"+ "</td><td class='Bold'>" + "Food Recommended" + "</td><td class='Bold'>" + "Food Restricted" + "</td></tr>");
+			   	$.each(data, function(i, field) { 
+			   	if(field.food_group != '') {
+						$('#comments').append("<tr><td>" + field.food_group + "</td><td>" + field.avoid_list + "</td><td>" + field.rlist + "</td></tr>");
+					};
+			   });
+
+           	}
+        });
+		
+	});
+
+	$("#form-template").submit(function(event){
+		event.preventDefault();
+		var url = '/patient/sendrecommendation';
+		$.ajax(
+        {
+           type: "POST",
+           url: url,
+           data: $("#form-template").serialize(),
+           success: function(data)
+           {
+               $('#alert').show();
+			   $("#form-template").hide();
+               $('#alert').empty().append(data);
+               setTimeout(function()
+                {
+                    $('#alert').slideUp('slow').fadeOut(function() 
+                    {
+                        location.reload();
+                     });
+                }, 3000);
+           }
+        });
+	});
+});	
 </script>
+
+<style type="text/css">
+	#form-template .form-control{
+		padding: 0;
+		border: none;
+	}
+	.comment-body{
+		font-style: italic;
+		padding: 5px;	
+		float: left; 
+		width: 33%;
+	}
+	.comment-header{
+		font-style: bold;
+		padding: 5px;	
+		float: left; 
+		width: 33%;
+		font-size: large;
+	}
+	.Bold { font-weight: bold; }
+	
+</style>
 @endsection
