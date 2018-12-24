@@ -660,6 +660,8 @@ Route::group([
         Route::post('doctor/patients', 'DoctorController@patients');
 
         Route::post('patient/saveHerb', 'MedicalController@savePatientHerb');
+        Route::post('patient/sendrecommendation','PatientController@sendrecommendation');
+        Route::get('/api/guideline/{id}','PatientController@getguideline');
 
         Route::post('patient/{id}/herb/add', 'MedicalController@addPatientHerb');
 

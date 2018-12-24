@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\File;
 
 use App\Models\Lead;
 use App\Models\BreakAdjustment;
@@ -25,6 +26,8 @@ use App\Models\PatientPrakriti;
 use App\Models\Email;
 use App\Models\EmailTemplate;
 use App\Models\User;
+use App\Models\VediqueDietPaidRecommendation;
+USE App\Models\PatientRecommendation;
 
 use App\Support\Helper;
 
@@ -177,11 +180,17 @@ class PatientController extends Controller
 
         $questions = PrakritiQuestion::get();
 
+        $templates = DB::table('recommendation')
+                        ->select('program_id','program_name')
+                        ->distinct()
+                        ->get();
+
         $data = array(
             'menu'          => 'patient',
             'section'       => 'partials.prakriti',
             'patient'       =>  $patient,
             'questions'     =>  $questions,
+            'templates'     =>  $templates,
             'i'             => '1'
         );
 
@@ -658,5 +667,36 @@ class PatientController extends Controller
 
         return true;
 
+    }
+    public function sendrecommendation(Request $request)
+    {
+        $patient = Patient::with('lead')
+                        ->find($request->id);
+        
+        $dd = VediqueDietPaidRecommendation::where('email' ,$patient->lead->email)
+                        ->delete(); 
+   
+        $vrec = new VediqueDietPaidRecommendation;
+        $vrec->email = $patient->lead->email;
+        $vrec->program_id = $request->template_id;
+        $vrec->save();
+
+        $rec = new PatientRecommendation;
+        $rec->patient_id = $request->id;
+        $rec->template_id = $request->template_id;
+        $rec->save();
+        return "SUCCESS";            
+    }
+
+    public function getguideline($id)
+    {
+        return DB::table('recommendation as a')
+                        ->select('a.food_group','a.list as rlist','f.list as avoid_list')
+                        ->join(DB::raw('(SELECT * FROM recommendation WHERE is_avoid=0 and program_id='.$id.') AS f'),function($join){
+                            $join->on('a.food_group','=','f.food_group');
+                        })
+                        ->where('a.is_avoid',1)
+                        ->WHERE('a.program_id',$id)
+                        ->get();               
     }
 }
