@@ -10,8 +10,21 @@
 				<select name="template" id=template-select>
 					<option>Select Template </option>
 					@foreach($templates as $template)
-						<option value="{{$template->program_id}}">{{$template->program_name}}</option>
+						<option value="{{$template->program_id}}" >{{$template->program_name}}</option>
 					@endforeach
+
+					@foreach($templates AS $template)
+							@if($patient_template != null)
+							<?php
+								$dd = $template->program_id;
+								$cc= $patient_template->template_id?>
+								@if($dd == $cc )
+									<option selected="selected" value="{{$template->program_id}}">{{$template->program_name}}</option>
+								@else
+									<option value="{{$template->program_id}}" >{{$template->program_name}}</option>
+								@endif
+							@endif	
+					@endforeach 
 				</select>	
 			</form>
 			<form id="form-template" class="form-inline">
@@ -22,16 +35,22 @@
 					<button class="btn btn-primary">Send Now</button>
 				</div>
 			</form>
-				<!--<div class="col-md-12"> -->
-					<table id="comments" class="table table-bordered" align="center" style="width:80%; background-color:#fff4c5">
-						<!--<h3>Do's and Don't Guideline</h3> -->
-						<!--<div class="panel panel-default"> -->
-							<!--<div class="panel-body"> -->
-								<!--<div id="comments-body" class='comment well'></div> -->
-							<!--</div> -->
-						<!--</div> -->
-					</table>
-				<!--</div>-->
+			<table id="comments" class="table table-bordered" align="center" style="width:80%; background-color:#fff4c5">
+				<tr>
+					<td class='Bold'>Food Group</td>
+					<td class='Bold'>Food Recommended</td>
+					<td class='Bold'>Food Restricted</td>
+				</tr>
+				@if($sent_guideline != null)
+				@foreach($sent_guideline as $guideline)
+					<tr>
+						<td>{{$guideline->food_group}}</td>
+						<td>{{$guideline->avoid_list}}</td>
+						<td>{{$guideline->rlist}}</td>
+					</tr>
+				@endforeach
+				@endif
+            </table>
 		</div>
 	</div>
 </div>				
@@ -159,6 +178,7 @@
 <script type="text/javascript">
 $(document).ready(function() 
 {
+
 	$('#prakriti-copy').on('click', function(){
 		
 		var url = '/patient/'+this.value+'/prakriti/copy';
@@ -205,17 +225,20 @@ $(document).ready(function()
 
 	$("#template-select").on('change', function() {
 		event.preventDefault();
-	    /* stop form from submitting normally */
-	    var url = "/api/guideline/"+$(this).val();
-	    $.ajax(
+		var url = $(this).val();
+		$("#template_id").val(url);
+		showdata(url);	
+	});
+
+	function showdata(val)
+	{
+		$.ajax(
         {
            	type: "get",
-           	url: url,
+           	url: "/api/guideline/"+val,
            	success: function(data)
            	{
 				$("#form-template").show();
-				var temp = $('#template-select').val();
-				$("#template_id").val(temp);
 				var i = 1;
 				$("#comments").empty();
 				$('#comments').append("<tr><td class='Bold'>" + "Food Group"+ "</td><td class='Bold'>" + "Food Recommended" + "</td><td class='Bold'>" + "Food Restricted" + "</td></tr>");
@@ -227,8 +250,7 @@ $(document).ready(function()
 
            	}
         });
-		
-	});
+	}
 
 	$("#form-template").submit(function(event){
 		event.preventDefault();
