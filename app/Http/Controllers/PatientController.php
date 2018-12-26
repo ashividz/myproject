@@ -176,6 +176,9 @@ class PatientController extends Controller
 
     public function prakriti($id)
     {
+        $sent_guideline=null;
+        $patient_template=null;
+
         $patient = PatientPrakriti::prakriti($id);
 
         $questions = PrakritiQuestion::get();
@@ -185,12 +188,29 @@ class PatientController extends Controller
                         ->distinct()
                         ->get();
 
+        $patient_template = PatientRecommendation::where('patient_id',$id)
+                            ->orderby('created_at', 'desc')
+                            ->first();  
+        
+        if($patient_template!=null){                    
+            $sent_guideline = DB::table('recommendation as a')
+                                ->select('a.food_group','a.list as rlist','f.list as avoid_list')
+                                ->join(DB::raw('(SELECT * FROM recommendation WHERE is_avoid=0 and program_id='.$patient_template->template_id.') AS f'),function($join){
+                                    $join->on('a.food_group','=','f.food_group');
+                                })
+                                ->where('a.is_avoid',1)
+                                ->WHERE('a.program_id',$patient_template->template_id)
+                                ->get();                     
+        }  
+
         $data = array(
             'menu'          => 'patient',
             'section'       => 'partials.prakriti',
             'patient'       =>  $patient,
             'questions'     =>  $questions,
             'templates'     =>  $templates,
+            'patient_template' => $patient_template,
+            'sent_guideline' => $sent_guideline,
             'i'             => '1'
         );
 
