@@ -31,7 +31,7 @@
 
     <li{!! (($section == "partials.symptoms") ? " class='selected'" : "") !!}><a href="/patient/symptoms/{{ $patient->id or $lead->patient->id }}">Symptoms</a></li>
     <li{!! (($section == "partials.fab") ? " class='selected'" : "") !!}><a href="/patientFab/{{ $patient->id or $lead->patient->id }}">Fab</a></li> 
-    
+    <li{!! (($section == "partials.symptomaticfab") ? " class='selected'" : "") !!}><a href="/patientSymptomaticFab/{{ $patient->id or $lead->patient->id }}">Symptomatic Fab</a></li> 
     <li{!! (($section == "partials.preference") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/preference">Preference</a></li>
     <li{!! (($section == "partials.break") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/break">Break</a></li> 
 </ul>

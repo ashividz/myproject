@@ -187,6 +187,7 @@ class PatientFABController extends Controller
         $initialSymptom->headache = $request->initial_headache;
         $initialSymptom->backache = $request->initial_backache;
         $initialSymptom->general_feeling = $request->initial_general_feeling;
+        $initialSymptom->sleep_pattern = $request->initial_sleep_pattern;
         $initialSymptom->created_by = Auth::user()->id;
         $initialSymptom->save();
 
@@ -204,6 +205,7 @@ class PatientFABController extends Controller
         $lastSymptom->headache = $request->last_headache;
         $lastSymptom->backache = $request->last_backache;
         $lastSymptom->general_feeling = $request->last_general_feeling;
+        $lastSymptom->sleep_pattern = $request->last_sleep_pattern;
         $lastSymptom->created_by = Auth::user()->id;
         $lastSymptom->save();
         return $initialSymptom->id;
@@ -394,6 +396,51 @@ class PatientFABController extends Controller
 
     }
 
+    public function SendSymptomaticFabMail(Request $request)
+    {   
+        $patientFab = null;
+        $request->patient_id  = $request->id;  
+        $patient = $this->getFabData($request);
+        $guidelines = FabGuideline::get();
+        $patient->guidelines = $guidelines;
+        $dietbody = "<table cellspacing='0' cellpadding='10' style='padding: 10px'";
+
+        $dietbody .= "<tr><td colspan='2' style='background: #ddd;padding: 15px'><h3 style='margin: 0px'>Guideline</h3></td></tr>";
+        
+        if (trim($patient->lead->email) <> '') {  
+            $dietbody .= "</table>";              
+            $view = View::make('patient.symptomatic_fab_email', ['patient' => $patient]);
+            if($view)
+            {
+                $fabcontent = $view->render();
+                $patientFab = new PatientFab;
+                $patientFab->patient_id = $request->id;
+                $patientFab->content = $fabcontent;
+                $patientFab->created_by = Auth::user()->id;
+                $patientFab->save();
+            }
+            if($patientFab)
+            {
+              Mail::send('patient.symptomatic_fab_email', ['patient' => $patient], function($message) use ($patient)
+                    {
+                        $message->to($patient->lead->email, $patient->lead->name)
+                            ->bcc("diet@nutrihealthsystems.co.in")
+                            ->subject("FINAL ANALYSIS BROCHURE - ".$patient->lead->name." - ".date('D, jS M, Y H:i:s'))
+                            ->from('diet@nutrihealthsystems.co.in', 'Nutri-Health Systems');
+                            
+                        if (trim($patient->lead->email_alt) <> '') {
+                            $message->cc($patient->lead->email_alt, $patient->lead->name);
+                        }
+                    });
+            }
+        }
+        else {
+            $message .= '<li>Email does not exist for '.$patient->lead->name.'</li>';
+            $status = 'error';
+        }
+        return $patientFab;
+    }
+
     public function weightUpdate(Request $request)
     {
         $patient = PatientWeight::where('patient_id', $request->patient_id)->orderBy('id')->get();
@@ -444,6 +491,20 @@ class PatientFABController extends Controller
             'menu'          => $this->menu,
             'patient'       =>  $patient,
             'section'       => 'partials.fab',
+            'i'             =>  '1'
+        );
+
+        return view('home')->with($data);
+    }
+
+    public function patientsymptomaticFab($id)
+    {
+        $patient = Patient::find($id);
+       
+         $data = array(
+            'menu'          => $this->menu,
+            'patient'       =>  $patient,
+            'section'       => 'partials.symptomaticfab',
             'i'             =>  '1'
         );
 

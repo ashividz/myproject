@@ -183,7 +183,23 @@
                           <option>Happy</option>
                           <option>Tense</option>
                          
+                    </select>
+                    </td></tr>
+
+                    <tr><td>Sleep Pattern</td><td>
+                    
+                    <select class="editfield" v-model="patient.initialSymptom.sleep_pattern">
+                          <option selected>Good</option>
+                          <option>Bad</option>
+                          <option>Okay</option>                         
                        </select>
+                    </td><td>
+                    
+                    <select class="editfield" v-model="patient.lastSymptom.sleep_pattern">
+                          <option selected>Good</option>
+                          <option>Bad</option>
+                          <option>Okay</option>                         
+                    </select>
                     </td></tr>
                 </table>
               
@@ -277,7 +293,7 @@ new Vue({
                 initial_headache: this.patient.initialSymptom.headache,
                 initial_backache: this.patient.initialSymptom.backache,
                 initial_general_feeling: this.patient.initialSymptom.general_feeling,
-                
+                initial_sleep_pattern: this.patient.initialSymptom.sleep_pattern,
 
                 last_energy_level: this.patient.lastSymptom.energy_level,
                 //last_skin: this.patient.lastSymptom.skin,
@@ -291,7 +307,7 @@ new Vue({
                 last_headache: this.patient.lastSymptom.headache,
                 last_backache: this.patient.lastSymptom.backache,
                 last_general_feeling: this.patient.lastSymptom.general_feeling,
-                
+                last_sleep_pattern: this.patient.lastSymptom.sleep_pattern,
 
             }).success(function(data){
                 
