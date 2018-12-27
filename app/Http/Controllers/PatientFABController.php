@@ -28,6 +28,7 @@ use App\Models\PatientSymptom;
 use App\Models\FabDiet;
 use App\Models\FabGuideline;
 use App\Models\PatientFab;
+use App\Models\VediqueDietFab;
 use App\Http\Requests\PatientTagRequest;
 
 use Auth;
@@ -419,6 +420,12 @@ class PatientFABController extends Controller
                 $patientFab->content = $fabcontent;
                 $patientFab->created_by = Auth::user()->id;
                 $patientFab->save();
+
+                $userFab = new VediqueDietFab;
+                $userFab->email = $patient->lead->email;
+                $userFab->content = $fabcontent;
+                $userFab->created_at = date('Y-m-d h:i:s');
+                $userFab->save();
             }
             if($patientFab)
             {
