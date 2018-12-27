@@ -62,7 +62,7 @@
             </div>
         </div> 
         <div class="panel panel-default">
-           <a class="btn btn-primary" @click="sendFabMail">Send Mail</a>
+           <a class="btn btn-primary" @click="sendFabMail">Send Now</a>
         </div>
     </div>
 </div>
@@ -190,10 +190,14 @@ new Vue({
 
     methods: {
         sendFabMail(){
+            $.isLoading({ text: "Sending" });
             this.$http.get("/patient/SendSymptomaticFabMail/{{$patient->id}}", {}).success(function(data){
                 toastr.success('Mail Sent!', 'Success!');
                 this.getPatientFab;
-            }).error(function(errors) {
+            }).success(function(data){
+                 $.isLoading( "hide" );
+            })
+            .error(function(errors) {
                 this.toastErrors(errors);
             }).bind(this);
         },
