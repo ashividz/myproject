@@ -84,6 +84,19 @@
 
       <div style='margin-top: 15px;border: 1px solid #bbb;border-radius: 4px; padding: 15px'>
           <div>
+            <h4>Remarks</h4>
+            <ol>
+              @foreach($eatingTips as $eatingTip)
+              <li class="col-md-12" style='float: none'>
+                  {{$eatingTip->name}}
+              </li>
+             @endforeach
+           </ul>
+          </div>
+      </div>
+
+      <div style='margin-top: 15px;border: 1px solid #bbb;border-radius: 4px; padding: 15px'>
+          <div>
             <h4>GENERAL GUIDELINES</h4>
             <ol>
               @foreach($patient->guidelines as $guideline)

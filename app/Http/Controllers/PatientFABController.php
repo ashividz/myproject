@@ -403,13 +403,14 @@ class PatientFABController extends Controller
         $patient = $this->getFabData($request);
         $guidelines = FabGuideline::get();
         $patient->guidelines = $guidelines;
+        $eatingTips = PatientEatingtip::where('patient_id', $request->patient_id)->get();
         $dietbody = "<table cellspacing='0' cellpadding='10' style='padding: 10px'";
 
         $dietbody .= "<tr><td colspan='2' style='background: #ddd;padding: 15px'><h3 style='margin: 0px'>Guideline</h3></td></tr>";
         
         if (trim($patient->lead->email) <> '') {  
             $dietbody .= "</table>";              
-            $view = View::make('patient.symptomatic_fab_email', ['patient' => $patient]);
+            $view = View::make('patient.symptomatic_fab_email', ['patient' => $patient, 'eatingTips' => $eatingTips]);
             if($view)
             {
                 $fabcontent = $view->render();
@@ -421,7 +422,7 @@ class PatientFABController extends Controller
             }
             if($patientFab)
             {
-              Mail::send('patient.symptomatic_fab_email', ['patient' => $patient], function($message) use ($patient)
+              Mail::send('patient.symptomatic_fab_email', ['patient' => $patient, 'eatingTips' => $eatingTips], function($message) use ($patient)
                     {
                         $message->to($patient->lead->email, $patient->lead->name)
                             ->bcc("diet@nutrihealthsystems.co.in")
