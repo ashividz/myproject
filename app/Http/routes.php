@@ -706,6 +706,7 @@ Route::group([
         Route::post('vediqueDiet/vediqueDietUsers' , 'VediqueDietController@vediqueDietUsers');
 
         Route::get('patientFab/{id}', 'PatientFABController@patientFab');
+        Route::get('patientSymptomaticFab/{id}', 'PatientFABController@patientsymptomaticFab');
         Route::post('patient/add/eatingTip' , 'PatientFABController@addEatingTip');
         Route::get('patient/eatingTips', 'PatientFABController@getAllEatingTips');
         Route::get('patient/sampleDiets', 'PatientFABController@getSampleDiets');
@@ -719,6 +720,7 @@ Route::group([
         Route::get('patient/symptoms/{id}', 'PatientFABController@getSymptoms');
         Route::get('patient/fab/preview/{id}', 'PatientFABController@previewMail');
         Route::get('patient/sendFabMails/{id}', 'PatientFABController@sendFabMail');
+        Route::get('patient/SendSymptomaticFabMail/{id}', 'PatientFABController@SendSymptomaticFabMail');
         Route::post('patient/weightUpdate', 'PatientFABController@weightUpdate');
         Route::get('service/reports/fabReport', 'PatientFABController@fabReport');
         Route::post('service/reports/fabReport', 'PatientFABController@fabReport');
