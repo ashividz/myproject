@@ -46,7 +46,7 @@
           </div>
         </div>
 
-        <!--<div class=' panel panel-default'>
+        <div class=' panel panel-default'>
             <div class='panel-body'>
                 <h4>Remarks</h4>
                 <div class="col-md-12">
@@ -60,13 +60,35 @@
                   <editable-field2 :eatingtipx.sync="eatingtipx"></editable-field2>
                 </div>
             </div>
-        </div>  --> 
+        </div> 
         <div class="panel panel-default">
            <a class="btn btn-primary" @click="sendFabMail">Send Mail</a>
         </div>
     </div>
 </div>
 </div>
+
+<template id="editable-field2">
+   <div class=" col-md-12 eatingtips">
+        <div v-show="edit">
+            <span class="col-xs-10 col-md-10" style='padding: 0px'>
+                <input type="text" v-model="eatingtipx.name" style='width: 100% !important' class="editable-input" @keyup.13="update"/> 
+            </span>
+        </div>
+        <div v-else>
+            <span class="col-xs-10 col-md-10 eating_tip" @click="toggleEdit">@{{ eatingtipx.name }}</span>
+        </div>
+        <span class="col-xs-2 col-md-2">
+            <small class="pull-right hidden-xs" v-if="eatingtipx.deleted_at">
+                <em>@{{ eatingtipx.deleted_at }}</em>
+            </small>
+            <div class="pull-right">
+                <a class='deletebtn'  @click="toggleDelete"><i class="fa fa-remove red"></i></a>
+            </div>
+        </span>
+    </div>
+</template>
+
 
 <style type="text/css">
 .table-bordered td, .table-bordered th
@@ -105,13 +127,54 @@ padding: 4px 6px;
 </style>
 
 <script>
+Vue.component('editableField2', {
+    mixins: [ VueFocus.mixin ],
+    template: '#editable-field2',
+    props: ['eatingtipx'],
+    data: function() {
+        return {
+            edit: false
+        }
+    },
+     ready: function() {
+        console.log(this.eatingtipx);
+    },
+    methods: {
+             update(){
+
+            this.$http.patch("/patient/eatingTip/" + this.eatingtipx.id, {
+                name: this.eatingtipx.name
+            }).success(function(data){
+                this.$parent.eatingtipx = data;
+                toastr.success('Tips updated', 'Success!')
+            }).error(function(errors) {
+                this.$parent.toastErrors(errors);
+            }).bind(this);
+            this.edit = false;
+
+        },
+
+         toggleEdit() {
+            this.edit = true;
+        },
+
+        toggleDelete() {
+            
+            this.$http.post("/patient/eatingTip/" + this.eatingtipx.id + "/delete")
+            .success(function(data){
+                this.$parent.eatingTips = data;
+                this.$parent.toastDelete(this.eatingtipx.deleted_at);
+            }).bind(this);
+        }
+    }
+})
 new Vue({
     el: '#fabController',
 
     data: {
         //loading: false,
         patient: '',
-        //eatingTips: [],
+        eatingTips: [],
         eatingTipField: '',
         editSymptoms: false,
         editMeasurements: false,
