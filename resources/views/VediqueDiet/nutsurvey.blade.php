@@ -35,7 +35,7 @@
 						@if($patient->name)
 							<tr>
 								<td>{{$i++}}</td>
-								<td>{{$patient->patient_id}}</td>
+                                <td><a href="/patient/{{$patient->patient_id}}/diet" target="_blank">{{$patient->patient_id or ' '}}</a></td>
 								<td>{{$patient->name or ""}}</td>
 								<td>{{$patient->nutritionist or " "}}</td>
 								<td>{{$patient->doctor or " "}}</td>
