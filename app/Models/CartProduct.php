@@ -30,20 +30,24 @@ class CartProduct extends Model
 
     public static function getOffer($cartProduct)
     {
-        $offer = CartProduct::checkOffer($cartProduct); 
+        $offers = CartProduct::checkOffer($cartProduct); 
 
-        if($offer) {
-            $op = new CartProduct;
-            $op->cart_id = $cartProduct->cart_id;
-            $op->product_id = $offer->product_offer_id;
-            $op->product_offer_parent_id = $cartProduct->product_id;
-            $op->product_offer_id = $offer->id;
-            $op->quantity = $offer->product_offer_quantity;
-            $op->price = 0;
-            $op->discount = 0;
-            $op->amount = 0;
-            $op->created_by = 1;
-            $op->save();
+        if($offers)
+        {
+            foreach ($offers as $offer)
+            {
+                $op = new CartProduct;
+                $op->cart_id = $cartProduct->cart_id;
+                $op->product_id = $offer->product_offer_id;
+                $op->product_offer_parent_id = $cartProduct->product_id;
+                $op->product_offer_id = $offer->id;
+                $op->quantity = $offer->product_offer_quantity;
+                $op->price =  $offer->product_offer_price;
+                $op->amount = $offer->product_offer_quantity * $offer->product_offer_price;
+                $op->created_by = 1;
+                $op->save();
+            }
+            
         }
     }
 
@@ -88,7 +92,7 @@ class CartProduct extends Model
                     //->where('start_date', '<=', date('Y-m-d'))
                     //->where('end_date', '<', date('Y-m-d'))
                     ->orderBy('product_offer_quantity', 'desc')
-                    ->first();
+                    ->get();
     }
 
     public static function deleteOffer($cartProduct)
