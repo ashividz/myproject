@@ -165,7 +165,7 @@ return [
         'sqlsrv' => [
             'driver'   => 'sqlsrv',
             'host'     =>  '192.168.1.176',
-            'database' =>  'everybinnew',
+            'database' =>  'everybin',
             'port'      => '1433',
             'username' =>  'SA',
             'password' => 'everybin123',
