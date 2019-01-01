@@ -369,6 +369,10 @@
                     <a href="/service/assignNutritionist" id="menu_service_nutritionist">Assign Nutritionist & Doctor</a>
                 </li>
                 <li>
+                    <a href="/service/assignDoctor" id="menu_service_doctor">Assign Doctor</a>
+                </li>
+
+                <li>
                     <a href="/service/bulk" id="menu_service_bulk">Bulk Email & SMS</a>
                 </li>                                   
                 <li>

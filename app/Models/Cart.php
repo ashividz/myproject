@@ -269,6 +269,18 @@ class Cart extends Model
         return $cart;
     }
 
+
+    public static function setProductDuration($cart)
+    {
+        $duration = CartProduct::getProductDuration($cart);
+
+        //dd($duration);
+
+        $cart->duration = $duration;
+
+        return $cart;
+    }
+
     public function getDietAmount()
     {
         return $this->products()
@@ -283,7 +295,25 @@ class Cart extends Model
             ->sum('amount');
 
         $other_amount = $this->products()
-            ->whereIn('product_category_id', [2,3,4,5,6,7,8,9,10,11])
+            ->whereIn('product_category_id', [2,3,4,5,6,7,8,9,10,11,12,13,14])
+            ->sum('amount');
+
+        $payment = $this->payments()
+            ->sum('amount');
+
+        return $payment - $other_amount;
+    }
+
+     // CSk Produt Price 
+
+    public function getProductPaidAmount()
+    {
+        $product_amount = $this->products()
+            ->whereIn('product_category_id', [13 , 14])
+            ->sum('amount');
+
+        $other_amount = $this->products()
+            ->whereIn('product_category_id', [1,2,3,4,5,6,7,8,9,10,11,12])
             ->sum('amount');
 
         $payment = $this->payments()

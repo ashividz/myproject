@@ -418,7 +418,7 @@ class CartApprovalController extends Controller
                     $amount = 0;
                     if ($cart->hasProductCategories([11])) {
                         $amount = $this->checkcartAmount($cart);
-                        if(!$cart->hasProductCategories([1]) && $amount >= 1599)
+                        if(!$cart->hasProductCategories([1 , 14]) && $amount >= 1599)
                         {
                             $this->sendmail($cart , $cart->lead_id);
                         }

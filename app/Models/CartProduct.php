@@ -67,21 +67,26 @@ class CartProduct extends Model
         CartProduct::deleteOffer($cartProduct);
         
 
-        $newOffer = CartProduct::checkOffer($cartProduct);
+        $newOffers = CartProduct::checkOffer($cartProduct);
 
         //dd($newOffer);
 
-        if($newOffer) {
-            $op = new CartProduct;
-            $op->cart_id = $cartProduct->cart_id;
-            $op->product_id = $newOffer->product_offer_id;
-            $op->product_offer_id = $newOffer->id;
-            $op->quantity = $newOffer->product_offer_quantity;
-            $op->price = 0;
-            $op->discount = 0;
-            $op->amount = 0;
-            $op->created_by = 1;
-            $op->save();
+        if($newOffers)
+        {
+
+            foreach ($newOffers as $newOffer)
+            {
+
+                $op = new CartProduct;
+                $op->cart_id = $cartProduct->cart_id;
+                $op->product_id = $newOffer->product_offer_id;
+                $op->product_offer_id = $newOffer->id;
+                $op->quantity = $newOffer->product_offer_quantity;
+                $op->price = $newOffer->product_offer_price;
+                $op->amount = $newOffer->product_offer_quantity * $offer->product_offer_price;
+                $op->created_by = 1;
+                $op->save();    
+            }    
         }
     }
 
@@ -112,6 +117,16 @@ class CartProduct extends Model
                     //->first();
     }
 
+
+     public static function getProductDuration($cart) 
+    {
+        return DB::table('cart_product as op')
+                    ->join('products as p', 'op.product_id', '=', 'p.id')
+                    ->where('cart_id', $cart->id)
+                    ->whereIn('product_category_id', [13 , 14])
+                    ->sum(DB::RAW('duration * quantity'));
+    }
+
     
 
     /*public static function hasProductCategory($cart, $product_category_id)
@@ -130,6 +145,8 @@ class CartProduct extends Model
     {
         //Don't use calculation for discounted product based on amount calculated using discount
         //$amount = ($cart->getDietPaidAmount() *100) / (100 - $cart->getDietDiscount());
+
+        
         $basePlanIds = Product::getBasePlanIds();
         $amount = $cart->getDietPaidAmount();
 

@@ -53,6 +53,13 @@ class Order extends Model
 
         //$duration = CartProduct::getDietDuration($cart, 1);
         $cart = Cart::setDietDuration($cart);
+
+         
+
+        $product = Cart::setProductDuration($cart); 
+       
+        // dd($cart->duration);
+
         $category_id = 1;
         if(Cart::isBenefitCart($cart) && !$cart->hasProductCategories([1]))
         {
@@ -85,16 +92,30 @@ class Order extends Model
                  
         }
 
-        if ($cart->duration > 0) {
+        if($cart->hasProductCategories([13]))
+        {
+            $category_id = 13;
+        }
+        else if($cart->hasProductCategories([14]))
+        {
+             $category_id = 14;
+        }
+
+        if ($cart->duration > 0  || $product->duration > 0) {
             $order = Order::firstOrNew(['cart_id' => $cart->id]);
 
             $order->patient_id              = $order->patient_id ? : $patient->id;
             $order->cart_id                 = $order->cart_id ? : $cart->id;
             $order->product_category_id     = $order->product_category_id ? : $category_id;
             
-            $order->duration                = $cart->duration;
+            $order->duration                = $cart->duration ? : $product->duration;
             $order->created_by              = Auth::id();
             $order->save();
+        }
+
+        if(($product->duration > 0 && $cart->hasProductCategories([13])) || ($product->duration > 0 && $cart->hasProductCategories([14])))
+        {
+            ProductFee::store($cart , $product , $patient);
         }
         /*$categories = ProductCategory::get();
 
@@ -116,7 +137,7 @@ class Order extends Model
 
        // dd($cart->hasProductCategories([11]));
         //Update old Fee tables for now
-        if (($cart->duration > 0 && $cart->hasProductCategories([1])) || ($cart->duration > 0 && $cart->hasProductCategories([11]))) {
+        if (($cart->duration > 0 && $cart->hasProductCategories([1])) || ($cart->duration == 5 && $cart->hasProductCategories([11]))) {
             Fee::store($cart, $patient);
         } 
         
