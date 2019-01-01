@@ -276,7 +276,7 @@ class Cart extends Model
 
         //dd($duration);
 
-        $cart->duration = $duration;
+        $cart->productduration = $duration;
 
         return $cart;
     }

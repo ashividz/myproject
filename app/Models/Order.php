@@ -52,13 +52,13 @@ class Order extends Model
         }*/
 
         //$duration = CartProduct::getDietDuration($cart, 1);
+
+
         $cart = Cart::setDietDuration($cart);
 
-         
-
-        $product = Cart::setProductDuration($cart); 
+          
        
-        // dd($cart->duration);
+        $product = Cart::setProductDuration($cart); 
 
         $category_id = 1;
         if(Cart::isBenefitCart($cart) && !$cart->hasProductCategories([1]))
@@ -101,19 +101,19 @@ class Order extends Model
              $category_id = 14;
         }
 
-        if ($cart->duration > 0  || $product->duration > 0) {
+        if ($cart->duration > 0  || $product->productduration > 0) {
             $order = Order::firstOrNew(['cart_id' => $cart->id]);
 
             $order->patient_id              = $order->patient_id ? : $patient->id;
             $order->cart_id                 = $order->cart_id ? : $cart->id;
             $order->product_category_id     = $order->product_category_id ? : $category_id;
             
-            $order->duration                = $cart->duration ? : $product->duration;
+            $order->duration                = $cart->duration ? : $product->productduration;
             $order->created_by              = Auth::id();
             $order->save();
         }
 
-        if(($product->duration > 0 && $cart->hasProductCategories([13])) || ($product->duration > 0 && $cart->hasProductCategories([14])))
+        if(($product->productduration > 0 && $cart->hasProductCategories([13])) || ($product->productduration > 0 && $cart->hasProductCategories([14])))
         {
             ProductFee::store($cart , $product , $patient);
         }
