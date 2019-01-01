@@ -243,9 +243,10 @@
 						@endif
 
 					@endfor
+
 				</tr>
-			@elseif(in_array(19, $program_id))
-				<tr tr style="background-color: #2CCEAE">
+			@else
+				<tr>
 		
 
 			
@@ -320,8 +321,86 @@
 
 				@endfor
 				</tr>
+			@endif
+		@elseif(in_array(19, $program_id))
+		       <tr tr style="background-color: #2CCEAE">
+		
+
+			
+							<td>{{$x++}}</td>
+							<td><a href="/patient/{{$patient->id}}/diet" target="_blank">{{$patient->lead->name}}</a></td>
+							<?php
+								$Birthday = false;
+								if(in_array($patient->lead->id, $dob))
+								{
+									$Birthday = true;
+								} 
+							?>
+							@if($Birthday)
+								<td>{{ date('jS F Y',strtotime($patient->lead->dob))}} <i class="fa fa-birthday-cake" aria-hidden="true"></i></td>
+
+							@else
+								<td></td>
+							@endif
+							<td>{{$patient->secondary_nutritionist or " "}}</td>
+							<td><div class="pull-right" data-html="true" data-toggle="popover" title="Tags" data-content="{!!$tags ==''?'No Tag':$tags!!}"><a href="/patient/{{$patient->id}}/tags" target="_blank"><i class="fa fa-tags fa-2x {{$patient->tags->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
+
+
+							<td>{{$patient->doctor ? "Dr. ".$patient->doctor : ''}}</td>
+
+							<td align="center"><div data-html="true" data-toggle="popover" title="Herbs" data-content="{!!$herbs==''?'No Herb':$herbs!!}"><a href="/patient/{{$patient->id}}/herbs" target="_blank"><i class="fa fa-stethoscope fa-2x {{$patient->herbs->isEmpty() ? 'red': 'green'}}"></i></a></div></td>
+
+						
+							<td><div class="article"><div class="description"><p>{{$patient->suit->trial_plan or ""}}</p><a href="#more" class="more grad"></a></div></div></td>
+
+							<td><div class="pull-left" data-html="true" data-toggle="popover" title="Notes" data-content="{!!$notes==''?'No Note':$notes!!}"><a href="/patient/{{$patient->id}}/notes" target="_blank"><i class="fa fa-sticky-note fa-2x {{$patient->notes->isEmpty() ? 'red': 'green'}}"></i></a></div>@if($patient->notes->isEmpty())<div class="article"><div class="description"><p>{{$patient->remark}}</p><a href="#more" class="more grad"></a></div></div>@endif
+							<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$fee->end_date->format('d-M-Y')}}"><i class="fa fa-info-circle"></i></div></td>
+
+							<td>{{!$patient->diets->isEmpty()?date('d-m-Y', strtotime($patient->diets->first()->date_assign)) :''}}</td>
+
+				@for($j=0; $j<$days; $j++)
+
+				<?php 
+						$dt = date('Y-m-d', strtotime('+ '.$j.' days', strtotime($start_date)));
+						$today = "";
+						if(date('Y-m-d', strtotime('+ '.$j.' days', strtotime($start_date))) == date('Y-m-d')) {
+							$today = "today";
+						}
+				?>
+					
+					@if($dt < $fee->start_date->format('Y-m-d'))
+
+						<td></td>
+
+					@elseif($dt == $fee->start_date->format('Y-m-d'))
+
+						<td title="Program Start" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}""><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-play"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
+
+					@elseif($dt == $fee->end_date->format('Y-m-d'))
+
+						<td title="Program End" style="text-align:center" class="{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><span class="label label-{{$patient->diets->where('date_assign', $dt)->first() ? 'success' : 'danger'}}"><i class="fa fa-stop"></i></span><span class="hide">{{$patient->diets->where('date_assign', $dt)->first() ? 'Y' : 'N'}}</span></td>
+
+					@elseif($patient->diets->where('date_assign', $dt)->first())
+						
+						@if($dt < date('Y-m-d'))
+							<td align="center" class="{{$today}}"><span class="label label-primary"><i class="fa fa-check"></i></span><span class="hide">Y</span></td>
+						@elseif($dt == date('Y-m-d'))
+							<td align="center" class="{{$today}}"><span class="label label-success"><i class="fa fa-check"></i></span><span class="hide">Y</span></td>
+						@elseif($dt > date('Y-m-d'))
+							<td align="center" class="{{$today}}"><span class="label label-info"><i class="fa fa-check"></i></span><span class="hide">Y</span></td>
+						@endif
+
+					@elseif($dt >= $patient->start_date && $dt <= date('Y-m-d'))
+						<td align="center" class="{{$today}}"><span class="label label-danger"><span class="fa fa-close"></span></span><span class="hide">N</span></td>
+					@else
+						<td class="{{$today}}"></td>	
+					@endif
+
+				@endfor
+				</tr>
+
 		@else 
-					<tr>
+		<tr>
 		
 
 			
@@ -398,11 +477,9 @@
 
 				@endfor
 				</tr>
-			@endif
 		@endif
-	@endif
+	@endif	
 @endforeach
-
 
 					</tbody>
 				</table>
