@@ -75,6 +75,27 @@ class ServiceController extends Controller
         return view('home')->with($data);
     }
 
+     //Assign doctor for OI CSK Program
+    public function assginedDoctor()
+    {
+        $patients =  Patient::select('patient_details.*')
+                ->with('lead', 'currentProductFee', 'doctor','suit' , 'fee' , 'break' , 'lead.programs')
+                ->whereHas('productFee', function($query){
+                    $query->where('end_date', '>=', DB::RAW('CURDATE()'));
+                })
+                ->join('marketing_details as m', 'm.id', '=', 'patient_details.lead_id')
+                ->orderBy('name')
+                ->get();
+
+         $data = array(
+            'menu'      => $this->menu,
+            'section'   => 'assign_doctor',
+            'patients'  => $patients
+        );
+
+        return view('home')->with($data);
+    }
+
     public function saveNutritionist(Request $request)
     {
         /** Removed because of request from Service team

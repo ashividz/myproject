@@ -934,6 +934,8 @@ Route::group([
 
         Route::get('patient/{id}/calls','PatientController@calls');
 
+        Route::get('service/assignDoctor', 'ServiceController@assginedDoctor');
+
 });
 
 Route::group([
