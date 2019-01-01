@@ -43,14 +43,14 @@ class ProductFee extends Model
             $fee->start_date = Carbon::now()->addDays(1);
         }
        
-        $fee->end_date = Carbon::parse($fee->start_date)->addDays($product->duration);
+        $fee->end_date = Carbon::parse($fee->start_date)->addDays($product->productduration);
         $fee->cre = $cart->cre->employee->name;
         $fee->cre_id = $cart->cre_id;
         $fee->source_id = $cart->source_id;
         $fee->total_amount = $cart->getProductPaidAmount();
         
         //$fee->valid_months = 
-        $fee->duration = $product->duration;
+        $fee->duration = $product->productduration;
         $fee->created_by = Auth::id();
         $fee->save();
         LeadStatus::saveStatus($patient->lead, 5);
