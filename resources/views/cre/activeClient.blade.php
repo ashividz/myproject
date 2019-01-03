@@ -34,15 +34,19 @@
 
                         if($duration >= 30)
                         {
-                            $x = 15;
+                            $x = 20;
+                        }
+                        if($duration >=60)
+                        {
+                            $x = 40;
                         }
                         if($duration >= 90)
                         {
-                            $x = 45;
+                            $x = 60;
                         }
                         if($duration >= 180)
                         {
-                            $x = 90;
+                            $x = 120;
                         }
                         if($duration >=365)
                         {
@@ -69,7 +73,7 @@
                                 </ul>
                             </td>
                         </tr>
-                @elseif($isupgrade==0 && $day>=20 && $day<$x)<!-- && $day%15==0) -->
+                @elseif($isupgrade==0 && $day<$x)<!-- && $day%15==0) -->
                        <tr>
                             <td>{{$i++}}</td>
                             <td><a href="/cre/{{$l->patient->id}}/survey" target="_blank">{{$l->name or ' '}}</a></td>
