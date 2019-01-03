@@ -114,7 +114,7 @@ class DoctorController extends Controller
         return view('lead.modals.dispositions')->with($data);
     }
 
-    public function patients()
+   public function patients()
     {
         $users = User::getUsersByRole('doctor');
 
@@ -172,12 +172,44 @@ class DoctorController extends Controller
             }])
             ->with('bt','medical','fee','cfee')            
             ->get();
+
+
+            $productspatients = Patient::where('doctor', $this->doctor)
+                                ->has('currentProductFee')
+                                ->with(['lead.dialerphonedisposition' => function($query) use($doctorsUserNames){
+                                    $query->with('user')
+                                    ->whereIn('username',$doctorsUserNames)
+                                    ->where('duration','>=',$this->connectedCallDuration)
+                                    ->orderBy('eventdate','desc');
+                                }])
+                                ->with(['lead.dialermobiledisposition' => function($query) use($doctorsUserNames){
+                                    $query->with('user')
+                                    ->whereIn('username',$doctorsUserNames)
+                                    ->where('duration','>=',$this->connectedCallDuration)
+                                    ->orderBy('eventdate','desc');
+                                }])
+                                ->with(['lead.phonecallback' => function($query) use($doctorsUserNames){
+                                    $query->with('user')
+                                    ->whereIn('username',$doctorsUserNames)
+                                    ->where('callbackdate','>=',date('Y-m-d H:i:s'))
+                                    ->orderBy('callbackdate');
+                                }])            
+                                ->with(['lead.mobilecallback' => function($query) use($doctorsUserNames){
+                                    $query->with('user')
+                                    ->whereIn('username',$doctorsUserNames)
+                                    ->where('callbackdate','>=',date('Y-m-d H:i:s'))
+                                    ->orderBy('callbackdate');
+                                }])
+                                ->with('lead' , 'productFee' , 'currentProductFee')
+                                ->get();
+         //dd($productspatients);
         
         $data = array(
             'menu'                  =>  $this->menu,
             'section'               =>  'patients',
             'users'                 =>  $users,
             'patients'              =>  $patients,
+            'productspatients'      =>  $productspatients,
             'appointmentInterval'   =>  $this->appointmentInterval,
             'connectedCallDuration' =>  $this->connectedCallDuration,
             'name'                  =>  $this->doctor,
@@ -186,8 +218,9 @@ class DoctorController extends Controller
             'end_date'              =>  $this->end_date,
             'i'                     =>  '1',
             'x'                     =>  '1',
+            'p'                     =>  '1',
         );
 
         return view('home')->with($data);
-    }    
+    }        
 }

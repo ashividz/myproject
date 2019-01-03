@@ -71,6 +71,12 @@
                 <span>
                     Organic India : <input type="checkbox" v-model="categories" value="11" debounce="5000" checked>
                 </span>  
+                <span>
+                    Condition specific kits : <input type="checkbox" v-model="categories" value="13" debounce="5000" checked>
+                </span>  
+                <span>
+                    Curated Diabetes Control Kit : <input type="checkbox" v-model="categories" value="14" debounce="5000" checked>
+                </span>  
                 <span><button class="btn btn-primary" @click="getCarts">Search</button></span>
             </div>
         </div>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Fee;
+use App\Models\ProductFee;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\LeadSource;
@@ -224,10 +225,33 @@ class Patient extends Model
         return $this->hasMany(LeadCre::class, 'lead_id', 'lead_id');
     }
 
+    // OI CSK Product
+
+    public function currentProductFee()
+    {
+        return $this->hasOne(ProductFee::class)->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->latest();
+    } 
+
+    public function oldProductFee()
+    {
+        return $this->hasOne(ProductFee::class)->oldest();
+    }
+
+    public function productFee()
+    {
+        return $this->hasOne(ProductFee::class)->latest();
+    }
+
+    public function productFees()
+    {
+        return $this->hasMany(ProductFee::class)->orderBy('id', 'DESC');
+    }
+
     public static function getActivePatients($nutritionist = NULL)
     {
         $query =  Patient::select('patient_details.*')
-                ->with('lead', 'cfee', 'doctor','suit' , 'fee' , 'break')
+                ->with('lead', 'cfee', 'doctor','suit' , 'fee' , 'break' , 'lead.programs')
+
                 /*->leftJoin(DB::raw('(SELECT * FROM fees_details A WHERE id = (SELECT MAX(id) FROM fees_details B WHERE A.patient_id=B.patient_id)) AS f'), function($join) {
                     $join->on('patient_details.id', '=', 'f.patient_id');
                 })
@@ -639,25 +663,6 @@ class Patient extends Model
         return $yuwowPatients;
     }
 
-    public static function register($cart , $amount = null)
-    {
-        if($cart->lead->patient) {  
-            //if($cart->hasProductCategories([1])){ 
-            //Patient::setDietPreference($cart->id,$cart->lead_id,$cart->lead->patient);}         
-            return $patient = $cart->lead->patient;
-        }
-
-        if ($cart->hasProductCategories([1])) {
-            return Patient::store($cart->lead_id);
-        }
-        else if ($cart->hasProductCategories([11]) && $amount >= 1599)
-        {
-            return Patient::store($cart->lead_id);
-        }
-
-        return null; 
-    }
-
     public static function store($lead_id)
     {
         $patient = new Patient;
@@ -669,28 +674,23 @@ class Patient extends Model
         return $patient;
     }
 
-
-    /*public static function setDietPreference($cart_id,$lead_id,$patient=null)
+    public static function register($cart , $amount = null)
     {
-        $id = $patient->id;
-        $patient_details = Patient::where('id' , $id)->first();
-
-        $products_id = [];
-        $products = CartProduct::where('cart_id' , $cart_id)->get();
-        foreach ($products as $product) {
-        $products_id[] = $product->product_id;
+        if($cart->lead->patient) {  
+            //if($cart->hasProductCategories([1])){ 
+            //Patient::setDietPreference($cart->id,$cart->lead_id,$cart->lead->patient);}         
+            return $patient = $cart->lead->patient;
         }
 
-       //NOT REFERENCE CART
-        if(!in_array(97, $products_id))
+        if ($cart->hasProductCategories([1]) || $cart->hasProductCategories([13]) || $cart->hasProductCategories([14])) {
+            return Patient::store($cart->lead_id);
+        }
+        else if ($cart->hasProductCategories([11]) && $amount >= 1599)
         {
-             //rejoin clients
-            if(LeadSource::isExistingSource($lead_id,23))
-            {
-                $patient->email = 0 ;
-                $patient->save();
-            }
+            return Patient::store($cart->lead_id);
         }
-        return true;
-    }*/
+
+        return null; 
+    }
+
 }

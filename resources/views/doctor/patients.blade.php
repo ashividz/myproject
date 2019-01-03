@@ -53,6 +53,59 @@
 			$patient->appointmentDate = $nextCall;			
 		}
 	}
+	foreach ($productspatients as $patient) {							
+		$fee = $patient->currentProductFee ? $patient->currentProductFee : $patient->productFee;
+		$welcomeCallDate = date('Y-m-d', strtotime('-'.'1'.' days', strtotime($fee->start_date)));
+		$lastDisposition  = collect([$patient->lead->dialerphonedisposition,$patient->lead->dialermobiledisposition])
+							->sortByDesc('eventdate')->first();
+		$callBack 		  = collect([$patient->lead->mobilecallback,$patient->lead->phonecallback])
+							->sortBy('callbackdate')->first();
+		$patient->isCallBack = false;
+		$patient->BTCall     = false;
+		$patient->lastDisposition = $lastDisposition;
+		
+		$lastDispositionDate = $lastDisposition ? date('Y-m-d',strtotime($lastDisposition->eventdate)) :null;
+
+		if ($patient->bt && $patient->medical) {
+			$patient->lastBTDate = max( $patient->bt->report_date , date('Y-m-d',strtotime($patient->medical->date)) );
+		} else {
+			$patient->lastBTDate = $patient->bt ? $patient->bt->report_date : ($patient->medical ? date('Y-m-d',strtotime($patient->medical->date)) : null);
+		}
+		
+		if ( $patient->lastBTDate && ( !$lastDisposition || ( $lastDisposition && strtotime($lastDisposition->eventdate) < strtotime($patient->lastBTDate) ) ) )
+			$patient->BTCall =true ;
+
+		//If it's a callback bypass all other things
+		if ($callBack) {
+			$nextCall = date('Y-m-d',strtotime($callBack->callbackdate));
+			$patient->appointmentDate = $nextCall;
+			$patient->iscallBack 	  = true;
+			$patient->callbackdate    = $callBack->callbackdate;
+		} elseif ( strtotime($welcomeCallDate) <= strtotime($today) ) {
+			$nextCall = null;
+			//If BT has been uploaded schedule a call next
+			if ( $patient->lastBTDate && (!$lastDisposition || ($lastDisposition && $lastDisposition->eventdate < $patient->lastBTDate)) ) {
+				$nexttCall = date('Y-m-d', strtotime('+'.'1'.' days', strtotime($patient->lastBTDate)));				
+			} elseif ($lastDisposition && ( strtotime($lastDispositionDate) >= strtotime($welcomeCallDate)) ) {
+				//schedule call +15 after last disposition date
+				$nextCall = date('Y-m-d', strtotime('+'.$appointmentInterval.' days', strtotime($lastDisposition->eventdate)));							
+
+			} else {
+				//schedule call today
+				$nextCall = $today;
+			}
+
+			
+			if ($nextCall <= $fee->end_date)
+				$patient->appointmentDate = $nextCall >= $today ? $nextCall : $today;
+			else
+				$patient->appointmentDate = null; //program ended schedule no call					
+		} else {
+			//schedule a welcome call if program has not started
+			$nextCall = $welcomeCallDate;
+			$patient->appointmentDate = $nextCall;			
+		}
+	}
 ?>							
 <div class="container">
 	<div class="panel panel-default">
@@ -67,6 +120,8 @@
 			<ul class="nav nav-tabs" role="tablist">
 	        	<li role="presentation" class="active"><a href="#patients" aria-controls="primary" role="tab" data-toggle="tab">Patients</a></li>	        	
 	        	<li role="presentation" ><a href="#appointments" aria-controls="summary	" role="tab" data-toggle="tab">Appointments</a></li>
+	        	<li role="presentation" ><a href="#productpatients" aria-controls="primary" role="tab" data-toggle="tab"> Product Patients</a></li>
+	        	<li role="presentation" ><a href="#Productappointments" aria-controls="summary	" role="tab" data-toggle="tab">Product Appointments</a></li>
 	        </ul>
 
 	        <!-- Tab panes -->
@@ -233,6 +288,100 @@
 								@endif
 								<div class="pull-right" data-toggle="popover" data-html="true" data-content="<b>Start Date</b> : {{$patient->fee->start_date->format('d-M-Y')}}<p><b>End Date</b> : {{$patient->fee->end_date->format('d-M-Y')}}" data-placement="left"><i class="fa fa-info-circle"></i></div>
 							</td>
+							
+							<?php
+							/*@for($y=0;$y<7;$y++)
+								<?php */
+									//$dt = date('Y-m-d', strtotime('+ '.$y.' days', strtotime(date('Y-m-d'))));
+								//
+								/*<!-- <td>
+									@if($dt==$patient->appointmentDate)
+										<i class="fa fa-times danger" aria-hidden="true"></i>
+									@endif
+								</td>
+							@endfor	 -->*/
+							?>
+						</tr>						
+						@endforeach
+					</tbody>					
+				</table>
+			</div>
+
+			<!-- Product Patient  -->
+
+			<div role="tabpanel" class="tab-pane" id="productpatients">   		
+        		<table id="leads" class="table table-bordered">
+					<thead>
+						<tr>
+							<td>#</td>
+							<td>Name</td>
+							<td>Start Date</td>
+							<td>End Date</td>
+						</tr>
+					</thead>
+					<tbody>
+
+				@foreach($productspatients AS $patient)
+						<tr>
+							<td>
+								{{$p++}}
+							</td>
+							<td><a href="/patient/{{$patient->id}}/medical" target="_blank">{{$patient->lead->name}}</a></td>
+							<td>
+								{{date('jS M, Y', strtotime($patient->currentProductFee->start_date))}}
+							</td>
+							<td>
+								{{date('jS M, Y', strtotime($patient->currentProductFee->end_date))}}
+							</td>
+						</tr>
+				@endforeach
+
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Product Patient Appointment -->
+
+			<div role="tabpanel" class="tab-pane fade" id="Productappointments">				                    
+            	<table class="table table-bordered" id="appointment_table">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Name</th>
+							<th>Call Time</th>
+							<th>Last Call Date</th>			
+							<th>Next Call Date</th>									
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($productspatients AS $patient)									
+						<tr>
+							<td>{{$x++}}</td>
+							<td><a href="\patient\{!!$patient->id!!}\medical" target="_blank">{{$patient->lead->name}}</a></td>
+
+							<td>{{$patient->suit ? $patient->suit->trial_plan : ''}}</td>
+
+							<td>
+								@if($patient->lastDisposition)
+								{{date("Y-m-d, g:i a",strtotime($patient->lastDisposition->eventdate))}}
+								&nbsp;[{{$patient->lastDisposition->user->userfullname}}]
+								
+								<a data-toggle="modal" data-target="#disposition" href="/patient/{{$patient->id}}/doctordialercalls"><i class="fa fa-mobile danger" aria-hidden="true"></i></a>
+
+								@endif
+							</td>							
+							
+							<td>
+								{{$patient->appointmentDate}}
+								@if($patient->isCallback)
+									<a href="#" class="pull-right"  data-html="true" data-toggle="popover" title ="Call back" data-content="{!!$cb_notes!!}"><i class="fa fa-phone danger"></i></a>
+								@endif
+								@if($patient->BTCall)
+									<a href="#" class="pull-right" data-toggle="popover" data-html="true"  title ="Blood Test" data-content="{{$bt_notes}}" data-placement="left"><i class="fa fa-eyedropper danger"></i></a>
+								@endif
+							</td>							
+
+							
 							
 							<?php
 							/*@for($y=0;$y<7;$y++)
