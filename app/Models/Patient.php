@@ -105,9 +105,9 @@ class Patient extends Model
         return $this->hasOne(Doctor::class)->latest();
     }
 
-     public function break() 
+    public function break() 
     {
-        return $this->hasOne(PatientBreak::class)->latest();
+        return $this->hasOne(PatientBreak::class)->where('start_date', '<=', date('Y-m-d'))->where('end_date', '>=', date('Y-m-d'))->latest();
     }
 
     public function doctors() 
