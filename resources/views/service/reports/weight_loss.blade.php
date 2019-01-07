@@ -46,15 +46,13 @@
                         <tbody>
                         @foreach($weightLoss as $patient)
                             <?php
+                                $average_weight_lose = 0;
                                 if( $patient->initialWeight && $patient->finalWeight)
                                 {
                                    $weight_diff = number_format(($patient->initialWeight->weight - $patient->finalWeight->weight),2);
                                     $month = Carbon::parse($patient->finalWeight->date)
                                     ->diffInDays(Carbon::parse($patient->initialWeight->date)) / 30 ;
-
-                                   
-
-                                    if($month)
+                                    if($month > 1)
                                     {
                                          $average_weight_lose =number_format(($weight_diff/$month),2);
                                     } 
