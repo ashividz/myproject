@@ -554,7 +554,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'sales', 'sales_tl', 'marketing']], 
+    'roles' => ['admin', 'sales', 'sales_tl', 'marketing' , 'upgrade_team']], 
     function() {
         Route::get('sales', 'SalesController@index');
         Route::get('sales/hot', 'SalesController@viewHotPipelines');

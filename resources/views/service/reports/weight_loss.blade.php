@@ -40,10 +40,31 @@
                                 <th>final weight date</th>
                                 <th>weight loss</th>
                                 <th>Duration </th>
+                                <th>Avrg. weight lose </th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($weightLoss as $patient)
+                            <?php
+                                if( $patient->initialWeight && $patient->finalWeight)
+                                {
+                                   $weight_diff = number_format(($patient->initialWeight->weight - $patient->finalWeight->weight),2);
+                                    $month = Carbon::parse($patient->finalWeight->date)
+                                    ->diffInDays(Carbon::parse($patient->initialWeight->date)) / 30 ;
+
+                                   
+
+                                    if($month)
+                                    {
+                                         $average_weight_lose =number_format(($weight_diff/$month),2);
+                                    } 
+                                    else
+                                    {
+                                        $average_weight_lose = $weight_diff;
+                                    }
+
+                                }
+                             ?>
                             <tr>
                                 <td>{{$x++}}</td>
                                 <td><a href="/patient/{{$patient->id}}/weight" target="_blank">{{$patient->id}}</a></td>
@@ -66,6 +87,8 @@
                                     Carbon::parse($patient->finalWeight->date)
                                     ->diffInDays(Carbon::parse($patient->initialWeight->date)) : ''
                                 }}</td>
+
+                                <td>{{$average_weight_lose or " "}}</td>
                                 
                             </tr>
                         @endforeach
