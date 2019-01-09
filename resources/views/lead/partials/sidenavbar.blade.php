@@ -43,3 +43,10 @@
 		<!--<li{!! (($section == "partials.preference") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/preference">Preference</a></li>-->
 	</ul>
 @endif
+
+@if(Auth::user()->hasRole('quality') && (isset($lead->patient) || isset($patient) ) )
+	<ul id="sidenav">
+		 
+		<li{!! (($section == "partials.survey") ? " class='selected'" : "") !!}><a href="/patient/{{ $patient->id or $lead->patient->id }}/survey">Survey</a></li> 		
+	</ul>
+@endif
