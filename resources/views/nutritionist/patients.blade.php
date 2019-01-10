@@ -96,7 +96,7 @@
 				@endif
 			@elseif($patient->break)
 				<tr style="background-color: #C0C0C0" >
-			@elseif(in_array(19 , $program_id))
+			@elseif($patient->lead->source_id == 111)
 				<tr style="background-color: #18EAC1" >
 			@else
 				<tr>
