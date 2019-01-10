@@ -18,17 +18,21 @@
             else
                 break;
         }
-        $initialWeight =  \App\Models\PatientWeight::where('patient_id',$medical->patient->id)
+        if($startFee)
+        {
+            $initialWeight =  \App\Models\PatientWeight::where('patient_id',$medical->patient->id)
                                  ->where('weight','>',0)
                                  ->where('date','>=',$startFee->start_date)
                                  ->orderBy('date')
                                  ->first();
 
-        $latestWeight  =  \App\Models\PatientWeight::where('patient_id',$medical->patient->id)
+            $latestWeight  =  \App\Models\PatientWeight::where('patient_id',$medical->patient->id)
                                  ->where('weight','>',0)
                                  ->where('date','>=',$startFee->start_date)
                                  ->orderBy('date','desc')
                                  ->first();
+        }
+        
     }
     // $initialBMI = null;
     // $latestBMI  = null;
