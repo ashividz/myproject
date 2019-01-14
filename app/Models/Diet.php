@@ -129,7 +129,7 @@ class Diet extends Model
 
             Diet::AddVediqueDiet($diets , $email);
             $client = new Client();
-            $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet', ['verify' => false] ,[
+            $app_response = $client->request('POST', 'https://portal.yuwow.com/index.php/diet/insertDiet',[
                     'form_params' => [
                     'diet' => json_encode($diets),
                     'email' => json_encode($email)]
