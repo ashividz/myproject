@@ -181,7 +181,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service']], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'service_tl', 'service' ,  'senior_sales_tl']], 
     function() {
 
         Route::get('report/messages', 'MessageController@messages');
@@ -218,7 +218,7 @@ Route::group([
 Route::group([
     'middleware' => ['auth', 'roles', 'checkip'],
     'roles' => [
-        'admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service', 'quality','service_tl', 'logistics', 'cre', 'nutritionist'
+        'admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl', 'senior_sales_tl','service', 'quality','service_tl', 'logistics', 'cre', 'nutritionist'
     ]], 
     function() {
         Route::get('carts', 'CartReportController@index');
@@ -228,7 +228,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles', 'checkip'],
-    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality','service_tl', 'logistics']], 
+    'roles' => ['admin', 'registration', 'finance', 'marketing', 'sales', 'sales_tl','service','quality','service_tl', 'logistics' , 'senior_sales_tl' ]], 
     function() {
         
         Route::post('carts', 'CartReportController@index');
@@ -503,7 +503,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'marketing','goods_sale','service', 'service_tl' , 'sales_tl']], 
+    'roles' => ['admin', 'marketing','goods_sale','service', 'service_tl' , 'sales_tl' , 'senior_sales_tl']], 
     function() {
         Route::get('reports/products/no_purchases', 'ProductReportController@noPurchases');
         Route::get('api/getNoPurchases', 'ProductReportController@getNoPurchases');
@@ -554,7 +554,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'sales', 'sales_tl', 'marketing' , 'upgrade_team']], 
+    'roles' => ['admin', 'sales', 'sales_tl', 'marketing' , 'upgrade_team' , 'senior_sales_tl']], 
     function() {
         Route::get('sales', 'SalesController@index');
         Route::get('sales/hot', 'SalesController@viewHotPipelines');
@@ -590,7 +590,7 @@ Route::group([
 });
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'sales', 'sales_tl', 'marketing']], 
+    'roles' => ['admin', 'sales', 'sales_tl', 'marketing' ,  'senior_sales_tl']], 
     function() {
         
         Route::get('cre/{id}/leads', 'CREController@viewLeads');
@@ -604,7 +604,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'cre', 'marketing', 'sales', 'sales_tl']], 
+    'roles' => ['admin', 'cre', 'marketing', 'sales', 'sales_tl', 'senior_sales_tl']], 
     function() {
 
         Route::get('cre', 'CREController@index');
@@ -961,7 +961,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin','sales', 'sales_tl', 'service', 'service_tl','registration','marketing','finance']], 
+    'roles' => ['admin','sales', 'sales_tl', 'service', 'service_tl','registration','marketing','finance' , 'senior_sales_tl']], 
     function() {
             
         Route::get('sales/payments', 'SalesController@viewPayments');
