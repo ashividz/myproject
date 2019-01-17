@@ -508,6 +508,7 @@ Route::group([
         Route::get('reports/products/no_purchases', 'ProductReportController@noPurchases');
         Route::get('api/getNoPurchases', 'ProductReportController@getNoPurchases');
         Route::get('reports/products/no_repeat_purchases','ProductReportController@noRepeatPurchases');
+        Route::get('reports/products/no_repeat_purchases_active','ProductReportController@noRepeatPurchasesactive');
         Route::get('api/getNoRepeatPurchases', 'ProductReportController@getNoRepeatPurchases');
 });
 

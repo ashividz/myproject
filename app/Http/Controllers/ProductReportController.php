@@ -71,6 +71,45 @@ class ProductReportController extends Controller
         return view('home')->with($data);
     }
 
+
+    public function noRepeatPurchasesactive()
+    {
+        $lastOrderDate    =  Carbon::today()->subDays($this->reorderDuration);
+        $leads = Lead::has('patient.cfee')
+                ->whereHas('carts.products',function($query) use ($lastOrderDate) {
+                $query->where('product_category_id',$this->productCategoryId)
+                  ->where('carts.updated_at','<=',$lastOrderDate)
+                  ->where('products.id','<>',$this->bfaProductId);
+            })
+            ->whereHas('carts.products',function($query) use ($lastOrderDate) {
+                $query->where('product_category_id',$this->productCategoryId)
+                  ->where('carts.updated_at','>',$lastOrderDate)
+                  ->where('products.id','<>',$this->bfaProductId);
+            },0)
+        ->with([ 
+            'carts' => function ($query) use ($lastOrderDate) {
+                $query->whereHas('products',function($q) use($lastOrderDate) {
+                    $q->where('product_category_id',$this->productCategoryId)
+                    ->where('carts.updated_at','<=',$lastOrderDate)
+                    ->where('products.id','<>',$this->bfaProductId);
+                })
+                ->with([
+                    'products'=>function($qry) {
+                    $qry->where('product_category_id',$this->productCategoryId)
+                    ->where('products.id','<>',$this->bfaProductId);
+                }]);
+            }
+        ])
+        ->get();    
+
+         $data = array(
+            'menu'    => $this->menu,
+            'section' => 'reports.products.no_repeat_purchases',
+            'leads'   => $leads,
+        );
+        return view('home')->with($data);
+    }
+
     public function getProducts(Request $request)
     {
         $categories = $request->categories;
@@ -205,8 +244,7 @@ class ProductReportController extends Controller
     public function getNoRepeatPurchases()
     {
         $lastOrderDate    =  Carbon::today()->subDays($this->reorderDuration);
-        
-        $leads = Lead::with('patient')
+        $leads = Lead::doesntHave('patient.cfee')
                 ->whereHas('carts.products',function($query) use ($lastOrderDate) {
                 $query->where('product_category_id',$this->productCategoryId)
                   ->where('carts.updated_at','<=',$lastOrderDate)
