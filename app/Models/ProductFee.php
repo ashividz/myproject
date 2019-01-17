@@ -57,4 +57,43 @@ class ProductFee extends Model
         return $fee;
 
     }
+
+
+    public static function conversionCountBySource($source, $start_date, $end_date)
+    {
+        return ProductFee::where('source_id', $source)
+                    ->whereBetween('entry_date', array($start_date, $end_date))
+                    ->get();
+    }
+
+    public static function conversionCountByDate($source, $start_date, $end_date)
+    {
+        
+
+        $users = Lead::with('patient')
+                       ->where('source_id' , $source)
+                       ->whereBetween('created_at', array($start_date, $end_date))
+                       ->get();
+        $lead = [];
+        foreach ($users as $user) {
+            if(!$user->patient) {
+               continue;
+            }
+            else
+            {
+                $lead[] = $user->patient->id;
+            }   
+        }
+
+        return ProductFee::whereIn('patient_id' , $lead)
+                    ->where('source_id' , $source)
+                    ->whereBetween('entry_date', array($start_date, $end_date))
+                    /*->with(['lead.patient.fee' => function ($query) use($start_date , $end_date ) {
+                                $query->whereBetween('created_at', array($start_date, $end_date));
+                            }])*/
+                    ->get(); 
+            
+                      
+
+    }
 }

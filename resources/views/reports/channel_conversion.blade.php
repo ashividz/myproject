@@ -31,20 +31,32 @@
                     </td>
             <td>{{$source->leads}}</td>
 
-<?php $fee = Fee::conversionCountBySource($source->source_id, $start_date, $end_date) ?>
-<?php $cfee = Fee::conversionCountByDate($source->source_id, $start_date, $end_date) ?>
-
-            <td>{{$fee->count()}}</td>
-             <td>{{$cfee->count()}}</td>
-
-        @if($source->leads > 0)
-            <td>{{round($fee->count()/$source->leads*100, 2)}}</td>
-        @else
-            <td></td>
-        @endif
+            <?php $fee   =    Fee::conversionCountBySource($source->source_id, $start_date, $end_date) ?>
+            <?php $cfee  =    Fee::conversionCountByDate($source->source_id, $start_date, $end_date) ?>
+            <?php $productfee     =    App\Models\ProductFee::conversionCountBySource($source->source_id, $start_date, $end_date) ?>
+            <?php $productcfee     =    App\Models\ProductFee::conversionCountByDate($source->source_id, $start_date, $end_date) ?>
+            @if($source->source_id == 112)
+                <td>{{$productfee->count()}}</td>
+                 <td>{{$productcfee->count()}}</td>
+            @else
+                 <td>{{$fee->count()}}</td>
+                 <td>{{$cfee->count()}}</td>
+            @endif
+            @if($source->leads > 0)
+                @if($source->source_id == 112)
+                     <td>{{round($productfee->count()/$source->leads*100, 2)}}</td>
+                @else
+                    <td>{{round($fee->count()/$source->leads*100, 2)}}</td>
+                @endif
+            @else
+                <td></td>
+            @endif
             <?php
               $amount = 0;
-              foreach ($fee as $f) {
+
+              if($source->source_id == 112)
+              {
+                foreach ($productfee as $f) {
                 if($f->currency_id == 2)
                 {
                   $amount = $amount + ($f->total_amount)*65;
@@ -53,6 +65,20 @@
                   $amount = $amount + $f->total_amount;
                 }
               }
+              }
+              else
+              {
+                 foreach ($fee as $f) {
+                if($f->currency_id == 2)
+                {
+                  $amount = $amount + ($f->total_amount)*65;
+                }
+                else{
+                  $amount = $amount + $f->total_amount;
+                }
+              }
+              }
+             
             ?>
             <td>{{$amount}}</td>
 
