@@ -266,6 +266,9 @@ Route::group([
 
         Route::get('orders', 'OrderController@index');
         Route::post('orders', 'OrderController@index');
+         Route::get('service/reports/vediquediet/feedback', 'YuWoWController@vediqueDietFeedback');
+        Route::post('service/reports/vediquediet/feedback', 'YuWoWController@vediqueDietFeedback');
+
 
 });
 
@@ -503,7 +506,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['auth', 'roles','checkip'],
-    'roles' => ['admin', 'marketing','goods_sale','service', 'service_tl' , 'sales_tl' , 'senior_sales_tl']], 
+    'roles' => ['admin', 'marketing','goods_sale','service', 'service_tl' , 'sales_tl' , 'senior_sales_tl' , 'sales']], 
     function() {
         Route::get('reports/products/no_purchases', 'ProductReportController@noPurchases');
         Route::get('api/getNoPurchases', 'ProductReportController@getNoPurchases');
@@ -587,6 +590,8 @@ Route::group([
 
         Route::get('selfAssignCount', 'DialerPushController@selfAssignCount');
         Route::post('selfAssignCount', 'DialerPushController@selfAssignCount');
+
+
 
 });
 Route::group([
