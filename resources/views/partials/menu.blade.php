@@ -602,7 +602,10 @@
                         </li>
                         <li>
                          <a href="/marketing/YuwowLeads" id="menu_reports_yuwow">Yuwow Leads</a>  
-                        </li>   
+                        </li>  
+                         <li>
+                            <a href="/service/reports/vediquediet/feedback" id="vedique_diet_marketing">Vediquediet Feedback</a>
+                        </li> 
                     </ul>
                 </li>
 
