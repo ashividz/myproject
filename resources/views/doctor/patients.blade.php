@@ -88,7 +88,7 @@
 				$nexttCall = date('Y-m-d', strtotime('+'.'1'.' days', strtotime($patient->lastBTDate)));				
 			} elseif ($lastDisposition && ( strtotime($lastDispositionDate) >= strtotime($welcomeCallDate)) ) {
 				//schedule call +15 after last disposition date
-				$nextCall = date('Y-m-d', strtotime('+'.$appointmentInterval.' days', strtotime($lastDisposition->eventdate)));							
+				$nextCall = date('Y-m-d', strtotime('+'.$productappointmentInterval.' days', strtotime($lastDisposition->eventdate)));							
 
 			} else {
 				//schedule call today

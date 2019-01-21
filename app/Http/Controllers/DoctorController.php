@@ -23,6 +23,7 @@ class DoctorController extends Controller
     protected $end_date;
     protected $appointmentInterval;
     protected $connectedCallDuration;
+    protected $productappointmentInterval;
 
     public function __construct(Request $request)
     {
@@ -32,6 +33,7 @@ class DoctorController extends Controller
         $this->start_date = isset($this->daterange[0]) ? date('Y/m/d 0:0:0', strtotime($this->daterange[0])) : date("Y/m/d 0:0:0");
         $this->end_date = isset($this->daterange[1]) ? date('Y/m/d 23:59:59', strtotime($this->daterange[1])) : date('Y/m/d 23:59:59');
         $this->appointmentInterval   = 20;
+        $this->productappointmentInterval   = 10;
         $this->connectedCallDuration = '00:01:00'; //HH:mm:ss
  
     }
@@ -205,20 +207,21 @@ class DoctorController extends Controller
          //dd($productspatients);
         
         $data = array(
-            'menu'                  =>  $this->menu,
-            'section'               =>  'patients',
-            'users'                 =>  $users,
-            'patients'              =>  $patients,
-            'productspatients'      =>  $productspatients,
-            'appointmentInterval'   =>  $this->appointmentInterval,
-            'connectedCallDuration' =>  $this->connectedCallDuration,
-            'name'                  =>  $this->doctor,
-            'doctorsUserNames'      =>  $doctorsUserNames,
-            'start_date'            =>  $this->start_date,
-            'end_date'              =>  $this->end_date,
-            'i'                     =>  '1',
-            'x'                     =>  '1',
-            'p'                     =>  '1',
+            'menu'                      =>  $this->menu,
+            'section'                   =>  'patients',
+            'users'                     =>  $users,
+            'patients'                  =>  $patients,
+            'productspatients'          =>  $productspatients,
+            'appointmentInterval'       =>  $this->appointmentInterval,
+            'productappointmentInterval' => $this->productappointmentInterval,
+            'connectedCallDuration'     =>  $this->connectedCallDuration,
+            'name'                      =>  $this->doctor,
+            'doctorsUserNames'          =>  $doctorsUserNames,
+            'start_date'                =>  $this->start_date,
+            'end_date'                  =>  $this->end_date,
+            'i'                         =>  '1',
+            'x'                         =>  '1',
+            'p'                         =>  '1',
         );
 
         return view('home')->with($data);
