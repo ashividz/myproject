@@ -23,7 +23,7 @@
 				                <th>#</th>
 				                <th>Name</th>
 						        <th>Nutritionist</th>
-						        <th>Patient</th>
+						        <th>Doctor</th>
 				                <th>Score</th>
 				                <th>Created By</th>
 				                <th>Source</th>
