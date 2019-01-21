@@ -23,6 +23,7 @@
 				                <th>#</th>
 				                <th>Name</th>
 						        <th>Nutritionist</th>
+						        <th>Patient</th>
 				                <th>Score</th>
 				                <th>Created By</th>
 				                <th>Source</th>
@@ -36,6 +37,7 @@
 								<td>{{$i++}}</td>
 								<td><a href="/patient/{{$survey->patient->id}}/survey" target="_blank">{{$survey->patient->lead->name or ""}}</a></td>
 								<td>{{$survey->nutritionist}}</td>
+								<td>{{$survey->patient->doctor}}</td>
 								<td>{{$survey->score}}</td>
 								<td>{{$survey->created_by}}</td>
 								<td>{{$survey->source}}</td>
