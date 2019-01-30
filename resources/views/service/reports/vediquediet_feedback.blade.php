@@ -28,7 +28,7 @@
                             <tr>
                                 <td>{{++$i}}</td>
                                 <td>{{$feedback->date or " "}}</td>
-                                <td><a href="{{url('patient/'.$feedback->lead->patient->id.'/diet')}}" target="blank">{{$feedback->lead->name or " "}}</a></td>
+                                <td><a href="{{url('lead/'.$feedback->lead->id.'/viewDetails')}}" target="blank">{{$feedback->lead->name or " "}}</a></td>
                                 <td>{{$feedback->lead->patient->nutritionist or " "}}</td>
                                 <td>{{$feedback->feedback or " "}}</td>
                             </tr>
