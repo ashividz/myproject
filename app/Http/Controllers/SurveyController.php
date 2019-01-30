@@ -421,7 +421,7 @@ class SurveyController extends Controller
         $start_date = $request->start_date; 
         $end_date = $request->end_date ;
         $surveys =  DB::table('patient_survey_answers AS psa')
-                        ->select(DB::RAW('patient_id,question,psa.comment,psa.created_at'))
+                        ->select(DB::RAW('patient_id,nutritionist,question,psa.comment,psa.created_at'))
                         ->leftjoin('patient_survey AS ps',  function($join)
                         {
                             $join->on('ps.id', '=', 'psa.patient_survey_id');
@@ -439,12 +439,14 @@ class SurveyController extends Controller
             $excel->sheet('csat', function($sheet) use($surveys) {
                 $sheet->appendRow(array(
                        'PatientID',
+                       'Nutritionist',
                        'question',
                        'Comments',   
                        'Date'                      
                 ));
                 foreach ($surveys as $survey) {
                     $id             = $survey->patient_id;
+                    $nutritionist    = $survey->nutritionist;
                     $question        = $survey->question;
                     $comments   = $survey->comment;
                     $date        = $survey->created_at;
@@ -452,6 +454,7 @@ class SurveyController extends Controller
 
                     $sheet->appendRow(array(
                         $id,
+                        $nutritionist,
                         $question,
                         $comments,
                         $date

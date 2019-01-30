@@ -837,9 +837,6 @@ Route::group([
 
         Route::get('service/reports/yuwow/feedback', 'YuWoWController@customerFeedback');
         Route::post('service/reports/yuwow/feedback', 'YuWoWController@customerFeedback');
-        Route::get('service/reports/vediquediet/feedback', 'YuWoWController@vediqueDietFeedback');
-        Route::post('service/reports/vediquediet/feedback', 'YuWoWController@vediqueDietFeedback');
-
         //Doctor can also see the Diets & BT & all diets & weights & measurements
 
         Route::get('patient/{id}/diet', 'PatientDietController@show');
