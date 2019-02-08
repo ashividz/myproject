@@ -26,6 +26,7 @@
                     <th>Sourced By</th>
                     <th>Lead Id</th>
                     <th>Name</th>
+                    <th>Referrer Lead Id</th>
                     <th>Referrer</th>
                     <th>Source</th>
                     <th>Voice</th>
@@ -44,6 +45,7 @@
                 <td>{{$lead->sourced_by}}</td>
                 <td>{{$lead->id}}</td>
                 <td><a href="/lead/{{$lead->id}}/viewDetails" target="_blank">{{trim($lead->name) <> "" ? $lead->name : "No Name"}}</a></td>
+                <td>{{$lead->referrer_id}}</td>
                 <td><a href="/lead/{{$lead->referrer_id}}/viewReferences" target="_blank">{{$lead->referrer_name}}</a></td>
                 <td>{{$lead->sourcename}}</td>
 
