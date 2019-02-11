@@ -653,4 +653,72 @@ class ServiceController extends Controller
 
         return $this->leave();
 
-    } }
+    } 
+
+    Public function upgrade_opportunity(Request $request)
+    {
+        $weightLoss = Patient::whereHas('fees' , function($q){
+            $q->whereBetween('end_date' , [$this->start_date , $this->end_date]);
+        })
+        ->with('fees','lead','surveys', 'cfee')
+        ->limit(env('DB_LIMIT'))
+         ->whereHas('lead.programs', function($q) {
+                        $q->where('programs.id', 1);
+                    })
+        ->get();
+
+        
+        $upgrades = PatientWeight::weightLoss($weightLoss);
+
+
+           $data = array(
+                    'menu'           =>  'service',
+                    'section'        =>  'upgrade',
+                    'users'          =>   $upgrades,
+                    'start_date'    =>  $this->start_date,
+                    'end_date'      =>  $this->end_date,
+                     );            
+
+        return view('home')->with($data);
+
+
+    }
+
+    public function weight_loss_summary()
+    {
+
+         $users = User::getUsersByRole('nutritionist');
+         foreach ($users as $user) {
+            $weightLoss = Patient::where('nutritionist' , $user->name)
+            ->whereHas('fees',function($query) {
+                $query->where('end_date','>=',DB::raw('curdate()'));
+            })
+            ->with('fees','lead','lead.programs')
+            ->whereHas('lead.programs', function($q) {
+                            $q->where('programs.id', 1);
+                        })
+            ->limit(env('DB_LIMIT'))
+            ->get();
+
+            $weightLoss = PatientWeight::weightLoss($weightLoss);
+
+           $user->patients = $weightLoss->count();
+           $user->g2kg   = $weightLoss->g2kg;
+           $user->g1kg   = $weightLoss->g1kg;
+           $user->g0kg   = $weightLoss->g0kg;
+           $user->l0kg   = $weightLoss->l0kg;
+        }
+
+        //dd($users);
+
+         $data = array(
+                    'menu'           =>  'service',
+                    'section'        =>  'weightlosssummary',
+                    'users'          =>   $users,
+                    'start_date'    =>   $this->start_date,
+                    'end_date'      =>   $this->end_date,
+                     );            
+
+        return view('home')->with($data);
+    }
+}

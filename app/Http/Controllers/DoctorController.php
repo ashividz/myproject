@@ -11,6 +11,7 @@ use App\Models\CallDisposition;
 use App\Models\DialerCallDisposition;
 use App\Models\Patient;
 use App\Models\Lead;
+use App\Models\AmazonLead;
 use Auth;
 use DB;
 
@@ -225,5 +226,22 @@ class DoctorController extends Controller
         );
 
         return view('home')->with($data);
-    }        
+    } 
+
+
+   public function amazonOtc(Request $request)
+   {
+       $patients = AmazonLead::whereBetween('created_at', [$this->start_date, $this->end_date])->get();
+
+       $data = array(
+            'menu'                      =>  $this->menu,
+            'section'                   =>  'amazonotc',
+            'patients'                  =>  $patients,
+            'start_date'                =>  $this->start_date,
+            'end_date'                  =>  $this->end_date,
+            'i'                         =>  '1'
+        );
+
+       return view('home')->with($data);
+   }       
 }
