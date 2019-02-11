@@ -138,6 +138,7 @@ Route::group([
         Route::get('quiz/report/{id}', 'QuizController@showReport');
         Route::post('quiz/reattempt', 'QuizController@reattempt');
         Route::get('quiz/report/{id}/download', 'QuizController@downloadReport');
+
 });
 
 Route::group([
@@ -338,6 +339,8 @@ Route::group([
         Route::post('marketing/uploadLead', 'LeadController@uploadLead');
         Route::get('marketing/salesReport', 'MarketingController@salesReport');
         Route::post('marketing/salesReport', 'LeadController@salesReport');
+        Route::get('marketing/amazonlead', 'MarketingController@amazonLead');
+        Route::post('marketing/amazonlead', 'LeadController@amazonLead');
 
         Route::get('marketing/referral', 'ReferralController@index');
         Route::post('marketing/referral', 'ReferralController@index');
@@ -685,11 +688,23 @@ Route::group([
         Route::post('herb/template/update', 'HerbController@templateUpdate');
         
         Route::get('service/reports/appointments', 'ServiceController@appointments');   
-        Route::post('service/reports/appointments', 'ServiceController@appointments'); 
+        Route::post('service/reports/appointments', 'ServiceController@appointments');
 
-        
+        Route::post('service/reports/upgradeopportunity', 'ServiceController@upgrade_opportunity');
+        Route::get('service/reports/upgradeopportunity', 'ServiceController@upgrade_opportunity');
+
+        Route::post('service/reports/weighlosssummery', 'ServiceController@weight_loss_summary');
+        Route::get('service/reports/weighlosssummery', 'ServiceController@weight_loss_summary');
         /** APIs **/
         Route::get('api/getPatient', 'PatientController@get');
+
+        /*
+          Amazon Lead Doctor Otc
+        */
+
+        Route::get('service/amazonotc', 'DoctorController@amazonOtc');
+        Route::post('service/amazonotc', 'DoctorController@amazonOtc');
+
 
 });
 
@@ -1056,7 +1071,12 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::POST('lead/search', 'LeadController@search');
 
 
-    
+    /*
+    Amazon Otc Disposition
+    */
+
+    Route::get('amazon/{id}/disposition', 'LeadController@viewOtcDispositions');
+    Route::POST('amazon/{id}/disposition', 'CallDispositionController@storeOtc');
     
     Route::get('lead/{id}/viewCreModal', 'ModalController@viewCre');
     Route::POST('lead/saveCre', 'LeadController@saveCre');

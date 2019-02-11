@@ -22,6 +22,7 @@ use App\Models\Status;
 use App\Models\LeadProgram;
 use App\Models\Cart;
 use App\Models\CreRevenue;
+use App\Models\AmazonLead;
 
 use DB;
 use Auth;
@@ -689,6 +690,19 @@ class MarketingController extends Controller
         $data = array(
             'menu'              =>  $this->menu,
             'section'           =>  'revenue',
+            'users'             =>  $leads
+        );
+
+        return view('home')->with($data);
+    }
+
+
+    public function amazonLead()
+    {
+        $leads = AmazonLead::limit(20)->orderBy('id', 'desc')->get();
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'amazonlead',
             'users'             =>  $leads
         );
 

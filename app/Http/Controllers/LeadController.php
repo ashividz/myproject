@@ -28,6 +28,7 @@ use App\Models\Country;
 use App\Models\Region;
 use App\Models\Cart;
 use App\Models\CreRevenue;
+use App\Models\AmazonLead;
 
 use App\Support\SMS;
 
@@ -1117,6 +1118,54 @@ class LeadController extends Controller
     }
 
 
+    public function amazonLead(Request $request)
+    {
+
+     // dd($request);
+       $filename = $_FILES["file"]["tmp_name"];
+        $header = true;
+
+        if($_FILES["file"]["size"] > 0)
+        {
+            $fields = array();
+
+            $file = fopen($filename, "r");
+
+            echo "<thead>". PHP_EOL;
+
+            while (($data = fgetcsv($file, 10000, ",")) !== FALSE)
+            {  
+    
+                $status  =  "<i class='fa fa-check-square green' title='Lead Added'></i>";
+                $name    =  isset($data[0]) ? $data[0] : '';
+                $phone   =  isset($data[1]) ? $data[1] : '';
+                $amount  =  isset($data[2]) ? $data[2] : '';
+                $doctor  =  isset($data[3]) ? $data[3] : '';
+                $source  =  isset($data[4]) ? $data[4] : '';
+
+
+                if ($header) {
+                    $header = FALSE;
+                    continue;
+                }
+
+                $lead = new AmazonLead;
+                $lead->name = $name ;
+                $lead->phone = $phone;
+                $lead->amount = $amount;
+                $lead->doctor = $doctor;
+                $lead->source = $source;
+                $lead->created_by = Auth::user()->employee->name;
+                $lead->created_at = date('Y-m-d h:i:s');
+                $lead->updated_at = date('Y-m-d h:i:s');
+                $lead->save();
+            }
+
+        }
+        return redirect('marketing/amazonlead');
+  }
+
+
     public function delete(Request $request, $id)
     {
         $lead = Lead::find($id);
@@ -1535,6 +1584,19 @@ class LeadController extends Controller
         $reply =  $sms->send($mobile, $request->sms);
       }
       return $this->showsms($id);
+    }
+
+    public function viewOtcDispositions($id)
+    {
+        $lead = AmazonLead::with('dispositions')->find($id);
+        //dd($lead);
+         $data = array(
+              'menu'    => 'lead',
+              'section' => 'amazon',
+               'lead'   =>  $lead,
+              );
+
+        return view('home')->with($data);
     }
     
 }

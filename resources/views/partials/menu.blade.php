@@ -281,6 +281,9 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="/service/amazonotc" id="menu_doctor_patients">Amazon Otc</a>
+                </li>
                             
             </ul> <!-- second level -->                        
         </li>
@@ -411,6 +414,12 @@
                         </li>
                         <li>
                             <a href="/sales/upgradeLeads" id="menu_service_upgradeLeads">UpgradeLeads</a>
+                        </li>
+                        <li>
+                             <a href="/service/reports/upgradeopportunity" id="menu_service_upgrade_Opportunity">Upgrade Opportunity</a>
+                        </li>
+                        <li>
+                             <a href="/service/reports/weighlosssummery" id="Weight_Loss_Summary">Weight Loss Summary</a>
                         </li>
                         
                     </ul>
@@ -550,6 +559,9 @@
                         </li>
                         <li>
                             <a href="/marketing/salesReport" id="menu_sales">Cre Revenue</a>
+                        </li>
+                        <li>
+                            <a href="/marketing/amazonlead" id="menu_amazon">Upload Amazon Lead</a>
                         </li>
                         </ul>
                 </li>  

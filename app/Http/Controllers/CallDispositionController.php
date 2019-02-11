@@ -14,6 +14,7 @@ use App\Models\Lead;
 use App\Models\LeadStatus;
 use App\Models\EmailTemplate;
 use App\Models\Email;
+use App\Models\AmazonDisposition;
 use Auth;
 use DB;
 use Mail;
@@ -259,5 +260,20 @@ class CallDispositionController extends Controller
 
         return true;
     }
+
+    public function storeOtc(Request $request , $id)              
+    {
+        $disposition = new AmazonDisposition;
+        $disposition->amazon_lead_id = $id;
+        $disposition->disposition = $request->disposition;
+        $disposition->created_by  = Auth::user()->employee->name;
+        $disposition->created_at  = date('Y-m-d h:i:s');
+        $disposition->updated_at  = date('Y-m-d h:i:s');
+        $disposition->save();
+
+        return redirect('amazon/'.$id.'/disposition');
+    }
+
+    
     
 }
