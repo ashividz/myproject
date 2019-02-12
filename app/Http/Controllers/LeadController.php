@@ -1118,7 +1118,7 @@ class LeadController extends Controller
     }
 
 
-    public function amazonLead(Request $request)
+    public function marketPlaceLead(Request $request)
     {
 
      // dd($request);

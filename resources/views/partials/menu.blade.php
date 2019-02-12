@@ -282,7 +282,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="/service/amazonotc" id="menu_doctor_patients">Amazon Otc</a>
+                    <a href="/service/marketPlaceOtc" id="menu_doctor_patients">Market Place Otc</a>
                 </li>
                             
             </ul> <!-- second level -->                        
@@ -561,7 +561,7 @@
                             <a href="/marketing/salesReport" id="menu_sales">Cre Revenue</a>
                         </li>
                         <li>
-                            <a href="/marketing/amazonlead" id="menu_amazon">Upload Amazon Lead</a>
+                            <a href="/marketing/marketPlaceLead" id="menu_amazon">Upload Market Place Lead</a>
                         </li>
                         </ul>
                 </li>  

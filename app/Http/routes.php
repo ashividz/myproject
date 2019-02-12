@@ -339,8 +339,8 @@ Route::group([
         Route::post('marketing/uploadLead', 'LeadController@uploadLead');
         Route::get('marketing/salesReport', 'MarketingController@salesReport');
         Route::post('marketing/salesReport', 'LeadController@salesReport');
-        Route::get('marketing/amazonlead', 'MarketingController@amazonLead');
-        Route::post('marketing/amazonlead', 'LeadController@amazonLead');
+        Route::get('marketing/marketPlaceLead', 'MarketingController@marketPlaceLead');
+        Route::post('marketing/marketPlaceLead', 'LeadController@marketPlaceLead');
 
         Route::get('marketing/referral', 'ReferralController@index');
         Route::post('marketing/referral', 'ReferralController@index');
@@ -702,8 +702,8 @@ Route::group([
           Amazon Lead Doctor Otc
         */
 
-        Route::get('service/amazonotc', 'DoctorController@amazonOtc');
-        Route::post('service/amazonotc', 'DoctorController@amazonOtc');
+        Route::get('service/marketPlaceOtc', 'DoctorController@marketPlaceOtc');
+        Route::post('service/marketPlaceOtc', 'DoctorController@marketPlaceOtc');
 
 
 });

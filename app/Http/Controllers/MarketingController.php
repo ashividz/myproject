@@ -697,7 +697,7 @@ class MarketingController extends Controller
     }
 
 
-    public function amazonLead()
+    public function marketPlaceLead()
     {
         $leads = AmazonLead::limit(20)->orderBy('id', 'desc')->get();
         $data = array(

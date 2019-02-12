@@ -229,7 +229,7 @@ class DoctorController extends Controller
     } 
 
 
-   public function amazonOtc(Request $request)
+   public function marketPlaceOtc(Request $request)
    {
        $patients = AmazonLead::whereBetween('created_at', [$this->start_date, $this->end_date])->get();
 
