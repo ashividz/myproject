@@ -316,13 +316,9 @@ class CREController extends Controller
         
             $size = count($request->comment);
             $score = 0;
-            for ($i=1; $i <= $size; $i++) { 
-                if(!empty($request->answer[$i]))
-                {
-                    $answer = PatientSurveyAnswer::saveAnswer($survey->id, $i, $request->answer[$i], $request->comment[$i]);
-                    $score += $answer->answer->assessment_value;
-                    
-                }                    
+            foreach ($request->answer as $key => $value) {
+                $answer = PatientSurveyAnswer::saveAnswer($survey->id, $key, $value, $request->comment[$key]);
+                $score += $answer->answer->assessment_value;
             }
 
             $survey->score = $score;
