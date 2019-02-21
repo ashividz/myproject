@@ -30,9 +30,7 @@
 											<em>&nbsp; ( {{ $patient->nutritionist }} ) </em>
 										</strong>
 									</div>
-									@if($patient->comment)
-										<span> [ {{ $patient->comment or "" }} ] </span>
-									@endif
+									
 								</div>
 							@endforeach
 						</div>   

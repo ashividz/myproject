@@ -328,7 +328,9 @@ class SurveyController extends Controller
     
     public function viewcustomersatisfaction()
     {
-        $surveys = array();
+        /*$surveys = array();
+
+        $questions = SurveyQuestion::with('answers')->get();
 
         $answers = SurveyAnswer::where('question_id',3)->get();
         foreach ($answers as $answer) {
@@ -349,8 +351,40 @@ class SurveyController extends Controller
             array_push($surveys, $survey);
         }
 
-        $surveys = json_encode($surveys);
-                
+        $surveys = json_encode($surveys); */
+        
+        $surveys = array();
+
+        $survey['title'] = "Delighted";
+        $survey['count'] =  PatientSurvey::where('score','=',100)
+                                        ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                        ->count();
+        $survey['patients'] =  PatientSurvey::where('score','=',100)
+                                            ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                            ->get(); 
+
+        array_push($surveys, $survey);
+        $survey['title'] = "Satisfied";
+        $survey['count'] =  PatientSurvey::whereBetween('score',array(80,99))
+                                        ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                        ->count();
+
+        $survey['patients'] =  PatientSurvey::whereBetween('score',array(80,99))
+                                            ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                            ->get(); 
+        
+        array_push($surveys, $survey);   
+        $survey['title'] = "Not Satisfied";
+        $survey['count'] =  PatientSurvey::where('score','<',80)
+                                        ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                        ->count();
+
+        $survey['patients'] =  PatientSurvey::where('score','<',80)
+                                            ->whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                                            ->get(); 
+        
+        array_push($surveys, $survey);                                  
+        $surveys = json_encode($surveys);       
         $data = array(
             'menu'          =>  $this->menu,
             'surveys'        =>  $surveys,
