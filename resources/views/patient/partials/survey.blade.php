@@ -48,7 +48,7 @@
 						<tbody>
 					@foreach($survey->answers AS $answer)
 							<tr>
-								<th>{{$answer->question->title or ""}}. {{$answer->question->question or ""}}</th>
+								<th>{{$answer->answer->question_id or ""}}. {{$answer->answer->question->question or ""}}</th>
 								<td>{{$answer->answer->answer or ""}}</td>
 								<td>{{$answer->answer->assessment_value or ""}}</td>
 								<td>{{$answer->comment}}</td>
