@@ -110,18 +110,12 @@ class SurveyController extends Controller
 
     public function savePatientSurvey(Request $request)
     {
-        //DB::transaction(function () use ($request){
             $survey = PatientSurvey::saveSurvey($request);
-
             $score = 0;
             $size = count($request->comment);
-            
-            for ($i=1; $i <= $size; $i++) { 
-                if(!empty($request->answer[$i]))
-                {
-                    $answer = PatientSurveyAnswer::saveAnswer($survey->id, $i, $request->answer[$i], $request->comment[$i]);
-                    $score += $answer->answer->assessment_value;
-                }                    
+            foreach ($request->answer as $key => $value) {
+                $answer = PatientSurveyAnswer::saveAnswer($survey->id, $key, $value, $request->comment[$key]);
+                $score += $answer->answer->assessment_value;
             }
 
             $survey->score = $score;
@@ -129,7 +123,6 @@ class SurveyController extends Controller
             
             return $this->patients();
 
-        //});
     }
 
     public function viewSurveys()

@@ -65,7 +65,7 @@
 <?php $i = 0 ?>
 
 		@foreach($questions AS $question)
-<?php $i++ ?>
+<?php $i = $question->id  ?>
 			<tr>
 				<td class='questiontext'>
 					{{$question->title}} 
