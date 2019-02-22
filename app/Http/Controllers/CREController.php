@@ -274,6 +274,9 @@ class CREController extends Controller
                          ->with('patient.cfee')   
                          ->whereHas('patient', function ($query) use($nutri){
                             $query->wherein('nutritionist', $nutri); })
+                        ->whereHas('programs', function($q) {
+                                $q->where('programs.id', 1);
+                            })   
                          ->get();
 
 
