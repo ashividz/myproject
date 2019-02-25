@@ -199,6 +199,9 @@ Route::group([
         Route::get('canApprovePayment', 'CartApprovalController@canApprovePayment');
         Route::get('canApproveDiscount', 'CartApprovalController@canApproveDiscount');
         Route::post('cart/{id}/approve', 'CartApprovalController@approve');
+
+       // Route::get('cart/unicommerece', 'CartController@unicommerece');
+
        
         /** Old **/
         Route::get('cart/approval', 'CartApprovalController@show');
@@ -285,6 +288,8 @@ Route::group([
         Route::post('marketing/addFood', 'VediqueDietController@addFood');
         Route::get('marketing/addRecipe', 'VediqueDietController@viewRecipe');
         Route::post('marketing/addRecipe', 'VediqueDietController@saveRecipe');
+        Route::get('marketing/{id}/updateRecipe', 'VediqueDietController@recipe');
+        Route::post('marketing/{id}/updateRecipe', 'VediqueDietController@updaterecipe');
         Route::get('marketing/addProducts', 'VediqueDietController@viewProducts');
         Route::post('marketing/addProducts', 'VediqueDietController@saveProducts');
         Route::get('marketing/addBrunchArticle', 'VediqueDietController@viewBrunchArticle');
@@ -574,6 +579,8 @@ Route::group([
         Route::post('sales/viewProgramEnd', 'SalesController@viewProgramEnd');
         Route::get('sales/leads', 'MarketingController@viewLeads');
         Route::POST('sales/leads', 'MarketingController@viewLeads');
+        Route::get('cart/unicommerece', 'CartController@unicommerece');
+        Route::post('cart/unicommerece', 'CartController@unicommerece');
 
 
         Route::get('sales/report/lead/status', 'SalesReportController@viewLeadStatus');

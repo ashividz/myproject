@@ -622,4 +622,23 @@ public function getdetails(Request $request)
     return view('home')->with($data); 
     }
 
+
+    public function unicommerece()
+    {
+        $carts = Cart::with('address' ,'lead' , 'products.productsku' , 'payments.method' , 'cre' , 'source')
+                       ->whereBetween('created_at' , [$this->start_date , $this->end_date])
+                       ->get();
+
+        $data = array(
+            'menu'              =>  'marketing',
+            'section'           =>  'unicommerece',
+            'carts'             =>   $carts,
+            'start_date'        =>  $this->start_date,
+            'end_date'          =>  $this->end_date,
+            'i'                 =>  '1'
+        );
+
+         return view('home')->with($data); 
+    }
+
 }
