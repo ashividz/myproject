@@ -240,11 +240,19 @@ class SurveyController extends Controller
 
     public function viewNutritionistWiseSurvey()
     {
+        $doctor_summaries = DB::table('patient_survey AS s')
+                                ->select(DB::RAW('pd.doctor as doctor, sum(score) as score,count(s.id) AS total'))
+                                ->leftjoin('patient_details AS pd',  function($join)
+                                {   $join->on('s.patient_id', '=', 'pd.id');}) 
+                                ->whereBetween('s.created_at', array($this->start_date, $this->end_date))
+                                ->groupBy('pd.doctor')
+                                ->get();                       
+        //dd($doctor_summaries);
+
         $surveys = PatientSurvey::whereBetween('created_at', array($this->start_date, $this->end_date))
                     ->orderBy('id', 'desc')
                     ->limit(env('DB_LIMIT'))
-                    ->get();  
-        //dd($surveys);                          
+                    ->get();                          
 
         $summaries = PatientSurvey::select(DB::RAW('nutritionist, sum(score) AS score, count(*) AS total'))
                     ->whereBetween('created_at', array($this->start_date, $this->end_date))
@@ -262,6 +270,7 @@ class SurveyController extends Controller
             'surveys'       =>  $surveys,
             'summaries'     =>  $summaries,
             'average_csat'  =>  $average_csat,
+            'doctor_summaries'  =>  $doctor_summaries,
             'i'             => '1'
         );
 
