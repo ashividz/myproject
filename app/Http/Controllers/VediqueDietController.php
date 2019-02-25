@@ -10,6 +10,7 @@ use App\Models\Patient;
 use App\Models\Lead;
 use App\Models\User;
 use App\Models\Days365;
+use App\Models\VediqueDiet\Recipe;
 use DB;
 use Carbon;
 use Auth;
@@ -343,6 +344,52 @@ class VediqueDietController extends Controller
         );
 
         return view('home')->with($data);
+  }
+
+  public function recipe(Request $request , $id)
+  {
+     
+
+    $recipe =  Recipe::find($id);
+    
+    //return $recipe;
+    $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'updateRecipe',
+            'recipe'        =>  $recipe
+        );
+
+    return view('home')->with($data);
+      
+  }
+
+  public function updaterecipe(Request $request , $id)
+  {
+
+    $recipe =  Recipe::find($id);
+
+    $recipe->name = $request->name;
+    $recipe->cooking_time = $request->cooking_time ; 
+    $recipe->serving  = $request->serving ;
+    $recipe->calories =  $request->calories;
+    $recipe->steps = $request->steps ;
+    $recipe->tips  = $request->tips ;
+    $recipe->tag = $request->tag ; 
+    $recipe->image = $request->image;
+    $recipe->ingredients = $request->ingredients;
+    $recipe->prakriti = $request->prakriti;
+    $recipe->Veg =   $request->veg;
+    $recipe['Non Veg'] = $request->nonveg;
+    $recipe->Egg = $request->egg;
+    $recipe->Breakfast = $request->breakfast;
+    $recipe['Mid Morning'] = $request->midmorning;
+    $recipe->Lunch = $request->lunch;
+    $recipe->Snack = $request->snack;
+    $recipe->Dinner = $request->dinner;
+    
+    $recipe->save();
+    
+    return redirect("/marketing/addRecipe");
   }
 
 }

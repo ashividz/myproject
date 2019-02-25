@@ -88,6 +88,7 @@
                             <th>image</th>
                             <th>ingredients</th>
                             <th>prakriti</th>
+                            <th>Button</th>
                         </tr>
                     </thead>
                         
@@ -126,6 +127,9 @@
                             </td>
                             <td>
                                 {{ $recipe->prakriti or " "}}
+                            </td>
+                            <td>
+                                 <a href="/marketing/{{$recipe->id}}/updateRecipe" target="_blank">update</a>
                             </td>
                         </tr>                
                 @endforeach
