@@ -11,6 +11,7 @@
       		<ul class="nav nav-tabs" role="tablist">
         		<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
         		<li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Nutritionist Summary</a></li>
+				<li role="presentation"><a href="#doctor_summary" aria-controls="summary" role="tab" data-toggle="tab">Doctor Summary</a></li>
       		</ul>
 
       		<!-- Tab panes -->
@@ -79,6 +80,37 @@
 				    </table>
 				</div>
 			</div>
+
+			<!-- Nutritionist Summary Report -->
+        	<div role="tabpanel" class="tab-pane fade" id="doctor_summary">        
+          		<div class="container">
+          			<!--<a name="download" id="downloadSummary" class="btn btn-primary pull-right" style="margin:10px" download="summary.csv">Download Summary Csv</a>  -->
+					<table id="table_summary" class="table table-striped table-bordered">
+						<caption>Doctor CSAT Report </caption>
+						<thead>
+				            <tr>
+						        <th >Doctor</th>
+				                <th >Count</th>
+				                <th >Total Score</th>
+				                <th >Average</th>
+				           </tr>
+				        </thead>
+				        <tbody>
+
+				@foreach($doctor_summaries AS $summary)
+							<tr>								
+								<td>{{$summary->doctor}}</td>
+								<td>{{$summary->total}}</td>
+								<td>{{$summary->score}}</td>
+								<td>{{$summary->total <> 0 ? round($summary->score/$summary->total, 2):''}}</td>
+							</tr>
+
+				@endforeach
+
+				        </tbody>
+				    </table>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -107,7 +139,7 @@
 		buttons: ['csv']
 	});
 } );
-</script>  -->
+</script>
 <style>
 caption {
     text-align: center;
