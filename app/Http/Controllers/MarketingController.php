@@ -1055,10 +1055,19 @@ class MarketingController extends Controller
 
     public function test()
     {
-           $users = DB::connection('sqlsrv')->table('tblCustomerDetail')->insert(
-                            ['CustomerNo' => '1', 'CustomerName' => '1' ,'PrintName' => '1', 'ContectName' => '1' ,'Address' => '1', 'City' => '1' ,'Pincode' => '1', 'MobileNo' => '1' ,'Phone_No' => '1', 'TIN' => '1' ,'DateofBirth' => '', 'dateofAnniversary' => ' ' ,'TaxType' => '1', 'TaxRate' => '1' ,'Sex' => '1', 'MaritalStatus' => '1' ,'LedgerName' => '1', 'Email' => '1' ,'OPPts' => '1', 'BillDis' => '1' ,'Active' => '1', 'StateCode' => '1' ,'PAN' => '1', 'CSTNo' => '1' ,'Fax' => '1', 'Country' => '1' ,'State' => '1']
-                    );
+           $users = Lead::where('source_id' , 10)
+                          ->doesntHave('patient')
+                          ->has('dnc', '<', 1)
+                          ->whereBetween('created_at' , ['2016-01-01 00:00:00' , '2019-02-15 00:00:00'])
+                          ->whereRaw( "(country ='IN' or country is null or country ='')")
+                          ->whereHas('dispositions',function($query) {
+                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -5 DAY)'));
+                    },'<',1)
+                    ->get();
 
-           return $users;
+         foreach ($users as $user) {
+              echo $user->phone;
+              echo "</br>";
+         }
     }
 }

@@ -546,7 +546,7 @@ class CartApprovalController extends Controller
         return $amount;
     }
 
-     public function inventryDatabase($cart)
+    public function inventryDatabase($cart)
     {
 
          $list = array(

@@ -38,6 +38,11 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class ,'product_category_id');
     }
 
+    public function productsku()
+    {
+        return $this->hasOne(ProductSku::class , 'product_id');
+    }
+
     public function offers()
     {
         return $this->hasMany(ProductOffer::class);
