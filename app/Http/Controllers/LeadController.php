@@ -29,6 +29,7 @@ use App\Models\Region;
 use App\Models\Cart;
 use App\Models\CreRevenue;
 use App\Models\AmazonLead;
+use App\Models\DeletedReferenceLead;
 
 use App\Support\SMS;
 
@@ -1595,6 +1596,78 @@ class LeadController extends Controller
               'section' => 'amazon',
                'lead'   =>  $lead,
               );
+
+        return view('home')->with($data);
+    }
+
+
+    public function deleteRefrencelead(Request $request)
+    {
+       
+
+
+        // dd($request);
+       $filename = $_FILES["file"]["tmp_name"];
+        $header = true;
+
+        if($_FILES["file"]["size"] > 0)
+        {
+            $fields = array();
+
+            $file = fopen($filename, "r");
+
+            echo "<thead>". PHP_EOL;
+
+            while (($data = fgetcsv($file, 10000, ",")) !== FALSE)
+            {  
+    
+                $status  =  "<i class='fa fa-check-square green' title='Lead Added'></i>";
+                $id    =  isset($data[0]) ? $data[0] : '';
+                
+
+
+                if ($header) {
+                    $header = FALSE;
+                    continue;
+                }
+
+                 $user = Lead::find($id);
+
+                $refree = LeadSource::where('lead_id' , $id)
+                ->first();
+
+              $lead = new DeletedReferenceLead;
+              $lead->lead_id = $user->id;
+              $lead->name = $user->name;
+              $lead->phone = $user->phone;
+              $lead->email = $user->email;
+              $lead->mobile = $user->mobile;
+              $lead->nutritionist =  $user->created_by;
+              $lead->refree_lead_id = $refree->referrer_id;
+              $lead->created_by = Auth::user()->employee->name;
+              $lead->created_at = Carbon::now()->format('Y-m-d'); 
+              $lead->save();
+              $dispositions = CallDisposition::where('lead_id', $id)->delete(); 
+              $sources = LeadSource::where('lead_id', $id)->delete();
+              $cres = LeadCre::where('lead_id', $id)->delete();
+              $deleteStatus = LeadStatus::where('lead_id', $id)->delete();
+
+              Lead::destroy($id);
+            }
+
+        }
+        return redirect('lead/deleteReference');
+
+    }
+
+    public function deleteRefrence()
+    {
+        $leads = DeletedReferenceLead::limit(20)->orderBy('id', 'desc')->get();
+        $data = array(
+            'menu'              =>  $this->menu,
+            'section'           =>  'deletedreferencelead',
+            'users'             =>  $leads
+        );
 
         return view('home')->with($data);
     }

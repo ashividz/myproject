@@ -74,7 +74,16 @@ class VediqueDietController extends Controller
       'tag'=>$request->tag , 
       'image'=>$request->image , 
       'ingredients'=>$request->ingredients, 
-      'prakriti' =>$request->prakriti]
+      'prakriti' =>$request->prakriti,
+       'Veg' => $request->veg , 
+      'Non Veg' => $request->nonveg , 
+      'Egg' =>$request->egg, 
+      'Breakfast' =>$request->breakfast, 
+      'Mid Morning'=>$request->midmorning , 
+      'Lunch'=>$request->lunch , 
+      'Snack'=>$request->snack, 
+      'Dinner' =>$request->dinner
+      ]
       );
     }
     
@@ -171,8 +180,7 @@ class VediqueDietController extends Controller
   public function viewRecipe()
   {
 
-    $recipes = DB::connection('VediqueDiet')->table('Recipe')->get();
-
+    $recipes = DB::connection('VediqueDiet')->table('Recipe')->limit(20)->orderBy('id', 'DESC')->get();
     $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'addRecipe',
