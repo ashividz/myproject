@@ -401,6 +401,8 @@ Route::group([
 
         /** Delete 
         **/
+        Route::get('lead/deleteReference', 'LeadController@deleteRefrence');
+        Route::post('lead/deleteReference', 'LeadController@deleteRefrencelead');
         Route::get('lead/{id}/delete', 'LeadController@delete');
         Route::post('lead/{id}/delete', 'LeadController@delete');
         Route::post('lead/deleteSource', 'LeadController@deleteSource');

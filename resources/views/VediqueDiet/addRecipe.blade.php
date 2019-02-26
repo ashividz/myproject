@@ -50,6 +50,38 @@
                             <label>prakriti *</label>
                            <input type="text" name="prakriti" style="width:390px" required>
                         </li>
+                         <li>
+                            <label>Veg *</label>
+                           <input type="text" name="veg" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>Non Veg *</label>
+                           <input type="text" name="nonveg" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>Egg *</label>
+                           <input type="text" name="egg" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>BreakFast *</label>
+                           <input type="text" name="breakfast" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>MidMorning *</label>
+                           <input type="text" name="midmorning" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>Lunch *</label>
+                           <input type="text" name="lunch" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>Snack *</label>
+                           <input type="text" name="snack" style="width:390px" required >
+                        </li>
+                         <li>
+                            <label>Dinner *</label>
+                           <input type="text" name="dinner" style="width:390px" required >
+                        </li>
                     </ol>
                 </fieldset>             
                 <div class="row">

@@ -618,6 +618,9 @@
                          <li>
                             <a href="/service/reports/vediquediet/feedback" id="vedique_diet_marketing">Vediquediet Feedback</a>
                         </li> 
+                        <li>
+                            <a href="/lead/deleteReference" id="delete_Reference">Delete Refrence</a>
+                        </li> 
                     </ul>
                 </li>
 
