@@ -11,6 +11,7 @@ use App\Models\Lead;
 use App\Models\User;
 use App\Models\Days365;
 use App\Models\VediqueDiet\Recipe;
+use App\Models\VediqueDiet\Product;
 use DB;
 use Carbon;
 use Auth;
@@ -104,8 +105,26 @@ class VediqueDietController extends Controller
         'benefit' =>$request->benefit, 
         'buy_url'=>$request->buy_url , 
         'is_active'=>$request->is_active,
-        'image' =>$request->image]
+        'image' =>$request->image,
+        'Immunity' => $request->immunity,
+        'Weight Loss'=>   $request->weightloss,
+        'Green Teas' => $request->greenteas,
+        'Cardiac Wellness' => $request->cardiacwellness,
+        'Diabetic Care' => $request->diabeticcare,
+        'Skin & Hair care' => $request->skinhaircare,
+        'Liver Care' =>$request->livercare,
+        'Kidney Care' => $request->kidneycare,
+        'Joint Pain /Arthritis' => $request->jointpainarthritis,
+        'Cold & Cough' => $request->coldcough,
+        'Stress' => $request->stress,
+        'Hair Care' => $request->haircare,
+        'Acidity' => $request->acidity,
+        'Constipation' => $request->constipation,
+        'Acne/Pimples' => $request->acnepimple,
+        'Cholesterol' => $request->cholesterol,
+        'Women Health' => $request->womenhealth]
         );
+    
 
       $vata_dosage = DB::connection('VediqueDiet')->table('Product_Dosage')->insertGetId(
           ['product_id'=> $id,
@@ -165,7 +184,7 @@ class VediqueDietController extends Controller
   public function viewProducts()
   {
 
-    $products = DB::connection('VediqueDiet')->table('Products')->get();
+    $products = DB::connection('VediqueDiet')->table('Products')->orderBy('id', 'DESC')->paginate(20);;
 
     $data = array(
             'menu'          =>  $this->menu,
@@ -180,7 +199,7 @@ class VediqueDietController extends Controller
   public function viewRecipe()
   {
 
-    $recipes = DB::connection('VediqueDiet')->table('Recipe')->limit(20)->orderBy('id', 'DESC')->get();
+    $recipes = DB::connection('VediqueDiet')->table('Recipe')->orderBy('id', 'DESC')->paginate(20);
     $data = array(
             'menu'          =>  $this->menu,
             'section'       =>  'addRecipe',
@@ -398,6 +417,58 @@ class VediqueDietController extends Controller
     $recipe->save();
     
     return redirect("/marketing/addRecipe");
+  }
+
+  public function product($id)
+  {
+     $product = Product::find($id);
+
+     //return $product;
+
+      $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'updateProduct',
+            'product'        =>  $product
+        );
+
+      return view('home')->with($data);
+  }
+
+  public function updateProduct(Request $request , $id)
+  {
+      $product = Product::find($id);
+
+      $product->name = $request->name;
+      $product->image = $request->image ; 
+      $product->quantity  = $request->quantity ;
+      $product->price =  $request->price;
+      $product->ingredients = $request->ingredients ;
+      $product->description  = $request->description ;
+      $product->benefit = $request->benefit ; 
+      $product->buy_url = $request->buy_url;
+      $product->is_active = $request->is_active;
+      $product->Immunity = $request->immunity;
+      $product['Weight Loss'] =   $request->weightloss;
+      $product['Green Teas'] = $request->greenteas;
+      $product['Cardiac Wellness'] = $request->cardiacwellness;
+      $product['Diabetic Care'] = $request->diabeticcare;
+      $product['Skin & Hair care'] = $request->skinhaircare;
+      $product['Liver Care'] = $request->livercare;
+      $product['Kidney Care'] = $request->kidneycare;
+      $product['Joint Pain /Arthritis'] = $request->jointpainarthritis;
+      $product['Cold & Cough'] = $request->coldcough;
+      $product['Stress'] = $request->stress;
+      $product['Hair Care'] = $request->haircare;
+      $product['Acidity'] = $request->acidity;
+      $product['Constipation'] = $request->constipation;
+      $product['Acne/Pimples'] = $request->acnepimple;
+      $product['Cholesterol'] = $request->cholesterol;
+      $product['Women Health'] = $request->womenhealth;
+    
+    
+      $product->save();
+    
+      return redirect("marketing/addProducts");
   }
 
 }
