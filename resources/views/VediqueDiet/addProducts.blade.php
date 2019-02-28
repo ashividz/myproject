@@ -56,7 +56,77 @@
                         </li>
                         <li>
                             <label>Is Active *</label>
-                            <input type="number" name="is_active"  style="width:390px" required></li>
+                            <input type="number" name="is_active"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label> Immunity *</label>
+                            <input type="number" name=" immunity"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Weight Loss *</label>
+                            <input type="number" name="weightloss"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Green Teas *</label>
+                            <input type="number" name="greenteas"  style="width:390px" required>
+                        </li>
+                         <li>
+                            <label>Cardiac Wellness *</label>
+                            <input type="number" name="cardiacwellness"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Diabetic Care *</label>
+                            <input type="number" name="diabetic"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Skin & Hair care *</label>
+                            <input type="number" name="skinhaircare"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Liver Care *</label>
+                            <input type="number" name="livercare"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Kidney Care *</label>
+                            <input type="number" name="kidneycare"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Joint Pain /Arthritis *</label>
+                            <input type="number" name="jointpainarthritis"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Cold & Cough *</label>
+                            <input type="number" name="coldcough"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Stress *</label>
+                            <input type="number" name="stress"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Hair Care *</label>
+                            <input type="number" name="haircare"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Acidity *</label>
+                            <input type="number" name="acidity"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Constipation *</label>
+                            <input type="number" name="constipation"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Acne/Pimples *</label>
+                            <input type="number" name="acnepimple"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Cholesterol *</label>
+                            <input type="number" name="cholesterol"  style="width:390px" required>
+                        </li>
+                        <li>
+                            <label>Women Health *</label>
+                            <input type="number" name="womenhealth"  style="width:390px" required>
+                        </li>
+                        
                     </ol>
                 </fieldset>             
                 <div class="row">
@@ -94,6 +164,7 @@
                             <th>Buy URL</th>
                             <th>Image</th>
                             <th>Is Active</th>
+                            <th>Update</th>
                         </tr>
                     </thead>
                         
@@ -130,6 +201,9 @@
                             <td>
                                 {{ $product->is_active or " "}}
                             </td>
+                            <td>
+                                 <a href="/marketing/{{$product->id}}/updateProduct" target="_blank">update</a>
+                            </td>
                         </tr>                
                 @endforeach
             @endif
@@ -144,5 +218,6 @@
                 </table>
             @endif
         </div>
+        {!! $products->render() !!}
     </div>
 </div>

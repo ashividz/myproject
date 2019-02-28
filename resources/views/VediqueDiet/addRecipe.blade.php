@@ -177,5 +177,6 @@
                 </table>
             @endif
         </div>
+        {!! $recipes->render() !!}
     </div>
 </div>

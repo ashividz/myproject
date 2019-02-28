@@ -290,6 +290,8 @@ Route::group([
         Route::post('marketing/addRecipe', 'VediqueDietController@saveRecipe');
         Route::get('marketing/{id}/updateRecipe', 'VediqueDietController@recipe');
         Route::post('marketing/{id}/updateRecipe', 'VediqueDietController@updaterecipe');
+        Route::get('marketing/{id}/updateProduct', 'VediqueDietController@product');
+        Route::post('marketing/{id}/updateProduct', 'VediqueDietController@updateProduct');
         Route::get('marketing/addProducts', 'VediqueDietController@viewProducts');
         Route::post('marketing/addProducts', 'VediqueDietController@saveProducts');
         Route::get('marketing/addBrunchArticle', 'VediqueDietController@viewBrunchArticle');
