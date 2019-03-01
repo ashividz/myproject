@@ -7,7 +7,6 @@
 				<h4>Unicommerece Cart</h4>
 			</div>	
 			<div class="panel-body">
-			<a name="download" id="downloadCSV" class="btn btn-primary pull-right" style="margin:10px" download="filename.csv">Download Csv</a>
 				<form id="form" class="form-inline" action="/marketing/saveRejoin" method="post">
 					<table id="table" class="table table-bordered">
 						<thead>
@@ -20,6 +19,7 @@
 								<td>Cart id</td>
 								<td>Payment Mode</td>
 								<td>Sku Code</td>
+								<td>Order Id</td>
 								<td>Discount</td>
 								<td>Amount</td>
 							</tr>
@@ -52,6 +52,7 @@
 							<td>{{$cart->id or " "}}</td>
 							<td>{{$ModeOfPayment or " "}}</td>
 							<td>{{$product->productsku->sku or ""}}</td>
+							<td>{{$cart->order_id or " "}}</td>
 							<td>{{$product->pivot->discount or ""}}</td>
 							<td>{{$product->pivot->amount or ""}}</td>
 							
@@ -116,38 +117,23 @@ $(document).ready(function()
 	    $("input:checkbox").prop('checked', $(this).prop("checked"));
 	});
 });
-</script><script type="text/javascript">
-$(document).ready(function() 
-{
-	
-  	$( "#downloadCSV" ).bind( "click", function() 
-  	{
-    	var csv_value = $('#table').table2CSV({
-                delivery: 'value'
-            });
-    	downloadFile('program_end.csv','data:text/csv;charset=UTF-8,' + encodeURIComponent(csv_value));
-    	$("#csv_text").val(csv_value);  
-  });
+<script type="text/javascript" src = "https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src = "https://cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src = "//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script type="text/javascript" src = "//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src = "//cdn.datatables.net/buttons/1.2.3/js/buttons.print.min.js"></script>
 
-  	function downloadFile(fileName, urlData){
-    	var aLink = document.createElement('a');
-    	var evt = document.createEvent("HTMLEvents");
-    	evt.initEvent("click");
-    	aLink.download = fileName;
-    	aLink.href = urlData ;
-    	aLink.dispatchEvent(evt);
-	}
-});
-</script>
 <script type="text/javascript">
-	$('.status').raty({ 
-		readOnly: true,
-		hints : ['New', 'Explanined', 'Follow Up', 'Hot', 'Converted'],
-		score: function() {
-            return $(this).attr('data-score');
-        },
-        number: function() {
-            return $(this).attr('number');
-        },
-	});
+  $(document).ready(function() {
+    $('#table').DataTable( {
+        "iDisplayLength": 100,
+        dom: 'Bfrtip',
+        buttons: [
+            'csv'
+        ]
+    } );
+} );
 </script>

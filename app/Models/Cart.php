@@ -21,6 +21,7 @@ class Cart extends Model
         'start_date',
         'end_date',
         'source_id',
+        'order_id',
         'cre_id',
         'created_by',
         'shipping_address_id'

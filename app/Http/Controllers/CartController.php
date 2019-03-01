@@ -128,6 +128,8 @@ class CartController extends Controller
 
         CartStep::store($cart->id, 1, 1);
 
+       // dd($cart);
+
         return $cart;
 
 
