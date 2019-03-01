@@ -161,6 +161,12 @@
                             </div>                            
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                           <label>Order Id :</label>
+                            <input type="text" v-model="order_id">
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="col-md-4">
@@ -403,6 +409,7 @@ new Vue({
 
         store() {
             this.$http.post("/lead/" + this.lead.id + "/cart", {
+                order_id:               this.order_id,
                 currency_id:            this.currency_id,
                 cre_id:                 this.cre_id,
                 source_id:              this.lead.source_id,
