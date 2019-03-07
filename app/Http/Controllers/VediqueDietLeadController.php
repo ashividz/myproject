@@ -38,7 +38,7 @@ class VediqueDietLeadController extends Controller
 
     public function vediqueDietUser()
     {
-          $users = DB::connection('VediqueDiet')->table('users')->get();
+          $users = DB::connection('VediqueDiet')->table('users')->orderBy('id', 'DESC')->paginate(100);
 
           //dd($users);
 

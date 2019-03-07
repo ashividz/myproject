@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Name</th>
                 <th>Email</th>
                 <th>Gender</th>
                 <th>Phone</th>
@@ -22,6 +23,7 @@
         	@foreach($users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
+                <td>{{$user->name or " " }}</td>
                 <td>{{ $user->email}}</td>
                 <td>{{ $user->gender or " "}}</td>
                 <td>{{ $user->phone or " "}}</td>
@@ -54,6 +56,7 @@
     					});
 					} );
 			</script>
+            {!! $users->render() !!}
 			</div>			
 	</div>
 	
