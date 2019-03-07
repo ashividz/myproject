@@ -14,7 +14,10 @@
 								<td>#</td>
 								<td>Name</td>
 								<td>Adderss</td>
-								<td>ContactNo</td>
+								<td>Contact No</td>
+								<td>City</td>
+								<td>State</td>
+								<td>Pincode</td>
 								<td>Email</td>
 								<td>Cart id</td>
 								<td>Payment Mode</td>
@@ -28,35 +31,41 @@
 
 				@foreach($carts AS $cart)
 
-				    @foreach($cart->products As $product)
+					@if($cart->status_id == 4)
 
-							<?php 
-                              $ModeOfPayment = "";
-						        foreach ($cart->payments as $payment) {
-						            $ModeOfPayment = $ModeOfPayment.'/'.$payment->method->name;
-						        }
-							?>
+					    @foreach($cart->products As $product)
 
-							<tr>
-							<td>{{$i++}}</td>
-							
-							<td><a href="/lead/{{$cart->lead->id}}/viewDetails" target="_blank">{{$cart->lead->name or ""}}</a></td>
-							@if($cart->address)
-								<td>{{$cart->address->address .','.$cart->address->city . ',' . $cart->address->region->region_name . ',' . $cart->address->zip . ',' . $cart->address->country}}</td>
-							@else
-								<td>{{$shippingAddress = $cart->lead->address .','.$cart->lead->city . ',' . $cart->lead->zip . ',' . $cart->lead->state . ',' . $cart->lead->country}}</td>
-							@endif
+								<?php 
+	                              $ModeOfPayment = "";
+							        foreach ($cart->payments as $payment) {
+							            $ModeOfPayment = $ModeOfPayment.'/'.$payment->method->name;
+							        }
+								?>
 
-							<td>{{$cart->lead->phone or " "}}</td>
-							<td>{{$cart->lead->email or " "}}</td>
-							<td>{{$cart->id or " "}}</td>
-							<td>{{$ModeOfPayment or " "}}</td>
-							<td>{{$product->productsku->sku or ""}}</td>
-							<td>{{$cart->order_id or " "}}</td>
-							<td>{{$product->pivot->discount or ""}}</td>
-							<td>{{$product->pivot->amount or ""}}</td>
-							
-					@endforeach
+								<tr>
+								<td>{{$i++}}</td>
+								
+								<td><a href="/lead/{{$cart->lead->id}}/viewDetails" target="_blank">{{$cart->lead->name or ""}}</a></td>
+								@if($cart->address)
+									<td>{{$cart->address->address .','.$cart->address->city . ',' . $cart->address->region->region_name . ',' . $cart->address->zip . ',' . $cart->address->country}}</td>
+								@else
+									<td>{{$shippingAddress = $cart->lead->address .','.$cart->lead->city . ',' . $cart->lead->zip . ',' . $cart->lead->state . ',' . $cart->lead->country}}</td>
+								@endif
+
+								<td>{{$cart->lead->phone or " "}}</td>
+								<td>{{$cart->address->city or $cart->lead->city}}</td>
+								<td>{{$cart->address->region->region_name or $cart->lead->state}}</td>
+								<td>{{$cart->address->zip or $cart->lead->zip}}</td>
+								<td>{{$cart->lead->email or " "}}</td>
+								<td>{{$cart->id or " "}}</td>
+								<td>{{$ModeOfPayment or " "}}</td>
+								<td>{{$product->productsku->sku or ""}}</td>
+								<td>{{$cart->order_id or " "}}</td>
+								<td>{{$product->pivot->discount or ""}}</td>
+								<td>{{$product->pivot->amount or ""}}</td>
+								
+						@endforeach
+					@endif
 
 				@endforeach
 

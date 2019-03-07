@@ -628,7 +628,7 @@ public function getdetails(Request $request)
     public function unicommerece()
     {
         $carts = Cart::with('address' ,'lead' , 'products.productsku' , 'payments.method' , 'cre' , 'source')
-                       ->whereBetween('created_at' , [$this->start_date , $this->end_date])
+                       ->whereBetween('updated_at' , [$this->start_date , $this->end_date])
                        ->get();
 
         $data = array(

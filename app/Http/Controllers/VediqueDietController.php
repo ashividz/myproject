@@ -184,7 +184,7 @@ class VediqueDietController extends Controller
   public function viewProducts()
   {
 
-    $products = DB::connection('VediqueDiet')->table('Products')->orderBy('id', 'DESC')->paginate(20);;
+    $products = DB::connection('VediqueDiet')->table('Products')->orderBy('id', 'DESC')->paginate(20);
 
     $data = array(
             'menu'          =>  $this->menu,
