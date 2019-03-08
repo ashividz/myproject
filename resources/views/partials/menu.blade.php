@@ -64,7 +64,8 @@
                         </li>
                         <li>
                             <a href="/admin/viewUserRoles" id="menu_admin_roles">Roles</a>
-                        </li>                                  
+                        </li>  
+                                                       
                                                                 
                     </ul> <!-- third level -->                            
                                                     
@@ -89,6 +90,10 @@
                                                                 
                     </ul> <!-- third level -->   
                 </li>
+
+                <li>
+                    <a href="/marketing/dialer_push" id="menu_lead_dialer-push">Dialer Push</a>
+                </li> 
                                                 
             </ul> <!-- second level -->    
         </li>
@@ -478,11 +483,14 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#" id="MasterDiet">VediqueDiet CSAT</a>
+                    <a href="#" id="MasterDiet">VediqueDiet</a>
                      <ul>
                         <li>
                             <a href="/vediqueDiet/service/surveySummary" id="menu_service_Survey Summary">Survey Summary</a>
                         </li>
+                        <li>
+                             <a href="/service/Vediquediet/appointment" id="menu_Vedique_appointmnet">VediqueDiet Appointment</a>
+                        </li>   
                         <!-- <li>
                             <a href="/vediqueDiet/service/surveyresult" id="menu_service_survey_results">Survey Results</a>
                         </li>                            
@@ -490,7 +498,8 @@
                             <a href="/vediqueDiet/service/customerSatisfaction" id="menu_service_customer_satisfaction">Customer Satisfaction </a>
                         </li>    -->                
                     </ul>
-                </li>              
+                </li>
+                             
             </ul> <!-- second level -->                        
         </li>  
     @endif  
@@ -522,9 +531,7 @@
                     </li>
                 @endif
 
-                <li>
-                    <a href="/marketing/dialer_push" id="menu_lead_dialer-push">Dialer Push</a>
-                </li>
+                
 
                 <li>
                     <a href="/marketing/search" id="menu_search">Search</a>
@@ -837,14 +844,14 @@
             @endif
 
              @if(Auth::user()->canViewOnlinePayments())
-            <li>
+           <!--  <li>
                 <a href="/sales/new/payments" id="menu_sales_new_payments">New Online Payments</a>
                     <ul>
                         <li>
                             <a href="/sales/new/paymentsNew" id="menu_sales_new_pipeline_status">New Online Payments New</a>
                         </li>
                     </ul>
-            </li> 
+            </li>  -->
 
             @endif
 
@@ -1078,13 +1085,15 @@
         @endif  
 
         @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('reference_team'))                
-        <li class="{{ $menu == 'settings' ? 'current' : '' }}">
-            <a href="/settings" id="menu_settings" class="firstLevelMenu"><b>Reference Tracker</b></a>
-            
+        <li class="{{ $menu == 'reference ' ? 'current' : '' }}">
+            <a href="#" class="firstLevelMenu"><b>Reference Tracker</b></a>
             <ul>
                 <li>
-                    <a href="/report/viewReferences" id="menu_lead_references" class="arrow">References</a>
+                    <a href="/report/viewReferences" id="menu_lead_references_tracker">References</a>
                 </li>  
+                <li>
+                    <a href="/report/vediqueDietReference" id="menu_lead_vediquediet_references">vediquediet Reference</a>
+                </li> 
             </ul>
         </li>
         @endif
