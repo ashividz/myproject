@@ -39,7 +39,7 @@
                  <td>{{$user->name or " "}}</td>
                  <td>{{$user->phone or " "}}</td>
                  <td>{{$user->email or " "}}</td>
-                 <td>{{$usere->appointment_type or " "}}</td>
+                 <td>{{$user->appointment_type or " "}}</td>
                  <td>{{$user->date or " "}}</td>
                  <td>{{$user->time or " "}}</td>
                 <td>{{$user->remark or " "}}</td>
