@@ -42,4 +42,15 @@ class ReferralController extends Controller
         );
         return view('home')->with($data);
 	}
+
+    public function menu()
+    {
+         $data = array(
+            'menu'          => 'lead',
+            'section'       => 'name',
+            'name'          =>  'reference'
+        );
+
+        return view('home')->with($data);
+    }
 }

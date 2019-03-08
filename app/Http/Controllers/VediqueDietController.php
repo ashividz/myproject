@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Days365;
 use App\Models\VediqueDiet\Recipe;
 use App\Models\VediqueDiet\Product;
+use App\Models\VediqueDiet\Appointment;
+
 use DB;
 use Carbon;
 use Auth;
@@ -469,6 +471,22 @@ class VediqueDietController extends Controller
       $product->save();
     
       return redirect("marketing/addProducts");
+  }
+
+  public function appointment()
+  {
+    $users = Appointment::whereBetween('created_at' , [$this->start_date , $this->end_date] )->orderBy('id' , 'DESC')->get();
+    //return $users;
+
+    $data = array(
+            'menu'          =>  'VediqueDiet',
+            'section'       =>  'appointment',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'users'         =>  $users
+        );
+
+        return view('home')->with($data);
   }
 
 }

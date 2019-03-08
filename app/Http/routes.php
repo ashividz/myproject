@@ -1249,6 +1249,8 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('report/viewPlatinumCustomers', 'ReferenceController@platinum');
     Route::get('report/viewChannelConversion', 'ReportController@channelConversion');
     Route::post('report/viewChannelConversion', 'ReportController@channelConversion');
+    Route::get('report/vediqueDietReference', 'ReferenceController@vdietReference');
+    Route::post('report/vediqueDietReference', 'ReferenceController@vdietReference');
 
     Route::get('report/source/{id}/leads', 'LeadSourceController@sourceLeads');
     Route::post('report/source/{id}/leads', 'LeadSourceController@sourceLeads');
@@ -1434,6 +1436,9 @@ Route::group([
 
        Route::get('vediqueDiet/service/surveySummary', 'VediqueDietController@surveySummary');
        Route::post('vediqueDiet/service/surveySummary', 'VediqueDietController@surveySummary');
+
+       Route::get('service/Vediquediet/appointment', 'VediqueDietController@appointment');
+       Route::post('service/Vediquediet/appointment', 'VediqueDietController@appointment');
         
        Route::get('vediqueDiet/service/surveyresult', 'VediqueDietController@viewNutritionistWiseSurvey');
        Route::post('vediqueDiet/service/surveyresult', 'VediqueDietController@viewNutritionistWiseSurvey');

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lead;
 use App\Models\User;
 use App\Models\LeadSource;
+use App\Models\VediqueDiet\Reference;
 
 use DB;
 use Carbon;
@@ -277,5 +278,24 @@ class ReferenceController extends Controller
         );
 
         return view('home')->with($data);
+    }
+
+    public function vdietReference()
+    {
+            $references = Reference::whereBetween('created_at' , [$this->start_date , $this->end_date])
+                          ->orderBy('id', 'DESC')
+                          ->get();
+           // return $references;
+
+            $data = array(
+            'menu'          =>  'VediqueDiet',
+            'section'       =>  'reference',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'references'         =>  $references
+        );
+
+        return view('home')->with($data);
+
     }
 }

@@ -1534,7 +1534,7 @@ class LeadController extends Controller
               }
 
             }
-            else if($delivery->courier_id == 2)
+           /* else if($delivery->courier_id == 2)
             {
               if($delivery->city == "Delhi" || $delivery->city == "Faridabad"  || $delivery->city == "Gurgaon" || $delivery->city == "Ghaziabad" || $delivery->city == "Noida"  || $delivery->city == "Gautam Buddha Nagar" )
               {
@@ -1554,7 +1554,7 @@ class LeadController extends Controller
                 }
               }
 
-            }
+            }*/
           }
         }
 
