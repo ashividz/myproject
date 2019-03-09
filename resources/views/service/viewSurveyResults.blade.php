@@ -52,7 +52,7 @@
 
         	<!-- Nutritionist Summary Report -->
         	<div role="tabpanel" class="tab-pane fade" id="summary">        
-          		<div class="container">
+          		<!--<div class="container">  -->
           			<!--<a name="download" id="downloadSummary" class="btn btn-primary pull-right" style="margin:10px" download="summary.csv">Download Summary Csv</a>  -->
 					<table id="table_summary" class="table table-striped table-bordered">
 						<caption>Average Score: {{$average_csat}}</caption>
@@ -78,14 +78,14 @@
 
 				        </tbody>
 				    </table>
-				</div>
+				<!--</div> -->
 			</div>
 
 			<!-- Nutritionist Summary Report -->
         	<div role="tabpanel" class="tab-pane fade" id="doctor_summary">        
-          		<div class="container">
+          		<!--<div class="container"> -->
           			<!--<a name="download" id="downloadSummary" class="btn btn-primary pull-right" style="margin:10px" download="summary.csv">Download Summary Csv</a>  -->
-					<table id="table_summary" class="table table-striped table-bordered">
+					<table id="doctor_csat" class="table table-striped table-bordered">
 						<caption>Doctor CSAT Report </caption>
 						<thead>
 				            <tr>
@@ -109,7 +109,7 @@
 
 				        </tbody>
 				    </table>
-				</div>
+				<!--</div> -->
 			</div>
 		</div>
 	</div>
@@ -134,6 +134,11 @@
         ]
     } );
 	$('#table_summary').DataTable({
+		"iDisplayLength": 100,
+		dom: 'Bfrtip',
+		buttons: ['csv']
+	});
+	$('#doctor_csat').DataTable({
 		"iDisplayLength": 100,
 		dom: 'Bfrtip',
 		buttons: ['csv']
