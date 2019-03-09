@@ -29,7 +29,15 @@ class PatientMeasurementController extends Controller
 
     public function show($id)
     {
-        $patient = Patient::with('fee', 'measurements')->find($id);
+        $patient = Patient::with('fee', 'measurements' , 'lead')->find($id);
+
+        $vediqueDiet =  DB::connection('VediqueDiet')
+                        ->table('user_measurement')
+                        ->where('email' , $patient->lead->email)
+                        ->orderBy('id' , 'DESC')
+                        ->get();
+
+        //dd($vediqueDiet);
 
         $start_date = $patient->fee->start_date;
 
@@ -38,7 +46,8 @@ class PatientMeasurementController extends Controller
         $data = array(
             'menu'          => 'patient',
             'section'       => 'partials.measurements',
-            'patient'       => $patient
+            'patient'       =>  $patient,
+            'vediqueDiet'   =>  $vediqueDiet
         );
 
         return view('home')->with($data);
