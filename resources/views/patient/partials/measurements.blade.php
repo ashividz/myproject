@@ -36,48 +36,89 @@
 @endsection
 
 @section('main')
-@if($patient->measurements->count()>0)
-<div class="container">  
-    <div class="panel panel-default">
-        <div class="panel-heading1">
-        </div>
-        <div class="panel-body">
-            <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Arms(cm)</th>
-                            <th>Chest(cm)</th>
-                            <th>Waist(cm)</th>
-                            <th>Abdomen(cm)</th>
-                            <th>Thighs(cm)</th>
-                            <th>Hips(cm)</th>
-                            <th>BP(Systolic, mm Hg)</th>
-                            <th>BP(Diastolic, mm Hg)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($patient->measurements as $measurement)
-                        <tr>
-                            <td>{{date("jS M, Y, g:i a",strtotime($measurement->created_at))}}</td>
-                            <td>{{$measurement->arms!=0 ? $measurement->arms :''}}</td>
-                            <td>{{$measurement->chest!=0 ? $measurement->chest:''}}</td>
-                            <td>{{$measurement->waist!=0 ? $measurement->waist:''}}</td>
-                            <td>{{$measurement->abdomen!=0 ? $measurement->abdomen:''}}</td>
-                            <td>{{$measurement->thighs!=0 ?  $measurement->thighs : ''}}</td>
-                            <td>{{$measurement->hips!=0 ? $measurement->hips : ''}}</td>
-                            <td>{{$measurement->bp_systolic!=0 ?  $measurement->bp_systolic : '' }}</td>
-                            <td>{{$measurement->bp_diastolic!=0 ?  $measurement->bp_diastolic : ''}}</td>
-                        </tr>
-                    @endforeach
+<div>
 
-                    </tbody>
-                </table>
+    @if($vediqueDiet)
+    <div class="container">  
+        <div class="panel panel-default">
+            <div class="panel-heading1">
+            </div>
+            <h3>Vedique Diet mesurement</h3>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Arms(cm)</th>
+                                <th>Chest(cm)</th>
+                                <th>Waist(cm)</th>
+                                <th>Abdomen(cm)</th>
+                                <th>Thighs(cm)</th>
+                                <th>Hips(cm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($vediqueDiet as $measurement)
+                            <tr>
+                                <td>{{date("jS M, Y, g:i a",strtotime($measurement->created_at))}}</td>
+                                <td>{{$measurement->arms!=0 ? $measurement->arms :''}}</td>
+                                <td>{{$measurement->chest!=0 ? $measurement->chest:''}}</td>
+                                <td>{{$measurement->waist!=0 ? $measurement->waist:''}}</td>
+                                <td>{{$measurement->abdomen!=0 ? $measurement->abdomen:''}}</td>
+                                <td>{{$measurement->thighs!=0 ?  $measurement->thighs : ''}}</td>
+                                <td>{{$measurement->hips!=0 ? $measurement->hips : ''}}</td>
+                            </tr>
+                        @endforeach
+
+                        </tbody>
+                    </table>
+            </div>
         </div>
     </div>
-</div>
-@endif
+    @endif
+    @if($patient->measurements->count()>0)
+    <div class="container">  
+        <div class="panel panel-default">
+            <div class="panel-heading1">
+            </div>
+            <h3>Amikus Mesurement</h3>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Arms(cm)</th>
+                                <th>Chest(cm)</th>
+                                <th>Waist(cm)</th>
+                                <th>Abdomen(cm)</th>
+                                <th>Thighs(cm)</th>
+                                <th>Hips(cm)</th>
+                                <th>BP(Systolic, mm Hg)</th>
+                                <th>BP(Diastolic, mm Hg)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($patient->measurements as $measurement)
+                            <tr>
+                                <td>{{date("jS M, Y, g:i a",strtotime($measurement->created_at))}}</td>
+                                <td>{{$measurement->arms!=0 ? $measurement->arms :''}}</td>
+                                <td>{{$measurement->chest!=0 ? $measurement->chest:''}}</td>
+                                <td>{{$measurement->waist!=0 ? $measurement->waist:''}}</td>
+                                <td>{{$measurement->abdomen!=0 ? $measurement->abdomen:''}}</td>
+                                <td>{{$measurement->thighs!=0 ?  $measurement->thighs : ''}}</td>
+                                <td>{{$measurement->hips!=0 ? $measurement->hips : ''}}</td>
+                                <td>{{$measurement->bp_systolic!=0 ?  $measurement->bp_systolic : '' }}</td>
+                                <td>{{$measurement->bp_diastolic!=0 ?  $measurement->bp_diastolic : ''}}</td>
+                            </tr>
+                        @endforeach
 
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+    @endif
+</div>
 <script type="text/javascript">
 $(document).ready(function() 
 {
