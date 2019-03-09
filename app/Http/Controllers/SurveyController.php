@@ -411,19 +411,8 @@ class SurveyController extends Controller
         $start_date = $request->start_date; 
         $end_date = $request->end_date ;
 
-        $surveys = DB::table('patient_survey_answers AS psa')
-                    ->select(DB::RAW('patient_id,answer,nutritionist'))
-                    ->leftjoin('patient_survey AS ps',  function($join)
-                    {
-                        $join->on('ps.id', '=', 'psa.patient_survey_id');
-                    }) 
-                    ->join('survey_answers AS a',function($join){
-                        $join->on('a.id', '=', 'psa.answer_id');
-                    })
-                    ->where('psa.question_id', 3)
-                    ->whereBetween('psa.created_at', array($start_date, $end_date)) 
-                    ->orderby('answer')
-                    ->get();
+        $surveys = PatientSurvey::whereBetween('created_at', array($this->start_date, $this->end_date)) 
+                            ->get(); 
 
         Excel::create('CSATReport', function($excel) use($surveys) {
 
@@ -435,7 +424,11 @@ class SurveyController extends Controller
                 ));
                 foreach ($surveys as $survey) {
                     $id             = $survey->patient_id;
-                    $answer         = $survey->answer;
+                    $answer         = "Not-Satisfied";
+                    if($survey->score == 100)
+                        $answer         = "Delighted";
+                    else if($survey->score >=80 && $survey->score<=99)
+                        $answer         = "Satisfied";
                     $nutritionist   = $survey->nutritionist;
 
 
