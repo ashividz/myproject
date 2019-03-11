@@ -27,8 +27,8 @@ class NewLeadAssigned extends Event implements ShouldBroadcast
      *
      * @return array
      */
-    public function broadcastOn()
-    {
-        return ['user-'. $this->user->id];
-    }
+    // public function broadcastOn()
+    // {
+    //     return ['user-'. $this->user->id];
+    // }
 }

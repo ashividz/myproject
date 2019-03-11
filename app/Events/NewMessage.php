@@ -37,6 +37,6 @@ class NewMessage extends Event implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['user'. $this->employee->user->id];
+         return ['user'. $this->employee->user->id];
     }
 }

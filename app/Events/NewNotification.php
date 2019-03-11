@@ -37,8 +37,8 @@ class NewNotification extends Event implements ShouldBroadcast
      *
      * @return array
      */
-    public function broadcastOn()
-    {
-        return ['user'. $this->recipient];
-    }
+    // public function broadcastOn()
+    // {
+    //     return ['user'. $this->recipient];
+    // }
 }

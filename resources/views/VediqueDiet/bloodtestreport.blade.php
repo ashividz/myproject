@@ -4,7 +4,7 @@
       <div class="pull-left">
         @include('partials/daterange')
       </div>
-      <h4>References</h4>
+      <h4>appointment</h4>
     </div>
     <div class="panel-body">
     <!-- Nav tabs -->
@@ -18,27 +18,29 @@
             <thead>
               <tr>
                <th>#</th>
-               <th>Refere email</th>
-               <th>Refere name</th>
-               <th>Refere phone</th>
-               <th>Client Name</th>
-               <th>client phone</th>
+               <th>Name</th>
+               <th>Phone</th>
+               <th>email</th>
+               <th>Bloodtest</th>
+               
                <th>Created_at</th>
               </tr>
             </thead>
             <tbody>
           
           <?php $i = 0 ?>
-          @foreach($references  AS $reference)
+          @foreach($users  AS $user)
+
+
             <?php $i++ ?>
               <tr>
                 <td>{{$i}}</td>
-                <td>{{$reference->email or " "}}</td>
-                 <td>{{$reference->referename or " "}}</td>
-                 <td>{{$reference->referephone or " "}}</td>
-                 <td>{{$reference->name or " "}}</td>
-                 <td>{{$reference->phone or " "}}</td>
-                 <td>{{$reference->createdat or " "}}</td>
+               
+                 <td>{{$user->name or " "}}</td>
+                 <td>{{$user->phone or " "}}</td>
+                 <td>{{$user->email or " "}}</td>
+                 <td><img src="data:image/png;base64 , {{$user->image}}"/></td>
+                 <td>{{$user->created_at or " "}}</td>
           @endforeach   
           
             </tbody>
