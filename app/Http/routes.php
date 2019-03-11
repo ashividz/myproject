@@ -1439,6 +1439,9 @@ Route::group([
 
        Route::get('service/Vediquediet/appointment', 'VediqueDietController@appointment');
        Route::post('service/Vediquediet/appointment', 'VediqueDietController@appointment');
+
+       Route::get('service/Vediquediet/bloodtest', 'VediqueDietController@bloodTestReport');
+       Route::post('service/Vediquediet/bloodtest', 'VediqueDietController@bloodTestReport');
         
        Route::get('vediqueDiet/service/surveyresult', 'VediqueDietController@viewNutritionistWiseSurvey');
        Route::post('vediqueDiet/service/surveyresult', 'VediqueDietController@viewNutritionistWiseSurvey');

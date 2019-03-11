@@ -10,5 +10,6 @@ class Reference extends Model
     protected $connection = 'VediqueDiet';
     protected $table = 'user_reference';
     public $timestamps = false;
+
     
 }

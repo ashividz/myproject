@@ -491,6 +491,9 @@
                         <li>
                              <a href="/service/Vediquediet/appointment" id="menu_Vedique_appointmnet">VediqueDiet Appointment</a>
                         </li>   
+                        <li>
+                             <a href="/service/Vediquediet/bloodtest" id="menu_Vedique_blood_test">Blood Test Report</a>
+                        </li>  
                         <!-- <li>
                             <a href="/vediqueDiet/service/surveyresult" id="menu_service_survey_results">Survey Results</a>
                         </li>                            
@@ -1084,7 +1087,7 @@
         </li>
         @endif  
 
-        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('reference_team'))                
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('reference_team') || Auth::user()->hasRole('marketing') || Auth::user()->hasRole('service'))                
         <li class="{{ $menu == 'reference ' ? 'current' : '' }}">
             <a href="#" class="firstLevelMenu"><b>Reference Tracker</b></a>
             <ul>

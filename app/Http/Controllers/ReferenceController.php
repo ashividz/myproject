@@ -282,17 +282,25 @@ class ReferenceController extends Controller
 
     public function vdietReference()
     {
-            $references = Reference::whereBetween('created_at' , [$this->start_date , $this->end_date])
-                          ->orderBy('id', 'DESC')
-                          ->get();
-           // return $references;
+            // $references = Reference::whereBetween('created_at' , [$this->start_date , $this->end_date])
+            //               ->orderBy('id', 'DESC')
+            //               ->get();
+
+            $users = DB::connection('VediqueDiet')->table('user_reference')
+            ->select('user_reference.name AS name' , 'user_reference.phone AS phone' ,'users.name AS referename' , 'users.phone AS referephone' , 'user_reference.created_at AS createdat' , 'user_reference.email AS email')
+            ->join('users','users.email','=','user_reference.email')
+            ->whereBetween('user_reference.created_at' , [$this->start_date , $this->end_date])
+            ->orderBy('user_reference.id', 'DESC')
+            ->get();
+
+           // dd($users);
 
             $data = array(
             'menu'          =>  'VediqueDiet',
             'section'       =>  'reference',
             'start_date'    =>  $this->start_date,
             'end_date'      =>  $this->end_date,
-            'references'         =>  $references
+            'references'         =>  $users
         );
 
         return view('home')->with($data);

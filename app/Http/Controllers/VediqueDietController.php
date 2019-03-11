@@ -489,4 +489,24 @@ class VediqueDietController extends Controller
         return view('home')->with($data);
   }
 
+  public function bloodTestReport()
+  {
+    $users = DB::connection('VediqueDiet')->table('Blood_report')
+            ->whereBetween('created_at' , [$this->start_date , $this->end_date])
+            ->orderBy('id', 'DESC')
+            ->get();
+
+           // dd($users);
+
+        $data = array(
+            'menu'          =>  'VediqueDiet',
+            'section'       =>  'bloodtestreport',
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'users'         =>  $users
+        );
+         return view('home')->with($data);
+
+  }
+
 }
