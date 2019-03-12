@@ -674,6 +674,9 @@ Route::group([
         Route::get('doctor/calls', 'DoctorController@calls');
         Route::post('doctor/calls', 'DoctorController@calls');
 
+        Route::get('doctor/appointment', 'DoctorController@appointment');
+        Route::post('doctor/appointment', 'DoctorController@appointment');
+        
         Route::get('patient/{id}/doctordialercalls', 'DoctorController@dialercalls');
         
         Route::get('doctor/patients', 'DoctorController@patients');
@@ -1123,6 +1126,10 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::get('lead/{id}/pipeline', 'PipelineController@modal'); 
     Route::post('lead/{id}/pipeline', 'PipelineController@store'); 
 
+    /**create appointment **/
+    Route::get('lead/{id}/appointment', 'AppointmentController@modal'); 
+    Route::post('lead/{id}/appointment', 'AppointmentController@store');
+     
 
     Route::get('lead/{id}/program', 'LeadProgramController@show');
     Route::post('lead/{id}/program', 'LeadProgramController@store');

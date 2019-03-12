@@ -12,6 +12,7 @@ use App\Models\DialerCallDisposition;
 use App\Models\Patient;
 use App\Models\Lead;
 use App\Models\AmazonLead;
+use App\Models\Appointment;
 use Auth;
 use DB;
 
@@ -70,6 +71,32 @@ class DoctorController extends Controller
         return view('home')->with($data);
     }
 
+     public function appointment()
+    {
+        $users = User::getUsersByRole('doctor');
+
+            //dd($this->doctor);
+
+        $appointment = Appointment::getAppointmentsByUser($this->doctor, $this->start_date, $this->end_date);
+     //  dd($appointment[0]->description);
+       // dd($appointment);
+    
+        $data = array(
+            'menu'          =>  $this->menu,
+            'section'       =>  'appointment',
+            'users'         =>  $users,
+            'name'          =>  $this->doctor,
+            'start_date'    =>  $this->start_date,
+            'end_date'      =>  $this->end_date,
+            'calls'         =>  $appointment,
+            'i'             =>  '0'
+        );
+               // dd($data->menu);
+           // dd($data);
+        return view('home')->with($data);
+    }
+
+
     public function dialercalls($id)
     {
         $users = User::getUsersByRole('doctor');
@@ -117,6 +144,7 @@ class DoctorController extends Controller
         return view('lead.modals.dispositions')->with($data);
     }
 
+        
    public function patients()
     {
         $users = User::getUsersByRole('doctor');

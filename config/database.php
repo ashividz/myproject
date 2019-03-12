@@ -56,10 +56,10 @@ return [
 
         'mysql' => [
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
-            'database'  => env('DB_DATABASE', 'forge'),
-            'username'  => env('DB_USERNAME', 'forge'),
-            'password'  => env('DB_PASSWORD', ''),
+            'host'      => env('DB_HOST', '192.168.1.215'),
+            'database'  => env('DB_DATABASE', 'amikus'),
+            'username'  => env('DB_USERNAME', 'root'),
+            'password'  => env('DB_PASSWORD', 'Am!ku$'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -162,20 +162,20 @@ return [
         ],
 
 
-        'sqlsrv' => [
-            'driver'   => 'sqlsrv',
-            'host'     =>  '192.168.1.176',
-            'database' =>  'everybin',
-            'port'      => '1433',
-            'username' =>  'SA',
-            'password' => 'everybin123',
-            'charset'  => 'utf8',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-            'strict'    => false,
-            'prefix'   => '',
-        ],
+        // 'sqlsrv' => [
+        //     'driver'   => 'sqlsrv',
+        //     'host'     =>  '192.168.1.176',
+        //     'database' =>  'everybin',
+        //     'port'      => '1433',
+        //     'username' =>  'SA',
+        //     'password' => 'everybin123',
+        //     'charset'  => 'utf8',
+        //     'charset'   => 'utf8',
+        //     'collation' => 'utf8_unicode_ci',
+        //     'prefix'    => '',
+        //     'strict'    => false,
+        //     'prefix'   => '',
+        // ],
 
     ],
 

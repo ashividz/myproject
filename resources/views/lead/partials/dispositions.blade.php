@@ -218,6 +218,11 @@
                     <li title="Validate Coupon">
                         <a href="http://coupon/validation?lead_id={{$lead->id}}&amp;name={{$lead->name}}&amp;phone={{$lead->phone}}&amp;email={{$lead->email}}&amp;user_id={{Auth::User()->id}}" class="btn btn-primary default_popup"><i class='fa fa-gift fa-2x'></i></a>
                     </li>
+                    <li title="Book an Appointment" data-placement="left" data-toggle="tooltip">
+                    <a href="/lead/{{ $lead->id }}/appointment" data-toggle="modal" data-target="#modal" class="btn btn-primary">
+                   
+                       <i class="fa fa-calendar-plus-o" style="font-size:26px;color:white"></i></a>
+                    </li>
                 </ul>
             </div>
         </div>
