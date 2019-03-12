@@ -293,7 +293,10 @@
                 <li>
                     <a href="/service/marketPlaceOtc" id="menu_doctor_patients">Market Place Otc</a>
                 </li>
-                            
+                <li>
+                    <a href="/doctor/appointment" id="menu_doctor_appointment">Appointments</a>
+                </li>
+
             </ul> <!-- second level -->                        
         </li>
     @endif
