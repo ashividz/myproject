@@ -557,6 +557,107 @@ class LeadController extends Controller
 
         $dialer_dispositions = array();
 
+        // try {
+
+        //     $dialer_dispositions = DB::connection('pgsql2')->table('nr_conn_cdr as crl')
+        //         ->where('crl.phonenumber', '=', trim($lead->phone));
+            
+        //         if (trim($lead->mobile) <> '' && ( trim($lead->mobile) <> trim($lead->phone))) {
+        //             $dialer_dispositions = $dialer_dispositions->orWhere('crl.phonenumber', '=', trim($lead->mobile));
+        //         }
+        //     if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->phone)) )
+        //            $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->phone)));
+        //     if ( $lead->country=='IN' && Helper::isIndianNumber(trim($lead->mobile)) )
+        //            $dialer_dispositions =  $dialer_dispositions->orWhere('crl.phonenumber', '=', '91'.Helper::properMobile(trim($lead->mobile)));
+            
+        //     $dialer_dispositions = $dialer_dispositions->select('*')
+        //                         ->orderby('crl.recordentrydate','desc')
+        //                         ->limit(10)->get();
+            
+        // } catch (\Exception $e) {
+            
+        //     Session::flash("message", "Error connecting with Dialer Database");
+        //     Session::flash("status", "error");
+        // }      
+              
+        $data = array(
+            'menu'          =>  'lead',
+            'section'       =>  'partials.dispositions',
+            'dept'          =>  $dept,
+            'dialer_dispositions' => $dialer_dispositions,
+            'lead'          =>  $lead,
+            'remark'        =>  $disposition,
+            'medical'       =>  $medical
+        );
+
+        return view('home')->with($data);
+            
+    }
+
+
+    public function viewDialerDispositions($id)
+    {
+
+        $disposition = Lead::with('source')->find($id);
+
+        $medical  = Lead::with('patient')->find($id);
+
+
+        $lead = Lead::with('patient','dispositions.master' , 'patient.suit')
+                ->with('dialer')
+                ->with(['disposition' => function($q){
+                    $q->where('name','=',Auth::user()->employee->name);
+                    $q->whereBetween('created_at', Array(date('Y-m-d 0:0:0'), date('Y-m-d 23:59:59')));
+                }])
+               /* ->leftjoin(DB::raw('(SELECT * FROM call_dispositions A WHERE id = (SELECT MAX(id) FROM call_dispositions B WHERE  A.lead_id=B.lead_id)) AS cd'), function($join) {
+                $join->on('marketing_details.id', '=', 'cd.lead_id');
+                 })
+                ->select('marketing_details.*', 'cd.disposition_id as last_dispo', 'cd.callback as callback')*/
+
+                ->find($id);
+
+          //dd($lead->dialer);
+                //$lead->last_dispo = 1;
+     /*   if($lead->dialer && array_search($lead->last_dispo, [8, 9, 10, 11, 15]))
+            $lead->hideDisposition = true;*/
+
+        //dd($lead->hideDisposition);
+
+        if ($lead->country!='IN'){
+            $city = new City;
+            $flag = false;
+
+            if ($lead->country && $lead->country!='' && $city->where('country_code',$lead->country)->first()){
+                $city = $city->where('country_code',$lead->country);
+                $flag = true;
+            }
+            if ($lead->state && $lead->state!='' && strpos($lead->state,'.') && $city->where('region_code',trim(explode('.',$lead->state)[1]))->first()){
+                $city = $city->where('region_code',trim(explode('.',$lead->state)[1]));
+                $flag = true;
+            }
+            if ($lead->city && $lead->city!='' && $city->where('name',$lead->city)->first()){
+                $city = $city->where('name',$lead->city);                       
+                $flag = true;
+            }
+            $msg = 'This is an international Client. Please Check local time before calling';            
+            if($city->first() && $city->first()->getLocalTime())
+                $msg = $msg.'<br>Local Time : '.$city->first()->getLocalTime();
+            if ($flag && $city->first() && $city->first()->country_code =='IN');            
+            else
+                Session::flash('message', $msg);
+                Session::flash('status', 'error');
+        }                           
+           
+        $dept =  1;
+        if (Auth::user()->hasRole('cre') || Auth::user()->hasRole('sales')) {
+           $dept =  1;
+        }
+        elseif (Auth::user()->hasRole('doctor') || Auth::user()->hasRole('nutritionist') || Auth::user()->hasRole('service')) {
+           $dept =  2;
+        }
+
+        $dialer_dispositions = array();
+
         try {
 
             $dialer_dispositions = DB::connection('pgsql2')->table('nr_conn_cdr as crl')

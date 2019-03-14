@@ -274,7 +274,10 @@
     <div class="col-md-5">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h5>Dialer Dispositions</h5>
+                <form method="GET" action="/lead/{{ $lead->id }}/dialerdisposition" role="form" class="form-inline" >
+                    <button class="btn btn-success"> View Dialer Disposition</button>
+                </form>
+                 
             </div>
             <div class="panel-body">
                 <table class="table table-condensed table-bordered">
@@ -290,19 +293,21 @@
                     </thead>
                     <tbody>
             <?php $i=0 ?>
-            @foreach($dialer_dispositions as $disposition)
-                <?php $i++; ?>
-                        <tr>
-                            <td>{{ $i }}</td>
-                            <td>{{ date('jS-M-y h:i A', strtotime($disposition->recordentrydate))}}</td>
-                            <td><b>{{ $disposition->calltype }}</b></td>
-                            <td><b>{{ $disposition->disposition or "" }}</b>
+            @if($dialer_dispositions);
+                @foreach($dialer_dispositions as $disposition)
+                    <?php $i++; ?>
+                            <tr>
+                                <td>{{ $i }}</td>
+                                <td>{{ date('jS-M-y h:i A', strtotime($disposition->recordentrydate))}}</td>
+                                <td><b>{{ $disposition->calltype }}</b></td>
+                                <td><b>{{ $disposition->disposition or "" }}</b>
 
-                            </td>
-                            <td>{{gmdate('H:i:s',$disposition->callduration) }}</td>
-                            <td>{{ $disposition->userfullname    }}</td>
-                        </tr>
-            @endforeach
+                                </td>
+                                <td>{{gmdate('H:i:s',$disposition->callduration) }}</td>
+                                <td>{{ $disposition->userfullname    }}</td>
+                            </tr>
+                @endforeach
+            @endif
                     </tbody>
                 </table>
             </div>
