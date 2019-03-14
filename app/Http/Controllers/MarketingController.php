@@ -1058,11 +1058,11 @@ class MarketingController extends Controller
            $users = Lead::where('source_id' , 10)
                           ->doesntHave('patient')
                           ->has('dnc', '<', 1)
-                          ->whereBetween('created_at' , ['2016-01-01 00:00:00' , '2019-02-15 00:00:00'])
+                          ->whereBetween('created_at' , ['2017-01-01 00:00:00' , '2018-12-31 00:00:00'])
                           ->whereRaw( "(country ='IN' or country is null or country ='')")
-                          ->whereHas('dispositions',function($query) {
-                        $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -5 DAY)'));
-                    },'<',1)
+                    //       ->whereHas('dispositions',function($query) {
+                    //     $query->where('created_at','>=',DB::RAW('DATE_ADD(CURDATE(), INTERVAL -5 DAY)'));
+                    // },'<',1)
                     ->get();
 
          foreach ($users as $user) {

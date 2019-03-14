@@ -1098,6 +1098,7 @@ Route::group(['middleware' => ['auth', 'roles','checkip']],
     Route::POST('lead/saveSource', 'LeadController@saveSource');
 
     Route::get('lead/{id}/viewDispositions', 'LeadController@viewDispositions');
+    Route::get('lead/{id}/dialerdisposition', 'LeadController@viewDialerDispositions');
     Route::POST('lead/{id}/disposition', 'CallDispositionController@store');
     Route::get('lead/{id}/viewPersonalDetails', 'LeadController@showPersonalDetails');
     Route::POST('lead/{id}/savePersonalDetails', 'LeadController@savePersonalDetails');
