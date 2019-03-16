@@ -630,7 +630,12 @@ public function getdetails(Request $request)
         $carts = Cart::with('address' ,'lead' , 'products.productsku' , 'payments.method' , 'cre' , 'source')
                        ->whereBetween('updated_at' , [$this->start_date , $this->end_date])
                        ->get();
+        foreach ($carts as $cart) {
+           //dd($cart->cre->employee->emp_no);
+           // dd($cart->lead->source->master->source);
 
+
+        }
         $data = array(
             'menu'              =>  'marketing',
             'section'           =>  'unicommerece',
