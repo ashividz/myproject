@@ -14,6 +14,7 @@
 								<td>#</td>
 								<td>Name</td>
 								<td>Adderss</td>
+								<td>Order Id</td>
 								<td>Contact No</td>
 								<td>City</td>
 								<td>State</td>
@@ -42,6 +43,7 @@
 							        }
 								?>
 
+
 								<tr>
 								<td>{{$i++}}</td>
 								
@@ -51,7 +53,10 @@
 								@else
 									<td>{{$shippingAddress = $cart->lead->address .','.$cart->lead->city . ',' . $cart->lead->zip . ',' . $cart->lead->state . ',' . $cart->lead->country}}</td>
 								@endif
-
+								<?php
+								  $order_id = $cart->lead->source->master->source.'-'.$ModeOfPayment.'-'.$cart->cre->employee->emp_no.'-'.$cart->lead->id . '-' .$cart->id ;
+								?>
+								<td>{{$order_id or " "}}</td>
 								<td>{{$cart->lead->phone or " "}}</td>
 								<td>{{$cart->address->city or $cart->lead->city}}</td>
 								<td>{{$cart->address->region->region_name or $cart->lead->state}}</td>
