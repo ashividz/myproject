@@ -1,33 +1,23 @@
-@extends('master')
+@extends('layouts.app')
 
 @section('content')
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dashboard</div>
 
-<!-- Start Main Wrapper -->
-<div id="mws-wrapper">
-	<!-- Necessary markup, do not remove -->
-	<div id="mws-sidebar-stitch"></div>
+                <div class="panel-body">
+                    @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
- 
-	<!-- Main Container Start -->
-	<div id="mws-container" class="clearfix">
-		<!-- Date Select -->
-
-
-
-		<!-- Inner Container Start -->
-		<div class="inner">
-
-			@if ($section)
-				@include($menu . "/". $section)
-			@elseif($menu)
-				@include($menu)
-			@endif
-		</div>
-		<!-- Inner Container End -->
- 
-		
-	</div>
-	<!-- Main Container End -->
- 
+                    You are logged in!
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
